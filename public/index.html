@@ -350,11 +350,12 @@ body {
     button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
     .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .auth-card { background: var(--surface-card); border-radius: 20px; padding: 36px 32px; max-width: 380px; width: 100%; box-shadow: var(--shadow-card); border: 1px solid var(--border); }
-    .auth-card .brand-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
-    .auth-card h1 { font-size: 19px; margin: 0; font-weight: 700; }
-    .auth-card .sub { font-size: 12.5px; color: var(--ink-muted); font-weight: 500; margin-bottom: 18px; }
-    .auth-clock { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
+    .auth-card { background: var(--surface-card); border-radius: 20px; padding: 36px 32px; max-width: 420px; width: 100%; box-shadow: var(--shadow-card); border: 1px solid var(--border); box-sizing: border-box; }
+    .auth-card .brand-row { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; text-align: center; }
+    .auth-card .brand-row img { height: 48px !important; max-height: 48px !important; width: auto !important; max-width: 220px !important; object-fit: contain !important; display: block !important; margin: 0 auto !important; }
+    .auth-card h1 { font-size: 20px; margin: 0; font-weight: 700; text-align: center; }
+    .auth-card .sub { font-size: 12px; color: var(--ink-muted); font-weight: 500; margin-bottom: 18px; text-align: center; }
+    .auth-clock { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-faint); margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); text-align: center; }
     .auth-clock b { color: var(--ink-muted); font-weight: 700; }
     .auth-error { background: var(--rejected-bg); color: var(--rejected-text); padding: 10px 13px; border-radius: 10px; font-size: 13px; margin-bottom: 14px; display: none; }
     .auth-msg { background: var(--approved-bg); color: var(--approved-text); padding: 10px 13px; border-radius: 10px; font-size: 13px; margin-bottom: 14px; display: none; }
@@ -367,23 +368,45 @@ body {
 .app-header { 
   background: var(--bezel); 
   color: var(--bezel-text); 
-  padding: 14px 20px; 
+  padding: 10px 20px; 
   display: flex; 
   align-items: center; 
   justify-content: space-between; 
   gap: 12px; 
-  flex-wrap: wrap; 
-  position: sticky;        /* ← UBAH dari relative */
-  top: 0;                  /* ← TAMBAH: nempel di atas */
+  flex-wrap: nowrap; 
+  position: sticky;
+  top: 0;
   z-index: 100; 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);  /* ← TAMBAH: bayangan halus saat scroll */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-    .app-header .brand { display: flex; align-items: center; gap: 14px; }
-    .app-header .brand .brand-text { display: flex; flex-direction: column; }
-    .app-header .brand .company { font-size: 15.5px; font-weight: 700; }
-    .app-header .brand .system-name { font-size: 11.5px; color: var(--bezel-text-muted); font-weight: 500; margin-top: 2px; }
-    .qc-seal { flex-shrink: 0; display: inline-block; }
-    .user-box { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .app-header .brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .app-header .brand img,
+    .app-header .qc-seal {
+      height: 38px !important;
+      max-height: 38px !important;
+      width: auto !important;
+      max-width: 165px !important;
+      object-fit: contain !important;
+      flex-shrink: 0 !important;
+      display: inline-block !important;
+    }
+    .app-header .brand .brand-text { display: flex; flex-direction: column; justify-content: center; }
+    .app-header .brand .company { font-size: 15px; font-weight: 700; line-height: 1.2; }
+    .app-header .brand .system-name { font-size: 11px; color: var(--bezel-text-muted); font-weight: 500; margin-top: 2px; line-height: 1.2; }
+    .qc-seal { flex-shrink: 0; display: inline-block; object-fit: contain; }
+    .sidebar-brand-mini { display: flex; align-items: center; gap: 10px; padding: 8px 10px 14px; border-bottom: 1px dashed var(--border); margin-bottom: 14px; }
+    .sidebar-brand-mini img,
+    .sidebar-brand-mini .qc-seal {
+      height: 26px !important;
+      max-height: 26px !important;
+      width: auto !important;
+      max-width: 110px !important;
+      object-fit: contain !important;
+      flex-shrink: 0 !important;
+    }
+    .sidebar-brand-mini .mini-title { font-size: 12.5px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+    .sidebar-brand-mini .mini-sub { font-size: 10px; color: var(--ink-faint); font-weight: 500; white-space: nowrap; }
+    .user-box { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; flex-shrink: 0; }
     .header-clock { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 13px; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; background: rgba(255,255,255,0.05); }
     .clock-time { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 1px; }
     .clock-date { font-family: var(--font-mono); font-size: 10px; color: var(--bezel-text-muted); margin-top: 1px; }
@@ -1147,10 +1170,12 @@ body {
 
 /* ─── 3. HEADER RESPONSIVE ──────────────────────────────────────── */
 @media (max-width: 640px) {
-  .app-header { padding: 10px 14px !important; gap: 8px; }
+  .app-header { padding: 8px 12px !important; gap: 8px; flex-wrap: wrap !important; }
+  .app-header .brand img,
+  .app-header .qc-seal { height: 28px !important; max-height: 28px !important; width: auto !important; max-width: 120px !important; }
   .app-header .brand .company { font-size: 13px !important; }
   .app-header .brand .system-name { font-size: 10px !important; }
-  .qc-seal { width: 38px !important; height: 38px !important; }
+  .qc-seal { height: 28px !important; max-height: 28px !important; width: auto !important; max-width: 120px !important; }
   .header-clock {
     order: 3;
     width: 100%;
@@ -1964,8 +1989,10 @@ canvas#disciplineChart {
   }
   
   .auth-card .brand-row img {
-    width: 44px !important;
-    height: 44px !important;
+    height: 40px !important;
+    max-height: 40px !important;
+    width: auto !important;
+    max-width: 180px !important;
   }
   
   /* 6. Form group */
@@ -2025,8 +2052,10 @@ canvas#disciplineChart {
   }
   
   .auth-card .brand-row img {
-    width: 38px !important;
-    height: 38px !important;
+    height: 34px !important;
+    max-height: 34px !important;
+    width: auto !important;
+    max-width: 150px !important;
   }
 }
 
@@ -2187,12 +2216,15 @@ canvas#disciplineChart {
   <!-- ===================== AUTH SCREEN ===================== -->
   <div class="auth-wrapper" id="authScreen">
     <div class="auth-card">
-      <div class="brand-row">
-        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="46" alt="ASUKA Logo" style="height:46px;width:auto;max-width:210px;object-fit:contain;">
-        <h1 id="authCompanyName">QC-CMS</h1>
+      <div class="brand-row" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;text-align:center;">
+        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="48" alt="ASUKA Logo" style="height:48px;max-height:48px;width:auto;max-width:220px;object-fit:contain;display:block;margin:0 auto;">
+        <div style="display:flex;align-items:center;gap:6px;justify-content:center;">
+          <h1 id="authCompanyName" style="font-size:20px;font-weight:700;margin:0;color:var(--ink);white-space:nowrap;">QC-CMS</h1>
+          <span style="font-size:11px;background:rgba(232,114,12,0.15);color:#e8720c;border:1px solid rgba(232,114,12,0.3);padding:2px 7px;border-radius:6px;font-weight:700;">EDMS</span>
+        </div>
       </div>
-      <div class="sub">QA/QC Electronic Document Management System</div>
-      <div class="auth-clock"><b id="authClockTime">--:--:--</b> · <span id="authClockDate">-</span></div>
+      <div class="sub" style="text-align:center;margin-bottom:16px;">QA/QC Electronic Document Management System</div>
+      <div class="auth-clock" style="text-align:center;"><b id="authClockTime">--:--:--</b> · <span id="authClockDate">-</span></div>
       <div class="auth-error" id="authError"></div>
       <div class="auth-msg" id="authMsg"></div>
 <form id="loginForm">
@@ -2238,7 +2270,7 @@ canvas#disciplineChart {
     <div class="app-header">
       <div class="brand">
         <button class="hamburger-btn" onclick="toggleNavMenu()">☰</button>
-        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="36" alt="ASUKA Logo" style="height:36px;width:auto;max-width:180px;object-fit:contain;">
+        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="36" alt="ASUKA Logo" style="height:36px;max-height:36px;width:auto;max-width:160px;object-fit:contain;flex-shrink:0;">
         <div class="brand-text">
           <span class="company" id="companyName">QC-CMS</span>
           <span class="system-name" id="headerGreeting">QA/QC EDMS</span>
@@ -2268,8 +2300,11 @@ canvas#disciplineChart {
       <aside class="app-sidebar" id="appSidebar">
         <button class="sidebar-close-btn" onclick="closeNavMenu()">✕</button>
         <div class="sidebar-brand-mini">
-          <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="32" alt="ASUKA Logo" style="height:32px;width:auto;max-width:150px;object-fit:contain;">
-          <div><div class="mini-title">QC-CMS EDMS</div><div class="mini-sub">Dokumen Mutu Proyek</div></div>
+          <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="26" alt="ASUKA Logo" style="height:26px;max-height:26px;width:auto;max-width:110px;object-fit:contain;flex-shrink:0;">
+          <div style="min-width:0;flex:1;">
+            <div class="mini-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">QC-CMS EDMS</div>
+            <div class="mini-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dokumen Mutu Proyek</div>
+          </div>
         </div>
         <div class="sidebar-focus">
           <label for="globalProjectFilter">🎯 Fokus Proyek</label>
