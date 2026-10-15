@@ -2176,7 +2176,7 @@ canvas#disciplineChart {
 <body>
     <!-- ✅ PWA SPLASH SCREEN -->
   <div id="pwaSplash" style="position:fixed;inset:0;background:#13275a;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:18px;transition:opacity 0.35s ease;">
-      <img src="https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png" width="96" height="96" alt="QC-CMS" style="object-fit:contain;">
+      <img src="/icons/icon-192.png" onerror="this.onerror=null; this.src='https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png';" width="96" height="96" alt="QC-CMS" style="object-fit:contain;border-radius:12px;">
         <div style="color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.3px;">QC-CMS EDMS</div>
         <div style="color:rgba(255,255,255,0.55);font-size:12px;font-weight:500;">Dokumen Mutu Proyek</div>
         <div style="width:26px;height:26px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:pwaSpin 0.8s linear infinite;margin-top:6px;"></div>
@@ -2188,7 +2188,7 @@ canvas#disciplineChart {
   <div class="auth-wrapper" id="authScreen">
     <div class="auth-card">
       <div class="brand-row">
-        <img class="qc-seal" src="https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png" width="56" height="56" alt="Logo" style="object-fit:contain;">
+        <img class="qc-seal" src="/icons/icon-192.png" onerror="this.onerror=null; this.src='https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png';" width="56" height="56" alt="QC-CMS Logo" style="object-fit:contain;border-radius:10px;">
         <h1 id="authCompanyName">QC-CMS</h1>
       </div>
       <div class="sub">QA/QC Electronic Document Management System</div>
@@ -2238,7 +2238,7 @@ canvas#disciplineChart {
     <div class="app-header">
       <div class="brand">
         <button class="hamburger-btn" onclick="toggleNavMenu()">☰</button>
-        <img class="qc-seal" src="https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png" width="52" height="52" alt="Logo" style="object-fit:contain;">
+        <img class="qc-seal" src="/icons/icon-192.png" onerror="this.onerror=null; this.src='https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png';" width="52" height="52" alt="QC-CMS Logo" style="object-fit:contain;border-radius:8px;">
         <div class="brand-text">
           <span class="company" id="companyName">QC-CMS</span>
           <span class="system-name" id="headerGreeting">QA/QC EDMS</span>
@@ -2268,7 +2268,7 @@ canvas#disciplineChart {
       <aside class="app-sidebar" id="appSidebar">
         <button class="sidebar-close-btn" onclick="closeNavMenu()">✕</button>
         <div class="sidebar-brand-mini">
-          <img class="qc-seal" src="https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png" width="44" height="44" alt="Logo" style="object-fit:contain;">
+          <img class="qc-seal" src="/icons/icon-192.png" onerror="this.onerror=null; this.src='https://cdn.phototourl.com/free/2026-09-16-72dd0332-d14b-4e83-8e0e-6cfacd74a83c.png';" width="44" height="44" alt="QC-CMS Logo" style="object-fit:contain;border-radius:8px;">
           <div><div class="mini-title">QC-CMS EDMS</div><div class="mini-sub">Dokumen Mutu Proyek</div></div>
         </div>
         <div class="sidebar-focus">
@@ -3805,11 +3805,10 @@ canvas#disciplineChart {
   /** Sanitasi string untuk onclick handler. */
   function escapeJs_(s) {
     return String(s || '')
-      .replace(/\/g, '\\')
-      .replace(/'/g, "\'")
-      .replace(/?
-/g, '\n')
-      .replace(/</g, '\x3c');
+      .replace(/\\/g, '\\\\')
+      .replace(/'/g, "\\'")
+      .replace(/\r?\n/g, '\\n')
+      .replace(/</g, '\\x3c');
   }
 </script>
   <script>
@@ -4321,8 +4320,7 @@ function handleForgotPassword(event) {
       '    </form>',
       '  </div>',
       '</div>'
-    ].join('
-');
+    ].join('\n');
     wrapper.appendChild(div);
   }
 
