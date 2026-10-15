@@ -1,0 +1,47 @@
+/**
+ * Vercel Serverless Function — Google Apps Script API Proxy
+ * Menghilangkan CORS & mengikuti redirect 302 Google Apps Script di sisi server.
+ */
+
+export default async function handler(req, res) {
+  // CORS Headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  // URL Web App Deployment Google Apps Script Anda
+  // Anda bisa mengaturnya di menu Vercel Environment Variables: GAS_EXEC_URL
+  const GAS_EXEC_URL = process.env.GAS_EXEC_URL || 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
+
+
+  try {
+    const gasResponse = await fetch(GAS_EXEC_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body || {}),
+      redirect: 'follow'
+    });
+
+    const text = await gasResponse.text();
+    try {
+      const data = JSON.parse(text);
+      return res.status(200).json(data);
+    } catch (e) {
+      return res.status(200).send(text);
+    }
+  } catch (err) {
+    console.error('GAS Proxy Error:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Gagal terhubung ke Google Apps Script: ' + err.message
+    });
+  }
+}
