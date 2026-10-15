@@ -9,45 +9,6 @@
     window.google.script = window.google.script || {};
 
     const PROXY_ENDPOINT = '/api/gas';
-    const DIRECT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
-
-    function callJsonpDirect_(gasUrl, action, args, sessionToken) {
-      return new Promise(function(resolve, reject) {
-        const callbackName = 'gas_cb_' + Math.random().toString(36).substring(2) + '_' + Date.now();
-        const script = document.createElement('script');
-        const timeout = setTimeout(function() {
-          cleanup();
-          reject(new Error('Permintaan ke Google Apps Script timeout (30s)'));
-        }, 30000);
-
-        function cleanup() {
-          clearTimeout(timeout);
-          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-          if (script.parentNode) script.parentNode.removeChild(script);
-        }
-
-        window[callbackName] = function(res) {
-          cleanup();
-          resolve(res);
-        };
-
-        const params = new URLSearchParams({
-          api: '1',
-          apiAction: action,
-          apiArgs: JSON.stringify(args || []),
-          sessionToken: sessionToken || '',
-          callback: callbackName
-        });
-
-        script.src = gasUrl + (gasUrl.includes('?') ? '&' : '?') + params.toString();
-        script.onerror = function() {
-          cleanup();
-          reject(new Error('Gagal memuat respons dari Apps Script'));
-        };
-
-        document.head.appendChild(script);
-      });
-    }
 
     function Runner() {
       this._success = null;
@@ -77,8 +38,9 @@
 
       try {
         let sessionToken = window.sessionToken || localStorage.getItem('qc_session_token') || '';
-        // Cek jika argumen pertama adalah sessionToken (UUID format 36 char)
-        if (args.length > 0 && typeof args[0] === 'string' && args[0].length >= 32) {
+        if (action === 'login' || action === 'registerAccount' || action === 'requestPasswordReset') {
+          sessionToken = '';
+        } else if (args.length > 0 && typeof args[0] === 'string' && /^[0-9a-fA-F-]{36}$/.test(args[0])) {
           sessionToken = args[0];
         }
 
@@ -88,28 +50,17 @@
           sessionToken: sessionToken
         };
 
-        let data;
-        let responseOk = false;
+        const res = await fetch(PROXY_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
 
-        // 1. Coba lewat proxy /api/gas (Vercel)
-        try {
-          const res = await fetch(PROXY_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (res.ok) {
-            data = await res.json();
-            responseOk = true;
-          }
-        } catch (fetchErr) {
-          // Proxy tidak aktif, lanjut ke fallback JSONP
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status + ': ' + res.statusText);
         }
 
-        // 2. Fallback langsung ke Google Apps Script jika proxy gagal
-        if (!responseOk) {
-          data = await callJsonpDirect_(DIRECT_GAS_URL, action, args, sessionToken);
-        }
+        const data = await res.json();
         
         // Simpan token otomatis jika ini adalah response login berhasil
         if (action === 'login' && data && data.success && data.sessionToken) {
