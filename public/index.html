@@ -8773,7 +8773,14 @@ window.addEventListener('offline', updateFooterStatus);
   </script>
   
 
-  <!-- PWA Service Worker & Install Prompt Banner -->
+  <!-- PWA Update Notification Banner -->
+  <div id="pwaUpdateBanner" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999999;background:#1e293b;color:#fff;padding:10px 18px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.5);border:1px solid rgba(232,114,12,0.6);align-items:center;gap:12px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;max-width:92%;width:auto;">
+    <span>✨ <b>Versi baru tersedia!</b></span>
+    <button id="pwaUpdateBtn" style="background:#e8720c;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Perbarui Sekarang</button>
+    <button id="pwaUpdateDismissBtn" style="background:transparent;color:#94a3b8;border:none;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;">&times;</button>
+  </div>
+
+  <!-- PWA Install Prompt Banner -->
   <div id="pwaInstallBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a2332;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;gap:14px;font-family:system-ui,sans-serif;max-width:92%;width:420px;">
     <img src="/icons/icon-192.png" style="width:40px;height:40px;border-radius:8px;object-fit:cover;" alt="App Icon">
     <div style="flex:1;">
@@ -8789,12 +8796,76 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
   <script>
-    // Register Service Worker
+    // PWA Auto-Update & Service Worker Manager
+    let waitingWorker = null;
+    function showUpdateBanner(worker) {
+      waitingWorker = worker;
+      const banner = document.getElementById('pwaUpdateBanner');
+      if (banner) banner.style.display = 'flex';
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js')
-          .then(function(reg) { console.log('[PWA] ServiceWorker registered:', reg.scope); })
-          .catch(function(err) { console.log('[PWA] ServiceWorker registration failed:', err); });
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+          console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
+
+          // 1. Cek jika sudah ada update menunggu saat app dibuka
+          if (reg.waiting) {
+            showUpdateBanner(reg.waiting);
+          }
+
+          // 2. Deteksi pembaruan baru dari server
+          reg.addEventListener('updatefound', function() {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', function() {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                showUpdateBanner(newWorker);
+              }
+            });
+          });
+
+          // 3. Periksa pembaruan otomatis saat user membuka kembali aplikasi
+          document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+              reg.update();
+            }
+          });
+
+          // 4. Periksa pembaruan berkala setiap 10 menit
+          setInterval(function() {
+            reg.update();
+          }, 10 * 60 * 1000);
+        }).catch(function(err) {
+          console.log('[PWA] ServiceWorker registration failed:', err);
+        });
+
+        // 5. Reload otomatis saat Service Worker baru aktif mengambil alih
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function() {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+      });
+    }
+
+    const updateBtn = document.getElementById('pwaUpdateBtn');
+    if (updateBtn) {
+      updateBtn.addEventListener('click', function() {
+        if (waitingWorker) {
+          waitingWorker.postMessage({ type: 'SKIP_WAITING' });
+        } else {
+          window.location.reload();
+        }
+      });
+    }
+
+    const updateDismissBtn = document.getElementById('pwaUpdateDismissBtn');
+    if (updateDismissBtn) {
+      updateDismissBtn.addEventListener('click', function() {
+        const banner = document.getElementById('pwaUpdateBanner');
+        if (banner) banner.style.display = 'none';
       });
     }
 
