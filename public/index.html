@@ -1384,17 +1384,32 @@ body {
 
 .sidebar-footer-brand {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 10px 8px;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 10px;
   background: var(--surface-subtle);
-  border-radius: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
   margin-bottom: 12px;
-  transition: background 0.15s ease;
+  transition: all 0.15s ease;
+  text-align: center;
 }
 
 .sidebar-footer-brand:hover {
   background: var(--surface-hover);
+  border-color: rgba(232, 114, 12, 0.3);
+}
+
+.sidebar-footer-brand img {
+  height: 26px !important;
+  max-height: 26px !important;
+  width: auto !important;
+  max-width: 145px !important;
+  object-fit: contain !important;
+  display: block;
+  margin: 0 auto;
 }
 
 .sidebar-footer-company {
@@ -1408,7 +1423,11 @@ body {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--ink-faint);
-  margin-top: 2px;
+  background: rgba(255,255,255,0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  display: inline-block;
 }
 
 .sidebar-footer-copy {
@@ -2343,10 +2362,10 @@ canvas#disciplineChart {
         <div class="sidebar-footer">
           <div class="sidebar-footer-brand">
             <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" 
-                 height="22" alt="ASUKA" style="height:22px;width:auto;object-fit:contain;">
-            <div>
-              <div class="sidebar-footer-company">PT Asuka Engineering</div>
-              <div class="sidebar-footer-version" id="sidebarVersion">v3.2.1</div>
+                 height="26" alt="ASUKA" style="height:26px;max-height:26px;width:auto;max-width:145px;object-fit:contain;display:block;margin:0 auto;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px;flex-wrap:wrap;">
+              <span class="sidebar-footer-company">PT Asuka Engineering</span>
+              <span class="sidebar-footer-version" id="sidebarVersion">v3.2.1</span>
             </div>
           </div>
           <div class="sidebar-footer-copy">
