@@ -1,9 +1,12 @@
 /**
  * Service Worker — QC-CMS EDMS PWA
- * Strategy: Cache-First for static assets, Network-First for API calls
+ * Strategy:
+ *  - HTML / Navigation: Network-First with fast Cache Fallback (Never stale!)
+ *  - Static Assets: Stale-While-Revalidate (Instant load + background refresh)
+ *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-cache-v1';
+const CACHE_NAME = 'qccms-edms-v2.2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -11,26 +14,31 @@ const STATIC_ASSETS = [
   '/gas-adapter.js',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
+  '/icons/logo.png',
+  '/icons/apple-touch-icon.png',
   '/favicon.ico'
 ];
 
+// 1. Install Event — Pre-cache static assets
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log('[SW] Precaching app shell');
+      console.log('[SW] Precaching static assets for', CACHE_NAME);
       return cache.addAll(STATIC_ASSETS);
-    }).then(function() {
-      return self.skipWaiting();
     })
   );
 });
 
+// 2. Activate Event — Clean up old caches immediately
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(keys) {
       return Promise.all(
         keys.filter(function(k) { return k !== CACHE_NAME; })
-            .map(function(k) { return caches.delete(k); })
+            .map(function(k) {
+              console.log('[SW] Deleting old cache:', k);
+              return caches.delete(k);
+            })
       );
     }).then(function() {
       return self.clients.claim();
@@ -38,35 +46,67 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+// 3. Message Event — Skip waiting when user confirms update
+self.addEventListener('message', function(event) {
+  if (event.data && (event.data.type === 'SKIP_WAITING' || event.data === 'skipWaiting')) {
+    self.skipWaiting();
+  }
+});
+
+// 4. Fetch Event — Network-First for HTML, Stale-While-Revalidate for Assets
 self.addEventListener('fetch', function(event) {
   const url = new URL(event.request.url);
 
-  // Jangan cache request API / POST
+  // Jangan cache request API / Serverless POST
   if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
     return;
   }
 
-  // Static assets: Cache First, fallback to Network
+  // A. STRATEGI NETWORK-FIRST UNTUK NAVIGASI & HTML (Solusi Anti-Stale!)
+  // Memastikan pengguna selalu mendapatkan UI terbaru saat online,
+  // tapi tetap bisa dibuka offline jika tidak ada sinyal.
+  const isHtml = event.request.mode === 'navigate' || 
+                 (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) ||
+                 url.pathname === '/' || url.pathname.endsWith('.html');
+
+  if (isHtml) {
+    event.respondWith(
+      fetch(event.request)
+        .then(function(networkResponse) {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then(function(cache) {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(function() {
+          console.log('[SW] Offline detected, serving cached HTML');
+          return caches.match('/index.html').then(function(cached) {
+            return cached || caches.match('/');
+          });
+        })
+    );
+    return;
+  }
+
+  // B. STRATEGI STALE-WHILE-REVALIDATE UNTUK ASET STATIK (Cepat + Selalu Update)
   event.respondWith(
-    caches.match(event.request).then(function(cached) {
-      if (cached) {
-        return cached;
-      }
-      return fetch(event.request).then(function(response) {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response;
+    caches.match(event.request).then(function(cachedResponse) {
+      const fetchPromise = fetch(event.request).then(function(networkResponse) {
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(function(cache) {
+            cache.put(event.request, responseClone);
+          });
         }
-        const toCache = response.clone();
-        caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(event.request, toCache);
-        });
-        return response;
+        return networkResponse;
+      }).catch(function() {
+        return null;
       });
-    }).catch(function() {
-      // Offline fallback
-      if (event.request.headers.get('accept').includes('text/html')) {
-        return caches.match('/index.html');
-      }
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
