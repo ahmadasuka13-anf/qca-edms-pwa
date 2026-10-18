@@ -602,6 +602,45 @@ body {
     .badge-rejected { background: var(--rejected-bg); color: var(--rejected-text); }
     .badge-superseded, .badge-inactive { background: var(--superseded-bg); color: var(--superseded-text); }
 
+    /* ═══════════════════════════════════════════════════════════════ */
+    /* SKELETON SCREEN — Loading shimmer untuk tabel dokumen           */
+    /* ═══════════════════════════════════════════════════════════════ */
+    @keyframes shimmer {
+      0%   { background-position: -700px 0; }
+      100% { background-position: 700px 0; }
+    }
+    .skeleton-row { display: flex; flex-direction: column; gap: 0; }
+    .skeleton-tr {
+      display: grid;
+      grid-template-columns: 1.5fr 1.2fr 1fr 2fr 0.8fr 0.8fr 1.2fr;
+      gap: 0;
+      padding: 12px 13px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+    }
+    .skeleton-td { padding: 4px 8px; }
+    .skeleton-cell {
+      height: 14px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--surface-subtle) 25%, var(--border) 50%, var(--surface-subtle) 75%);
+      background-size: 700px 100%;
+      animation: shimmer 1.5s infinite linear;
+    }
+    .skeleton-cell.w-60  { width: 60%; }
+    .skeleton-cell.w-75  { width: 75%; }
+    .skeleton-cell.w-40  { width: 40%; }
+    .skeleton-cell.w-50  { width: 50%; }
+    .skeleton-cell.w-30  { width: 30%; }
+    .skeleton-cell.w-90  { width: 90%; }
+    .skeleton-cell.badge { height: 20px; border-radius: 999px; width: 70px; }
+    .skeleton-cell.btn   { height: 26px; border-radius: 6px; width: 50px; display: inline-block; }
+    .skeleton-btns { display: flex; gap: 4px; }
+    /* Offline queue banner animation */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
     .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 26px; }
     @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
     .stat-card { background: var(--surface-subtle); border: 1px solid var(--border); border-radius: 12px; padding: 17px; }
@@ -4584,14 +4623,28 @@ function syncThemeToggleIcon() {
       ['headerClockDate','authClockDate'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ds; });
     }
 
-    function bootstrapAuth() {
-      const saved = localStorage.getItem('qccms_session');
+    async function bootstrapAuth() {
+      // ── Baca token dari encrypted storage (QC_SECURITY) ──
+      let saved = null;
+      if (typeof QC_SECURITY !== 'undefined') {
+        saved = await QC_SECURITY.decryptToken();
+      } else {
+        saved = localStorage.getItem('qccms_session');
+      }
       if (!saved) { showAuthScreen(); return; }
       sessionToken = saved;
       google.script.run.withSuccessHandler(function (res) {
         if (res.success) { currentUser = res.user; enterApp(); }
-        else { localStorage.removeItem('qccms_session'); showAuthScreen(); }
-      }).withFailureHandler(function () { localStorage.removeItem('qccms_session'); showAuthScreen(); }).getSessionUser(sessionToken);
+        else {
+          if (typeof QC_SECURITY !== 'undefined') QC_SECURITY.clearSession();
+          else localStorage.removeItem('qccms_session');
+          showAuthScreen();
+        }
+      }).withFailureHandler(function () {
+        if (typeof QC_SECURITY !== 'undefined') QC_SECURITY.clearSession();
+        else localStorage.removeItem('qccms_session');
+        showAuthScreen();
+      }).getSessionUser(sessionToken);
     }
     function showAuthScreen() {
       document.getElementById('authScreen').style.display = 'flex';
@@ -4609,7 +4662,12 @@ function syncThemeToggleIcon() {
     }
       // handleForgotPassword didefinisikan di Auth.html
 
-    function handleLogout() { google.script.run.logout(sessionToken); localStorage.removeItem('qccms_session'); sessionToken = null; currentUser = null; location.reload(); }
+    function handleLogout() {
+      google.script.run.logout(sessionToken);
+      if (typeof QC_SECURITY !== 'undefined') QC_SECURITY.clearSession();
+      else localStorage.removeItem('qccms_session');
+      sessionToken = null; currentUser = null; location.reload();
+    }
     function greetingWord_() { const h = new Date().getHours(); return h < 10 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam'; }
 function enterApp() {
   // ✨ Tampilkan animasi selamat datang
@@ -5011,19 +5069,59 @@ function restoreSidebarState() {
 
     // ---------- Document List ----------
     function onSearchInput() { clearTimeout(searchDebounceTimer); searchDebounceTimer = setTimeout(loadDocumentList, 350); }
+    function _buildSkeletonRows(count) {
+      // Buat skeleton rows untuk shimmer loading effect
+      count = count || 7;
+      const cols = [
+        'w-75', 'w-60', 'w-50', 'w-90', 'badge', 'w-40',
+        '<div class="skeleton-btns"><div class="skeleton-cell btn"></div><div class="skeleton-cell btn"></div><div class="skeleton-cell btn"></div></div>'
+      ];
+      let rows = '';
+      for (let i = 0; i < count; i++) {
+        rows += '<div class="skeleton-tr">';
+        cols.forEach(function(c) {
+          if (c.startsWith('<')) {
+            rows += '<div class="skeleton-td">' + c + '</div>';
+          } else {
+            rows += '<div class="skeleton-td"><div class="skeleton-cell ' + c + '"></div></div>';
+          }
+        });
+        rows += '</div>';
+      }
+      return rows;
+    }
     function loadDocumentList() {
       const content = document.getElementById('listContent');
-      content.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat...</div>';
+      // ✨ Skeleton screen — jauh lebih premium dari spinner biasa
+      content.innerHTML = [
+        '<div class="table-scroll">',
+          '<table>',
+            '<thead><tr>',
+              '<th>File</th><th>Proyek</th><th>Jenis</th><th>Judul</th>',
+              '<th>Status</th><th>Tanggal</th><th>Aksi</th>',
+            '</tr></thead>',
+          '</table>',
+          '<div class="skeleton-row">', _buildSkeletonRows(7), '</div>',
+        '</div>'
+      ].join('');
       const filters = {
-        projectCode: globalProjectFilter,
+        projectCode:  globalProjectFilter,
         documentType: document.getElementById('filterDocType').value,
-        status: document.getElementById('filterStatus').value,
-        search: document.getElementById('filterSearch').value.trim()
+        status:       document.getElementById('filterStatus').value,
+        search:       document.getElementById('filterSearch').value.trim()
       };
-      google.script.run.withSuccessHandler(renderDocumentList).withFailureHandler(function (err) { content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div class="msg">Gagal: ' + esc(err.message) + '</div></div>'; }).getDocumentList(sessionToken, filters);
+      google.script.run
+        .withSuccessHandler(renderDocumentList)
+        .withFailureHandler(function (err) {
+          content.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div class="msg">Gagal: ' + esc(err.message) + '</div></div>';
+        })
+        .getDocumentList(sessionToken, filters);
       const cw = document.getElementById('statusDonutWrap');
       cw.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat grafik...</div>';
-      google.script.run.withSuccessHandler(renderStatusDonut).withFailureHandler(function () {}).getStatusCounts(sessionToken, { projectCode: filters.projectCode, documentType: filters.documentType });
+      google.script.run
+        .withSuccessHandler(renderStatusDonut)
+        .withFailureHandler(function () {})
+        .getStatusCounts(sessionToken, { projectCode: filters.projectCode, documentType: filters.documentType });
     }
     function exportDocumentListExcel_() {
       const filters = { projectCode: globalProjectFilter, documentType: document.getElementById('filterDocType').value, status: document.getElementById('filterStatus').value, search: document.getElementById('filterSearch').value.trim() };
@@ -8769,8 +8867,12 @@ window.addEventListener('online', updateFooterStatus);
 window.addEventListener('offline', updateFooterStatus);
 
 
-
   </script>
+
+  <!-- ✅ PRIORITAS TINGGI: Security (Enkripsi Token AES-256-GCM + CSRF) -->
+  <script src="/security.js"></script>
+  <!-- ✅ PRIORITAS TINGGI: Offline Queue (IndexedDB — sync otomatis) -->
+  <script src="/offline-queue.js"></script>
   
 
   <!-- PWA Update Notification Banner -->
