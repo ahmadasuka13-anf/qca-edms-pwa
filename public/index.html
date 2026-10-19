@@ -1479,6 +1479,72 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+.sidebar-dev-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(237,46,53,0.08), rgba(37,99,235,0.08));
+  border: 1px solid rgba(237,46,53,0.25);
+  border-radius: 12px;
+  margin: 10px 0 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+.sidebar-dev-card:hover, .sidebar-dev-card:active {
+  background: linear-gradient(135deg, rgba(237,46,53,0.15), rgba(37,99,235,0.15));
+  border-color: rgba(237,46,53,0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(237,46,53,0.2);
+}
+.sidebar-dev-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ed2e35, #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(237,46,53,0.35);
+}
+.sidebar-dev-meta {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+.sidebar-dev-role {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: var(--accent, #ed2e35);
+  text-transform: uppercase;
+}
+.sidebar-dev-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-dev-chip {
+  font-size: 8.5px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(34,197,94,0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34,197,94,0.3);
+  letter-spacing: 0.3px;
+}
+
 .sidebar-footer-links {
   display: flex;
   justify-content: center;
@@ -1490,18 +1556,20 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
   background: var(--surface-subtle);
   color: var(--ink-muted);
-  font-size: 14px;
+  font-size: 15px;
   text-decoration: none;
   transition: all 0.15s ease;
   border: 1px solid var(--border);
+  touch-action: manipulation;
 }
 
-.sidebar-footer-links a:hover {
+.sidebar-footer-links a:hover,
+.sidebar-footer-links a:active {
   background: linear-gradient(135deg, #163d78, #0d6ab0);
   color: #fff;
   border-color: #0d6ab0;
@@ -1509,10 +1577,31 @@ body {
   box-shadow: 0 4px 10px rgba(22,61,120,0.25);
 }
 
-/* Responsive: Hilangkan footer sidebar di HP (sidebar-nya fullscreen) */
+/* Responsive: Footer sidebar di HP (touch-friendly 44px & anti-tabrakan FAB) */
 @media (max-width: 860px) {
   .sidebar-footer {
-    padding-bottom: 20px;
+    padding-bottom: 24px;
+  }
+  .sidebar-footer-links {
+    gap: 12px;
+    padding-top: 12px;
+  }
+  .sidebar-footer-links a {
+    width: 44px;
+    height: 44px;
+    font-size: 19px;
+    border-radius: 12px;
+  }
+  /* Sembunyikan FAB & Chat button saat sidebar mobile terbuka agar tidak menabrak / memblokir sentuhan footer */
+  body.sidebar-open #aiChatBtn,
+  body.sidebar-open #mobileFabContainer,
+  body.sidebar-open #scrollTopBtn,
+  .app-sidebar.open ~ #aiChatBtn,
+  .app-sidebar.open ~ #mobileFabContainer,
+  .app-sidebar.open ~ #scrollTopBtn {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(20px) scale(0.9) !important;
   }
 }
 
@@ -2847,18 +2936,25 @@ canvas#disciplineChart {
   text-transform: uppercase;
 }
 .ai-diag-close-btn {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--ink-muted, #94a3b8);
   font-size: 20px;
   cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
 }
-.ai-diag-close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+.ai-diag-close-btn:hover,
+.ai-diag-close-btn:active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
 }
 .ai-diag-body {
   padding: 20px 22px;
@@ -2957,6 +3053,333 @@ canvas#disciplineChart {
   gap: 10px;
 }
 
+/* 📱 Responsive Mobile AI QA Diagnostic Modal */
+@media (max-width: 640px) {
+  .ai-diag-overlay {
+    padding: 10px;
+  }
+  .ai-diag-card {
+    max-height: 94vh;
+    border-radius: 18px;
+  }
+  .ai-diag-header {
+    padding: 14px 16px;
+  }
+  .ai-diag-close-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+  }
+  .ai-diag-body {
+    padding: 14px 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ai-diag-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  #aiDiagStatsCount {
+    text-align: left !important;
+    align-self: flex-start;
+  }
+  .ai-diag-footer {
+    flex-direction: column-reverse;
+    gap: 10px;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+  }
+  .ai-diag-footer .btn {
+    width: 100% !important;
+    min-height: 46px;
+    font-size: 13.5px;
+    font-weight: 700;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* 👨‍💻 DEVELOPER SHOWCASE & SYSTEM ARCHITECT (AHMAD NUR FATONY)    */
+/* ═══════════════════════════════════════════════════════════════ */
+.app-footer-dev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  background: rgba(237,46,53,0.08);
+  border: 1px solid rgba(237,46,53,0.25);
+  font-size: 11.5px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  touch-action: manipulation;
+}
+.app-footer-dev-badge:hover, .app-footer-dev-badge:active {
+  background: rgba(237,46,53,0.18);
+  border-color: rgba(237,46,53,0.5);
+  transform: translateY(-1px);
+}
+.app-footer-dev-badge b {
+  color: var(--accent, #ed2e35);
+}
+
+/* Modal Developer Ahmad Nur Fatony */
+.dev-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100020;
+  background: rgba(8, 12, 22, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.dev-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.dev-modal-card {
+  width: 100%;
+  max-width: 520px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card, #151e2e);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(237,46,53,0.25);
+  overflow: hidden;
+  animation: devCardIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes devCardIn {
+  0% { transform: scale(0.94) translateY(14px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.dev-modal-banner {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(237,46,53,0.18), rgba(37,99,235,0.18));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dev-banner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #fff;
+  background: linear-gradient(135deg, #ed2e35, #2563eb);
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(237,46,53,0.4);
+}
+.dev-close-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ink-muted, #94a3b8);
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  touch-action: manipulation;
+}
+.dev-close-btn:hover, .dev-close-btn:active {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+.dev-modal-profile {
+  padding: 22px 24px 16px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+.dev-avatar-wrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 14px;
+}
+.dev-avatar-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ed2e35, #3b82f6, #10b981);
+  animation: devAvatarSpin 8s linear infinite;
+}
+@keyframes devAvatarSpin {
+  to { transform: rotate(360deg); }
+}
+.dev-avatar-core {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0f172a;
+  border: 3px solid #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+.dev-avatar-status {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 3px solid #0f172a;
+  box-shadow: 0 0 10px rgba(34,197,94,0.7);
+}
+.dev-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink, #fff);
+  margin: 0 0 4px;
+  letter-spacing: -0.2px;
+}
+.dev-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--accent, #ed2e35);
+  margin-bottom: 2px;
+}
+.dev-company {
+  font-size: 11.5px;
+  color: var(--ink-muted, #94a3b8);
+}
+.dev-modal-body {
+  padding: 18px 22px;
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+}
+.dev-quote-box {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--accent, #ed2e35);
+  border-radius: 10px;
+  padding: 12px 14px 12px 30px;
+  margin-bottom: 16px;
+}
+.dev-quote-icon {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--accent, #ed2e35);
+  opacity: 0.5;
+  font-family: serif;
+}
+.dev-quote-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink, #e2e8f0);
+  margin: 0;
+  font-style: italic;
+}
+.dev-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.dev-stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+}
+.dev-stat-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--ink, #fff);
+  margin-bottom: 2px;
+}
+.dev-stat-label {
+  font-size: 9px;
+  color: var(--ink-faint, #94a3b8);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.dev-badges-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  color: var(--ink-faint, #94a3b8);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.dev-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.dev-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--ink, #e2e8f0);
+}
+.dev-modal-footer {
+  padding: 14px 22px calc(14px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  gap: 10px;
+}
+.dev-modal-footer .dev-btn-action {
+  flex: 1;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+@media (max-width: 540px) {
+  .dev-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dev-modal-footer {
+    flex-direction: column;
+  }
+}
+
+/* Universal touch optimization */
+html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobile-main-fab {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
 </style>
 
 <script>
@@ -2970,12 +3393,7 @@ canvas#disciplineChart {
       }
     }
   });
-  var lastTouchEnd = 0;
-  document.addEventListener('touchend', function(event) {
-    var now = new Date().getTime();
-    if (now - lastTouchEnd <= 300) event.preventDefault();
-    lastTouchEnd = now;
-  }, false);
+  // ✅ FIX: Hapus touchend preventDefault yang memblokir klik tombol di HP
   document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
 })();
 </script>
@@ -3060,6 +3478,7 @@ canvas#disciplineChart {
           <span class="clock-time" id="headerClockTime">--:--:--</span>
           <span class="clock-date" id="headerClockDate">-</span>
         </div>
+        <button class="theme-toggle" onclick="openQADiagnosticModal()" title="AI QA Diagnostic &amp; Audit Agent" style="font-size:16px;">🧪</button>
         <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Ganti Tema">🌙</button>
         <div class="notif-bell-wrap" style="position:relative;">
           <button class="theme-toggle" onclick="toggleNotifPanel()" title="Notifikasi">🔔<span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
@@ -3119,7 +3538,21 @@ canvas#disciplineChart {
           <button class="sidebar-item" id="tabBtnApprovalsettings" onclick="switchTab('approvalsettings')" style="display:none;"><span class="si-icon">⚙️</span><span class="si-label">Pengaturan Sistem</span></button>
         </div>
 
-                <!-- 🆕 COPYRIGHT DI BOTTOM SIDEBAR -->
+        <!-- 🧪 SEKSI KHUSUS AI & DIAGNOSTIK AUDIT -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">AI &amp; Diagnostik</div>
+          <button class="sidebar-item" type="button" onclick="openQADiagnosticModal(); closeNavMenu();" style="background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(16,185,129,0.12)); border: 1px solid rgba(59,130,246,0.3); margin-bottom:4px;">
+            <span class="si-icon">🧪</span>
+            <span class="si-label" style="font-weight:700;">AI Audit &amp; Diagnostic</span>
+            <span style="font-size:9.5px; background:linear-gradient(135deg,#2563eb,#10b981); color:#fff; padding:2px 7px; border-radius:6px; font-weight:700; margin-left:auto; letter-spacing:0.5px;">AUDIT</span>
+          </button>
+          <button class="sidebar-item" type="button" onclick="toggleAIChat(); closeNavMenu();">
+            <span class="si-icon">🤖</span>
+            <span class="si-label">AI QC Assistant</span>
+          </button>
+        </div>
+
+        <!-- 🆕 COPYRIGHT & DEVELOPER DI BOTTOM SIDEBAR -->
         <div class="sidebar-footer">
           <div class="sidebar-footer-brand">
             <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" 
@@ -3129,6 +3562,17 @@ canvas#disciplineChart {
               <span class="sidebar-footer-version" id="sidebarVersion">v3.2.1</span>
             </div>
           </div>
+
+          <!-- ⚡ DEVELOPER SHOWCASE CARD -->
+          <div class="sidebar-dev-card" onclick="openDevModal()" title="Profil Pengembang — Ahmad Nur Fatony">
+            <div class="sidebar-dev-avatar">⚡</div>
+            <div class="sidebar-dev-meta">
+              <div class="sidebar-dev-role">LEAD SYSTEM DEVELOPER</div>
+              <div class="sidebar-dev-name">Ahmad Nur Fatony</div>
+            </div>
+            <div class="sidebar-dev-chip">PRO</div>
+          </div>
+
           <div class="sidebar-footer-copy">
             © 2026 PT Asuka Engineering Indonesia.<br>
             <span style="opacity:0.7;">All Rights Reserved.</span>
@@ -3138,7 +3582,7 @@ canvas#disciplineChart {
             <a href="mailto:admin@asuka.co.id" title="Email Admin">📧</a>
             <a href="#" onclick="if(typeof openWelcomeScreen==='function')openWelcomeScreen(); return false;" title="Layar Sambutan Sinematik">🎬</a>
             <a href="#" onclick="if(typeof openQADiagnosticModal==='function')openQADiagnosticModal(); return false;" title="AI QA Diagnostic Agent (Uji Semua Fitur)">🧪</a>
-            <a href="#" onclick="alert('QC-CMS EDMS v3.2.1\n\nDibuat dengan ❤️ untuk PT Asuka Engineering Indonesia'); return false;" title="Tentang">ℹ️</a>
+            <a href="#" onclick="if(typeof openDevModal==='function')openDevModal(); return false;" title="Tentang Sistem &amp; Pengembang (Ahmad Nur Fatony)">ℹ️</a>
           </div>
         </div>
       </aside>
@@ -3994,8 +4438,11 @@ canvas#disciplineChart {
                 <!-- 🆕 FOOTER PAGE UTAMA -->
         <footer class="app-footer">
           <div class="app-footer-content">
-            <div class="app-footer-left">
+            <div class="app-footer-left" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
               <span>© 2026 <b>PT Asuka Engineering Indonesia</b> · All Rights Reserved</span>
+              <div class="app-footer-dev-badge" onclick="openDevModal()" title="Lihat Profil Pengembang Ahmad Nur Fatony">
+                ⚡ Developed by <b>Ahmad Nur Fatony</b>
+              </div>
             </div>
             <div class="app-footer-center">
               <span class="app-footer-dot"></span>
@@ -4004,6 +4451,7 @@ canvas#disciplineChart {
             <div class="app-footer-right">
               <a href="https://wa.me/6281234567890" target="_blank">💬 Support</a>
               <a href="mailto:admin@asuka.co.id">📧 Admin</a>
+              <span onclick="openDevModal()" style="cursor:pointer; font-weight:700; color:var(--accent,#ed2e35); padding:2px 8px; border-radius:6px; background:rgba(237,46,53,0.1); border:1px solid rgba(237,46,53,0.25);">👨‍💻 Ahmad Nur Fatony</span>
               <span style="font-family:var(--font-mono); font-size:11px;">v3.2.1</span>
             </div>
           </div>
@@ -6195,6 +6643,7 @@ function toggleNavMenu() {
     const open = !sb.classList.contains('open');
     sb.classList.toggle('open', open);
     ov.classList.toggle('show', open);
+    document.body.classList.toggle('sidebar-open', open);
   } else {
     // 🖥️ Desktop — collapse width
     const isCollapsed = sb.classList.toggle('collapsed');
@@ -6218,6 +6667,7 @@ function restoreSidebarState() {
       const ov = document.getElementById('sidebarOverlay');
       if (sb) sb.classList.remove('open');
       if (ov) ov.classList.remove('show');
+      document.body.classList.remove('sidebar-open');
     }
     function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
@@ -10377,7 +10827,9 @@ window.addEventListener('offline', updateFooterStatus);
 
     window.handleFabAction = function(action) {
       window.toggleMobileFab(false);
-      if (action === 'upload') {
+      if (action === 'ai-diag') {
+        if (typeof openQADiagnosticModal === 'function') openQADiagnosticModal();
+      } else if (action === 'upload') {
         if (typeof switchTab === 'function') switchTab('upload');
       } else if (action === 'sitereport') {
         if (typeof switchTab === 'function') switchTab('sitereport');
@@ -10387,6 +10839,8 @@ window.addEventListener('offline', updateFooterStatus);
         if (typeof switchTab === 'function') switchTab('nfilog');
       } else if (action === 'ai') {
         if (typeof toggleAIChat === 'function') toggleAIChat();
+      } else if (action === 'dev') {
+        if (typeof openDevModal === 'function') openDevModal();
       }
     };
 
@@ -10468,13 +10922,36 @@ window.addEventListener('offline', updateFooterStatus);
       var modal = document.getElementById('aiDiagnosticModal');
       if (!modal) return;
       modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     };
 
     window.closeQADiagnosticModal = function() {
       var modal = document.getElementById('aiDiagnosticModal');
       if (!modal) return;
       modal.classList.remove('active');
+      document.body.style.overflow = '';
     };
+
+    window.openDevModal = function() {
+      var modal = document.getElementById('developerModal');
+      if (!modal) return;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeDevModal = function() {
+      var modal = document.getElementById('developerModal');
+      if (!modal) return;
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (typeof closeQADiagnosticModal === 'function') closeQADiagnosticModal();
+        if (typeof closeDevModal === 'function') closeDevModal();
+      }
+    });
 
     window.runQADiagnostics = async function() {
       var runBtn = document.getElementById('aiDiagRunBtn');
@@ -10700,6 +11177,8 @@ window.addEventListener('offline', updateFooterStatus);
       runBtn.textContent = '🔄 Uji Ulang';
       copyBtn.style.display = 'inline-block';
       window._lastQADiagReport = '=== LAPORAN AI QA DIAGNOSTIC QC-CMS EDMS ===\n' +
+        'Pengembang: Ahmad Nur Fatony (Lead QA/QC & System Developer)\n' +
+        'Perusahaan: PT Asuka Engineering Indonesia\n' +
         'Waktu: ' + new Date().toLocaleString('id-ID') + '\n' +
         'Skor Kesehatan: ' + score + '%\n' +
         'Lolos: ' + passed + ' | Peringatan: ' + warned + ' | Gagal: ' + failed + '\n\n' +
@@ -10722,6 +11201,10 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- Mobile Floating Action Button (Speed Dial) -->
   <div class="mobile-fab-container" id="mobileFabContainer">
     <div class="mobile-fab-menu" id="mobileFabMenu">
+      <button type="button" class="fab-item" onclick="handleFabAction('ai-diag')" title="AI Audit & Diagnostic Agent">
+        <span class="fab-label">🧪 AI Audit Agent</span>
+        <span class="fab-icon" style="background:linear-gradient(135deg, #2563eb, #10b981); color:#fff; font-size:18px;">🧪</span>
+      </button>
       <button type="button" class="fab-item" onclick="handleFabAction('ai')" title="Tanya AI Assistant">
         <span class="fab-label">AI Assistant QC</span>
         <span class="fab-icon">🤖</span>
@@ -10820,8 +11303,10 @@ window.addEventListener('offline', updateFooterStatus);
         </div>
       </div>
 
-      <div style="margin-top:20px; font-size:11px; color:rgba(255,255,255,0.45);">
-        © 2026 PT Asuka Engineering Indonesia · Quality Assurance &amp; Control Division
+      <div style="margin-top:20px; font-size:11.5px; color:rgba(255,255,255,0.65); display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap;">
+        <span>© 2026 PT Asuka Engineering Indonesia</span>
+        <span>•</span>
+        <span onclick="openDevModal()" style="color:#60a5fa; font-weight:700; cursor:pointer;" title="Lihat Profil Pengembang">⚡ Developed by Ahmad Nur Fatony</span>
       </div>
     </div>
   </div>
@@ -10829,7 +11314,7 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!-- 🧪 AI QA DIAGNOSTIC AGENT MODAL                                -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <div id="aiDiagnosticModal" class="ai-diag-overlay">
+  <div id="aiDiagnosticModal" class="ai-diag-overlay" onclick="if(event.target===this) closeQADiagnosticModal()">
     <div class="ai-diag-card">
       <div class="ai-diag-header">
         <div class="ai-diag-title">
@@ -10874,6 +11359,78 @@ window.addEventListener('offline', updateFooterStatus);
         <button type="button" class="btn btn-primary" id="aiDiagRunBtn" onclick="runQADiagnostics()">
           ▶️ Jalankan Diagnostic Scan
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 👨‍💻 DEVELOPER SHOWCASE MODAL (AHMAD NUR FATONY)                -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="developerModal" class="dev-modal-overlay" onclick="if(event.target===this) closeDevModal()">
+    <div class="dev-modal-card">
+      <div class="dev-modal-banner">
+        <div class="dev-banner-badge">⚡ OFFICIAL SYSTEM ARCHITECT</div>
+        <button type="button" class="dev-close-btn" onclick="closeDevModal()" title="Tutup">✕</button>
+      </div>
+
+      <div class="dev-modal-profile">
+        <div class="dev-avatar-wrap">
+          <div class="dev-avatar-ring"></div>
+          <div class="dev-avatar-core">ANF</div>
+          <span class="dev-avatar-status" title="Active Developer"></span>
+        </div>
+        <h3 class="dev-name">Ahmad Nur Fatony</h3>
+        <div class="dev-title">Lead System Developer &amp; QA/QC Engineering Specialist</div>
+        <div class="dev-company">PT Asuka Engineering Indonesia</div>
+      </div>
+
+      <div class="dev-modal-body">
+        <div class="dev-quote-box">
+          <div class="dev-quote-icon">“</div>
+          <p class="dev-quote-text">
+            Sistem QC-CMS EDMS direkayasa dengan standar industri tertinggi: enkripsi militer AES-256-GCM, sinkronisasi offline IndexedDB multi-titik, dan AI QA Diagnostic Inspector untuk memastikan kepatuhan mutu dan integritas berkas konstruksi tanpa jeda.
+          </p>
+        </div>
+
+        <div class="dev-stats-grid">
+          <div class="dev-stat-card">
+            <div class="dev-stat-num">v3.2.1</div>
+            <div class="dev-stat-label">Release</div>
+          </div>
+          <div class="dev-stat-card">
+            <div class="dev-stat-num">12+</div>
+            <div class="dev-stat-label">Modules</div>
+          </div>
+          <div class="dev-stat-card">
+            <div class="dev-stat-num">AES-256</div>
+            <div class="dev-stat-label">Security</div>
+          </div>
+          <div class="dev-stat-card">
+            <div class="dev-stat-num">PWA+GAS</div>
+            <div class="dev-stat-label">Engine</div>
+          </div>
+        </div>
+
+        <div class="dev-badges-title">🛠️ TEKNOLOGI &amp; ARSITEKTUR SISTEM</div>
+        <div class="dev-tags-wrap">
+          <span class="dev-tag">⚡ Full-Stack Web</span>
+          <span class="dev-tag">🛡️ AES-256-GCM Security</span>
+          <span class="dev-tag">📱 Progressive Web App (PWA)</span>
+          <span class="dev-tag">📶 Offline-First IndexedDB</span>
+          <span class="dev-tag">🧪 AI QA Diagnostic Agent</span>
+          <span class="dev-tag">🤖 AI QC Assistant</span>
+          <span class="dev-tag">🏗️ Construction QA/QC Standard</span>
+          <span class="dev-tag">📊 Real-Time Analytics</span>
+        </div>
+      </div>
+
+      <div class="dev-modal-footer">
+        <button type="button" class="btn btn-secondary dev-btn-action" onclick="closeDevModal(); openQADiagnosticModal();">
+          🧪 Jalankan AI Diagnostic
+        </button>
+        <a href="https://wa.me/6281234567890?text=Halo%20Ahmad%20Nur%20Fatony%2C%20saya%20menghubungi%20terkait%20sistem%20QC-CMS%20EDMS" target="_blank" class="btn btn-primary dev-btn-action" style="text-decoration:none;">
+          💬 Hubungi Developer
+        </a>
       </div>
     </div>
   </div>
