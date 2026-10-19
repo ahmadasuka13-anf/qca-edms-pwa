@@ -3,6 +3,14 @@
  * Menghilangkan CORS & mengikuti redirect 302 Google Apps Script di sisi server.
  */
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+};
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -15,10 +23,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  // URL Web App Deployment Google Apps Script Anda
-  // Anda bisa mengaturnya di menu Vercel Environment Variables: GAS_EXEC_URL
+  // URL Web App Deployment Google Apps Script
   const GAS_EXEC_URL = process.env.GAS_EXEC_URL || 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
-
 
   try {
     const gasResponse = await fetch(GAS_EXEC_URL, {
