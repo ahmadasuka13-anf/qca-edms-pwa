@@ -2541,7 +2541,7 @@ canvas#disciplineChart {
 .cinematic-welcome-overlay {
   position: fixed;
   inset: 0;
-  z-index: 10000;
+  z-index: 100000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5572,23 +5572,33 @@ function syncThemeToggleIcon() {
     }
     function greetingWord_() { const h = new Date().getHours(); return h < 10 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam'; }
 function enterApp() {
-  // ✨ Tampilkan animasi selamat datang
-  showSuccessOverlay({
-    title: '👋 Selamat Datang!',
-    message: 'Halo <b>' + esc(currentUser.fullName) + '</b><br>' +
-             'Anda login sebagai <b>' + esc(currentUser.role) + '</b>',
-    buttonText: '→ Masuk Dashboard',
-    autoClose: 2500,
-    onClose: function() {
-      document.getElementById('authScreen').style.display = 'none';
-      document.getElementById('appScreen').style.display = 'block';
-      document.getElementById('userBadge').innerHTML = esc(currentUser.fullName) + '<span class="role-badge">' + esc(currentUser.role) + '</span>';
-      document.getElementById('uploaderNameDisplay').value = currentUser.fullName;
-      const fn = (currentUser.fullName || '').split(' ')[0];
-      document.getElementById('headerGreeting').textContent = greetingWord_() + ', ' + fn + ' \u{1F44B}';
-      google.script.run.withSuccessHandler(onInitData).withFailureHandler(function (err) { showToast('Gagal: ' + err.message, 'error'); }).getInitData(sessionToken);
-    }
-  });
+  // 1. Sembunyikan authScreen, aktifkan appScreen di latar belakang
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+
+  // 2. Set identitas akun pada navbar header
+  if (currentUser) {
+    document.getElementById('userBadge').innerHTML = esc(currentUser.fullName) + '<span class="role-badge">' + esc(currentUser.role) + '</span>';
+    document.getElementById('uploaderNameDisplay').value = currentUser.fullName;
+    const fn = (currentUser.fullName || '').split(' ')[0];
+    document.getElementById('headerGreeting').textContent = greetingWord_() + ', ' + fn + ' \u{1F44B}';
+    try { localStorage.setItem('qccms_user_name', currentUser.fullName); } catch (e) {}
+  }
+
+  // 3. 🎬 TAMPILKAN LAYAR SAMBUTAN SINEMATIK SEGERA (SEBELUM MENU)
+  var seenWelcome = false;
+  try { seenWelcome = !!sessionStorage.getItem('qccms_welcome_seen'); } catch (e) {}
+  if (!seenWelcome && typeof openWelcomeScreen === 'function') {
+    openWelcomeScreen({ user: currentUser, fullName: currentUser ? currentUser.fullName : '' });
+  }
+
+  // 4. Muat data aplikasi di latar belakang
+  google.script.run
+    .withSuccessHandler(onInitData)
+    .withFailureHandler(function (err) {
+      showToast('Gagal memuat data: ' + err.message, 'error');
+    })
+    .getInitData(sessionToken);
 }
 
     function onInitData(data) {
@@ -5662,13 +5672,14 @@ function enterApp() {
       refreshMyTasksBadge();
       if (!myTasksPollTimer) myTasksPollTimer = setInterval(refreshMyTasksBadge, 180000);
 
-      // 🎬 Layar Sambutan Sinematik (Konsep B) - Ditampilkan saat pertama kali masuk aplikasi
-      try {
-        if (!sessionStorage.getItem('qccms_welcome_seen') && typeof openWelcomeScreen === 'function') {
-          openWelcomeScreen(data);
+      // 🎬 Perbarui info proyek pada Layar Sambutan jika sedang terbuka
+      var welcomeScr = document.getElementById('welcomeCinematicScreen');
+      if (welcomeScr && welcomeScr.style.display !== 'none') {
+        var projPill = document.getElementById('welcomeProjectPill');
+        if (projPill) {
+          var curFocus = localStorage.getItem('qccms_project_focus');
+          projPill.textContent = curFocus ? curFocus : 'Semua Proyek';
         }
-      } catch (e) {
-        if (typeof openWelcomeScreen === 'function') openWelcomeScreen(data);
       }
     }
 
@@ -10104,14 +10115,19 @@ window.addEventListener('offline', updateFooterStatus);
       if (!scr) return;
       var userGreet = document.getElementById('welcomeUserGreeting');
       if (userGreet) {
-        var name = (data && data.user && data.user.name) || (data && data.userName) || localStorage.getItem('qccms_user_name') || '';
-        if (name) {
-          userGreet.textContent = 'Halo, ' + name + ' 👋';
-        } else {
+        var name = (data && (data.fullName || (data.user && (data.user.fullName || data.user.name)))) ||
+                   (typeof currentUser !== 'undefined' && currentUser && currentUser.fullName) ||
+                   localStorage.getItem('qccms_user_name') || '';
+        if (!name) {
           var el = document.getElementById('userBadge');
-          var badgeText = el ? el.textContent.trim() : '';
-          userGreet.textContent = (badgeText && badgeText !== '-') ? 'Halo, ' + badgeText + ' 👋' : 'Halo, Rekan Tim QC 👋';
+          if (el) {
+            var clone = el.cloneNode(true);
+            var rb = clone.querySelector('.role-badge');
+            if (rb) rb.remove();
+            name = clone.textContent.trim();
+          }
         }
+        userGreet.textContent = (name && name !== '-') ? 'Halo, ' + name + ' 👋' : 'Halo, Rekan Tim QC 👋';
       }
       var projPill = document.getElementById('welcomeProjectPill');
       if (projPill) {
