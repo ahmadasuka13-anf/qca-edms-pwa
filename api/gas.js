@@ -41,7 +41,13 @@ export default async function handler(req, res) {
       const data = JSON.parse(text);
       return res.status(200).json(data);
     } catch (e) {
-      return res.status(200).send(text);
+      // Ekstrak pesan error dari HTML jika Google Apps Script mengembalikan halaman error
+      const bodyClean = text.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+      const detailedErr = bodyClean.length > 250 ? bodyClean.slice(0, 250) + '...' : bodyClean;
+      return res.status(200).json({
+        success: false,
+        message: 'Google Apps Script Error: ' + (detailedErr || 'Server Google mengembalikan HTML, bukan JSON.')
+      });
     }
   } catch (err) {
     console.error('GAS Proxy Error:', err);
