@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v3.2';
+const CACHE_NAME = 'qccms-edms-v3.3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -19,7 +19,8 @@ const STATIC_ASSETS = [
   '/icons/icon-512.png',
   '/icons/logo.png',
   '/icons/apple-touch-icon.png',
-  '/favicon.ico'
+  '/favicon.ico',
+  '/welcome-bg.jpg'
 ];
 
 // 1. Install Event — Pre-cache static assets
