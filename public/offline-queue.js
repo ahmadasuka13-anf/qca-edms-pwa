@@ -178,6 +178,14 @@ const QC_OFFLINE_QUEUE = (function () {
     }
   }
 
+  // ─── Label Aksi Indonesia ──────────────────────────────────
+  const ACTION_LABELS = {
+    submitDocument:        'Unggah Dokumen',
+    submitSiteReportEntry: 'Laporan Inspeksi Lapangan',
+    saveNFILogEntry:       'Entri NFI Log',
+    submitCalibration:     'Kalibrasi Alat'
+  };
+
   // ─── Detail antrian ──────────────────────────────────────────
 
   async function _showQueueDetails() {
@@ -188,7 +196,13 @@ const QC_OFFLINE_QUEUE = (function () {
       if (pending.length === 0) {
         showToast('Tidak ada antrian offline', 'success');
       } else {
-        showToast(`${pending.length} form offline menunggu — akan otomatis dikirim saat online`, 'warning');
+        const counts = {};
+        pending.forEach(item => {
+          const lbl = ACTION_LABELS[item.action] || item.action;
+          counts[lbl] = (counts[lbl] || 0) + 1;
+        });
+        const summary = Object.entries(counts).map(([k, v]) => `${v}x ${k}`).join(', ');
+        showToast(`Antrian offline (${pending.length}): ${summary}. Otomatis dikirim saat online.`, 'warning');
       }
     }
   }
@@ -206,7 +220,7 @@ const QC_OFFLINE_QUEUE = (function () {
     console.log(`[OfflineQueue] Memproses ${pending.length} item antrian offline...`);
 
     if (typeof showToast === 'function') {
-      showToast(`Menyinkronkan ${pending.length} form offline...`, 'info');
+      showToast(`Menyinkronkan ${pending.length} form offline ke server...`, 'info');
     }
 
     let successCount = 0;
@@ -233,7 +247,7 @@ const QC_OFFLINE_QUEUE = (function () {
           if (data && (data.success || data.docId)) {
             await remove(item.id);
             successCount++;
-            console.log(`[OfflineQueue] Item #${item.id} berhasil dikirim`);
+            console.log(`[OfflineQueue] Item #${item.id} (${item.action}) berhasil dikirim`);
           } else {
             await _incrementRetry(item.id, item.retries);
             failCount++;
@@ -249,17 +263,25 @@ const QC_OFFLINE_QUEUE = (function () {
       }
     }
 
-    // Update UI
+    // Update UI Banner
     await _showQueueBanner();
 
-    if (successCount > 0 && typeof showToast === 'function') {
-      showToast(`✅ ${successCount} form offline berhasil dikirim!`, 'success');
-      // Refresh daftar dokumen jika ada
-      if (typeof loadDocumentList === 'function') loadDocumentList();
-      if (typeof loadDashboard    === 'function') loadDashboard();
+    if (successCount > 0) {
+      if ('vibrate' in navigator) {
+        try { navigator.vibrate([40, 30, 40]); } catch (e) {}
+      }
+      if (typeof showToast === 'function') {
+        showToast(`✅ ${successCount} form offline berhasil dikirim ke server!`, 'success');
+      }
+      // Refresh semua modul yang terpengaruh
+      if (typeof loadDocumentList      === 'function') loadDocumentList();
+      if (typeof loadDashboard         === 'function') loadDashboard();
+      if (typeof loadNFILog            === 'function') loadNFILog();
+      if (typeof loadSiteReportEntries === 'function') loadSiteReportEntries();
+      if (typeof getCalibrationTools   === 'function') getCalibrationTools();
     }
     if (failCount > 0 && typeof showToast === 'function') {
-      showToast(`⚠️ ${failCount} form gagal dikirim — akan coba lagi`, 'error');
+      showToast(`⚠️ ${failCount} form gagal dikirim — akan dicoba lagi otomatis`, 'error');
     }
   }
 

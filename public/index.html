@@ -2474,7 +2474,8 @@ canvas#disciplineChart {
             <div class="panel" id="panelList">
               <h2 class="panel-title">Daftar Dokumen</h2>
               <div class="filter-row">
-                <input type="text" id="filterSearch" placeholder="🔍 Cari..." style="flex:2; min-width:200px;" oninput="onSearchInput()">
+                <input type="text" id="filterSearch" placeholder="🔍 Cari..." style="flex:2; min-width:180px;" oninput="onSearchInput()">
+                <button type="button" class="btn btn-secondary" onclick="openQrScanner('filterSearch', 'Scan QR / Barcode Dokumen')" title="Pindai QR / Barcode Dokumen" style="white-space:nowrap;padding:8px 12px;">📷 Scan</button>
                 <select id="filterDocType" onchange="loadDocumentList()"></select>
                 <select id="filterStatus" onchange="loadDocumentList()">
                   <option value="">Semua Status</option>
@@ -2503,7 +2504,8 @@ canvas#disciplineChart {
                 <select id="nfiFilterProject" onchange="loadNFILog()" style="min-width:220px;flex:1;"></select>
               </div>
               <div class="filter-row">
-                <input type="text" id="nfiSearch" placeholder="🔍 Cari..." style="flex:2; min-width:200px;" oninput="onNfiSearchInput()">
+                <input type="text" id="nfiSearch" placeholder="🔍 Cari..." style="flex:2; min-width:180px;" oninput="onNfiSearchInput()">
+                <button type="button" class="btn btn-secondary" onclick="openQrScanner('nfiSearch', 'Scan QR / Barcode NFI')" title="Pindai QR / Barcode NFI" style="white-space:nowrap;padding:8px 12px;">📷 Scan</button>
                 <select id="nfiFilterDiscipline" onchange="loadNFILog()"><option value="">Semua Discipline</option></select>
                 <select id="nfiFilterType" onchange="loadNFILog()"><option value="">Semua Tipe</option></select>
                 <select id="nfiFilterResult" onchange="loadNFILog()"><option value="">Semua Result</option></select>
@@ -3361,6 +3363,48 @@ canvas#disciplineChart {
 
   <div class="toast" id="toast"></div>
 
+  <!-- Real-Time Upload Progress Floating Widget -->
+  <div id="uploadProgressBarContainer" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999999;background:var(--surface-card,#1e293b);color:var(--ink,#fff);padding:14px 18px;border-radius:14px;box-shadow:0 12px 35px rgba(0,0,0,0.5);border:1px solid rgba(232,114,12,0.6);width:320px;font-family:system-ui,-apple-system,sans-serif;backdrop-filter:blur(10px);transition:all 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:600;margin-bottom:8px;">
+      <span id="uploadProgressTitle" style="display:flex;align-items:center;gap:6px;">
+        <span class="spinner dark" style="width:13px;height:13px;border-width:2px;"></span>
+        <span>Mengunggah berkas...</span>
+      </span>
+      <span id="uploadProgressPercent" style="color:#e8720c;font-weight:700;">0%</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);height:8px;border-radius:4px;overflow:hidden;position:relative;">
+      <div id="uploadProgressBar" style="background:linear-gradient(90deg,#e8720c,#f59e0b);height:100%;width:0%;transition:width 0.15s ease;border-radius:4px;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted,#94a3b8);margin-top:6px;">
+      <span id="uploadProgressDetail">0 KB / 0 KB</span>
+      <span id="uploadProgressAction" style="font-weight:600;"></span>
+    </div>
+  </div>
+
+  <!-- Modal Pemindai QR & Barcode Kamera -->
+  <div class="modal-overlay" id="qrScannerModal" style="display:none;align-items:center;justify-content:center;z-index:9999999;">
+    <div class="modal-box" style="max-width:440px;width:92%;padding:18px 20px;border-radius:16px;text-align:center;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border,#334155);">
+        <h3 style="margin:0;font-size:15px;display:flex;align-items:center;gap:8px;">
+          <span>📷</span> <span id="qrScannerTitle">Scan QR / Barcode</span>
+        </h3>
+        <button class="btn-small" onclick="closeQrScanner()" style="padding:4px 10px;font-size:14px;">✕</button>
+      </div>
+
+      <!-- Viewfinder Kamera -->
+      <div id="qrScannerReader" style="width:100%;min-height:260px;border-radius:12px;overflow:hidden;background:#000;position:relative;"></div>
+
+      <div style="margin-top:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+        <button id="qrTorchBtn" class="btn-small" onclick="toggleQrTorch()" style="display:none;">💡 Flashlight</button>
+        <button id="qrFlipBtn" class="btn-small" onclick="flipQrCamera()">🔄 Ganti Kamera</button>
+        <button class="btn-small btn-secondary" onclick="closeQrScanner()">Tutup</button>
+      </div>
+      <div style="font-size:11.5px;color:var(--ink-muted,#94a3b8);margin-top:10px;">
+        Arahkan kamera ke QR Code atau Barcode label alat / kode dokumen.
+      </div>
+    </div>
+  </div>
+
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SUCCESS OVERLAY — Animasi Sukses Universal (v2) -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -3903,6 +3947,194 @@ canvas#disciplineChart {
       .replace(/\r?\n/g, '\\n')
       .replace(/</g, '\\x3c');
   }
+
+  // ============================================================
+  // HAPTIC FEEDBACK (Getaran Responsif di HP)
+  // ============================================================
+  function triggerHaptic(pattern) {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(pattern || [30, 20, 30]); } catch (e) {}
+    }
+  }
+  window.triggerHaptic = triggerHaptic;
+
+  // ============================================================
+  // REAL-TIME UPLOAD PROGRESS BAR (0% - 100%)
+  // ============================================================
+  window.showUploadProgress = function (percent, totalBytes, action, loadedBytes) {
+    const container = document.getElementById('uploadProgressBarContainer');
+    const bar = document.getElementById('uploadProgressBar');
+    const pctText = document.getElementById('uploadProgressPercent');
+    const detailText = document.getElementById('uploadProgressDetail');
+    const actionText = document.getElementById('uploadProgressAction');
+    const titleText = document.getElementById('uploadProgressTitle');
+    if (!container || !bar) return;
+
+    container.style.display = 'block';
+    container.style.opacity = '1';
+    container.style.transform = 'translateY(0)';
+    bar.style.width = percent + '%';
+    if (pctText) pctText.textContent = percent + '%';
+
+    const formatSize = function (bytes) {
+      if (!bytes || bytes <= 0) return '0 KB';
+      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    };
+
+    const loaded = loadedBytes || (totalBytes ? Math.round((percent / 100) * totalBytes) : 0);
+    if (detailText) detailText.textContent = formatSize(loaded) + ' / ' + formatSize(totalBytes);
+
+    const actionMap = {
+      submitDocument: 'Dokumen',
+      submitSiteReportEntry: 'Laporan Inspeksi',
+      saveNFILogEntry: 'NFI Log',
+      submitCalibration: 'Kalibrasi Alat'
+    };
+    if (actionText) actionText.textContent = actionMap[action] || '';
+
+    if (percent >= 100) {
+      if (titleText) titleText.innerHTML = '<span>⚡ Menyimpan ke Drive & Spreadsheet...</span>';
+    } else {
+      if (titleText) titleText.innerHTML = '<span class="spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></span><span>Mengunggah berkas...</span>';
+    }
+  };
+
+  window.hideUploadProgress = function () {
+    const container = document.getElementById('uploadProgressBarContainer');
+    if (!container) return;
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(10px)';
+    setTimeout(function () {
+      container.style.display = 'none';
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+    }, 400);
+  };
+
+  // ============================================================
+  // SCANNER QR / BARCODE VIA KAMERA HP (Html5Qrcode)
+  // ============================================================
+  let _html5QrInstance = null;
+  let _currentQrInputId = null;
+  let _currentFacingMode = 'environment';
+  let _isTorchActive = false;
+
+  window.openQrScanner = function (targetInputId, title) {
+    _currentQrInputId = targetInputId;
+    const modal = document.getElementById('qrScannerModal');
+    const titleEl = document.getElementById('qrScannerTitle');
+    if (titleEl && title) titleEl.textContent = title;
+    if (!modal) return;
+
+    modal.style.display = 'flex';
+    modal.classList.add('show');
+
+    if (typeof Html5Qrcode === 'undefined') {
+      const s = document.createElement('script');
+      s.src = '/html5-qrcode.min.js';
+      s.onload = function () { _startQrCamera(); };
+      s.onerror = function () {
+        if (typeof showToast === 'function') showToast('Gagal memuat pustaka scanner kamera', 'error');
+        window.closeQrScanner();
+      };
+      document.head.appendChild(s);
+    } else {
+      _startQrCamera();
+    }
+  };
+
+  async function _startQrCamera() {
+    try {
+      if (_html5QrInstance) {
+        try { await _html5QrInstance.stop(); } catch (e) {}
+      }
+      _html5QrInstance = new Html5Qrcode('qrScannerReader');
+      const config = {
+        fps: 15,
+        qrbox: { width: 230, height: 230 },
+        aspectRatio: 1.0
+      };
+
+      await _html5QrInstance.start(
+        { facingMode: _currentFacingMode },
+        config,
+        function (decodedText) {
+          triggerHaptic([40, 30, 40]);
+          if (_currentQrInputId) {
+            const inp = document.getElementById(_currentQrInputId);
+            if (inp) {
+              inp.value = decodedText;
+              inp.dispatchEvent(new Event('input', { bubbles: true }));
+              inp.dispatchEvent(new Event('change', { bubbles: true }));
+              if (_currentQrInputId === 'filterSearch' && typeof loadDocumentList === 'function') {
+                loadDocumentList();
+              } else if (_currentQrInputId === 'nfiSearch' && typeof loadNFILog === 'function') {
+                loadNFILog();
+              }
+            }
+          }
+          if (typeof showToast === 'function') {
+            showToast('✅ Berhasil scan: ' + decodedText, 'success');
+          }
+          window.closeQrScanner();
+        },
+        function () {}
+      );
+
+      setTimeout(function () {
+        try {
+          const cap = _html5QrInstance.getRunningTrackCapabilities();
+          const torchBtn = document.getElementById('qrTorchBtn');
+          if (cap && cap.torch && torchBtn) {
+            torchBtn.style.display = 'inline-block';
+          }
+        } catch (e) {}
+      }, 1000);
+
+    } catch (err) {
+      console.error('[QR Scanner] Gagal akses kamera:', err);
+      if (typeof showToast === 'function') {
+        showToast('Kamera tidak dapat diakses: ' + (err.message || 'Izin kamera ditolak'), 'error');
+      }
+      window.closeQrScanner();
+    }
+  }
+
+  window.closeQrScanner = async function () {
+    const modal = document.getElementById('qrScannerModal');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.classList.remove('show');
+    }
+    if (_html5QrInstance) {
+      try {
+        await _html5QrInstance.stop();
+        _html5QrInstance.clear();
+      } catch (e) {}
+      _html5QrInstance = null;
+    }
+    _isTorchActive = false;
+  };
+
+  window.flipQrCamera = async function () {
+    _currentFacingMode = _currentFacingMode === 'environment' ? 'user' : 'environment';
+    await _startQrCamera();
+  };
+
+  window.toggleQrTorch = async function () {
+    if (!_html5QrInstance) return;
+    try {
+      _isTorchActive = !_isTorchActive;
+      await _html5QrInstance.applyVideoConstraints({
+        advanced: [{ torch: _isTorchActive }]
+      });
+      const btn = document.getElementById('qrTorchBtn');
+      if (btn) btn.textContent = _isTorchActive ? '🔦 Matikan Flash' : '💡 Flashlight';
+    } catch (e) {
+      console.warn('Torch error:', e);
+    }
+  };
 </script>
   <script>
   // ============================================================
@@ -4374,6 +4606,7 @@ function handleForgotPassword(event) {
       '<div class="filter-row" style="margin-bottom:16px;">',
       '  <button class="btn btn-secondary" onclick="loadCalibrationData()">↻ Muat Ulang</button>',
       '  <button class="btn btn-primary" onclick="openCalibrationForm()">+ Update Kalibrasi</button>',
+      '  <button class="btn btn-secondary" onclick="openCalibrationForm(); setTimeout(function(){ openQrScanner(\'calToolId\', \'Scan Label Alat\'); }, 300);" title="Scan Barcode / QR Label Alat">📷 Scan Label Alat</button>',
       '</div>',
       '<div class="card-section" id="calKpiWrap">',
       '  <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>',
@@ -4386,7 +4619,7 @@ function handleForgotPassword(event) {
       '    <h3 class="card-title">Update Data Kalibrasi</h3>',
       '    <form id="calibrationForm" onsubmit="saveCalibrationData(event)">',
       '      <div class="form-row">',
-      '        <div class="form-group"><label>Tool ID *</label><input type="text" id="calToolId" required></div>',
+      '        <div class="form-group"><label>Tool ID *</label><div style="display:flex;gap:6px;"><input type="text" id="calToolId" required style="flex:1;"><button type="button" class="btn-small" onclick="openQrScanner(\'calToolId\', \'Scan Tool ID Kalibrasi\')" title="Scan QR / Barcode Alat" style="white-space:nowrap;padding:4px 8px;">📷 Scan</button></div></div>',
       '        <div class="form-group"><label>Nama Alat *</label><input type="text" id="calToolName" required></div>',
       '      </div>',
       '      <div class="form-row">',
@@ -4785,8 +5018,15 @@ function enterApp() {
 
     function updateNotifBadge(c) {
       const b = document.getElementById('notifBadge');
-      if (c > 0) { b.textContent = c > 99 ? '99+' : String(c); b.style.display = 'flex'; }
-      else b.style.display = 'none';
+      if (b) {
+        if (c > 0) { b.textContent = c > 99 ? '99+' : String(c); b.style.display = 'flex'; }
+        else { b.style.display = 'none'; }
+      }
+      // PWA App Badging API (Ikon App di Layar HP & PC)
+      if ('setAppBadge' in navigator) {
+        if (c > 0) navigator.setAppBadge(c).catch(function () {});
+        else navigator.clearAppBadge().catch(function () {});
+      }
     }
     function refreshNotifBadge() { google.script.run.withSuccessHandler(function (list) { updateNotifBadge(list.filter(n => !n.isRead).length); }).withFailureHandler(function(){}).getMyNotifications(sessionToken); }
     function toggleNotifPanel() {
@@ -4813,8 +5053,15 @@ function enterApp() {
       google.script.run.withSuccessHandler(function () {
         document.querySelectorAll('.notif-item.unread').forEach(el => el.classList.remove('unread'));
         updateNotifBadge(0);
+        if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(function () {});
       }).markAllNotificationsRead(sessionToken);
     }
+    // Auto-refresh notifikasi berkala setiap 60 detik jika online
+    setInterval(function () {
+      if (navigator.onLine && window.sessionToken) {
+        refreshNotifBadge();
+      }
+    }, 60000);
     document.addEventListener('click', function (e) {
       const w = document.querySelector('.notif-bell-wrap');
       if (w && !w.contains(e.target)) document.getElementById('notifPanel').style.display = 'none';

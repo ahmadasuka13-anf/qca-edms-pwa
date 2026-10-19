@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v3.0';
+const CACHE_NAME = 'qccms-edms-v3.1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -14,6 +14,7 @@ const STATIC_ASSETS = [
   '/gas-adapter.js',
   '/security.js',
   '/offline-queue.js',
+  '/html5-qrcode.min.js',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/icons/logo.png',

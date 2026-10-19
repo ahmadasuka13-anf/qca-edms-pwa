@@ -15,8 +15,13 @@
 
     const PROXY_ENDPOINT = '/api/gas';
 
-    // Action yang BOLEH masuk antrian offline
-    const OFFLINE_QUEUEABLE = ['submitDocument'];
+    // Action yang BOLEH masuk antrian offline (semua form lapangan)
+    const OFFLINE_QUEUEABLE = [
+      'submitDocument',
+      'submitSiteReportEntry',
+      'saveNFILogEntry',
+      'submitCalibration'
+    ];
     // Action yang tidak perlu session token
     const AUTH_ACTIONS = ['login', 'registerAccount', 'requestPasswordReset'];
 
@@ -75,14 +80,14 @@
           successCb.call(userObj, {
             success:  true,
             offline:  true,
-            message:  '📶 Anda sedang offline. Form disimpan dan akan dikirim otomatis saat koneksi kembali.'
+            message:  '📶 Anda sedang offline. Form disimpan di antrian offline dan otomatis disinkronkan saat koneksi internet kembali.'
           });
         }
         return;
       }
 
-      // ── Kirim ke server ─────────────────────────────────────────
-      const _doFetch = async (retryCount) => {
+      // ── Kirim ke server (dengan Progress Tracking untuk payload besar) ──
+      const _doRequest = async (retryCount) => {
         const payload = {
           action,
           args,
@@ -90,10 +95,57 @@
           csrfToken
         };
 
+        const jsonStr = JSON.stringify(payload);
+        const hasLargePayload = jsonStr.length > 25000 || OFFLINE_QUEUEABLE.includes(action);
+
+        if (hasLargePayload && typeof window.showUploadProgress === 'function') {
+          window.showUploadProgress(0, jsonStr.length, action, 0);
+          return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', PROXY_ENDPOINT, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            if (xhr.upload) {
+              xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable && typeof window.showUploadProgress === 'function') {
+                  const percent = Math.min(99, Math.round((e.loaded / e.total) * 100));
+                  window.showUploadProgress(percent, e.total, action, e.loaded);
+                }
+              };
+            }
+
+            xhr.onload = () => {
+              if (typeof window.showUploadProgress === 'function') {
+                window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
+              }
+              setTimeout(() => {
+                if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+              }, 700);
+
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  resolve(JSON.parse(xhr.responseText));
+                } catch(e) {
+                  reject(new Error('Format balasan server tidak valid'));
+                }
+              } else {
+                reject(new Error('HTTP ' + xhr.status + ': ' + xhr.statusText));
+              }
+            };
+
+            xhr.onerror = () => {
+              if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+              reject(new TypeError('Network request failed'));
+            };
+
+            xhr.send(jsonStr);
+          });
+        }
+
         const res = await fetch(PROXY_ENDPOINT, {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload)
+          body:    jsonStr
         });
 
         if (!res.ok) {
@@ -105,13 +157,13 @@
       try {
         let data;
         try {
-          data = await _doFetch(0);
+          data = await _doRequest(0);
         } catch (firstErr) {
           // ── Retry 1x setelah 1.5 detik jika network error ──
           if (firstErr.message.startsWith('HTTP 5') || firstErr.name === 'TypeError') {
             console.warn('[GAS Adapter] Retry 1x untuk:', action);
             await new Promise(r => setTimeout(r, 1500));
-            data = await _doFetch(1);
+            data = await _doRequest(1);
           } else {
             throw firstErr;
           }
