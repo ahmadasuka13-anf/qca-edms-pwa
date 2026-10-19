@@ -2535,6 +2535,239 @@ canvas#disciplineChart {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════ */
+/* 🎬 CINEMATIC WELCOME SCREEN OVERLAY (KONSEP B)                 */
+/* ═══════════════════════════════════════════════════════════════ */
+.cinematic-welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #090d16;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cinematic-welcome-overlay.fade-out {
+  opacity: 0;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+.welcome-bg-wrapper {
+  position: absolute;
+  inset: -40px;
+  overflow: hidden;
+  z-index: 1;
+}
+.welcome-bg-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: kenBurnsZoom 26s infinite alternate ease-in-out;
+  transform-origin: center center;
+}
+@keyframes kenBurnsZoom {
+  0% { transform: scale(1.04) translate(0, 0); }
+  50% { transform: scale(1.12) translate(-1%, -1%); }
+  100% { transform: scale(1.08) translate(1%, 0.5%); }
+}
+.welcome-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(11, 17, 32, 0.65) 0%, rgba(9, 13, 22, 0.92) 80%, rgba(6, 9, 15, 0.98) 100%);
+  z-index: 2;
+}
+.welcome-skip-btn {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s, transform 0.15s;
+}
+.welcome-skip-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: scale(1.03);
+}
+.welcome-card-content {
+  position: relative;
+  z-index: 5;
+  width: 90%;
+  max-width: 660px;
+  background: rgba(18, 25, 41, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  padding: 34px 30px 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  text-align: center;
+  animation: welcomeCardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes welcomeCardEntrance {
+  0% { opacity: 0; transform: translateY(30px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.welcome-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(237, 46, 53, 0.15);
+  border: 1px solid rgba(237, 46, 53, 0.4);
+  color: #ff6b70;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.welcome-logo-img {
+  height: 44px;
+  max-width: 190px;
+  object-fit: contain;
+  margin: 0 auto 10px;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(237, 46, 53, 0.35));
+}
+.welcome-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 6px;
+  line-height: 1.25;
+  letter-spacing: -0.3px;
+}
+.welcome-user-greeting {
+  font-size: 15.5px;
+  color: #93c5fd;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.welcome-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 500px;
+  margin: 0 auto 20px;
+  line-height: 1.5;
+}
+.welcome-live-pills {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+}
+.welcome-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 5px 12px;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+.welcome-pill b {
+  color: #fff;
+}
+.welcome-pulse-online {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 10px #22c55e;
+}
+.welcome-main-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 26px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ed2e35 0%, #c81e24 100%);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(237, 46, 53, 0.45);
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 16px;
+}
+.welcome-main-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(237, 46, 53, 0.6);
+}
+.welcome-main-btn:active {
+  transform: translateY(1px);
+}
+.welcome-shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.welcome-shortcut-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 6px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.welcome-shortcut-item:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+.welcome-shortcut-icon {
+  font-size: 18px;
+}
+@media (max-width: 600px) {
+  .welcome-card-content {
+    padding: 24px 16px 20px;
+    width: 94%;
+    border-radius: 18px;
+  }
+  .welcome-title {
+    font-size: 19px;
+  }
+  .welcome-subtitle {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .welcome-shortcuts-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
 </style>
 
 <script>
@@ -2714,6 +2947,7 @@ canvas#disciplineChart {
           <div class="sidebar-footer-links">
             <a href="https://wa.me/6281234567890" target="_blank" title="WhatsApp Support">💬</a>
             <a href="mailto:admin@asuka.co.id" title="Email Admin">📧</a>
+            <a href="#" onclick="if(typeof openWelcomeScreen==='function')openWelcomeScreen(); return false;" title="Layar Sambutan Sinematik">🎬</a>
             <a href="#" onclick="alert('QC-CMS EDMS v3.2.1\n\nDibuat dengan ❤️ untuk PT Asuka Engineering Indonesia'); return false;" title="Tentang">ℹ️</a>
           </div>
         </div>
@@ -5427,6 +5661,15 @@ function enterApp() {
       if (!notifPollTimer) notifPollTimer = setInterval(refreshNotifBadge, 90000);
       refreshMyTasksBadge();
       if (!myTasksPollTimer) myTasksPollTimer = setInterval(refreshMyTasksBadge, 180000);
+
+      // 🎬 Layar Sambutan Sinematik (Konsep B) - Ditampilkan saat pertama kali masuk aplikasi
+      try {
+        if (!sessionStorage.getItem('qccms_welcome_seen') && typeof openWelcomeScreen === 'function') {
+          openWelcomeScreen(data);
+        }
+      } catch (e) {
+        if (typeof openWelcomeScreen === 'function') openWelcomeScreen(data);
+      }
     }
 
     function onGlobalProjectFilterChange() {
@@ -9854,6 +10097,48 @@ window.addEventListener('offline', updateFooterStatus);
       var mcElem = document.querySelector('.main-content');
       if (mcElem) mcElem.addEventListener('scroll', checkScrollTop, { passive: true });
     }
+
+    // 🎬 Kontroler Layar Sambutan Sinematik (Konsep B)
+    window.openWelcomeScreen = function(data) {
+      var scr = document.getElementById('welcomeCinematicScreen');
+      if (!scr) return;
+      var userGreet = document.getElementById('welcomeUserGreeting');
+      if (userGreet) {
+        var name = (data && data.user && data.user.name) || (data && data.userName) || localStorage.getItem('qccms_user_name') || '';
+        if (name) {
+          userGreet.textContent = 'Halo, ' + name + ' 👋';
+        } else {
+          var el = document.getElementById('userBadge');
+          var badgeText = el ? el.textContent.trim() : '';
+          userGreet.textContent = (badgeText && badgeText !== '-') ? 'Halo, ' + badgeText + ' 👋' : 'Halo, Rekan Tim QC 👋';
+        }
+      }
+      var projPill = document.getElementById('welcomeProjectPill');
+      if (projPill) {
+        var curFocus = localStorage.getItem('qccms_project_focus');
+        projPill.textContent = curFocus ? curFocus : 'Semua Proyek';
+      }
+      var datePill = document.getElementById('welcomeDatePill');
+      if (datePill) {
+        var now = new Date();
+        datePill.textContent = now.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+      }
+      scr.style.display = 'flex';
+      scr.classList.remove('fade-out');
+    };
+
+    window.closeWelcomeScreen = function(targetTab) {
+      var scr = document.getElementById('welcomeCinematicScreen');
+      if (!scr) return;
+      try { sessionStorage.setItem('qccms_welcome_seen', '1'); } catch(e) {}
+      scr.classList.add('fade-out');
+      setTimeout(function() {
+        scr.style.display = 'none';
+        if (targetTab && typeof switchTab === 'function') {
+          switchTab(targetTab);
+        }
+      }, 450);
+    };
   </script>
 
   <!-- Mobile FAB Backdrop -->
@@ -9892,5 +10177,81 @@ window.addEventListener('offline', updateFooterStatus);
   <button type="button" class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTopSmooth()" aria-label="Kembali ke atas" title="Kembali ke atas">
     ↑
   </button>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 🎬 CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;">
+    <!-- Background layer (Foto sinematik bergerak / Video mini loop) -->
+    <div class="welcome-bg-wrapper">
+      <video id="welcomeVideoBg" autoplay loop muted playsinline class="welcome-bg-media" style="display:none;" onloadeddata="this.style.display='block';">
+        <source src="/welcome-video.mp4" type="video/mp4">
+      </video>
+      <img src="/welcome-bg.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop';" alt="Asuka Engineering Project" class="welcome-bg-media" id="welcomeImgBg">
+    </div>
+
+    <!-- Scrim radial gradient overlay -->
+    <div class="welcome-overlay-scrim"></div>
+
+    <!-- Tombol Lewati di pojok kanan atas -->
+    <button type="button" class="welcome-skip-btn" onclick="closeWelcomeScreen()" aria-label="Lewati ke aplikasi" title="Lewati ke aplikasi">
+      Lewati ✕
+    </button>
+
+    <!-- Kartu Sambutan Kaca (Glassmorphism Card) -->
+    <div class="welcome-card-content">
+      <div class="welcome-brand-badge">
+        <span>🛡️</span> PT ASUKA ENGINEERING INDONESIA
+      </div>
+
+      <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" alt="ASUKA Logo" class="welcome-logo-img">
+
+      <h1 class="welcome-title">Selamat Datang di QC-CMS EDMS</h1>
+      <div class="welcome-user-greeting" id="welcomeUserGreeting">Halo, Ahmad Nur Fatony 👋</div>
+      <p class="welcome-subtitle">
+        Sistem Manajemen Dokumen Mutu Terpadu. Menjamin kepatuhan standar mutu, inspeksi presisi, dan integritas proyek konstruksi.
+      </p>
+
+      <div class="welcome-live-pills">
+        <div class="welcome-pill">
+          <span class="welcome-pulse-online"></span>
+          <span>Sistem: <b>Online &amp; Siap</b></span>
+        </div>
+        <div class="welcome-pill">
+          <span>🎯 Proyek:</span>
+          <b id="welcomeProjectPill">Semua Proyek</b>
+        </div>
+        <div class="welcome-pill">
+          <span>📅</span>
+          <span id="welcomeDatePill">Hari ini</span>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Utama -->
+      <button type="button" class="welcome-main-btn" onclick="closeWelcomeScreen('list')">
+        <span>🚀 Mulai Bekerja (Buka Dokumen)</span>
+      </button>
+
+      <!-- Pintasan Aksi Cepat -->
+      <div class="welcome-shortcuts-grid">
+        <div class="welcome-shortcut-item" onclick="closeWelcomeScreen('upload')" title="Unggah Dokumen Baru">
+          <span class="welcome-shortcut-icon">📤</span>
+          <span>Unggah Baru</span>
+        </div>
+        <div class="welcome-shortcut-item" onclick="closeWelcomeScreen('sitereport')" title="Laporan Inspeksi Lapangan">
+          <span class="welcome-shortcut-icon">📷</span>
+          <span>Inspeksi</span>
+        </div>
+        <div class="welcome-shortcut-item" onclick="closeWelcomeScreen('nfilog')" title="Buka NFI Log">
+          <span class="welcome-shortcut-icon">📝</span>
+          <span>NFI Log</span>
+        </div>
+      </div>
+
+      <div style="margin-top:20px; font-size:11px; color:rgba(255,255,255,0.45);">
+        © 2026 PT Asuka Engineering Indonesia · Quality Assurance &amp; Control Division
+      </div>
+    </div>
+  </div>
 </body>
 </html>
