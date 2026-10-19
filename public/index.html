@@ -2634,13 +2634,13 @@ canvas#disciplineChart {
         </div>
       </div>
       <div class="user-box">
-        <div class="header-clock">
+        <div class="header-clock" style="display:none;">
           <span class="clock-time" id="headerClockTime">--:--:--</span>
           <span class="clock-date" id="headerClockDate">-</span>
         </div>
-        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">🌙</button>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Ganti Tema">🌙</button>
         <div class="notif-bell-wrap" style="position:relative;">
-          <button class="theme-toggle" onclick="toggleNotifPanel()">🔔<span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
+          <button class="theme-toggle" onclick="toggleNotifPanel()" title="Notifikasi">🔔<span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
           <div id="notifPanel" class="notif-panel" style="display:none;">
             <div class="notif-panel-head"><span>Notifikasi</span><button class="btn-small" onclick="markAllNotifRead()">Tandai semua dibaca</button></div>
             <div id="notifPanelList"><div class="empty-state" style="padding:20px;"><div class="msg">Memuat...</div></div></div>
@@ -2656,21 +2656,22 @@ canvas#disciplineChart {
     <div class="app-layout">
       <aside class="app-sidebar" id="appSidebar">
         <button class="sidebar-close-btn" onclick="closeNavMenu()">✕</button>
-        <div class="sidebar-brand-mini">
+        <!-- Logo mini di sidebar disembunyikan agar tidak dobel dengan header -->
+        <div class="sidebar-brand-mini" style="display:none;">
           <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="26" alt="ASUKA Logo" style="height:26px;max-height:26px;width:auto;max-width:110px;object-fit:contain;flex-shrink:0;">
           <div style="min-width:0;flex:1;">
             <div class="mini-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">QC-CMS EDMS</div>
             <div class="mini-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dokumen Mutu Proyek</div>
           </div>
         </div>
-        <div class="sidebar-focus">
+        <div class="sidebar-focus" style="margin-top:4px;">
           <label for="globalProjectFilter">🎯 Fokus Proyek</label>
           <select id="globalProjectFilter" onchange="onGlobalProjectFilterChange()"></select>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-section-title">Dokumen</div>
-          <button class="sidebar-item active" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon">📤</span><span class="si-label">Unggah Dokumen</span></button>
-          <button class="sidebar-item" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon">📋</span><span class="si-label">Daftar Dokumen</span></button>
+          <button class="sidebar-item" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon">📤</span><span class="si-label">Unggah Dokumen</span></button>
+          <button class="sidebar-item active" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon">📋</span><span class="si-label">Daftar Dokumen</span></button>
           <button class="sidebar-item" id="tabBtnNfilog" onclick="switchTab('nfilog')"><span class="si-icon">📝</span><span class="si-label">NFI Log</span></button>
           <button class="sidebar-item" id="tabBtnTransmittals" onclick="switchTab('transmittals')" style="display:none;"><span class="si-icon">📬</span><span class="si-label">Transmittal</span></button>
           <button class="sidebar-item" id="tabBtnArchive" onclick="switchTab('archive')"><span class="si-icon">📦</span><span class="si-label">Arsip &amp; Retensi</span></button>
@@ -2680,7 +2681,7 @@ canvas#disciplineChart {
           <div class="sidebar-section-title">Review &amp; Monitoring</div>
           <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon">📌</span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:auto;font-family:var(--font-mono);"></span></span></button>
           <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon">✅</span><span class="si-label">Approval</span></button>
-          <button class="sidebar-item" id="tabBtnSitereport" onclick="switchTab('sitereport')"><span class="si-icon">📷</span><span class="si-label">Laporan Inspeksi Lapangan</span></button>
+          <button class="sidebar-item" id="tabBtnSitereport" onclick="switchTab('sitereport')"><span class="si-icon">📷</span><span class="si-label">Inspeksi Lapangan</span></button>
 
 <button class="sidebar-item" id="tabBtnCalibration" onclick="switchTab('calibration')"><span class="si-icon">📏</span><span class="si-label">Kalibrasi Alat</span></button>
 
@@ -2724,56 +2725,126 @@ canvas#disciplineChart {
         <div class="main-content">
           <div class="panel-wrapper" id="panelWrapper">
 
-            <!-- PANEL: UPLOAD -->
-            <div class="panel active" id="panelUpload">
-              <h2 class="panel-title">Unggah Dokumen Mutu</h2>
-<form id="uploadForm">
-                <div class="form-group" style="margin-bottom:16px;">
-                  <label>Status Dokumen</label>
-                  <div class="radio-group">
-                    <label><input type="radio" name="revType" value="new" checked onchange="onRevTypeChange()"> Dokumen Baru</label>
-                    <label><input type="radio" name="revType" value="revision" onchange="onRevTypeChange()"> Revisi</label>
+            <!-- PANEL: UPLOAD (DIRAMPINGKAN & TIDAK INTIMIDATIF) -->
+            <div class="panel" id="panelUpload">
+              <div class="panel-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+                <div>
+                  <h2 class="panel-title" style="margin:0;">Unggah Dokumen Mutu</h2>
+                  <p class="hint" style="margin:4px 0 0;">Unggah berkas baru atau revisi dokumen proyek Anda.</p>
+                </div>
+                <button type="button" class="btn btn-secondary btn-small" onclick="switchTab('list')">
+                  ← Kembali ke Daftar Dokumen
+                </button>
+              </div>
+
+              <form id="uploadForm">
+                <!-- KARTU 1: BERKAS & TUJUAN PROYEK (Wajib) -->
+                <div class="form-section-card" style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:18px; box-shadow:0 2px 10px rgba(0,0,0,0.03);">
+                  <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; font-weight:700; font-size:14px; color:var(--ink);">
+                    <span style="font-size:18px;">📁</span> 1. Pilih Berkas &amp; Tujuan Proyek
+                  </div>
+
+                  <div class="form-group" style="margin-bottom:16px;">
+                    <label>Status Dokumen</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="revType" value="new" checked onchange="onRevTypeChange()"> Dokumen Baru</label>
+                      <label><input type="radio" name="revType" value="revision" onchange="onRevTypeChange()"> Revisi</label>
+                    </div>
+                  </div>
+
+                  <div class="form-group" id="existingDocWrapper" style="display:none; margin-bottom:16px;">
+                    <label>Pilih Dokumen yang Direvisi</label>
+                    <select id="existingDocSelect"></select>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group"><label>Proyek <span style="color:#ef4444;">*</span></label><select id="projectSelect" required onchange="onProjectOrTypeChange()"></select></div>
+                    <div class="form-group"><label>Disiplin <span style="color:#ef4444;">*</span></label><select id="disciplineSelect" required></select></div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group"><label>Jenis Dokumen <span style="color:#ef4444;">*</span></label><select id="docTypeSelect" required onchange="onProjectOrTypeChange()"></select></div>
+                    <div class="form-group" id="inspectionResultWrapper" style="display:none;"><label>Hasil Inspeksi</label><select id="inspectionResultSelect"></select></div>
+                  </div>
+
+                  <div class="form-row single">
+                    <div class="form-group">
+                      <label>Judul Dokumen <span style="color:#ef4444;">*</span></label>
+                      <input type="text" id="titleInput" placeholder="Contoh: Inspection Report Welding Pipeline KM 12" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top:12px;">
+                    <label>Berkas Dokumen (maks 10 file, 15MB/file) <span style="color:#ef4444;">*</span></label>
+                    <div class="file-drop" style="border:2px dashed var(--border); border-radius:12px; padding:24px 16px; text-align:center; cursor:pointer; background:var(--surface-subtle); transition:all 0.2s;">
+                      <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.dwg" multiple required onchange="onFileChosen()">
+                      <div style="font-size:32px; margin-bottom:6px;">📤</div>
+                      <div style="font-weight:600; color:var(--ink); font-size:14px;">Klik untuk memilih file atau seret file ke sini</div>
+                      <div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Format yang didukung: PDF, DOCX, XLSX, DWG, JPG, PNG</div>
+                      <div class="file-name" id="fileNameDisplay" style="margin-top:10px; font-weight:700; color:var(--accent);"></div>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group" id="existingDocWrapper" style="display:none; margin-bottom:16px;">
-                  <label>Pilih Dokumen yang Direvisi</label>
-                  <select id="existingDocSelect"></select>
-                </div>
-                <div class="form-row">
-                  <div class="form-group"><label>Proyek</label><select id="projectSelect" required onchange="onProjectOrTypeChange()"></select></div>
-                  <div class="form-group"><label>Disiplin</label><select id="disciplineSelect" required></select></div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group"><label>Jenis Dokumen</label><select id="docTypeSelect" required onchange="onProjectOrTypeChange()"></select></div>
-                  <div class="form-group" id="inspectionResultWrapper" style="display:none;"><label>Hasil Inspeksi</label><select id="inspectionResultSelect"></select></div>
-                </div>
-                <div class="form-row single"><div class="form-group"><label>Judul / Deskripsi</label><input type="text" id="titleInput" required></div></div>
-                <div class="form-row">
-                  <div class="form-group"><label>Tingkat Kerahasiaan</label><select id="confidentialitySelect"><option value="Internal" selected>Internal</option><option value="Public">Public</option><option value="Confidential">Confidential</option><option value="Restricted">Restricted</option></select></div>
-                  <div class="form-group"><label>No. Referensi</label><input type="text" id="referenceNumberInput"></div>
-                </div>
-                <div class="form-row single"><div class="form-group"><label>Kata Kunci</label><input type="text" id="keywordsInput"></div></div>
-                <div class="form-row single"><div class="form-group"><label>Deskripsi</label><textarea id="descriptionInput"></textarea></div></div>
-                <div class="form-row">
-                  <div class="form-group"><label>Referensi Standar</label><input type="text" id="standardRefInput"></div>
-                  <div class="form-group"><label>Diunggah oleh</label><input type="text" id="uploaderNameDisplay" disabled></div>
-                </div>
-                <div class="form-group" style="margin-bottom:18px;">
-                  <label>File Dokumen (maks 10 file, 15MB/file)</label>
-                  <div class="file-drop">
-                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.dwg" multiple required onchange="onFileChosen()">
-                    <div class="file-name" id="fileNameDisplay"></div>
+
+                <!-- KARTU 2: DETAIL METADATA & OPSIONAL (Bisa Dilipat/Accordion) -->
+                <div class="form-section-card" style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:20px;">
+                  <div onclick="toggleUploadExtraInfo()" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; user-select:none;">
+                    <div style="display:flex; align-items:center; gap:8px; font-weight:700; font-size:13.5px; color:var(--ink);">
+                      <span style="font-size:17px;">⚙️</span> 2. Informasi Tambahan (Opsional)
+                    </div>
+                    <span id="extraInfoToggleIcon" style="font-size:12px; color:var(--accent); font-weight:600;">▼ Buka Detail</span>
+                  </div>
+
+                  <div id="uploadExtraInfoContent" style="display:none; margin-top:16px; padding-top:14px; border-top:1px dashed var(--border);">
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label>Tingkat Kerahasiaan</label>
+                        <select id="confidentialitySelect"><option value="Internal" selected>Internal</option><option value="Public">Public</option><option value="Confidential">Confidential</option><option value="Restricted">Restricted</option></select>
+                      </div>
+                      <div class="form-group">
+                        <label>No. Referensi / Surat</label>
+                        <input type="text" id="referenceNumberInput" placeholder="Contoh: REF/2026/QC/012">
+                      </div>
+                    </div>
+                    <div class="form-row single">
+                      <div class="form-group">
+                        <label>Kata Kunci (Keywords)</label>
+                        <input type="text" id="keywordsInput" placeholder="Pisahkan dengan koma, misal: welding, inspection, spip">
+                      </div>
+                    </div>
+                    <div class="form-row single">
+                      <div class="form-group">
+                        <label>Deskripsi / Catatan Tambahan</label>
+                        <textarea id="descriptionInput" rows="2" placeholder="Catatan tambahan mengenai dokumen..."></textarea>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group"><label>Referensi Standar</label><input type="text" id="standardRefInput" placeholder="Misal: ASME IX, AWS D1.1"></div>
+                      <div class="form-group"><label>Diunggah oleh</label><input type="text" id="uploaderNameDisplay" disabled></div>
+                    </div>
                   </div>
                 </div>
-<button type="button" class="btn btn-primary btn-full" id="submitBtn" onclick="handleSubmit(event)">Unggah &amp; Kirim untuk Persetujuan</button>
+
+                <button type="button" class="btn btn-primary btn-full" id="submitBtn" onclick="handleSubmit(event)" style="font-weight:700; font-size:14px; padding:12px;">
+                  🚀 Unggah &amp; Kirim untuk Persetujuan
+                </button>
               </form>
             </div>
 
-            <!-- PANEL: LIST -->
-            <div class="panel" id="panelList">
-              <h2 class="panel-title">Daftar Dokumen</h2>
+            <!-- PANEL: LIST (DEFAULT SETELAH LOGIN) -->
+            <div class="panel active" id="panelList">
+              <div class="panel-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                <div>
+                  <h2 class="panel-title" style="margin:0;">Daftar Dokumen Mutu</h2>
+                  <p class="hint" style="margin:4px 0 0;">Semua dokumen proyek yang terdaftar dan riwayat approval.</p>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="switchTab('upload')" style="display:flex; align-items:center; gap:8px; padding:10px 18px; font-weight:700; box-shadow:0 4px 14px rgba(237,46,53,0.35);">
+                  <span>📤</span>
+                  <span>Unggah Dokumen Baru</span>
+                </button>
+              </div>
               <div class="filter-row sticky-filters">
-                <input type="text" id="filterSearch" placeholder="🔍 Cari..." style="flex:2; min-width:180px;" oninput="onSearchInput()">
+                <input type="text" id="filterSearch" placeholder="🔍 Cari nama file, proyek, atau judul..." style="flex:2; min-width:180px;" oninput="onSearchInput()">
                 <button type="button" class="btn btn-secondary" onclick="openQrScanner('filterSearch', 'Scan QR / Barcode Dokumen')" title="Pindai QR / Barcode Dokumen" style="white-space:nowrap;padding:8px 12px;">📷 Scan</button>
                 <select id="filterDocType" onchange="loadDocumentList()"></select>
                 <select id="filterStatus" onchange="loadDocumentList()">
@@ -5338,7 +5409,8 @@ function enterApp() {
       if (data.tzWarning) { const b = document.getElementById('tzWarningBanner'); b.textContent = '🕒 ' + data.tzWarning; b.style.display = 'block'; }
       updateNotifBadge(data.unreadNotificationCount || 0);
 
-      const defaultTab = data.canUpload ? 'upload' : (data.canApprove ? 'approval' : 'list');
+      // Default landing page adalah DAFTAR DOKUMEN (bukan form kosong)
+      const defaultTab = 'list';
       let initialTab = defaultTab;
       const hash = (window.location.hash || '').replace('#', '').toLowerCase();
       if (hash && document.getElementById('panel' + capitalize(hash))) {
@@ -9706,6 +9778,21 @@ window.addEventListener('offline', updateFooterStatus);
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
+
+    // Toggle Informasi Tambahan Form Unggah
+    window.toggleUploadExtraInfo = function() {
+      var box = document.getElementById('uploadExtraInfoContent');
+      var icon = document.getElementById('extraInfoToggleIcon');
+      if (!box || !icon) return;
+      var isHidden = (box.style.display === 'none' || !box.style.display);
+      if (isHidden) {
+        box.style.display = 'block';
+        icon.textContent = '▲ Sembunyikan Detail';
+      } else {
+        box.style.display = 'none';
+        icon.textContent = '▼ Buka Detail';
+      }
+    };
 
     // Mobile FAB (Floating Action Button) Controller
     window.toggleMobileFab = function(forceState) {
