@@ -226,9 +226,10 @@ const QC_OFFLINE_QUEUE = (function () {
     let successCount = 0;
     let failCount    = 0;
 
+  const DIRECT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
+
     for (const item of pending) {
       try {
-        // Kirim langsung ke /api/gas (sama seperti gas-adapter.js)
         const payload = {
           action:       item.action,
           args:         item.args,
@@ -236,11 +237,29 @@ const QC_OFFLINE_QUEUE = (function () {
           csrfToken:    typeof QC_SECURITY !== 'undefined' ? QC_SECURITY.getCsrfToken() : ''
         };
 
-        const res = await fetch('/api/gas', {
+        const jsonStr = JSON.stringify(payload);
+        const isUploadAction = item.action === 'submitDocument' || item.action === 'submitSiteReportEntry';
+        const isDirectRequired = isUploadAction || jsonStr.length > 2.5 * 1024 * 1024;
+        const endpoint = isDirectRequired ? DIRECT_GAS_URL : '/api/gas';
+        const headers = isDirectRequired ? { 'Content-Type': 'text/plain;charset=utf-8' } : { 'Content-Type': 'application/json' };
+
+        let res = await fetch(endpoint, {
           method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify(payload)
+          headers: headers,
+          body:    jsonStr,
+          redirect: 'follow'
         });
+
+        // Fallback jika Vercel mengembalikan HTTP 413
+        if (res.status === 413 && endpoint !== DIRECT_GAS_URL) {
+          console.warn('[OfflineQueue] HTTP 413 dari Vercel — otomatis beralih ke direct GAS URL...');
+          res = await fetch(DIRECT_GAS_URL, {
+            method:  'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body:    jsonStr,
+            redirect: 'follow'
+          });
+        }
 
         if (res.ok) {
           const data = await res.json();

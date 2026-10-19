@@ -5539,6 +5539,14 @@ function fileLinksHtml(d) {
     }
 
     function renderApprovalPending(docs) {
+      if (!Array.isArray(docs)) {
+        const c = document.getElementById('approvalContent');
+        if (c) {
+          const msg = (docs && docs.message) || 'Tidak ada dokumen menunggu approval.';
+          c.innerHTML = '<div class="empty-state"><div class="msg">' + esc(msg) + '</div></div>';
+        }
+        return;
+      }
       approvalCache = {}; docs.forEach(d => approvalCache[d.docId] = d);
       selectedApprovalIds.clear(); updateBulkActionBar();
       const c = document.getElementById('approvalContent');
@@ -5551,6 +5559,14 @@ function fileLinksHtml(d) {
       c.innerHTML = '<div class="table-scroll"><table><thead><tr><th><input type="checkbox" id="selectAllApproval" onchange="toggleSelectAllApproval(this)"></th><th>Dokumen</th><th>Proyek</th><th>Jenis</th><th>Pengunggah</th><th>Tanggal</th><th>File</th><th>Aksi</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
     }
     function renderApprovalHistory(docs) {
+      if (!Array.isArray(docs)) {
+        const c = document.getElementById('approvalContent');
+        if (c) {
+          const msg = (docs && docs.message) || 'Belum ada riwayat.';
+          c.innerHTML = '<div class="empty-state"><div class="msg">' + esc(msg) + '</div></div>';
+        }
+        return;
+      }
       const c = document.getElementById('approvalContent');
       if (!docs.length) { c.innerHTML = '<div class="empty-state"><div class="msg">Belum ada riwayat.</div></div>'; return; }
       let rows = '';

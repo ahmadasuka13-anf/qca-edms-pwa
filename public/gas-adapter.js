@@ -14,6 +14,7 @@
     window.google.script = window.google.script || {};
 
     const PROXY_ENDPOINT = '/api/gas';
+    const DIRECT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
 
     // Action yang BOLEH masuk antrian offline (semua form lapangan)
     const OFFLINE_QUEUEABLE = [
@@ -86,19 +87,73 @@
         return;
       }
 
-      // ── Kirim ke server (dengan Progress Tracking untuk payload besar) ──
+      const payload = {
+        action,
+        args,
+        sessionToken,
+        csrfToken
+      };
+
+      const jsonStr = JSON.stringify(payload);
+
+      // ── Kirim langsung ke Google Apps Script (Bypass batasan 4.5MB Vercel) ──
+      const _sendDirectToGas = async () => {
+        console.log('[GAS Adapter] Mengirim langsung ke Google Apps Script (Bypass Vercel limit)...', action);
+        if (typeof window.showUploadProgress === 'function') {
+          window.showUploadProgress(15, jsonStr.length, action, Math.round(jsonStr.length * 0.15));
+        }
+
+        let simPct = 15;
+        const progressTimer = setInterval(() => {
+          if (simPct < 90) {
+            simPct += 15;
+            if (typeof window.showUploadProgress === 'function') {
+              window.showUploadProgress(simPct, jsonStr.length, action, Math.round(jsonStr.length * (simPct / 100)));
+            }
+          }
+        }, 500);
+
+        try {
+          const res = await fetch(DIRECT_GAS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: jsonStr,
+            redirect: 'follow'
+          });
+          clearInterval(progressTimer);
+
+          if (typeof window.showUploadProgress === 'function') {
+            window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
+          }
+          setTimeout(() => {
+            if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+          }, 700);
+
+          if (!res.ok) {
+            throw new Error('Google Apps Script HTTP ' + res.status + ': ' + res.statusText);
+          }
+          return await res.json();
+        } catch (err) {
+          clearInterval(progressTimer);
+          if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+          throw err;
+        }
+      };
+
+      // ── Kirim ke server ──
       const _doRequest = async (retryCount) => {
-        const payload = {
-          action,
-          args,
-          sessionToken,
-          csrfToken
-        };
+        const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry';
+        const isPayloadExceedingVercel = jsonStr.length > 2.5 * 1024 * 1024; // > 2.5 MB
 
-        const jsonStr = JSON.stringify(payload);
-        const hasLargePayload = jsonStr.length > 25000 || OFFLINE_QUEUEABLE.includes(action);
+        // Jika ukuran file besar atau form upload dokumen, LANGSUNG kirim ke Google Apps Script
+        // agar TIDAK dicegat oleh batas 4.5 MB Vercel Serverless Function (HTTP 413)
+        if (isUploadAction || isPayloadExceedingVercel) {
+          return await _sendDirectToGas();
+        }
 
-        if (hasLargePayload && typeof window.showUploadProgress === 'function') {
+        const hasMediumPayload = jsonStr.length > 25000 || OFFLINE_QUEUEABLE.includes(action);
+
+        if (hasMediumPayload && typeof window.showUploadProgress === 'function') {
           window.showUploadProgress(0, jsonStr.length, action, 0);
           return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -114,7 +169,18 @@
               };
             }
 
-            xhr.onload = () => {
+            xhr.onload = async () => {
+              if (xhr.status === 413) {
+                console.warn('[GAS Adapter] HTTP 413 dari Vercel terdeteksi! Mengalihkan langsung ke Google Apps Script...');
+                try {
+                  const fallbackData = await _sendDirectToGas();
+                  resolve(fallbackData);
+                } catch (fallbackErr) {
+                  reject(fallbackErr);
+                }
+                return;
+              }
+
               if (typeof window.showUploadProgress === 'function') {
                 window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
               }
@@ -148,6 +214,11 @@
           body:    jsonStr
         });
 
+        if (res.status === 413) {
+          console.warn('[GAS Adapter] HTTP 413 dari Vercel fetch! Mengalihkan langsung ke Google Apps Script...');
+          return await _sendDirectToGas();
+        }
+
         if (!res.ok) {
           throw new Error('HTTP ' + res.status + ': ' + res.statusText);
         }
@@ -159,8 +230,10 @@
         try {
           data = await _doRequest(0);
         } catch (firstErr) {
-          // ── Retry 1x setelah 1.5 detik jika network error ──
-          if (firstErr.message.startsWith('HTTP 5') || firstErr.name === 'TypeError') {
+          if (firstErr.message && firstErr.message.includes('413')) {
+            console.warn('[GAS Adapter] Auto-recover dari HTTP 413 langsung ke Google Apps Script:', action);
+            data = await _sendDirectToGas();
+          } else if (firstErr.message.startsWith('HTTP 5') || firstErr.name === 'TypeError') {
             console.warn('[GAS Adapter] Retry 1x untuk:', action);
             await new Promise(r => setTimeout(r, 1500));
             data = await _doRequest(1);
