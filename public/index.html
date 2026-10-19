@@ -2236,6 +2236,298 @@ canvas#disciplineChart {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════ */
+/* 🚀 10/10 MODERN UI & MOBILE UX ENHANCEMENTS                    */
+/* ═══════════════════════════════════════════════════════════════ */
+
+/* 1. Pulse Beacon Dot on Pending Badges */
+.pulse-beacon {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  margin-right: 6px;
+  position: relative;
+  vertical-align: middle;
+}
+.pulse-beacon::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: inherit;
+  animation: beaconPulse 1.8s infinite ease-out;
+}
+@keyframes beaconPulse {
+  0% { transform: scale(0.8); opacity: 0.9; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* 2. Sticky Glassmorphism Filter Bar */
+.filter-row.sticky-filters {
+  position: sticky;
+  top: 58px;
+  z-index: 45;
+  background: var(--surface-card);
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* 3. Mobile Card View for Document List */
+.mobile-doc-cards {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+.doc-mobile-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.doc-mobile-card:active {
+  transform: scale(0.99);
+}
+.doc-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.doc-code-badge {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--surface-subtle);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  word-break: break-all;
+}
+.doc-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.doc-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed var(--border);
+}
+.doc-card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.doc-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.doc-card-actions .btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .desktop-doc-table { display: none !important; }
+  .mobile-doc-cards { display: flex !important; }
+}
+@media (min-width: 769px) {
+  .desktop-doc-table { display: block !important; }
+  .mobile-doc-cards { display: none !important; }
+}
+
+/* 4. Rich Empty State Component */
+.rich-empty-state {
+  text-align: center;
+  padding: 42px 20px;
+  background: var(--surface-subtle);
+  border-radius: 16px;
+  border: 1.5px dashed var(--border);
+  margin: 16px 0;
+}
+.rich-empty-state .res-icon {
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-card);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  font-size: 26px;
+}
+.rich-empty-state h3 {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+.rich-empty-state p {
+  font-size: 13px;
+  color: var(--ink-muted);
+  max-width: 380px;
+  margin: 0 auto 16px;
+  line-height: 1.5;
+}
+
+/* 5. Mobile Floating Action Button (FAB) */
+.mobile-fab-container {
+  display: none;
+  position: fixed;
+  bottom: 22px;
+  right: 18px;
+  z-index: 899;
+  flex-direction: column;
+  align-items: flex-end;
+}
+@media (max-width: 860px) {
+  .mobile-fab-container {
+    display: flex;
+  }
+}
+.mobile-main-fab {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent, #ed2e35), #c81e24);
+  color: #fff;
+  border: none;
+  box-shadow: 0 6px 20px rgba(237, 46, 53, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
+}
+.mobile-main-fab:active {
+  transform: scale(0.92);
+}
+.mobile-main-fab.open {
+  transform: rotate(45deg);
+  background: #1f2937;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.fab-plus-icon {
+  font-size: 30px;
+  font-weight: 300;
+  line-height: 1;
+}
+.mobile-fab-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.95);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  align-items: flex-end;
+}
+.mobile-fab-menu.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.fab-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.fab-label {
+  background: var(--surface-card, #fff);
+  color: var(--ink, #1f2937);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.fab-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface-card, #fff);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  border: 1px solid var(--border);
+}
+.fab-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 898;
+}
+.fab-backdrop.show {
+  display: block;
+}
+
+/* 6. Scroll to Top Button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 86px;
+  right: 22px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  z-index: 890;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateY(10px);
+}
+.scroll-top-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.scroll-top-btn:hover {
+  background: var(--surface-hover);
+}
+
 </style>
 
 <script>
@@ -2473,7 +2765,7 @@ canvas#disciplineChart {
             <!-- PANEL: LIST -->
             <div class="panel" id="panelList">
               <h2 class="panel-title">Daftar Dokumen</h2>
-              <div class="filter-row">
+              <div class="filter-row sticky-filters">
                 <input type="text" id="filterSearch" placeholder="🔍 Cari..." style="flex:2; min-width:180px;" oninput="onSearchInput()">
                 <button type="button" class="btn btn-secondary" onclick="openQrScanner('filterSearch', 'Scan QR / Barcode Dokumen')" title="Pindai QR / Barcode Dokumen" style="white-space:nowrap;padding:8px 12px;">📷 Scan</button>
                 <select id="filterDocType" onchange="loadDocumentList()"></select>
@@ -5446,15 +5738,39 @@ function restoreSidebarState() {
     function renderDocumentList(docs) {
       documentsCache = {}; docs.forEach(d => documentsCache[d.docId] = d);
       const content = document.getElementById('listContent');
-      if (!docs.length) { content.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div class="msg">Belum ada dokumen.</div></div>'; return; }
+      if (!docs.length) {
+        content.innerHTML = '<div class="rich-empty-state"><div class="res-icon">📁</div><h3>Tidak Ada Dokumen yang Ditemukan</h3><p>Belum ada dokumen yang sesuai dengan filter atau kata kunci pencarian saat ini.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById(\'filterSearch\').value=\'\';document.getElementById(\'filterStatus\').value=\'\';document.getElementById(\'filterDocType\').value=\'\';loadDocumentList();">🔄 Reset Filter</button><button type="button" class="btn btn-primary btn-small" onclick="switchTab(\'upload\')">📤 Unggah Dokumen Baru</button></div></div>';
+        return;
+      }
       let rows = '';
+      let cards = '';
       docs.forEach(function (d) {
         const ds = d.timestamp ? new Date(d.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : '-';
         let actions = fileLinksHtml(d) + ' <button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button> <button class="btn-small" onclick="openHistoryModal(\'' + d.docId + '\')">Riwayat</button>';
         if (d.canEdit) actions += ' <button class="btn-small" onclick="openEditModal(\'' + d.docId + '\')">Edit</button> <button class="btn-small danger" onclick="doDeleteDocument(\'' + d.docId + '\')">Hapus</button>';
+        
+        // 1. Baris Tabel Desktop
         rows += '<tr><td><span class="doc-code">' + esc(d.fileName) + '</span></td><td>' + esc(d.projectName) + '<br><span class="hint" style="margin:0;">' + esc(d.discipline) + '</span></td><td>' + esc(d.documentType) + '</td><td class="doc-title">' + esc(d.title) + '</td><td>' + statusBadge(d.status) + '<br>' + lifecycleBadge(d.lifecycleStage) + '</td><td>' + ds + '</td><td>' + actions + '</td></tr>';
+
+        // 2. Kartu Mobile Responsif (Sangat nyaman di ponsel, tanpa geser horizontal)
+        cards += '<div class="doc-mobile-card">' +
+          '<div class="doc-card-head">' +
+            '<span class="doc-code-badge">' + esc(d.fileName || d.documentCode || 'Dokumen') + '</span>' +
+            '<div>' + statusBadge(d.status) + '</div>' +
+          '</div>' +
+          '<div class="doc-card-title">' + esc(d.title) + '</div>' +
+          '<div class="doc-card-meta">' +
+            '<span>🏗️ ' + esc(d.projectName) + ' · ' + esc(d.discipline) + '</span>' +
+            '<span>📌 ' + esc(d.documentType) + (d.lifecycleStage ? ' · ' + lifecycleBadge(d.lifecycleStage) : '') + '</span>' +
+            '<span>🕒 ' + ds + (d.uploaderName ? ' · Oleh ' + esc(d.uploaderName) : '') + '</span>' +
+          '</div>' +
+          '<div class="doc-card-actions">' + actions + '</div>' +
+        '</div>';
       });
-      content.innerHTML = '<div class="table-scroll"><table><thead><tr><th>File</th><th>Proyek</th><th>Jenis</th><th>Judul</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+      content.innerHTML = 
+        '<div class="desktop-doc-table table-scroll"><table><thead><tr><th>File</th><th>Proyek</th><th>Jenis</th><th>Judul</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+        '<div class="mobile-doc-cards">' + cards + '</div>';
     }
 function fileLinksHtml(d) {
   let h = '-';
@@ -5473,7 +5789,8 @@ function fileLinksHtml(d) {
 
     function statusBadge(s) {
       const m = { Pending: 'badge-pending', Approved: 'badge-approved', Rejected: 'badge-rejected', Superseded: 'badge-superseded' };
-      return '<span class="badge ' + (m[s] || 'badge-pending') + '">' + esc(s) + '</span>';
+      const pulse = s === 'Pending' ? '<span class="pulse-beacon"></span>' : '';
+      return '<span class="badge ' + (m[s] || 'badge-pending') + '">' + pulse + esc(s) + '</span>';
     }
     function lifecycleBadge(lc) {
       if (!lc) return '';
@@ -9346,6 +9663,94 @@ window.addEventListener('offline', updateFooterStatus);
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
+
+    // Mobile FAB (Floating Action Button) Controller
+    window.toggleMobileFab = function(forceState) {
+      var menu = document.getElementById('mobileFabMenu');
+      var btn = document.getElementById('mobileMainFab');
+      var backdrop = document.getElementById('fabBackdrop');
+      if (!menu || !btn) return;
+      var isOpen = (typeof forceState === 'boolean') ? forceState : !menu.classList.contains('open');
+      if (isOpen) {
+        menu.classList.add('open');
+        btn.classList.add('open');
+        if (backdrop) backdrop.classList.add('show');
+      } else {
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('show');
+      }
+    };
+
+    window.handleFabAction = function(action) {
+      window.toggleMobileFab(false);
+      if (action === 'upload') {
+        if (typeof switchTab === 'function') switchTab('upload');
+      } else if (action === 'sitereport') {
+        if (typeof switchTab === 'function') switchTab('sitereport');
+      } else if (action === 'qr') {
+        if (typeof openQrScanner === 'function') openQrScanner('filterSearch', 'Scan QR / Barcode Dokumen');
+      } else if (action === 'nfilog') {
+        if (typeof switchTab === 'function') switchTab('nfilog');
+      }
+    };
+
+    // Scroll to Top Handler
+    window.scrollToTopSmooth = function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      var mc = document.querySelector('.main-content');
+      if (mc) mc.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    var scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (scrollTopBtn) {
+      var checkScrollTop = function() {
+        var y = window.scrollY || document.documentElement.scrollTop || 0;
+        var mc = document.querySelector('.main-content');
+        if (mc && mc.scrollTop > y) y = mc.scrollTop;
+        if (y > 320) {
+          scrollTopBtn.classList.add('show');
+        } else {
+          scrollTopBtn.classList.remove('show');
+        }
+      };
+      window.addEventListener('scroll', checkScrollTop, { passive: true });
+      var mcElem = document.querySelector('.main-content');
+      if (mcElem) mcElem.addEventListener('scroll', checkScrollTop, { passive: true });
+    }
   </script>
+
+  <!-- Mobile FAB Backdrop -->
+  <div class="fab-backdrop" id="fabBackdrop" onclick="toggleMobileFab(false)"></div>
+
+  <!-- Mobile Floating Action Button (Speed Dial) -->
+  <div class="mobile-fab-container" id="mobileFabContainer">
+    <div class="mobile-fab-menu" id="mobileFabMenu">
+      <button type="button" class="fab-item" onclick="handleFabAction('upload')" title="Unggah Dokumen Baru">
+        <span class="fab-label">Unggah Dokumen</span>
+        <span class="fab-icon">📤</span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('sitereport')" title="Laporan Inspeksi Lapangan">
+        <span class="fab-label">Laporan Lapangan</span>
+        <span class="fab-icon">📷</span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('qr')" title="Pindai QR / Barcode">
+        <span class="fab-label">Pindai QR</span>
+        <span class="fab-icon">🔍</span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('nfilog')" title="Catat / Lihat NFI">
+        <span class="fab-label">NFI Log</span>
+        <span class="fab-icon">📝</span>
+      </button>
+    </div>
+    <button type="button" class="mobile-main-fab" id="mobileMainFab" onclick="toggleMobileFab()" aria-label="Menu Tindakan Cepat" title="Menu Tindakan Cepat">
+      <span class="fab-plus-icon">+</span>
+    </button>
+  </div>
+
+  <!-- Scroll-to-Top Floating Button -->
+  <button type="button" class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTopSmooth()" aria-label="Kembali ke atas" title="Kembali ke atas">
+    ↑
+  </button>
 </body>
 </html>
