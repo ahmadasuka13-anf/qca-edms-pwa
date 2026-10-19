@@ -776,11 +776,30 @@ body {
     .donut-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .donut-pct { color: var(--ink-muted); font-size: 12px; }
 
-    .modal-overlay { display: none; position: fixed; inset: 0; background: var(--overlay-scrim); align-items: center; justify-content: center; z-index: 250; padding: 16px; }
-    .modal-overlay.show { display: flex; }
-    .modal-box { background: var(--surface-card); border-radius: 16px; padding: 26px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-card); }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: var(--overlay-scrim); align-items: center; justify-content: center; z-index: 100000 !important; padding: 16px; -webkit-overflow-scrolling: touch; }
+    .modal-overlay.show { display: flex !important; }
+    .modal-box { background: var(--surface-card); border-radius: 16px; padding: 26px; max-width: 440px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-card); position: relative; }
     .modal-box .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-    .modal-box .modal-actions .btn { flex: 1; }
+    .modal-box .modal-actions .btn { flex: 1; min-height: 44px; touch-action: manipulation; }
+
+    /* Sembunyikan FAB & Chat Panel saat Modal atau Sidebar terbuka */
+    body.sidebar-open #mobileFabContainer,
+    body.sidebar-open #aiChatBtn,
+    body.modal-open #mobileFabContainer,
+    body.modal-open #aiChatBtn,
+    body.modal-open #aiChatPanel {
+      display: none !important;
+      pointer-events: none !important;
+    }
+    body:has(.modal-overlay.show) #mobileFabContainer,
+    body:has(.modal-overlay.show) #aiChatBtn,
+    body:has(.dev-modal-overlay.show) #mobileFabContainer,
+    body:has(.dev-modal-overlay.show) #aiChatBtn,
+    body:has(.ai-diag-overlay.show) #mobileFabContainer,
+    body:has(.ai-diag-overlay.show) #aiChatBtn {
+      display: none !important;
+      pointer-events: none !important;
+    }
 
     .history-timeline { display: flex; flex-direction: column; max-height: 56vh; overflow-y: auto; padding-right: 4px; }
     .history-item { border-left: 2px solid var(--border); padding: 2px 0 18px 16px; position: relative; }
@@ -1272,9 +1291,9 @@ body {
   .modal-box {
     max-width: 100% !important;
     width: 100% !important;
-    max-height: 92vh !important;
+    max-height: 90vh !important;
     border-radius: 20px 20px 0 0 !important;
-    padding: 22px 18px calc(22px + env(safe-area-inset-bottom)) !important;
+    padding: 20px 18px calc(18px + env(safe-area-inset-bottom)) !important;
     animation: slideUpMobile 0.25s ease-out;
   }
   @keyframes slideUpMobile {
@@ -1285,9 +1304,17 @@ body {
     position: sticky;
     bottom: 0;
     background: var(--surface-card);
-    padding-top: 12px;
-    margin-top: 16px;
+    padding: 12px 0 4px;
+    margin-top: 14px;
     border-top: 1px solid var(--border);
+    z-index: 20;
+  }
+  .modal-box .modal-actions .btn {
+    min-height: 48px !important;
+    font-size: 14.5px !important;
+    font-weight: 700 !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
@@ -4179,7 +4206,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <div style="font-size:16px; font-weight:800; font-family:'Plus Jakarta Sans',sans-serif;" id="analyticsProjectName">—</div>
         </div>
       </div>
-      <button onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid rgba(255,255,255,0.3); padding:6px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
+      <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.2); color:#fff; border:1px solid rgba(255,255,255,0.4); padding:8px 16px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; min-height:42px; touch-action:manipulation; display:inline-flex; align-items:center; gap:6px;">
         ✕ Tutup Analisis
       </button>
     </div>
@@ -4269,9 +4296,9 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- MODAL: Drill-down Detail -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<div id="drillModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; overflow:auto;">
-  <div style="background:#fff; max-width:1100px; margin:40px auto; border-radius:12px; padding:24px; position:relative;">
-    <button onclick="closeDrillModal()" style="position:absolute; right:16px; top:16px; background:#c62828; color:#fff; border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; font-size:16px;">✕</button>
+<div id="drillModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100000 !important; overflow:auto; padding:16px;" onclick="if(event.target===this) closeDrillModal()">
+  <div style="background:var(--surface-card,#fff); max-width:1100px; margin:20px auto; border-radius:14px; padding:24px; position:relative; box-shadow:0 12px 40px rgba(0,0,0,0.35);">
+    <button type="button" onclick="closeDrillModal()" style="position:absolute; right:16px; top:16px; background:#c62828; color:#fff; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; font-size:18px; display:inline-flex; align-items:center; justify-content:center; touch-action:manipulation; box-shadow:0 2px 8px rgba(0,0,0,0.3);" title="Tutup">✕</button>
     <h3 id="drillTitle" style="margin-top:0;">Detail</h3>
     <div style="margin-bottom:12px; font-size:13px; color:#666;" id="drillInfo"></div>
     <div style="overflow-x:auto; max-height:60vh;">
@@ -4447,8 +4474,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   </div>
 
   <!-- ===================== MODALS ===================== -->
-  <div class="modal-overlay" id="editModal"><div class="modal-box">
-    <h3 class="card-title">Edit Dokumen</h3>
+  <div class="modal-overlay" id="editModal" onclick="if(event.target===this) closeEditModal()"><div class="modal-box">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" style="margin:0;">Edit Dokumen</h3>
+      <button type="button" onclick="closeEditModal()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <form id="editForm" onsubmit="submitEdit(event)">
       <input type="hidden" id="editDocId">
       <div class="form-group" style="margin-bottom:14px;"><label>Judul</label><input type="text" id="editTitleInput" required></div>
@@ -4464,20 +4494,29 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     </form>
   </div></div>
 
-  <div class="modal-overlay" id="historyModal"><div class="modal-box" style="max-width:560px;">
-    <h3 class="card-title" id="historyModalTitle">Riwayat Revisi</h3>
+  <div class="modal-overlay" id="historyModal" onclick="if(event.target===this) closeHistoryModal()"><div class="modal-box" style="max-width:560px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" id="historyModalTitle" style="margin:0; font-size:16px;">Riwayat Revisi</h3>
+      <button type="button" onclick="closeHistoryModal()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <div id="historyModalContent"></div>
-    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeHistoryModal()">Tutup</button></div>
+    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeHistoryModal()" style="min-height:48px; font-weight:700; touch-action:manipulation;">Tutup</button></div>
   </div></div>
 
-  <div class="modal-overlay" id="docDetailModal"><div class="modal-box" style="max-width:640px;">
-    <h3 class="card-title" id="docDetailTitle">Detail Dokumen</h3>
+  <div class="modal-overlay" id="docDetailModal" onclick="if(event.target===this) closeDocDetail()"><div class="modal-box" style="max-width:680px; position:relative;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" id="docDetailTitle" style="margin:0; font-size:16px;">Detail Dokumen</h3>
+      <button type="button" onclick="closeDocDetail()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; font-size:18px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <div id="docDetailContent"></div>
-    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeDocDetail()">Tutup</button></div>
+    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="closeDocDetail()" style="min-height:48px; font-weight:700; touch-action:manipulation;">Tutup</button></div>
   </div></div>
 
-  <div class="modal-overlay" id="transmittalModal"><div class="modal-box" style="max-width:680px;">
-    <h3 class="card-title">Buat Transmittal</h3>
+  <div class="modal-overlay" id="transmittalModal" onclick="if(event.target===this) closeTransmittalModal()"><div class="modal-box" style="max-width:680px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" style="margin:0;">Buat Transmittal</h3>
+      <button type="button" onclick="closeTransmittalModal()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <form id="transmittalForm" onsubmit="submitTransmittal(event)">
       <div class="form-row">
         <div class="form-group"><label>Proyek</label><select id="transProjectSelect" required onchange="onTransProjectChange()"></select></div>
@@ -4499,14 +4538,20 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     </form>
   </div></div>
 
-  <div class="modal-overlay" id="accessLogModal"><div class="modal-box" style="max-width:600px;">
-    <h3 class="card-title">Log Akses</h3>
+  <div class="modal-overlay" id="accessLogModal" onclick="if(event.target===this) document.getElementById('accessLogModal').classList.remove('show')"><div class="modal-box" style="max-width:600px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" style="margin:0;">Log Akses</h3>
+      <button type="button" onclick="document.getElementById('accessLogModal').classList.remove('show')" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <div id="accessLogContent"></div>
-    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="document.getElementById('accessLogModal').classList.remove('show')">Tutup</button></div>
+    <div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="document.getElementById('accessLogModal').classList.remove('show')" style="min-height:48px; font-weight:700; touch-action:manipulation;">Tutup</button></div>
   </div></div>
 
-  <div class="modal-overlay" id="archiveModal"><div class="modal-box">
-    <h3 class="card-title">Arsipkan</h3>
+  <div class="modal-overlay" id="archiveModal" onclick="if(event.target===this) closeArchiveModal()"><div class="modal-box">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" style="margin:0;">Arsipkan</h3>
+      <button type="button" onclick="closeArchiveModal()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <form id="archiveForm" onsubmit="submitArchive(event)">
       <input type="hidden" id="archiveDocId">
       <div class="form-group" style="margin-bottom:14px;"><label>Tahun Retensi</label><input type="number" id="archiveRetentionYears" min="1" max="30" required></div>
@@ -4517,8 +4562,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     </form>
   </div></div>
 
-  <div class="modal-overlay" id="nfiModal"><div class="modal-box" style="max-width:780px;">
-    <h3 class="card-title" id="nfiModalTitle">Tambah Entri NFI</h3>
+  <div class="modal-overlay" id="nfiModal" onclick="if(event.target===this) closeNfiModal()"><div class="modal-box" style="max-width:780px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border);">
+      <h3 class="card-title" id="nfiModalTitle" style="margin:0;">Tambah Entri NFI</h3>
+      <button type="button" onclick="closeNfiModal()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup">✕</button>
+    </div>
     <form id="nfiForm" onsubmit="submitNfiForm(event)">
       <input type="hidden" id="nfiIdInput">
       <div class="form-row single"><div class="form-group"><label>Proyek *</label><select id="nfiProjectSelect" required><option value="">— Pilih —</option></select></div></div>
@@ -11179,6 +11227,186 @@ window.addEventListener('offline', updateFooterStatus);
         showToast('Gagal menyalin, browser tidak mengizinkan akses clipboard.', 'error');
       });
     };
+
+    // ═══════════════════════════════════════════════════════════════
+    // 📱 MODAL WATCHER & MUTATION OBSERVER
+    // Otomatis sembunyikan tombol melayang & kelola class body.modal-open
+    // ═══════════════════════════════════════════════════════════════
+    window.updateModalOpenState_ = function() {
+      var hasOpen = !!document.querySelector('.modal-overlay.show, .dev-modal-overlay.show, .ai-diag-overlay.show, #aiChatPanel[style*="display: flex"], #aiChatPanel[style*="display: block"], #drillModal[style*="display: block"]');
+      if (hasOpen) {
+        document.body.classList.add('modal-open');
+      } else {
+        document.body.classList.remove('modal-open');
+      }
+      return hasOpen;
+    };
+
+    try {
+      var modalObserver = new MutationObserver(function() {
+        if (typeof window.updateModalOpenState_ === 'function') {
+          window.updateModalOpenState_();
+        }
+      });
+      modalObserver.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class', 'style'] });
+    } catch (e) {}
+
+    // ═══════════════════════════════════════════════════════════════
+    // 📱 MOBILE PWA BACK BUTTON & NAVIGATION HISTORY MANAGER
+    // Mencegah aplikasi keluar mendadak saat tombol back di HP ditekan
+    // ═══════════════════════════════════════════════════════════════
+    window.closeAnyOpenModal = function () {
+      // 1. Developer Modal
+      var devModal = document.getElementById('developerModal');
+      if (devModal && devModal.classList.contains('show')) {
+        if (typeof closeDevModal === 'function') { closeDevModal(); return true; }
+        devModal.classList.remove('show');
+        return true;
+      }
+      // 2. AI QA Diagnostic Modal
+      var aiDiag = document.getElementById('aiDiagnosticModal');
+      if (aiDiag && aiDiag.classList.contains('show')) {
+        if (typeof closeQADiagnosticModal === 'function') { closeQADiagnosticModal(); return true; }
+        aiDiag.classList.remove('show');
+        return true;
+      }
+      // 3. AI Chat Floating Panel
+      var aiChat = document.getElementById('aiChatPanel');
+      if (aiChat && (aiChat.style.display === 'flex' || aiChat.style.display === 'block')) {
+        if (typeof _closeAIChatPanel_ === 'function') { _closeAIChatPanel_(); return true; }
+        aiChat.style.display = 'none';
+        return true;
+      }
+      // 4. Drill Modal (Command Center)
+      var drill = document.getElementById('drillModal');
+      if (drill && (drill.style.display === 'block' || drill.style.display === 'flex')) {
+        if (typeof closeDrillModal === 'function') { closeDrillModal(); return true; }
+        drill.style.display = 'none';
+        return true;
+      }
+      // 5. Welcome Screen
+      var welcome = document.getElementById('welcomeCinematicScreen') || document.getElementById('welcomeOverlay');
+      if (welcome && (welcome.classList.contains('show') || (welcome.style && welcome.style.display !== 'none' && welcome.style.display !== ''))) {
+        if (typeof closeWelcomeScreen === 'function') { closeWelcomeScreen(); return true; }
+        welcome.style.display = 'none';
+        welcome.classList.remove('show');
+        return true;
+      }
+      // 6. QR Scanner Modal
+      var qrModal = document.getElementById('qrScannerModal');
+      if (qrModal && (qrModal.style.display === 'flex' || qrModal.style.display === 'block')) {
+        if (typeof window.closeQrScanner === 'function') { window.closeQrScanner(); return true; }
+        qrModal.style.display = 'none';
+        return true;
+      }
+      // 7. Preview Modal
+      var prev = document.getElementById('previewModal');
+      if (prev && prev.classList.contains('show')) {
+        if (typeof window.closePreviewModal === 'function') { window.closePreviewModal(); return true; }
+        prev.classList.remove('show');
+        return true;
+      }
+      // 8. Standard modal overlays with .show
+      var openModals = document.querySelectorAll('.modal-overlay.show');
+      if (openModals && openModals.length > 0) {
+        for (var i = openModals.length - 1; i >= 0; i--) {
+          var m = openModals[i];
+          if (m.id === 'docDetailModal' && typeof closeDocDetail === 'function') { closeDocDetail(); return true; }
+          if (m.id === 'historyModal' && typeof closeHistoryModal === 'function') { closeHistoryModal(); return true; }
+          if (m.id === 'editModal' && typeof closeEditModal === 'function') { closeEditModal(); return true; }
+          if (m.id === 'transmittalModal' && typeof closeTransmittalModal === 'function') { closeTransmittalModal(); return true; }
+          if (m.id === 'accessLogModal') { m.classList.remove('show'); return true; }
+          if (m.id === 'archiveModal' && typeof closeArchiveModal === 'function') { closeArchiveModal(); return true; }
+          if (m.id === 'nfiModal' && typeof closeNfiModal === 'function') { closeNfiModal(); return true; }
+          if (m.id === 'nfiImportModal' && typeof closeNfiImportModal === 'function') { closeNfiImportModal(); return true; }
+          if (m.id === 'calibrationModal' && typeof closeCalibrationForm === 'function') { closeCalibrationForm(); return true; }
+          m.classList.remove('show');
+          return true;
+        }
+      }
+      // 9. Mobile Sidebar Open
+      var sb = document.getElementById('appSidebar');
+      if (sb && sb.classList.contains('open')) {
+        if (typeof closeNavMenu === 'function') { closeNavMenu(); return true; }
+        sb.classList.remove('open');
+        document.body.classList.remove('sidebar-open');
+        var ov = document.getElementById('sidebarOverlay');
+        if (ov) ov.classList.remove('show');
+        return true;
+      }
+      // 10. Mobile FAB Dial Open
+      var fab = document.getElementById('mobileFabContainer');
+      if (fab && fab.classList.contains('open')) {
+        if (typeof window.toggleMobileFab === 'function') { window.toggleMobileFab(false); return true; }
+        fab.classList.remove('open');
+        return true;
+      }
+      return false;
+    };
+
+    (function initPwaHistory() {
+      if (!window.history || !window.history.pushState) return;
+
+      var lastBackPressTime = 0;
+
+      try {
+        window.history.replaceState({ app: 'qccms', root: true, tab: 'list' }, '');
+        window.history.pushState({ app: 'qccms', tab: 'list' }, '');
+      } catch (e) {}
+
+      // Intercept window.switchTab so every tab change is tracked in history
+      var rawSwitchTab = window.switchTab;
+      window.switchTab = function (name, skipHistory) {
+        if (typeof rawSwitchTab === 'function') {
+          rawSwitchTab(name);
+        }
+        if (!skipHistory) {
+          try {
+            window.history.pushState({ app: 'qccms', tab: name }, '');
+          } catch (e) {}
+        }
+      };
+
+      // Listen for Android Back button or browser back gesture
+      window.addEventListener('popstate', function (event) {
+        // 1. If any modal, drawer, or speed dial is open, CLOSE IT and stay in app!
+        if (window.closeAnyOpenModal()) {
+          try {
+            window.history.pushState({ app: 'qccms', guard: true }, '');
+          } catch (e) {}
+          return;
+        }
+
+        // 2. If user is in a tab other than 'list', return to 'list'
+        var activePanel = document.querySelector('.panel.active');
+        var currentTab = activePanel ? activePanel.id.replace('panel', '').toLowerCase() : '';
+
+        if (currentTab && currentTab !== 'list') {
+          if (typeof window.switchTab === 'function') {
+            window.switchTab('list', true);
+            try {
+              window.history.pushState({ app: 'qccms', tab: 'list' }, '');
+            } catch (e) {}
+            return;
+          }
+        }
+
+        // 3. If already on root ('list') and no modal is open -> Double-press back to exit
+        var now = Date.now();
+        if (now - lastBackPressTime < 2500) {
+          // Allow exiting app
+          return;
+        }
+
+        lastBackPressTime = now;
+        if (typeof showToast === 'function') {
+          showToast('Tekan tombol kembali sekali lagi untuk keluar dari aplikasi', 'info');
+        }
+        try {
+          window.history.pushState({ app: 'qccms', exitConfirm: true }, '');
+        } catch (e) {}
+      });
+    })();
   </script>
 
   <!-- Mobile FAB Backdrop -->
