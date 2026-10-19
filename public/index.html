@@ -5247,68 +5247,110 @@ function handleForgotPassword(event) {
 }
 </script>
   <style>
+  #previewModal {
+    z-index: 100020 !important;
+  }
   .preview-modal-box {
-    max-width: 960px;
-    max-height: 92vh;
+    max-width: 1060px;
+    width: 95%;
+    max-height: 94vh;
     padding: 16px 20px 20px;
     display: flex;
     flex-direction: column;
+    background: var(--surface-card, #fff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 16px;
+    box-shadow: 0 25px 65px rgba(0,0,0,0.4);
+    animation: previewFadeIn 0.22s ease-out;
+  }
+  @keyframes previewFadeIn {
+    0% { opacity: 0; transform: scale(0.97) translateY(8px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
   }
   .preview-modal-head {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border, #e2e8f0);
   }
   .preview-modal-body {
     flex: 1;
-    min-height: 400px;
+    min-height: 440px;
+    height: 74vh;
     overflow: hidden;
     border-radius: 10px;
-    background: var(--surface-subtle);
+    background: #0f172a;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
   .preview-iframe {
     width: 100%;
-    height: 70vh;
+    height: 100%;
     border: none;
     border-radius: 10px;
     background: #fff;
   }
-  @media (max-width: 560px) {
-    .preview-iframe { height: 60vh; }
-    .preview-modal-box { padding: 12px; }
+  @media (max-width: 768px) {
+    #previewModal {
+      padding: 6px !important;
+      align-items: center !important;
+    }
+    .preview-modal-box {
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 94vh !important;
+      max-height: 94vh !important;
+      padding: 12px !important;
+      border-radius: 14px !important;
+    }
+    .preview-modal-body {
+      height: calc(94vh - 75px) !important;
+    }
   }
 </style>
 
 <script>
   // ============================================================================
-  // Preview In-Browser (Cache + Prefetch)
+  // Preview In-Browser (Instant Fast-Path + Drive Resolver + Image Support)
   // ============================================================================
-
   (function () {
     'use strict';
 
-    // ⬇️ 1. CACHE — di paling atas
     var __previewCache = {};
 
-    // ⬇️ 2. INJECT MODAL
+    function extractDriveIdClient_(url) {
+      if (!url) return '';
+      var str = String(url).trim();
+      var m = str.match(/\/(?:folders|d|file\/d)\/([a-zA-Z0-9_-]{15,})/);
+      if (m) return m[1];
+      m = str.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+      if (m) return m[1];
+      return '';
+    }
+
     function injectPreviewModal() {
       if (document.getElementById('previewModal')) return;
       var html =
         '<div class="modal-overlay" id="previewModal">' +
           '<div class="modal-box preview-modal-box">' +
             '<div class="preview-modal-head">' +
-              '<h3 class="card-title" id="previewModalTitle" style="margin:0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Preview</h3>' +
-              '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank">⬇ Download</a>' +
-              '<button class="btn-small" onclick="closePreviewModal()">✕</button>' +
+              '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">' +
+                '<span style="font-size:18px;">📄</span>' +
+                '<h3 class="card-title" id="previewModalTitle" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px;">Preview Dokumen</h3>' +
+              '</div>' +
+              '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
+                '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive">↗ Tab Baru</a>' +
+                '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen">⬇ Unduh</a>' +
+                '<button type="button" class="btn-small" onclick="closePreviewModal()" title="Tutup preview">✕</button>' +
+              '</div>' +
             '</div>' +
             '<div class="preview-modal-body" id="previewModalBody">' +
-              '<div class="loading-row"><span class="spinner dark"></span>Memuat preview...</div>' +
+              '<div class="loading-row" style="color:#fff;"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
             '</div>' +
           '</div>' +
         '</div>';
@@ -5317,43 +5359,66 @@ function handleForgotPassword(event) {
       document.body.appendChild(tmp.firstElementChild);
     }
 
-    // ⬇️ 3. RENDER ISI MODAL
     function renderPreviewBody_(body, res) {
-      if (res.mode === 'native' || res.mode === 'google-viewer') {
-        var iframe = document.createElement('iframe');
-        iframe.className = 'preview-iframe';
-        iframe.src = res.previewUrl;
-        iframe.setAttribute('allow', 'autoplay');
-        iframe.setAttribute('allowfullscreen', '');
-        body.innerHTML = '';
-        body.appendChild(iframe);
+      if (!body) return;
+      var previewUrl = res.previewUrl || '';
+      var fileId = res.fileId || extractDriveIdClient_(res.downloadUrl || previewUrl);
+      var downloadUrl = res.directDownloadUrl || res.downloadUrl || (fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : '');
+      var viewUrl = res.downloadUrl || (fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : '');
+
+      if (!previewUrl && fileId) {
+        previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+      }
+
+      var isImage = (res.mimeType && res.mimeType.indexOf('image/') === 0) ||
+                    /\.(jpe?g|png|gif|webp|bmp)$/i.test(res.fileName || '');
+
+      if (isImage && fileId) {
+        var imgSrc = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1600';
+        body.innerHTML =
+          '<div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:auto; background:#0f172a; border-radius:10px; padding:12px;">' +
+            '<img src="' + imgSrc + '" alt="' + esc(res.fileName || 'Preview') + '" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; box-shadow:0 4px 20px rgba(0,0,0,0.5);" onerror="this.onerror=null; this.src=\'' + esc(downloadUrl) + '\';">' +
+          '</div>';
+        return;
+      }
+
+      if (previewUrl) {
+        body.innerHTML =
+          '<iframe class="preview-iframe" src="' + esc(previewUrl) + '" allow="autoplay" allowfullscreen></iframe>';
       } else {
         body.innerHTML =
-          '<div class="empty-state">' +
+          '<div class="empty-state" style="padding:40px 20px; color:#fff;">' +
             '<div class="icon">📄</div>' +
-            '<div class="msg">Preview tidak tersedia untuk tipe file ini.<br><br>' +
-              '<a href="' + esc(res.downloadUrl) + '" target="_blank" class="btn btn-primary">⬇ Download File</a>' +
+            '<div class="msg" style="font-size:13.5px;color:#cbd5e1;">' +
+              '<b style="color:#fff;">Pratinjau langsung tidak tersedia untuk format file ini.</b><br>' +
+              '<span style="font-size:12px;opacity:0.8;">Silakan buka langsung di Google Drive atau unduh berkas.</span><br><br>' +
+              '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
+                (viewUrl ? '<a href="' + esc(viewUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-small">↗ Buka di Google Drive</a>' : '') +
+                (downloadUrl ? '<a href="' + esc(downloadUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-small">⬇ Unduh File</a>' : '') +
+              '</div>' +
             '</div>' +
           '</div>';
       }
     }
 
-    // ⬇️ 4. PREFETCH (dipanggil saat hover)
     window.prefetchPreview_ = function (fileUrl) {
       if (!fileUrl || __previewCache[fileUrl]) return;
       if (!sessionToken) return;
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (res && res.success) __previewCache[fileUrl] = res;
-        })
-        .withFailureHandler(function () {})
-        .getFilePreviewInfo(sessionToken, fileUrl);
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function (res) {
+            if (res && res.success) __previewCache[fileUrl] = res;
+          })
+          .withFailureHandler(function () {})
+          .getFilePreviewInfo(sessionToken, fileUrl);
+      }
     };
 
-    // ⬇️ 5. FUNGSI UTAMA PREVIEW
     window.previewFile_ = function (fileUrl, fileName) {
-      if (!fileUrl) { showToast('URL file tidak tersedia.', 'error'); return; }
-      if (!sessionToken) { showToast('Sesi tidak aktif.', 'error'); return; }
+      if (!fileUrl) {
+        if (typeof showToast === 'function') showToast('URL file dokumen tidak tersedia.', 'error');
+        return;
+      }
 
       injectPreviewModal();
 
@@ -5361,41 +5426,53 @@ function handleForgotPassword(event) {
       var title = document.getElementById('previewModalTitle');
       var body  = document.getElementById('previewModalBody');
       var dlBtn = document.getElementById('previewDownloadBtn');
+      var tabBtn = document.getElementById('previewNewTabBtn');
 
-      title.textContent = fileName || 'Preview';
-      dlBtn.href = fileUrl;
-      modal.classList.add('show');
+      var fileId = extractDriveIdClient_(fileUrl);
+      var directDl = fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : fileUrl;
+      var newTabUrl = fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : fileUrl;
 
-      // Cache hit → langsung tampil
-      if (__previewCache[fileUrl]) {
-        var c = __previewCache[fileUrl];
-        title.textContent = c.fileName || fileName;
-        dlBtn.href = c.downloadUrl || fileUrl;
-        renderPreviewBody_(body, c);
+      if (title) title.textContent = fileName || 'Preview Dokumen';
+      if (dlBtn) dlBtn.href = directDl;
+      if (tabBtn) tabBtn.href = newTabUrl;
+      if (modal) modal.classList.add('show');
+
+      // 1. FAST PATH: Langsung muat pratinjau seketika jika ada Google Drive ID
+      if (fileId) {
+        renderPreviewBody_(body, {
+          mode: 'native',
+          previewUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
+          fileName: fileName,
+          fileId: fileId,
+          downloadUrl: fileUrl,
+          directDownloadUrl: directDl
+        });
+      } else if (__previewCache[fileUrl]) {
+        renderPreviewBody_(body, __previewCache[fileUrl]);
         return;
+      } else {
+        body.innerHTML = '<div class="loading-row" style="color:#fff;"><span class="spinner"></span>Memuat preview dokumen...</div>';
       }
 
-      // Cache miss → tanya server
-      body.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat preview...</div>';
-
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (!res || !res.success) {
-            body.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div class="msg">' + esc((res && res.message) || 'Gagal memuat preview.') + '</div></div>';
-            return;
-          }
-          title.textContent = res.fileName || fileName;
-          dlBtn.href = res.downloadUrl || fileUrl;
-          __previewCache[fileUrl] = res;
-          renderPreviewBody_(body, res);
-        })
-        .withFailureHandler(function (err) {
-          body.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div class="msg">Gagal: ' + esc((err && err.message) || 'Unknown') + '</div></div>';
-        })
-        .getFilePreviewInfo(sessionToken, fileUrl);
+      // 2. BACKGROUND PERMISSION SYNC: Hubungi server untuk memastikan file sharing ANYONE_WITH_LINK aktif
+      if (sessionToken && typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function (res) {
+            if (res && res.success) {
+              __previewCache[fileUrl] = res;
+              if (title && res.fileName) title.textContent = res.fileName;
+              if (dlBtn && (res.directDownloadUrl || res.downloadUrl)) dlBtn.href = res.directDownloadUrl || res.downloadUrl;
+              if (tabBtn && res.downloadUrl) tabBtn.href = res.downloadUrl;
+              if (!fileId) renderPreviewBody_(body, res);
+            }
+          })
+          .withFailureHandler(function (err) {
+            console.warn('[Preview] Background check warning:', err);
+          })
+          .getFilePreviewInfo(sessionToken, fileUrl);
+      }
     };
 
-    // ⬇️ 6. CLOSE MODAL
     window.closePreviewModal = function () {
       var modal = document.getElementById('previewModal');
       if (!modal) return;
@@ -5404,7 +5481,6 @@ function handleForgotPassword(event) {
       if (body) body.innerHTML = '';
     };
 
-    // ⬇️ 7. EVENT LISTENER
     document.addEventListener('click', function (e) {
       var modal = document.getElementById('previewModal');
       if (modal && modal.classList.contains('show') && e.target === modal) closePreviewModal();
@@ -5416,7 +5492,6 @@ function handleForgotPassword(event) {
       }
     });
 
-    // ⬇️ 8. INJECT SAAT DOM SIAP
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', injectPreviewModal);
     } else {
@@ -6334,12 +6409,13 @@ function fileLinksHtml(d) {
   let h = '-';
   if (d.fileUrl) {
     var prefetch = 'onmouseenter="prefetchPreview_(\'' + escapeJs_(d.fileUrl) + '\')"';
-    h = '<button class="btn-small" ' + prefetch + ' onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.fileName || '') + '\')">👁 Preview</button> ' +
-        '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn-small">Buka</a>';
+    h = '<button type="button" class="btn-small" style="font-weight:600;" ' + prefetch + ' onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.fileName || d.title || 'Dokumen') + '\')">👁 Preview</button> ' +
+        '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn-small" title="Buka di tab baru">↗ Buka</a>';
   }
   if (d.additionalFileUrls && d.additionalFileUrls.length) {
     d.additionalFileUrls.forEach((u, i) => {
-      h += ' <a href="' + esc(u) + '" target="_blank" class="btn-small">+' + (i+2) + '</a>';
+      var extraName = (d.fileName ? d.fileName.replace(/\.[^.]+$/, '') : 'Dokumen') + ' (Lampiran ' + (i+2) + ')';
+      h += ' <button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(u) + '\',\'' + escapeJs_(extraName) + '\')" title="Preview Lampiran ' + (i+2) + '">👁 +' + (i+2) + '</button>';
     });
   }
   return h;
@@ -6485,9 +6561,10 @@ function fileLinksHtml(d) {
       let rows = '';
       docs.forEach(function (d) {
         const ds = d.approvalDate ? new Date(d.approvalDate).toLocaleDateString('id-ID') : '-';
-        rows += '<tr><td class="doc-title">' + esc(d.title) + '</td><td>' + esc(d.projectName) + '</td><td>' + statusBadge(d.status) + '</td><td>' + esc(d.approverName || '-') + '</td><td>' + ds + '</td><td>' + esc(d.comments || '-') + '</td></tr>';
+        const fileCol = fileLinksHtml(d);
+        rows += '<tr><td class="doc-title">' + esc(d.title) + '</td><td>' + esc(d.projectName) + '</td><td>' + statusBadge(d.status) + '</td><td>' + esc(d.approverName || '-') + '</td><td>' + ds + '</td><td>' + fileCol + '</td><td>' + esc(d.comments || '-') + '</td></tr>';
       });
-      c.innerHTML = '<div class="table-scroll"><table><thead><tr><th>Dokumen</th><th>Proyek</th><th>Status</th><th>Oleh</th><th>Tanggal</th><th>Catatan</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+      c.innerHTML = '<div class="table-scroll"><table><thead><tr><th>Dokumen</th><th>Proyek</th><th>Status</th><th>Oleh</th><th>Tanggal</th><th>File</th><th>Catatan</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
     }
     function onApprovalCheckboxChange() { selectedApprovalIds.clear(); document.querySelectorAll('.approval-checkbox:checked').forEach(cb => selectedApprovalIds.add(cb.getAttribute('data-doc-id'))); updateBulkActionBar(); }
     function toggleSelectAllApproval(m) { document.querySelectorAll('.approval-checkbox').forEach(cb => cb.checked = m.checked); onApprovalCheckboxChange(); }
@@ -7055,7 +7132,7 @@ function fileLinksHtml(d) {
       let rows = '';
       entries.forEach(function (e) {
         const d = e.reportDate ? new Date(e.reportDate).toLocaleDateString('id-ID') : '-';
-        const p = e.photoUrl ? '<a href="' + esc(e.photoUrl) + '" target="_blank" class="btn-small">📷</a>' : '—';
+        const p = e.photoUrl ? '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(e.photoUrl) + '\',\'Foto Inspeksi ' + escapeJs_(e.locationArea || '') + '\')" title="Preview Foto">👁</button> <a href="' + esc(e.photoUrl) + '" target="_blank" class="btn-small" title="Buka foto di tab baru">📷</a>' : '—';
         const a = e.canManage ? '<button class="btn-small danger" onclick="doDeleteSiteReportEntry(\'' + e.entryId + '\')">Hapus</button>' : '';
         rows += '<tr><td>' + d + '</td><td>' + esc(e.locationArea) + '</td><td>' + esc(truncateText_(e.workDescription, 60)) + '</td><td>' + (e.progress || 0) + '%</td><td>' + siteStatusBadge(e.statusQC) + '</td><td>' + p + '</td><td>' + esc(e.inspectorName) + '</td><td>' + a + '</td></tr>';
       });
@@ -7157,7 +7234,7 @@ function fileLinksHtml(d) {
       cols.push({ k: 'remark', l: 'Remark', r: n => '<td style="max-width:200px;white-space:normal;">' + esc(n.remark || '—') + '</td>' });
       cols.push({ k: 'actions', l: 'Aksi', a: true, r: n => {
         let a = '';
-        if (n.attachmentUrl) a += '<a href="' + esc(n.attachmentUrl) + '" target="_blank" class="btn-small">📎</a> ';
+        if (n.attachmentUrl) a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(n.attachmentUrl) + '\',\'Lampiran NFI ' + escapeJs_(n.noNfi || '') + '\')" title="Preview Lampiran NFI">👁</button> <a href="' + esc(n.attachmentUrl) + '" target="_blank" class="btn-small" title="Buka lampiran di tab baru">📎</a> ';
         if (n.canManage) a += '<button class="btn-small" onclick="editNfiEntry(\'' + n.nfiId + '\')">✏</button> <button class="btn-small danger" onclick="doDeleteNfi(\'' + n.nfiId + '\')">🗑</button>';
         return '<td style="white-space:nowrap;">' + (a || '<span class="hint" style="margin:0;">—</span>') + '</td>';
       } });
@@ -7203,7 +7280,7 @@ function fileLinksHtml(d) {
       document.getElementById('nfiPicAei').value = n.picAei || '';
       document.getElementById('nfiRemark').value = n.remark || '';
       document.getElementById('nfiAttachment').value = '';
-      document.getElementById('nfiAttachmentHint').innerHTML = n.attachmentUrl ? 'Lampiran: <a href="' + esc(n.attachmentUrl) + '" target="_blank">buka</a>' : '';
+      document.getElementById('nfiAttachmentHint').innerHTML = n.attachmentUrl ? 'Lampiran: <button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(n.attachmentUrl) + '\',\'Lampiran NFI ' + escapeJs_(n.noNfi || '') + '\')">👁 Preview</button> <a href="' + esc(n.attachmentUrl) + '" target="_blank">buka</a>' : '';
     }
     function submitNfiForm(e) {
       e.preventDefault();
@@ -7549,9 +7626,17 @@ function fileLinksHtml(d) {
       const d = res.doc;
       document.getElementById('docDetailTitle').textContent = d.documentCode + ' Rev' + d.revision + ' — ' + d.title;
       let ab = '';
-      if (d.fileUrl) ab += '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn btn-secondary" style="text-decoration:none;">📄 File</a> ';
-      d.additionalFileUrls.forEach((u, i) => { ab += '<a href="' + esc(u) + '" target="_blank" class="btn btn-secondary" style="text-decoration:none;">📎 Lamp ' + (i+2) + '</a> '; });
-      ab += '<button class="btn btn-secondary" onclick="openAccessLog(\'' + d.docId + '\')">👁 Log</button>';
+      if (d.fileUrl) {
+        ab += '<button type="button" class="btn btn-primary" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.fileName || d.title || 'Dokumen') + '\')">👁 Preview File</button> ';
+        ab += '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn btn-secondary" style="text-decoration:none;">↗ Buka File</a> ';
+      }
+      if (d.additionalFileUrls && d.additionalFileUrls.length) {
+        d.additionalFileUrls.forEach((u, i) => {
+          var extraName = (d.fileName ? d.fileName.replace(/\.[^.]+$/, '') : 'Dokumen') + ' (Lampiran ' + (i+2) + ')';
+          ab += '<button type="button" class="btn btn-secondary" onclick="previewFile_(\'' + escapeJs_(u) + '\',\'' + escapeJs_(extraName) + '\')">👁 Preview Lamp ' + (i+2) + '</button> ';
+        });
+      }
+      ab += '<button type="button" class="btn btn-secondary" onclick="openAccessLog(\'' + d.docId + '\')">📋 Log Akses</button>';
       if (initData.canArchive && d.lifecycleStage !== 'Archived' && d.lifecycleStage !== 'Obsolete') ab += ' <button class="btn btn-secondary" onclick="openArchiveModal(\'' + d.docId + '\')">📦 Arsipkan</button>';
       if (initData.canArchive && d.lifecycleStage === 'Archived') ab += ' <button class="btn btn-secondary" onclick="doRestoreFromArchive(\'' + d.docId + '\')">↺ Pulihkan</button>';
       const html = '<dl class="doc-detail-grid">' +
@@ -7591,7 +7676,7 @@ function fileLinksHtml(d) {
         const a = t.acknowledgedAt ? '✓ ' + new Date(t.acknowledgedAt).toLocaleDateString('id-ID') : '—';
         const sc = t.status === 'Acknowledged' ? 'badge-approved' : 'badge-pending';
         let acts = '';
-        if (t.coverSheetUrl) acts += '<a href="' + esc(t.coverSheetUrl) + '" target="_blank" class="btn-small">📄</a> ';
+        if (t.coverSheetUrl) acts += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(t.coverSheetUrl) + '\',\'Cover Sheet ' + escapeJs_(t.transmittalNumber || '') + '\')" title="Preview Cover Sheet">👁</button> <a href="' + esc(t.coverSheetUrl) + '" target="_blank" class="btn-small" title="Buka Cover Sheet di tab baru">📄</a> ';
         acts += '<button class="btn-small" onclick="viewTransmittalDetail(\'' + t.transmittalId + '\')">Detail</button>';
         rows += '<tr><td class="doc-code">' + esc(t.transmittalNumber) + '</td><td>' + d + '</td><td>' + esc(t.projectName) + '</td><td>' + esc(t.recipientCompany) + '</td><td>' + esc(t.purpose) + '</td><td>' + t.documentCount + '</td><td><span class="badge ' + sc + '">' + esc(t.status) + '</span><br><span class="hint" style="margin:0;">' + a + '</span></td><td>' + acts + '</td></tr>';
       });
@@ -7605,7 +7690,7 @@ function fileLinksHtml(d) {
         html += '<div class="table-scroll"><table><thead><tr><th>No.</th><th>Rev</th><th>Jenis</th><th>Judul</th></tr></thead><tbody>';
         res.items.forEach(function (it) { html += '<tr><td class="doc-code">' + esc(it.documentCode) + '</td><td>R' + it.revision + '</td><td>' + esc(it.documentType) + '</td><td>' + esc(it.title) + '</td></tr>'; });
         html += '</tbody></table></div>';
-        if (t.coverSheetUrl) html += '<p style="margin-top:12px;"><a href="' + esc(t.coverSheetUrl) + '" target="_blank" class="btn btn-primary" style="text-decoration:none;">📄 Cover Sheet</a></p>';
+        if (t.coverSheetUrl) html += '<p style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;"><button type="button" class="btn btn-secondary" onclick="previewFile_(\'' + escapeJs_(t.coverSheetUrl) + '\',\'Cover Sheet ' + escapeJs_(t.transmittalNumber || '') + '\')">👁 Preview Cover Sheet</button> <a href="' + esc(t.coverSheetUrl) + '" target="_blank" class="btn btn-primary" style="text-decoration:none;">📄 Buka Cover Sheet</a></p>';
         document.getElementById('docDetailTitle').textContent = 'Detail Transmittal';
         document.getElementById('docDetailContent').innerHTML = html;
         document.getElementById('docDetailModal').classList.add('show');
@@ -7651,8 +7736,11 @@ function fileLinksHtml(d) {
       let rows = '';
       list.forEach(function (d) {
         const ad = d.archivedDate ? new Date(d.archivedDate).toLocaleDateString('id-ID') : '-';
-        const rd = d.retentionUntil ? new Date(d.retentionUntil).toLocaleDateString('id-ID') : '-';
-        let a = '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn-small">Buka</a>';
+        let a = '';
+        if (d.fileUrl) {
+          a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Arsip') + '\')">👁 Preview</button> ' +
+               '<a href="' + esc(d.fileUrl) + '" target="_blank" class="btn-small">↗ Buka</a>';
+        }
         if (initData.canArchive && d.lifecycleStage === 'Archived') a += ' <button class="btn-small positive" onclick="doRestoreFromArchive(\'' + d.docId + '\')">↺</button>';
         a += ' <button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button>';
         rows += '<tr><td class="doc-code">' + esc(d.documentCode) + ' Rev' + d.revision + '</td><td>' + esc(d.title) + '</td><td>' + lifecycleBadge(d.lifecycleStage) + '</td><td>' + ad + '</td><td>' + rd + '</td><td>' + a + '</td></tr>';
@@ -7924,6 +8012,7 @@ function fileLinksHtml(d) {
               '<td>' + esc(d.uploaderName) + '</td>' +
               '<td style="font-family:var(--font-mono);font-size:12px;">' + ageStr + '</td>' +
               '<td style="white-space:nowrap;">' +
+              (d.fileUrl ? '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Dokumen') + '\')">👁 Preview</button> ' : '') +
               '<button class="btn btn-approve" style="padding:6px 12px;font-size:12px;" onclick="quickApprove(\'' + d.docId + '\')">✓ Setuju</button> ' +
               '<button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button>' +
               '</td>' +
@@ -7952,7 +8041,8 @@ function fileLinksHtml(d) {
             '<td>' + esc(d.documentType) + '</td>' +
             '<td style="font-family:var(--font-mono);font-size:12px;">' + ageStr + '</td>' +
             '<td>' + statusFlag + '</td>' +
-            '<td><button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button> <button class="btn-small" onclick="openHistoryModal(\'' + d.docId + '\')">Riwayat</button></td>' +
+            '<td>' + (d.fileUrl ? '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Dokumen') + '\')">👁 Preview</button> ' : '') +
+            '<button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button> <button class="btn-small" onclick="openHistoryModal(\'' + d.docId + '\')">Riwayat</button></td>' +
             '</tr>';
         });
         html += '</tbody></table></div>';
@@ -7971,7 +8061,9 @@ function fileLinksHtml(d) {
             '<td>' + esc(d.projectName) + '</td>' +
             '<td>' + esc(d.documentType) + '</td>' +
             '<td style="font-size:12px;color:var(--rejected-text);max-width:220px;">' + esc(d.comments || '-') + '</td>' +
-            '<td style="white-space:nowrap;"><button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button> <button class="btn-small" onclick="openHistoryModal(\'' + d.docId + '\')">Riwayat</button> <button class="btn-small" onclick="switchTab(\'upload\')">+ Upload Revisi</button></td>' +
+            '<td style="white-space:nowrap;">' +
+            (d.fileUrl ? '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Dokumen') + '\')">👁 Preview</button> ' : '') +
+            '<button class="btn-small" onclick="openDocDetail(\'' + d.docId + '\')">Detail</button> <button class="btn-small" onclick="openHistoryModal(\'' + d.docId + '\')">Riwayat</button> <button class="btn-small" onclick="switchTab(\'upload\')">+ Upload Revisi</button></td>' +
             '</tr>';
         });
         html += '</tbody></table></div>';
