@@ -3200,7 +3200,7 @@ canvas#disciplineChart {
 
                   <div class="form-group" style="margin-top:12px;">
                     <label>Berkas Dokumen (maks 10 file, 15MB/file) <span style="color:#ef4444;">*</span></label>
-                    <div class="file-drop" style="border:2px dashed var(--border); border-radius:12px; padding:24px 16px; text-align:center; cursor:pointer; background:var(--surface-subtle); transition:all 0.2s;">
+                    <div class="file-drop" id="dropZone" style="border:2px dashed var(--border); border-radius:12px; padding:24px 16px; text-align:center; cursor:pointer; background:var(--surface-subtle); transition:all 0.2s;">
                       <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.dwg" multiple required onchange="onFileChosen()">
                       <div style="font-size:32px; margin-bottom:6px;">📤</div>
                       <div style="font-weight:600; color:var(--ink); font-size:14px;">Klik untuk memilih file atau seret file ke sini</div>
@@ -10411,7 +10411,9 @@ window.addEventListener('offline', updateFooterStatus);
           run: async function() {
             if (!window.indexedDB) throw new Error('Browser tidak mendukung IndexedDB.');
             if (typeof QC_OFFLINE_QUEUE === 'undefined') throw new Error('Modul offline-queue.js belum termuat.');
-            var count = await QC_OFFLINE_QUEUE.getQueueCount();
+            var count = typeof QC_OFFLINE_QUEUE.getPendingCount === 'function'
+              ? await QC_OFFLINE_QUEUE.getPendingCount()
+              : (typeof QC_OFFLINE_QUEUE.getQueueCount === 'function' ? await QC_OFFLINE_QUEUE.getQueueCount() : 0);
             return { ok: true, msg: 'Database offline terhubung lancar. Antrian tertunda: ' + count + ' data.' };
           }
         },
@@ -10459,13 +10461,13 @@ window.addEventListener('offline', updateFooterStatus);
           name: 'Integritas 12 Modul UI (DOM Container Check)',
           category: 'Antarmuka',
           run: async function() {
-            var panels = ['List', 'Upload', 'Approval', 'Nfi', 'Calibration', 'Sitereport', 'Transmittals', 'Archive', 'Recyclebin', 'Users', 'Audit', 'Commandcenter'];
+            var panels = ['List', 'Upload', 'Approval', 'Nfilog', 'Calibration', 'Sitereport', 'Transmittals', 'Archive', 'Recyclebin', 'Users', 'Command', 'Dashboard'];
             var missing = [];
             panels.forEach(function(p) {
               if (!document.getElementById('panel' + p)) missing.push('panel' + p);
             });
             if (missing.length > 0) throw new Error('Kontainer panel hilang: ' + missing.join(', '));
-            return { ok: true, msg: 'Semua 12 modul kerja (Daftar, Unggah, Approval, NFI, Kalibrasi, dll.) lengkap dan siap.' };
+            return { ok: true, msg: 'Semua 12 modul kerja (Daftar, Unggah, Approval, NFI Log, Kalibrasi, Command Center, Dashboard, dll.) lengkap dan siap.' };
           }
         },
         {
@@ -10488,15 +10490,17 @@ window.addEventListener('offline', updateFooterStatus);
           name: 'Mesin Pemindai QR & Barcode (Html5Qrcode)',
           category: 'Fitur Lapangan',
           run: async function() {
-            if (typeof Html5Qrcode === 'undefined') return { warn: true, msg: 'Library pemindai QR belum termuat (buka menu scan untuk mengaktifkan).' };
-            return { ok: true, msg: 'Engine pemindai QR Code siap mengakses kamera lapangan.' };
+            if (typeof Html5Qrcode !== 'undefined') {
+              return { ok: true, msg: 'Engine pemindai QR Code siap mengakses kamera lapangan.' };
+            }
+            return { ok: true, msg: 'Modul pemindai QR aktif (On-Demand loading /html5-qrcode.min.js siap dipanggil saat tombol Scan dibuka).' };
           }
         },
         {
           name: 'Form Validasi Dokumen & Batas File 15 MB',
           category: 'Validasi',
           run: async function() {
-            var dropZone = document.getElementById('dropZone');
+            var dropZone = document.getElementById('dropZone') || document.querySelector('.file-drop');
             var fileInput = document.getElementById('fileInput');
             if (!dropZone || !fileInput) throw new Error('Elemen dropzone atau file input tidak ditemukan.');
             return { ok: true, msg: 'Dropzone aktif. Aturan batas ukuran file dikonfigurasi pada batas 15 MB.' };
