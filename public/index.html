@@ -32,8 +32,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     (function () {
       try {
@@ -3107,10 +3107,22 @@ canvas#disciplineChart {
                   <div class="form-row single"><div class="form-group"><label>Tindak Lanjut</label><textarea id="srFollowUpInput"></textarea></div></div>
                   <div class="form-row single"><div class="form-group"><label>Status QC</label><select id="srStatusSelect" required></select></div></div>
                   <div class="form-group" style="margin-bottom:18px;">
-                    <label>Foto Dokumentasi</label>
+                    <label>Foto Dokumentasi Lapangan</label>
+                    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('srPhotoCameraInput').click()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">
+                        📸 Ambil Foto Kamera
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('srPhotoInput').click()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">
+                        📁 Buka File / Galeri
+                      </button>
+                    </div>
+                    <input type="file" id="srPhotoCameraInput" accept="image/*" capture="environment" style="display:none;" onchange="onSiteReportCameraChosen(this)">
                     <div class="file-drop">
                       <input type="file" id="srPhotoInput" accept="image/*" multiple onchange="onSiteReportPhotoChosen()">
                       <div class="file-name" id="srPhotoNameDisplay"></div>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+                      💡 Foto otomatis dioptimasi &amp; distempel waktu inspeksi
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary btn-full" id="srSubmitBtn">Simpan</button>
@@ -3859,11 +3871,11 @@ canvas#disciplineChart {
     });
   }
 
-  /** Kompres gambar besar sebelum upload. */
-  function compressImageIfNeeded_(file) {
+  /** Kompres gambar besar sebelum upload & tambahkan watermark jika foto inspeksi. */
+  function compressImageIfNeeded_(file, stampWatermark) {
     const TH = 1.5 * 1024 * 1024, MAX = 1600, Q = 0.75;
     if (!file.type || file.type.indexOf('image/') !== 0 ||
-        file.type === 'image/svg+xml' || file.size <= TH) {
+        file.type === 'image/svg+xml' || (!stampWatermark && file.size <= TH)) {
       return Promise.resolve(file);
     }
     return new Promise(function (resolve) {
@@ -3877,7 +3889,25 @@ canvas#disciplineChart {
         w = Math.round(w * s); h = Math.round(h * s);
         const c = document.createElement('canvas');
         c.width = w; c.height = h;
-        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        if (stampWatermark) {
+          const barH = Math.max(26, Math.round(h * 0.052));
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+          ctx.fillRect(0, h - barH, w, barH);
+
+          const fontSize = Math.max(11, Math.round(barH * 0.44));
+          ctx.font = '600 ' + fontSize + 'px sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.textBaseline = 'middle';
+
+          const now = new Date();
+          const pad = n => String(n).padStart(2, '0');
+          const dateStr = pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear() + ' ' +
+                          pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + ' WIB';
+          ctx.fillText('📷 QC-CMS EDMS · ' + dateStr, 12, h - (barH / 2));
+        }
         c.toBlob(function (blob) {
           if (!blob || blob.size >= file.size) { resolve(file); return; }
           resolve(new File(
@@ -3893,9 +3923,9 @@ canvas#disciplineChart {
   }
 
   /** FileList → array payload siap kirim ke backend. */
-  function filesToPayload(list) {
+  function filesToPayload(list, stampWatermark) {
     return Promise.all(Array.from(list).map(function (file) {
-      return compressImageIfNeeded_(file).then(function (pf) {
+      return compressImageIfNeeded_(file, stampWatermark).then(function (pf) {
         return fileToBase64(pf).then(function (b64) {
           return {
             fileName: pf.name,
@@ -4975,7 +5005,15 @@ function enterApp() {
       updateNotifBadge(data.unreadNotificationCount || 0);
 
       const defaultTab = data.canUpload ? 'upload' : (data.canApprove ? 'approval' : 'list');
-      switchTab(defaultTab);
+      let initialTab = defaultTab;
+      const hash = (window.location.hash || '').replace('#', '').toLowerCase();
+      if (hash && document.getElementById('panel' + capitalize(hash))) {
+        initialTab = hash;
+      }
+      switchTab(initialTab);
+      if (hash === 'scanner' && typeof window.openQrScanner === 'function') {
+        setTimeout(window.openQrScanner, 400);
+      }
       loadDocumentList();
       loadDashboard();
       if (data.canApprove) loadApprovals();
@@ -6065,17 +6103,39 @@ function fileLinksHtml(d) {
       document.getElementById('srFilterTo').value = toDateInputValue_(to);
       loadSiteReportEntries();
     }
+    let srSelectedPhotos_ = [];
+
+    function onSiteReportCameraChosen(input) {
+      if (input.files && input.files.length) {
+        srSelectedPhotos_.push(input.files[0]);
+        updateSrPhotoDisplay();
+        input.value = '';
+      }
+    }
+
     function onSiteReportPhotoChosen() {
       const files = document.getElementById('srPhotoInput').files;
-      document.getElementById('srPhotoNameDisplay').textContent = files.length ? Array.from(files).map(f => f.name).join(', ') : '';
+      if (files && files.length) {
+        Array.from(files).forEach(f => srSelectedPhotos_.push(f));
+        updateSrPhotoDisplay();
+      }
     }
+
+    function updateSrPhotoDisplay() {
+      const disp = document.getElementById('srPhotoNameDisplay');
+      if (disp) {
+        disp.textContent = srSelectedPhotos_.length ? (srSelectedPhotos_.length + ' foto siap diunggah: ' + srSelectedPhotos_.map(f => f.name).join(', ')) : '';
+      }
+    }
+
     function handleSiteReportSubmit(e) {
       e.preventDefault();
-      const files = document.getElementById('srPhotoInput').files;
-      if (files.length > 6) { showToast('Maks 6 foto.', 'error'); return; }
+      const filesFromInput = document.getElementById('srPhotoInput').files;
+      const files = srSelectedPhotos_.length ? srSelectedPhotos_ : Array.from(filesFromInput);
+      if (files.length > 6) { showToast('Maksimal 6 foto.', 'error'); return; }
       const btn = document.getElementById('srSubmitBtn');
       btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>...';
-      filesToPayload(files).then(function (po) {
+      filesToPayload(files, true).then(function (po) {
         const payload = {
           projectCode: document.getElementById('srProjectSelect').value,
           reportDate: document.getElementById('srDateInput').value,
@@ -6090,7 +6150,14 @@ function fileLinksHtml(d) {
         google.script.run.withSuccessHandler(function (res) {
           btn.disabled = false; btn.textContent = 'Simpan';
           showToast(res.message, res.success ? 'success' : 'error');
-          if (res.success) { document.getElementById('siteReportForm').reset(); document.getElementById('srDateInput').value = toDateInputValue_(new Date()); document.getElementById('srPhotoNameDisplay').textContent = ''; if (globalProjectFilter) document.getElementById('srProjectSelect').value = globalProjectFilter; loadSiteReportEntries(); }
+          if (res.success) {
+            document.getElementById('siteReportForm').reset();
+            srSelectedPhotos_ = [];
+            updateSrPhotoDisplay();
+            document.getElementById('srDateInput').value = toDateInputValue_(new Date());
+            if (globalProjectFilter) document.getElementById('srProjectSelect').value = globalProjectFilter;
+            loadSiteReportEntries();
+          }
         }).withFailureHandler(function (err) { btn.disabled = false; btn.textContent = 'Simpan'; showToast('Gagal: ' + err.message, 'error'); }).submitSiteReportEntry(sessionToken, payload);
       }).catch(function (err) { btn.disabled = false; btn.textContent = 'Simpan'; showToast('Gagal: ' + err.message, 'error'); });
     }
@@ -6361,7 +6428,7 @@ function fileLinksHtml(d) {
       const fi = document.getElementById('nfiImportFile');
       if (!fi.files.length) { showToast('Pilih file Excel dulu.', 'error'); return; }
       const file = fi.files[0];
-      if (file.size > 5 * 1024 * 1024) { showToast('File maksimal 5MB.', 'error'); return; }
+      if (file.size > 15 * 1024 * 1024) { showToast('File maksimal 15MB.', 'error'); return; }
       if (typeof XLSX === 'undefined') { showToast('Library Excel tidak termuat. Refresh halaman.', 'error'); return; }
       const btn = document.getElementById('nfiImportPreviewBtn');
       btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Membaca file...';

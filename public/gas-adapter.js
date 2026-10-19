@@ -14,7 +14,13 @@
     window.google.script = window.google.script || {};
 
     const PROXY_ENDPOINT = '/api/gas';
-    const DIRECT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
+
+    function getDirectGasUrl() {
+      return (window.QC_CONFIG && window.QC_CONFIG.GAS_EXEC_URL)
+        || localStorage.getItem('qc_gas_exec_url')
+        || DEFAULT_GAS_URL;
+    }
 
     // Action yang BOLEH masuk antrian offline (semua form lapangan)
     const OFFLINE_QUEUEABLE = [
@@ -23,6 +29,14 @@
       'saveNFILogEntry',
       'submitCalibration'
     ];
+
+    // Action pembacaan data yang bisa disimpan di cache offline (IndexedDB)
+    const CACHEABLE_READ_ACTIONS = [
+      'getDocumentList', 'getInitData', 'getNFILogList', 'getProjectsListForUI',
+      'getProjectsSettings', 'getSiteReportEntries', 'getDashboardStats',
+      'getCalibrationTools', 'getMyTasks', 'getDisciplinesSettings', 'getDocTypesSettings'
+    ];
+
     // Action yang tidak perlu session token
     const AUTH_ACTIONS = ['login', 'registerAccount', 'requestPasswordReset'];
 
@@ -46,6 +60,7 @@
       const successCb = this._success;
       const failureCb = this._failure;
       const userObj   = this._userObject;
+      const cacheKey  = action + '_' + JSON.stringify(args || []);
 
       // ── Ambil token sesi (dari encrypted storage via QC_SECURITY) ──
       let sessionToken = '';
@@ -70,14 +85,13 @@
         ? QC_SECURITY.getCsrfToken()
         : '';
 
-      // ── Jika offline dan action bisa di-queue ──────────────────
+      // ── Jika offline dan action bisa di-queue (FORM LAPANGAN) ────
       if (!navigator.onLine && OFFLINE_QUEUEABLE.includes(action)) {
-        console.warn('[GAS Adapter] Offline — menambahkan ke antrian:', action);
+        console.warn('[GAS Adapter] Offline — menambahkan ke antrian offline:', action);
         if (typeof QC_OFFLINE_QUEUE !== 'undefined') {
           await QC_OFFLINE_QUEUE.enqueue(action, args, sessionToken);
         }
         if (successCb) {
-          // Beri tahu UI bahwa form sudah disimpan offline
           successCb.call(userObj, {
             success:  true,
             offline:  true,
@@ -85,6 +99,18 @@
           });
         }
         return;
+      }
+
+      // ── Jika offline dan action adalah BACA DATA (Cache fallback) ─
+      if (!navigator.onLine && CACHEABLE_READ_ACTIONS.includes(action)) {
+        if (typeof QC_OFFLINE_QUEUE !== 'undefined' && typeof QC_OFFLINE_QUEUE.getCachedReadData === 'function') {
+          const cached = await QC_OFFLINE_QUEUE.getCachedReadData(cacheKey);
+          if (cached) {
+            console.log('[GAS Adapter] Menggunakan data cache offline untuk:', action);
+            if (successCb) successCb.call(userObj, cached);
+            return;
+          }
+        }
       }
 
       const payload = {
@@ -98,55 +124,109 @@
 
       // ── Kirim langsung ke Google Apps Script (Bypass batasan 4.5MB Vercel) ──
       const _sendDirectToGas = async () => {
+        const gasUrl = getDirectGasUrl();
         console.log('[GAS Adapter] Mengirim langsung ke Google Apps Script (Bypass Vercel limit)...', action);
+
         if (typeof window.showUploadProgress === 'function') {
-          window.showUploadProgress(15, jsonStr.length, action, Math.round(jsonStr.length * 0.15));
+          window.showUploadProgress(10, jsonStr.length, action, Math.round(jsonStr.length * 0.1));
         }
 
-        let simPct = 15;
-        const progressTimer = setInterval(() => {
-          if (simPct < 90) {
-            simPct += 15;
-            if (typeof window.showUploadProgress === 'function') {
-              window.showUploadProgress(simPct, jsonStr.length, action, Math.round(jsonStr.length * (simPct / 100)));
+        // Coba kirim via XHR terlebih dahulu agar event onprogress akurat
+        const _callXhr = () => {
+          return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', gasUrl, true);
+            xhr.setRequestHeader('Content-Type', 'text/plain;charset=utf-8');
+
+            if (xhr.upload && typeof window.showUploadProgress === 'function') {
+              xhr.upload.onprogress = (e) => {
+                if (e.lengthComputable) {
+                  const pct = Math.min(98, Math.round((e.loaded / e.total) * 100));
+                  window.showUploadProgress(pct, e.total, action, e.loaded);
+                }
+              };
             }
+
+            xhr.onload = () => {
+              if (typeof window.showUploadProgress === 'function') {
+                window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
+              }
+              setTimeout(() => {
+                if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+              }, 600);
+
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  resolve(JSON.parse(xhr.responseText));
+                } catch (e) {
+                  resolve(xhr.responseText);
+                }
+              } else {
+                reject(new Error('Google Apps Script HTTP ' + xhr.status + ': ' + xhr.statusText));
+              }
+            };
+
+            xhr.onerror = () => {
+              reject(new TypeError('XHR CORS/Network error'));
+            };
+
+            xhr.send(jsonStr);
+          });
+        };
+
+        // Fallback fetch jika browser membatasi XHR redirect
+        const _callFetch = async () => {
+          let simPct = 25;
+          const progressTimer = setInterval(() => {
+            if (simPct < 90) {
+              simPct += 15;
+              if (typeof window.showUploadProgress === 'function') {
+                window.showUploadProgress(simPct, jsonStr.length, action, Math.round(jsonStr.length * (simPct / 100)));
+              }
+            }
+          }, 500);
+
+          try {
+            const res = await fetch(gasUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: jsonStr,
+              redirect: 'follow'
+            });
+            clearInterval(progressTimer);
+
+            if (typeof window.showUploadProgress === 'function') {
+              window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
+            }
+            setTimeout(() => {
+              if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+            }, 600);
+
+            if (!res.ok) {
+              throw new Error('Google Apps Script HTTP ' + res.status + ': ' + res.statusText);
+            }
+            return await res.json();
+          } catch (err) {
+            clearInterval(progressTimer);
+            if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
+            throw err;
           }
-        }, 500);
+        };
 
         try {
-          const res = await fetch(DIRECT_GAS_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: jsonStr,
-            redirect: 'follow'
-          });
-          clearInterval(progressTimer);
-
-          if (typeof window.showUploadProgress === 'function') {
-            window.showUploadProgress(100, jsonStr.length, action, jsonStr.length);
-          }
-          setTimeout(() => {
-            if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
-          }, 700);
-
-          if (!res.ok) {
-            throw new Error('Google Apps Script HTTP ' + res.status + ': ' + res.statusText);
-          }
-          return await res.json();
-        } catch (err) {
-          clearInterval(progressTimer);
-          if (typeof window.hideUploadProgress === 'function') window.hideUploadProgress();
-          throw err;
+          return await _callXhr();
+        } catch (xhrErr) {
+          console.warn('[GAS Adapter] XHR direct GAS gagal, fallback ke Fetch redirect...', xhrErr.message);
+          return await _callFetch();
         }
       };
 
       // ── Kirim ke server ──
       const _doRequest = async (retryCount) => {
-        const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry';
+        const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry' || action === 'saveNFILogEntry' || action === 'submitCalibration' || action === 'updateDocumentMetadata';
         const isPayloadExceedingVercel = jsonStr.length > 2.5 * 1024 * 1024; // > 2.5 MB
 
-        // Jika ukuran file besar atau form upload dokumen, LANGSUNG kirim ke Google Apps Script
-        // agar TIDAK dicegat oleh batas 4.5 MB Vercel Serverless Function (HTTP 413)
+        // Jika form upload dokumen/foto atau payload melebihi 2.5MB, LANGSUNG kirim ke Google Apps Script
         if (isUploadAction || isPayloadExceedingVercel) {
           return await _sendDirectToGas();
         }
@@ -264,10 +344,31 @@
           }
         }
 
+        // ── Simpan salinan data pembacaan ke offline cache ───────
+        if (data && CACHEABLE_READ_ACTIONS.includes(action)) {
+          if (typeof QC_OFFLINE_QUEUE !== 'undefined' && typeof QC_OFFLINE_QUEUE.cacheReadData === 'function') {
+            QC_OFFLINE_QUEUE.cacheReadData(cacheKey, data);
+          }
+        }
+
         if (successCb) successCb.call(userObj, data);
 
       } catch (err) {
         console.error('[GAS Adapter] Error:', action, err.message);
+
+        // ── Fallback ke cache offline jika aksi baca gagal karena network ──
+        if (CACHEABLE_READ_ACTIONS.includes(action)) {
+          if (typeof QC_OFFLINE_QUEUE !== 'undefined' && typeof QC_OFFLINE_QUEUE.getCachedReadData === 'function') {
+            const cachedFallback = await QC_OFFLINE_QUEUE.getCachedReadData(cacheKey);
+            if (cachedFallback) {
+              console.warn('[GAS Adapter] Network error, menyajikan data fallback dari cache lokal:', action);
+              if (successCb) {
+                successCb.call(userObj, cachedFallback);
+                return;
+              }
+            }
+          }
+        }
 
         // ── Jika gagal karena offline dan action bisa di-queue ──
         if (!navigator.onLine && OFFLINE_QUEUEABLE.includes(action)) {

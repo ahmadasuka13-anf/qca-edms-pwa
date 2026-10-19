@@ -1,8 +1,9 @@
 /**
- * QCA EDMS — Security Module
+ * QCA EDMS — Security Module v2.0
  * ===========================================
- * 1. Enkripsi token sesi dengan AES-GCM via Web Crypto API
- *    (Token tidak pernah disimpan plain-text di localStorage)
+ * 1. Enkripsi token sesi dengan AES-256-GCM via Web Crypto API
+ *    - Menggunakan persistent cryptographic device seed (tahan update browser / OS)
+ *    - Dilengkapi backward compatibility untuk token lama (legacy userAgent derivation)
  * 2. CSRF Token: generate & validasi per-session
  * ===========================================
  */
@@ -10,9 +11,9 @@
 const QC_SECURITY = (function () {
   'use strict';
 
-  // Kunci enkripsi di-derive dari kombinasi user agent + origin (deterministik per device)
+  const SEED_STORAGE_KEY  = 'qccms_device_seed';
   const KEY_MATERIAL_SALT = 'qca-edms-salt-2024';
-  const STORAGE_KEY_ENC   = 'qccms_session_enc';   // ganti key lama 'qccms_session'
+  const STORAGE_KEY_ENC   = 'qccms_session_enc';
   const STORAGE_KEY_IV    = 'qccms_session_iv';
   const CSRF_KEY          = 'qccms_csrf_token';
 
@@ -33,18 +34,23 @@ const QC_SECURITY = (function () {
     return bytes.buffer;
   }
 
-  // ─── Derive enkripsi key dari fingerprint device (tidak hardcoded) ─
+  // ─── Persistent Device Seed (Stabil saat browser update) ─────────
 
-  async function _getEncryptionKey() {
-    const fingerprint = [
-      navigator.userAgent,
-      window.location.origin,
-      KEY_MATERIAL_SALT
-    ].join('|');
+  function _getOrCreateDeviceSeed() {
+    let seed = localStorage.getItem(SEED_STORAGE_KEY);
+    if (!seed || seed.length < 32) {
+      const arr = new Uint8Array(32);
+      window.crypto.getRandomValues(arr);
+      seed = ab2hex(arr.buffer);
+      localStorage.setItem(SEED_STORAGE_KEY, seed);
+    }
+    return seed;
+  }
 
+  async function _deriveKeyFromMaterial(materialString) {
     const rawKey = await window.crypto.subtle.importKey(
       'raw',
-      str2ab(fingerprint),
+      str2ab(materialString),
       { name: 'PBKDF2' },
       false,
       ['deriveKey']
@@ -64,6 +70,23 @@ const QC_SECURITY = (function () {
     );
   }
 
+  // Kunci baru: stabil, terikat ke origin & device seed acak (tahan update browser)
+  async function _getEncryptionKey() {
+    const seed = _getOrCreateDeviceSeed();
+    const material = [window.location.origin, seed, KEY_MATERIAL_SALT].join('|');
+    return await _deriveKeyFromMaterial(material);
+  }
+
+  // Kunci legacy: untuk backward-compatibility jika token lama dienkripsi dengan userAgent
+  async function _getLegacyEncryptionKey() {
+    const legacyFingerprint = [
+      navigator.userAgent,
+      window.location.origin,
+      KEY_MATERIAL_SALT
+    ].join('|');
+    return await _deriveKeyFromMaterial(legacyFingerprint);
+  }
+
   // ─── Enkripsi token ─────────────────────────────────────────────
 
   async function encryptToken(plainToken) {
@@ -80,9 +103,8 @@ const QC_SECURITY = (function () {
       // Hapus key lama plain-text jika masih ada
       localStorage.removeItem('qccms_session');
       localStorage.removeItem('qc_session_token');
-      console.log('[Security] Token tersimpan terenkripsi (AES-256-GCM)');
+      console.log('[Security] Token tersimpan terenkripsi (AES-256-GCM, persistent seed)');
     } catch (err) {
-      // Fallback ke localStorage biasa jika Web Crypto tidak tersedia (browser lama)
       console.warn('[Security] Web Crypto tidak tersedia, fallback plain storage:', err.message);
       localStorage.setItem('qccms_session', plainToken);
     }
@@ -91,23 +113,37 @@ const QC_SECURITY = (function () {
   // ─── Dekripsi token ─────────────────────────────────────────────
 
   async function decryptToken() {
-    // Coba baca versi terenkripsi dulu
     const encHex = localStorage.getItem(STORAGE_KEY_ENC);
     const ivHex  = localStorage.getItem(STORAGE_KEY_IV);
 
     if (encHex && ivHex) {
+      // 1. Coba dekripsi dengan kunci stabil baru
       try {
-        const key       = await _getEncryptionKey();
+        const key = await _getEncryptionKey();
         const decrypted = await window.crypto.subtle.decrypt(
           { name: 'AES-GCM', iv: new Uint8Array(hex2ab(ivHex)) },
           key,
           hex2ab(encHex)
         );
         return ab2str(decrypted);
-      } catch (err) {
-        console.warn('[Security] Gagal dekripsi token, menghapus sesi:', err.message);
-        clearSession();
-        return null;
+      } catch (errNewKey) {
+        // 2. Fallback migrasi jika token lama masih memakai turunan userAgent
+        try {
+          const legacyKey = await _getLegacyEncryptionKey();
+          const decryptedLegacy = await window.crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: new Uint8Array(hex2ab(ivHex)) },
+            legacyKey,
+            hex2ab(encHex)
+          );
+          const plain = ab2str(decryptedLegacy);
+          console.log('[Security] Migrasi token sesi lama ke kunci persistent berhasil');
+          await encryptToken(plain);
+          return plain;
+        } catch (errLegacy) {
+          console.warn('[Security] Gagal dekripsi token, sesi dibersihkan:', errLegacy.message);
+          clearSession();
+          return null;
+        }
       }
     }
 
@@ -115,7 +151,7 @@ const QC_SECURITY = (function () {
     const plain = localStorage.getItem('qccms_session') || localStorage.getItem('qc_session_token');
     if (plain) {
       console.log('[Security] Migrasi token lama ke enkripsi baru...');
-      await encryptToken(plain);  // enkripsi ulang
+      await encryptToken(plain);
       localStorage.removeItem('qccms_session');
       localStorage.removeItem('qc_session_token');
       return plain;
@@ -140,7 +176,7 @@ const QC_SECURITY = (function () {
     const arr = new Uint8Array(24);
     window.crypto.getRandomValues(arr);
     const token = ab2hex(arr.buffer);
-    sessionStorage.setItem(CSRF_KEY, token);  // sessionStorage: hilang saat tab ditutup
+    sessionStorage.setItem(CSRF_KEY, token);
     return token;
   }
 
@@ -157,7 +193,6 @@ const QC_SECURITY = (function () {
     return generateCsrfToken();
   }
 
-  // Inisialisasi CSRF saat modul dimuat
   getCsrfToken();
 
   return {
@@ -169,4 +204,4 @@ const QC_SECURITY = (function () {
   };
 })();
 
-console.log('[Security] QCA EDMS Security Module v1.0 loaded');
+console.log('[Security] QCA EDMS Security Module v2.0 loaded (Resilient Device Seed)');

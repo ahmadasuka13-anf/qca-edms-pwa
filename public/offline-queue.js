@@ -9,9 +9,10 @@
 const QC_OFFLINE_QUEUE = (function () {
   'use strict';
 
-  const DB_NAME    = 'qca-edms-offline';
-  const DB_VERSION = 1;
-  const STORE_NAME = 'pending_actions';
+  const DB_NAME     = 'qca-edms-offline';
+  const DB_VERSION  = 2;
+  const STORE_NAME  = 'pending_actions';
+  const STORE_CACHE = 'read_cache';
 
   let _db = null;
 
@@ -24,18 +25,21 @@ const QC_OFFLINE_QUEUE = (function () {
       const req = indexedDB.open(DB_NAME, DB_VERSION);
 
       req.onupgradeneeded = function (e) {
-        const db    = e.target.result;
+        const db = e.target.result;
         if (!db.objectStoreNames.contains(STORE_NAME)) {
           const store = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
           store.createIndex('action',    'action',    { unique: false });
           store.createIndex('timestamp', 'timestamp', { unique: false });
           store.createIndex('status',    'status',    { unique: false });
         }
+        if (!db.objectStoreNames.contains(STORE_CACHE)) {
+          db.createObjectStore(STORE_CACHE, { keyPath: 'key' });
+        }
       };
 
       req.onsuccess = function (e) {
         _db = e.target.result;
-        console.log('[OfflineQueue] IndexedDB terbuka:', DB_NAME);
+        console.log('[OfflineQueue] IndexedDB v' + DB_VERSION + ' terbuka:', DB_NAME);
         resolve(_db);
       };
 
@@ -106,6 +110,42 @@ const QC_OFFLINE_QUEUE = (function () {
       });
     } catch (err) {
       console.error('[OfflineQueue] Gagal hapus item:', err);
+    }
+  }
+
+  // ─── Offline Read Cache (IndexedDB Stale-While-Revalidate) ────
+
+  async function cacheReadData(key, data) {
+    try {
+      const db = await _openDB();
+      return new Promise((resolve) => {
+        const tx = db.transaction(STORE_CACHE, 'readwrite');
+        const store = tx.objectStore(STORE_CACHE);
+        store.put({
+          key: key,
+          data: data,
+          cachedAt: Date.now()
+        });
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function getCachedReadData(key) {
+    try {
+      const db = await _openDB();
+      return new Promise((resolve) => {
+        const tx = db.transaction(STORE_CACHE, 'readonly');
+        const store = tx.objectStore(STORE_CACHE);
+        const req = store.get(key);
+        req.onsuccess = () => resolve(req.result ? req.result.data : null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (e) {
+      return null;
     }
   }
 
@@ -226,7 +266,9 @@ const QC_OFFLINE_QUEUE = (function () {
     let successCount = 0;
     let failCount    = 0;
 
-  const DIRECT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
+  const DIRECT_GAS_URL = (window.QC_CONFIG && window.QC_CONFIG.GAS_EXEC_URL)
+    || localStorage.getItem('qc_gas_exec_url')
+    || 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
 
     for (const item of pending) {
       try {
@@ -238,7 +280,7 @@ const QC_OFFLINE_QUEUE = (function () {
         };
 
         const jsonStr = JSON.stringify(payload);
-        const isUploadAction = item.action === 'submitDocument' || item.action === 'submitSiteReportEntry';
+        const isUploadAction = item.action === 'submitDocument' || item.action === 'submitSiteReportEntry' || item.action === 'saveNFILogEntry' || item.action === 'submitCalibration';
         const isDirectRequired = isUploadAction || jsonStr.length > 2.5 * 1024 * 1024;
         const endpoint = isDirectRequired ? DIRECT_GAS_URL : '/api/gas';
         const headers = isDirectRequired ? { 'Content-Type': 'text/plain;charset=utf-8' } : { 'Content-Type': 'application/json' };
@@ -304,16 +346,63 @@ const QC_OFFLINE_QUEUE = (function () {
     }
   }
 
-  // ─── Event listener online ────────────────────────────────────
+  // ─── Indikator Status Jaringan ───────────────────────────────
+
+  function _updateNetworkIndicator() {
+    let indicator = document.getElementById('qcNetworkIndicator');
+    if (!indicator) {
+      indicator = document.createElement('div');
+      indicator.id = 'qcNetworkIndicator';
+      indicator.style.cssText = [
+        'position:fixed', 'top:14px', 'right:18px',
+        'z-index:9998', 'padding:6px 14px',
+        'border-radius:20px', 'font-size:12px',
+        'font-weight:600', 'display:none',
+        'align-items:center', 'gap:8px',
+        'box-shadow:0 4px 14px rgba(0,0,0,0.25)',
+        'transition:all 0.3s ease',
+        'backdrop-filter:blur(8px)',
+        'font-family:sans-serif'
+      ].join(';');
+      document.body.appendChild(indicator);
+    }
+
+    if (!navigator.onLine) {
+      indicator.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;"></span><span>Offline (Mode Lapangan)</span>';
+      indicator.style.background = 'rgba(220, 38, 38, 0.92)';
+      indicator.style.color = '#fff';
+      indicator.style.display = 'flex';
+    } else {
+      if (indicator.style.display === 'flex') {
+        indicator.innerHTML = '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;"></span><span>Online — Terhubung</span>';
+        indicator.style.background = 'rgba(16, 185, 129, 0.92)';
+        indicator.style.color = '#fff';
+        setTimeout(() => {
+          indicator.style.display = 'none';
+        }, 3000);
+      }
+    }
+  }
+
+  // ─── Event listener online / offline ─────────────────────────
+
+  window.addEventListener('offline', function () {
+    _updateNetworkIndicator();
+    if (typeof showToast === 'function') {
+      showToast('📶 Anda sedang offline. Menampilkan data cache lokal & form disimpan otomatis.', 'warning');
+    }
+  });
 
   window.addEventListener('online', function () {
+    _updateNetworkIndicator();
     console.log('[OfflineQueue] Koneksi online terdeteksi, memproses antrian...');
-    setTimeout(processQueue, 1500);  // delay sedikit untuk pastikan koneksi stabil
+    setTimeout(processQueue, 1500);
   });
 
   // ─── Cek antrian saat startup ────────────────────────────────
 
   window.addEventListener('DOMContentLoaded', async function () {
+    _updateNetworkIndicator();
     await _showQueueBanner();
     if (navigator.onLine) {
       const count = await getPendingCount();
@@ -329,8 +418,10 @@ const QC_OFFLINE_QUEUE = (function () {
     getAll,
     remove,
     getPendingCount,
-    processQueue
+    processQueue,
+    cacheReadData,
+    getCachedReadData
   };
 })();
 
-console.log('[OfflineQueue] QCA EDMS Offline Queue Module v1.0 loaded');
+console.log('[OfflineQueue] QCA EDMS Offline Queue Module v2.0 loaded (Read Cache + Network Indicator)');

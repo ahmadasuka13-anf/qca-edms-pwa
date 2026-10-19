@@ -2,9 +2,11 @@
   "name": "QC-CMS — Electronic Document Management System",
   "short_name": "QC-CMS EDMS",
   "description": "Sistem Manajemen Dokumen QA/QC PT Asuka Engineering Indonesia",
+  "lang": "id-ID",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "any",
   "theme_color": "#1a2332",
   "background_color": "#0f172a",
@@ -20,6 +22,36 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Unggah Dokumen",
+      "short_name": "Unggah",
+      "description": "Unggah dokumen mutu QC baru",
+      "url": "/#upload",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Laporan Inspeksi Lapangan",
+      "short_name": "Site Report",
+      "description": "Buat laporan inspeksi foto lapangan",
+      "url": "/#sitereport",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Scan QR Dokumen",
+      "short_name": "Scan QR",
+      "description": "Pindai kode QR dokumen untuk verifikasi cepat",
+      "url": "/#scanner",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "NFI Log Tracker",
+      "short_name": "NFI Log",
+      "description": "Buka tracker inspeksi NFI",
+      "url": "/#nfilog",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "categories": ["business", "productivity", "utilities"]
