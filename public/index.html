@@ -2498,8 +2498,8 @@ canvas#disciplineChart {
 /* 6. Scroll to Top Button */
 .scroll-top-btn {
   position: fixed;
-  bottom: 86px;
-  right: 22px;
+  bottom: 92px;
+  right: 28px;
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -2526,6 +2526,13 @@ canvas#disciplineChart {
 }
 .scroll-top-btn:hover {
   background: var(--surface-hover);
+}
+@media (max-width: 860px) {
+  .scroll-top-btn {
+    bottom: 80px;
+    left: 24px;
+    right: auto;
+  }
 }
 
 </style>
@@ -3735,7 +3742,7 @@ canvas#disciplineChart {
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <!-- Floating Button -->
-<button id="aiChatBtn" onclick="toggleAIChat()" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg, #163d78, #0d6ab0); color:#fff; border:none; box-shadow:0 8px 24px rgba(22,61,120,0.4); cursor:pointer; font-size:26px; z-index:9998; transition:transform 0.2s ease, box-shadow 0.2s ease; display:flex; align-items:center; justify-content:center;">
+<button id="aiChatBtn" onclick="toggleAIChat()" aria-label="AI Assistant QC" title="AI Assistant QC">
   🤖
   <span id="aiChatNotifDot" style="display:none; position:absolute; top:6px; right:6px; width:12px; height:12px; background:#22c55e; border-radius:50%; border:2px solid #fff;"></span>
 </button>
@@ -3946,17 +3953,52 @@ canvas#disciplineChart {
   0%, 100% { box-shadow:0 0 0 0 rgba(220,38,38,0.4); }
   50% { box-shadow:0 0 0 10px rgba(220,38,38,0); }
 }
-@media (max-width: 640px) {
-  #aiChatBtn { bottom:16px !important; right:16px !important; width:54px !important; height:54px !important; font-size:24px !important; }
+/* Styling Tombol Floating AI Chat */
+#aiChatBtn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #163d78, #0d6ab0);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 24px rgba(22,61,120,0.4);
+  cursor: pointer;
+  font-size: 26px;
+  z-index: 9998;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#aiChatBtn:hover {
+  transform: scale(1.05);
+}
+#aiChatBtn:active {
+  transform: scale(0.92);
+}
+
+@media (max-width: 860px) {
+  /* 📱 MOBILE: Pindahkan AI Button ke KIRI BAWAH agar TIDAK bertabrakan dengan FAB di KANAN BAWAH */
+  #aiChatBtn {
+    bottom: 20px !important;
+    left: 18px !important;
+    right: auto !important;
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 24px !important;
+  }
   #aiChatPanel {
-    bottom:80px !important;
-    right:12px !important;
-    left:12px !important;
-    width:auto !important;
-    max-width:100% !important;
-    height:calc(100vh - 100px) !important;
-    max-height:none !important;
-    border-radius:14px !important;
+    bottom: 80px !important;
+    right: 12px !important;
+    left: 12px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: calc(100vh - 100px) !important;
+    max-height: none !important;
+    border-radius: 14px !important;
   }
 }
 </style>
@@ -9020,6 +9062,7 @@ function toggleAIChat() {
     panel.style.display = 'none';
     btn.innerHTML = '🤖';
   } else {
+    if (typeof toggleMobileFab === 'function') toggleMobileFab(false);
     panel.style.display = 'flex';
     btn.innerHTML = '✕';
     if (typeof updateAIChatContext === 'function') updateAIChatContext();
@@ -9672,6 +9715,10 @@ window.addEventListener('offline', updateFooterStatus);
       if (!menu || !btn) return;
       var isOpen = (typeof forceState === 'boolean') ? forceState : !menu.classList.contains('open');
       if (isOpen) {
+        var aiPanel = document.getElementById('aiChatPanel');
+        if (aiPanel && aiPanel.style.display !== 'none' && typeof toggleAIChat === 'function') {
+          toggleAIChat();
+        }
         menu.classList.add('open');
         btn.classList.add('open');
         if (backdrop) backdrop.classList.add('show');
@@ -9692,6 +9739,8 @@ window.addEventListener('offline', updateFooterStatus);
         if (typeof openQrScanner === 'function') openQrScanner('filterSearch', 'Scan QR / Barcode Dokumen');
       } else if (action === 'nfilog') {
         if (typeof switchTab === 'function') switchTab('nfilog');
+      } else if (action === 'ai') {
+        if (typeof toggleAIChat === 'function') toggleAIChat();
       }
     };
 
@@ -9726,6 +9775,10 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- Mobile Floating Action Button (Speed Dial) -->
   <div class="mobile-fab-container" id="mobileFabContainer">
     <div class="mobile-fab-menu" id="mobileFabMenu">
+      <button type="button" class="fab-item" onclick="handleFabAction('ai')" title="Tanya AI Assistant">
+        <span class="fab-label">AI Assistant QC</span>
+        <span class="fab-icon">🤖</span>
+      </button>
       <button type="button" class="fab-item" onclick="handleFabAction('upload')" title="Unggah Dokumen Baru">
         <span class="fab-label">Unggah Dokumen</span>
         <span class="fab-icon">📤</span>
