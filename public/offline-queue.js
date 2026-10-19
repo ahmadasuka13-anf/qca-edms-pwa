@@ -418,6 +418,7 @@ const QC_OFFLINE_QUEUE = (function () {
     getAll,
     remove,
     getPendingCount,
+    getQueueCount: getPendingCount,
     processQueue,
     cacheReadData,
     getCachedReadData
