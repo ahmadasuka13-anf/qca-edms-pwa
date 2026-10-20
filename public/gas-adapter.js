@@ -305,15 +305,17 @@
         return res.json();
       };
 
+      let requestSucceeded = false;
       try {
         let data;
         try {
           data = await _doRequest(0);
         } catch (firstErr) {
-          if (firstErr.message && firstErr.message.includes('413')) {
+          const errMsg = (firstErr && firstErr.message) || '';
+          if (errMsg.includes('413')) {
             console.warn('[GAS Adapter] Auto-recover dari HTTP 413 langsung ke Google Apps Script:', action);
             data = await _sendDirectToGas();
-          } else if (firstErr.message.startsWith('HTTP 5') || firstErr.name === 'TypeError') {
+          } else if (errMsg.startsWith('HTTP 5') || (firstErr && firstErr.name === 'TypeError')) {
             console.warn('[GAS Adapter] Retry 1x untuk:', action);
             await new Promise(r => setTimeout(r, 1500));
             data = await _doRequest(1);
@@ -321,6 +323,8 @@
             throw firstErr;
           }
         }
+
+        requestSucceeded = true;
 
         // ── Login success → enkripsi & simpan token ─────────────
         if (action === 'login' && data && data.success && data.sessionToken) {
@@ -344,26 +348,36 @@
           }
         }
 
-        // ── Simpan salinan data pembacaan ke offline cache ───────
-        if (data && CACHEABLE_READ_ACTIONS.includes(action)) {
+        // ── Simpan salinan data pembacaan ke offline cache HANYA jika valid ──
+        if (data && data.success !== false && CACHEABLE_READ_ACTIONS.includes(action)) {
           if (typeof QC_OFFLINE_QUEUE !== 'undefined' && typeof QC_OFFLINE_QUEUE.cacheReadData === 'function') {
             QC_OFFLINE_QUEUE.cacheReadData(cacheKey, data);
           }
         }
 
-        if (successCb) successCb.call(userObj, data);
+        if (successCb) {
+          try {
+            successCb.call(userObj, data);
+          } catch (cbErr) {
+            console.error('[GAS Adapter] Callback error pada aksi', action, cbErr);
+          }
+        }
 
       } catch (err) {
-        console.error('[GAS Adapter] Error:', action, err.message);
+        console.error('[GAS Adapter] Error:', action, (err && err.message) || err);
 
-        // ── Fallback ke cache offline jika aksi baca gagal karena network ──
-        if (CACHEABLE_READ_ACTIONS.includes(action)) {
+        // ── Fallback ke cache offline HANYA jika request gagal ke network/server ──
+        if (!requestSucceeded && CACHEABLE_READ_ACTIONS.includes(action)) {
           if (typeof QC_OFFLINE_QUEUE !== 'undefined' && typeof QC_OFFLINE_QUEUE.getCachedReadData === 'function') {
             const cachedFallback = await QC_OFFLINE_QUEUE.getCachedReadData(cacheKey);
-            if (cachedFallback) {
+            if (cachedFallback && cachedFallback.success !== false) {
               console.warn('[GAS Adapter] Network error, menyajikan data fallback dari cache lokal:', action);
               if (successCb) {
-                successCb.call(userObj, cachedFallback);
+                try {
+                  successCb.call(userObj, cachedFallback);
+                } catch (cbErr) {
+                  console.error('[GAS Adapter] Error pada callback fallback:', cbErr);
+                }
                 return;
               }
             }
