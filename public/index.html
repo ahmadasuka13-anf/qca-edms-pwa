@@ -8400,6 +8400,7 @@ function fileLinksHtml(d) {
       let rows = '';
       list.forEach(function (d) {
         const ad = d.archivedDate ? new Date(d.archivedDate).toLocaleDateString('id-ID') : '-';
+        const rd = d.retentionUntil ? new Date(d.retentionUntil).toLocaleDateString('id-ID') : '-';
         let a = '';
         if (d.fileUrl) {
           a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Arsip') + '\')">👁 Preview</button> ' +
