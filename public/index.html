@@ -3747,33 +3747,45 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         </div>
 
         <!-- 👤 PROFIL PENGGUNA & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
+        <!-- 👤 PROFIL USER & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
         <div class="user-profile-wrap" style="position:relative;" id="userProfileWrap">
-          <div class="user-profile-trigger" id="userProfileTrigger" onclick="toggleUserDropdown(event)" title="Menu Profil &amp; Pengaturan">
+          <button type="button" class="user-profile-trigger" id="userProfileTrigger" onclick="toggleUserDropdown(event)" title="Menu Profil &amp; Pengaturan">
             <span class="user-badge" id="userBadge">-</span>
             <svg class="dropdown-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-          </div>
+          </button>
 
           <div id="userDropdownMenu" class="user-dropdown-menu" style="display:none;">
             <div class="user-dropdown-header">
               <div class="udh-name" id="dropdownUserName">Ahmad Nur Fatony</div>
-              <div class="udh-role" id="dropdownUserRole">QC-CMS User</div>
+              <div class="udh-role-wrap">
+                <span class="udh-role-badge" id="dropdownUserRole">Admin</span>
+                <span class="udh-company">PT Asuka Engineering Indonesia</span>
+              </div>
             </div>
             <div class="udh-divider"></div>
             <button type="button" class="user-dropdown-item" onclick="openHeaderColorModal(); closeUserDropdown();">
-              <span class="udi-icon">🎨</span>
+              <span class="udi-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="1.8"/><circle cx="8" cy="10" r="1.5" fill="#ef4444"/><circle cx="12" cy="7" r="1.5" fill="#f59e0b"/><circle cx="16" cy="10" r="1.5" fill="#10b981"/><circle cx="14" cy="15" r="1.5" fill="#8b5cf6"/></svg>
+              </span>
               <span>Ganti Warna Header</span>
             </button>
             <button type="button" class="user-dropdown-item" onclick="toggleTheme(); closeUserDropdown();">
-              <span class="udi-icon" id="userDropdownThemeIcon">🌙</span>
+              <span class="udi-icon" id="userDropdownThemeIcon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
               <span id="userDropdownThemeText">Mode Gelap / Terang</span>
             </button>
             <button type="button" class="user-dropdown-item" onclick="openQADiagnosticModal(); closeUserDropdown();">
-              <span class="udi-icon">🧪</span>
+              <span class="udi-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 3h6v3l3 9v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4l3-9V3z" fill="#10b981" fill-opacity="0.2" stroke="#10b981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="3" x2="15" y2="3" stroke="#10b981" stroke-width="1.8"/><line x1="8" y1="14" x2="16" y2="14" stroke="#10b981" stroke-width="1.5"/></svg>
+              </span>
               <span>AI QA Diagnostic &amp; Audit</span>
             </button>
             <div class="udh-divider"></div>
             <button type="button" class="user-dropdown-item logout-danger" onclick="handleLogout()">
-              <span class="udi-icon">🚪</span>
+              <span class="udi-icon">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 17 21 12 16 7" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
               <span>Keluar (Logout)</span>
             </button>
           </div>
@@ -6506,20 +6518,59 @@ function handleForgotPassword(event) {
     /* ═══════════════════════════════════════════════════════════════ */
     /* 🌟 STREAMLINED HEADER & ACCORDION SIDEBAR STYLING             */
     /* ═══════════════════════════════════════════════════════════════ */
+    /* 👤 USER PROFILE TRIGGER & DROPDOWN */
     .user-profile-trigger {
       display: inline-flex !important;
       align-items: center !important;
-      gap: 8px !important;
+      gap: 9px !important;
       cursor: pointer !important;
       user-select: none !important;
-      transition: transform 0.2s ease !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      padding: 5px 12px 5px 14px !important;
+      border-radius: 9999px !important;
+      color: #ffffff !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
     }
     .user-profile-trigger:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      border-color: rgba(255, 255, 255, 0.38) !important;
       transform: translateY(-1px) !important;
     }
+    .user-profile-wrap.open .user-profile-trigger {
+      background: rgba(255, 255, 255, 0.26) !important;
+      border-color: rgba(255, 255, 255, 0.45) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    }
+    .user-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      font-size: 13px !important;
+      background: transparent !important;
+      padding: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.2px !important;
+    }
+    .role-badge {
+      font-size: 10.5px !important;
+      background: #ed2e35 !important;
+      color: #ffffff !important;
+      padding: 2px 9px !important;
+      border-radius: 9999px !important;
+      font-weight: 700 !important;
+      margin-left: 8px !important;
+      letter-spacing: 0.3px !important;
+      text-transform: uppercase !important;
+      box-shadow: 0 2px 6px rgba(237, 46, 53, 0.35) !important;
+    }
     .dropdown-caret {
-      color: rgba(255, 255, 255, 0.7) !important;
+      color: rgba(255, 255, 255, 0.85) !important;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      flex-shrink: 0 !important;
     }
     .user-profile-wrap.open .dropdown-caret {
       transform: rotate(180deg) !important;
@@ -6528,7 +6579,7 @@ function handleForgotPassword(event) {
       position: absolute !important;
       top: calc(100% + 10px) !important;
       right: 0 !important;
-      width: 250px !important;
+      width: 260px !important;
       background: var(--surface-card, #131b2e) !important;
       border: 1px solid var(--border) !important;
       border-radius: 16px !important;
@@ -6544,19 +6595,38 @@ function handleForgotPassword(event) {
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
     .user-dropdown-header {
-      padding: 10px 12px 6px !important;
+      padding: 10px 12px 8px !important;
     }
     .udh-name {
-      font-size: 13.5px !important;
+      font-size: 14px !important;
       font-weight: 800 !important;
       color: var(--ink) !important;
-      line-height: 1.2 !important;
+      line-height: 1.25 !important;
     }
-    .udh-role {
+    .udh-role-wrap {
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      margin-top: 5px !important;
+    }
+    .udh-role-badge {
+      display: inline-block !important;
+      font-size: 10px !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      padding: 2px 8px !important;
+      border-radius: 9999px !important;
+      background: #ed2e35 !important;
+      color: #ffffff !important;
+    }
+    .udh-company {
       font-size: 11px !important;
-      color: var(--accent) !important;
-      font-weight: 700 !important;
-      margin-top: 3px !important;
+      color: var(--ink-faint) !important;
+      font-weight: 600 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
     }
     .udh-divider {
       height: 1px !important;
@@ -6566,7 +6636,7 @@ function handleForgotPassword(event) {
     .user-dropdown-item {
       display: flex !important;
       align-items: center !important;
-      gap: 10px !important;
+      gap: 11px !important;
       padding: 9px 12px !important;
       border-radius: 10px !important;
       border: none !important;
@@ -6582,6 +6652,14 @@ function handleForgotPassword(event) {
     .user-dropdown-item:hover {
       background: var(--surface-hover) !important;
       color: var(--ink) !important;
+    }
+    .user-dropdown-item .udi-icon {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 20px !important;
+      height: 20px !important;
+      flex-shrink: 0 !important;
     }
     .user-dropdown-item.logout-danger {
       color: #ef4444 !important;
@@ -7276,13 +7354,19 @@ function enterApp(isFreshLogin) {
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
 
-  // 2. Set identitas akun pada navbar header
+// 2. Set identitas akun pada navbar header
   if (currentUser) {
     document.getElementById('userBadge').innerHTML = esc(currentUser.fullName) + '<span class="role-badge">' + esc(currentUser.role) + '</span>';
+    var dun = document.getElementById('dropdownUserName');
+    if (dun) dun.textContent = currentUser.fullName || 'User';
+    var dur = document.getElementById('dropdownUserRole');
+    if (dur) dur.textContent = currentUser.role || 'Admin';
+    window.__currentUser = currentUser;
     document.getElementById('uploaderNameDisplay').value = currentUser.fullName;
     const fn = (currentUser.fullName || '').split(' ')[0];
     document.getElementById('headerGreeting').textContent = greetingWord_() + ', ' + fn + ' \u{1F44B}';
     try { localStorage.setItem('qccms_user_name', currentUser.fullName); } catch (e) {}
+    try { localStorage.setItem('qccms_user_role', currentUser.role); } catch (e) {}
   }
 
   // 3. 🎬 Tampilkan Layar Sambutan Sinematik jika login baru atau sesi baru
@@ -7848,7 +7932,7 @@ function restoreSidebarState() {
         if (d.canEdit) actions += ' <button class="btn-small" onclick="openEditModal(\'' + d.docId + '\')">Edit</button> <button class="btn-small danger" onclick="doDeleteDocument(\'' + d.docId + '\')">Hapus</button>';
         
         // 1. Baris Tabel Desktop
-        rows += '<tr><td><span class="doc-code">' + esc(d.fileName) + '</span></td><td>' + esc(d.projectName) + '<br><span class="hint" style="margin:0;">' + esc(d.discipline) + '</span></td><td>' + esc(d.documentType) + '</td><td class="doc-title">' + esc(d.title) + '</td><td>' + statusBadge(d.status) + '<br>' + lifecycleBadge(d.lifecycleStage) + '</td><td>' + ds + '</td><td>' + actions + '</td></tr>';
+        rows += '<tr><td><span class="doc-code">' + esc(d.fileName) + '</span></td><td>' + esc(d.projectName) + '<br><span class="hint" style="margin:0;">' + esc(d.discipline) + '</span></td><td>' + esc(d.documentType) + '</td><td class="doc-title">' + esc(d.title) + '</td><td>' + statusBadge(d.status) + (d.lifecycleStage && d.lifecycleStage !== d.status ? '<br>' + lifecycleBadge(d.lifecycleStage) : '') + '</td><td style="white-space:nowrap;">' + ds + '</td><td>' + actions + '</td></tr>';
 
         // 2. Kartu Mobile Responsif (Sangat nyaman di ponsel, tanpa geser horizontal)
         cards += '<div class="doc-mobile-card">' +
@@ -12764,15 +12848,30 @@ window.addEventListener('offline', updateFooterStatus);
       try {
         var uName = document.getElementById('dropdownUserName');
         var uRole = document.getElementById('dropdownUserRole');
-        if (typeof currentUser !== 'undefined' && currentUser) {
-          if (uName) uName.textContent = currentUser.fullName || 'Ahmad Nur Fatony';
-          if (uRole) uRole.textContent = (currentUser.role || 'User') + (currentUser.email ? ' · ' + currentUser.email : '');
+        var user = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : window.__currentUser;
+        if (user) {
+          if (uName) uName.textContent = user.fullName || 'Ahmad Nur Fatony';
+          if (uRole) uRole.textContent = user.role || 'Admin';
+        } else {
+          var ub = document.getElementById('userBadge');
+          if (ub) {
+            var rb = ub.querySelector('.role-badge');
+            var roleText = rb ? rb.textContent.trim() : (localStorage.getItem('qccms_user_role') || 'Admin');
+            var clone = ub.cloneNode(true);
+            var innerRb = clone.querySelector('.role-badge');
+            if (innerRb) innerRb.remove();
+            var nameText = clone.textContent.trim();
+            if (uName && nameText && nameText !== '-') uName.textContent = nameText;
+            if (uRole && roleText) uRole.textContent = roleText;
+          }
         }
         var curTheme = document.documentElement.getAttribute('data-theme') || 'light';
         var tIcon = document.getElementById('userDropdownThemeIcon');
         var tText = document.getElementById('userDropdownThemeText');
-        if (tIcon) tIcon.textContent = curTheme === 'dark' ? '☀️' : '🌙';
-        if (tText) tText.textContent = curTheme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap';
+        var sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8"/><line x1="12" y1="1" x2="12" y2="3" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/></svg>';
+        var moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        if (tIcon) tIcon.innerHTML = curTheme === 'dark' ? sunSvg : moonSvg;
+        if (tText) tText.textContent = curTheme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
       } catch(err) {}
     };
 
@@ -12813,6 +12912,26 @@ window.addEventListener('offline', updateFooterStatus);
           }
         } catch(e) {}
       };
+
+      // Pastikan ada grup accordion yang terbuka saat awal
+      function ensureInitialAccordionOpen() {
+        try {
+          var activeBtn = document.querySelector('.sidebar-item.active');
+          if (activeBtn) {
+            var pg = activeBtn.closest('.sidebar-accordion-group');
+            if (pg) pg.classList.add('open');
+          } else {
+            var gd = document.getElementById('groupDokumen');
+            if (gd) gd.classList.add('open');
+          }
+        } catch(e) {}
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ensureInitialAccordionOpen);
+      } else {
+        ensureInitialAccordionOpen();
+      }
+      setTimeout(ensureInitialAccordionOpen, 500);
     })();
 
 </script>
