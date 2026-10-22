@@ -2761,14 +2761,56 @@ canvas#disciplineChart {
 }
 .welcome-bg-wrapper {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   z-index: 1;
   pointer-events: none;
-  display: flex;
-  flex-direction: column; /* 📱 Di layar HP: 3 foto ditumpuk vertikal 33% atas, tengah, bawah agar layar 100% penuh */
+}
+
+/* ─── 💻 LAPTOP & DESKTOP (Widescreen 100% Layar Penuh Megah Tanpa Garis/Hitam) ─── */
+.welcome-bg-desktop {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  width: calc(100% + 40px);
+  height: calc(100% + 40px);
+  display: block;
+  overflow: hidden;
+  background: #090d16;
+}
+.welcome-bg-media-desktop {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  animation: kenBurnsDesktop 28s infinite alternate ease-in-out;
+  transform-origin: center center;
+}
+@keyframes kenBurnsDesktop {
+  0%   { transform: scale(1.03) translate(0, 0); }
+  50%  { transform: scale(1.10) translate(-1%, -0.8%); }
+  100% { transform: scale(1.06) translate(1%, 0.5%); }
+}
+
+/* ─── 📱 SMARTPHONE & HP (3 Foto Bertumpuk Vertikal Penuh 100%) ─── */
+.welcome-bg-mobile-3stack {
+  display: none; /* Sembunyikan default di laptop */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
 }
 
 .welcome-bg-slot {
@@ -2776,6 +2818,7 @@ canvas#disciplineChart {
   flex: 1 1 33.333%;
   width: 100%;
   height: 33.333%;
+  min-height: 0;
   overflow: hidden;
   background: #090d16;
 }
@@ -2790,16 +2833,10 @@ canvas#disciplineChart {
   pointer-events: none;
 }
 
-/* 🎬 Ken-Burns micro-motion terpisah di tiap foto agar background sinematik dan hidup */
-.welcome-bg-media-1 {
-  animation: kenBurnsSlot1 22s infinite alternate ease-in-out;
-}
-.welcome-bg-media-2 {
-  animation: kenBurnsSlot2 26s infinite alternate ease-in-out;
-}
-.welcome-bg-media-3 {
-  animation: kenBurnsSlot3 24s infinite alternate ease-in-out;
-}
+/* 🎬 Ken-Burns micro-motion terpisah di tiap foto HP agar dinamis */
+.welcome-bg-media-1 { animation: kenBurnsSlot1 22s infinite alternate ease-in-out; }
+.welcome-bg-media-2 { animation: kenBurnsSlot2 26s infinite alternate ease-in-out; }
+.welcome-bg-media-3 { animation: kenBurnsSlot3 24s infinite alternate ease-in-out; }
 
 @keyframes kenBurnsSlot1 {
   0%   { transform: scale(1.02) translate(0, 0); }
@@ -2814,7 +2851,7 @@ canvas#disciplineChart {
   100% { transform: scale(1.09) translate(1%, -1%); }
 }
 
-/* 🌫️ Vignette soft gradient antar slot agar transisi antar foto menyatu halus */
+/* 🌫️ Vignette soft gradient antar slot foto vertikal di HP */
 .welcome-slot-vignette {
   position: absolute;
   inset: 0;
@@ -2822,28 +2859,28 @@ canvas#disciplineChart {
   pointer-events: none;
 }
 
-/* 🛡️ Scrim global elegan agar teks, logo Asuka, dan kartu kaca sangat terbaca jernih */
-.welcome-overlay-scrim {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(6, 10, 20, 0.42) 0%, rgba(4, 7, 14, 0.70) 65%, rgba(2, 4, 10, 0.88) 100%);
-  z-index: 2;
-  pointer-events: none;
+/* 📱 Di Layar HP (Lebar <= 768px atau Orientasi Portrait): Aktifkan 3 Foto Vertikal Penuh */
+@media (max-width: 768px), (orientation: portrait) {
+  .welcome-bg-desktop {
+    display: none !important;
+  }
+  .welcome-bg-mobile-3stack {
+    display: flex !important;
+  }
 }
 
-/* 💻 Di Desktop / Layar Lebar (Landscape): 3 foto ditampilkan berjajar 3 kolom triptych */
-@media (min-width: 769px) and (orientation: landscape) {
-  .welcome-bg-wrapper {
-    flex-direction: row;
-  }
-  .welcome-bg-slot {
-    flex: 1 1 33.333%;
-    height: 100%;
-    width: 33.333%;
-  }
-  .welcome-slot-vignette {
-    background: linear-gradient(90deg, rgba(9, 13, 22, 0.5) 0%, rgba(9, 13, 22, 0.1) 35%, rgba(9, 13, 22, 0.1) 65%, rgba(9, 13, 22, 0.5) 100%);
-  }
+/* 🛡️ Scrim global elegan agar kartu kaca, logo, dan teks sangat terbaca jernih */
+.welcome-overlay-scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, rgba(6, 10, 20, 0.35) 0%, rgba(4, 7, 14, 0.65) 60%, rgba(2, 4, 10, 0.88) 100%);
+  z-index: 2;
+  pointer-events: none;
 }
 .welcome-skip-btn {
   position: absolute;
@@ -12072,22 +12109,30 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- 🎬 CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;" onclick="if(event.target===this) closeWelcomeScreen()">
-    <!-- Background layer (3 Foto Sinematik: 100% Penuh Vertikal di HP & Triptych di Desktop) -->
+    <!-- Background layer (Adaptif: Full Widescreen di Laptop, 3 Foto Vertikal Penuh di HP) -->
     <div class="welcome-bg-wrapper" id="welcomeBgWrapper">
-      <!-- 📸 Foto 1 (Atas): Proyek Lapangan / Aerial Drone -->
-      <div class="welcome-bg-slot welcome-bg-slot-1">
-        <img src="/welcome-bg-1.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Proyek Lapangan 1" class="welcome-bg-media welcome-bg-media-1" id="welcomeImgBg">
-        <div class="welcome-slot-vignette"></div>
+      <!-- 💻 TAMPILAN LAPTOP / DESKTOP (1 Foto Widescreen Megah Menutupi 100% Layar Penuh) -->
+      <div class="welcome-bg-desktop">
+        <img src="/welcome-bg.jpg" onerror="this.onerror=null; this.src='/welcome-bg-1.jpg';" alt="Asuka Engineering Project" class="welcome-bg-media welcome-bg-media-desktop" id="welcomeImgBg">
       </div>
-      <!-- 📸 Foto 2 (Tengah): Workshop Fabrikasi & Manufaktur -->
-      <div class="welcome-bg-slot welcome-bg-slot-2">
-        <img src="/welcome-bg-2.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Fabrikasi Workshop 2" class="welcome-bg-media welcome-bg-media-2" id="welcomeImgBg2">
-        <div class="welcome-slot-vignette"></div>
-      </div>
-      <!-- 📸 Foto 3 (Bawah): Konstruksi & Ereksi Struktur Baja -->
-      <div class="welcome-bg-slot welcome-bg-slot-3">
-        <img src="/welcome-bg-3.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Ereksi Struktur 3" class="welcome-bg-media welcome-bg-media-3" id="welcomeImgBg3">
-        <div class="welcome-slot-vignette"></div>
+
+      <!-- 📱 TAMPILAN HP / MOBILE (3 Foto Bertumpuk Vertikal 100% Penuh dari Atas Sampai Bawah) -->
+      <div class="welcome-bg-mobile-3stack">
+        <!-- 📸 Foto 1 (Atas): Proyek Lapangan / Aerial Drone -->
+        <div class="welcome-bg-slot welcome-bg-slot-1">
+          <img src="/welcome-bg-1.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Proyek Lapangan 1" class="welcome-bg-media welcome-bg-media-1" id="welcomeImgBg1">
+          <div class="welcome-slot-vignette"></div>
+        </div>
+        <!-- 📸 Foto 2 (Tengah): Workshop Fabrikasi & Manufaktur -->
+        <div class="welcome-bg-slot welcome-bg-slot-2">
+          <img src="/welcome-bg-2.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Fabrikasi Workshop 2" class="welcome-bg-media welcome-bg-media-2" id="welcomeImgBg2">
+          <div class="welcome-slot-vignette"></div>
+        </div>
+        <!-- 📸 Foto 3 (Bawah): Konstruksi & Ereksi Struktur Baja -->
+        <div class="welcome-bg-slot welcome-bg-slot-3">
+          <img src="/welcome-bg-3.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Ereksi Struktur 3" class="welcome-bg-media welcome-bg-media-3" id="welcomeImgBg3">
+          <div class="welcome-slot-vignette"></div>
+        </div>
       </div>
     </div>
 
