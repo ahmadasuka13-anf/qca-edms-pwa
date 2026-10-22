@@ -3734,18 +3734,54 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <span class="clock-time" id="headerClockTime">--:--:--</span>
           <span class="clock-date" id="headerClockDate">-</span>
         </div>
-        <button class="theme-toggle" onclick="openQADiagnosticModal()" title="AI QA Diagnostic &amp; Audit Agent" style="font-size:16px;">🧪</button>
-        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Ganti Tema">🌙</button>
-        <button class="theme-toggle" id="headerColorBtn" onclick="openHeaderColorModal()" title="Kustomisasi Warna Header">🎨</button>
+
+        <!-- 🔔 NOTIFIKASI -->
         <div class="notif-bell-wrap" style="position:relative;">
-          <button class="theme-toggle" onclick="toggleNotifPanel()" title="Notifikasi">🔔<span id="notifBadge" class="notif-badge" style="display:none;">0</span></button>
+          <button class="theme-toggle notif-btn" onclick="toggleNotifPanel()" title="Notifikasi">
+            🔔<span id="notifBadge" class="notif-badge" style="display:none;">0</span>
+          </button>
           <div id="notifPanel" class="notif-panel" style="display:none;">
             <div class="notif-panel-head"><span>Notifikasi</span><button class="btn-small" onclick="markAllNotifRead()">Tandai semua dibaca</button></div>
             <div id="notifPanelList"><div class="empty-state" style="padding:20px;"><div class="msg">Memuat...</div></div></div>
           </div>
         </div>
-        <span class="user-badge" id="userBadge">-</span>
-        <button class="logout-btn" onclick="handleLogout()">Keluar</button>
+
+        <!-- 👤 PROFIL PENGGUNA & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
+        <div class="user-profile-wrap" style="position:relative;" id="userProfileWrap">
+          <div class="user-profile-trigger" id="userProfileTrigger" onclick="toggleUserDropdown(event)" title="Menu Profil &amp; Pengaturan">
+            <span class="user-badge" id="userBadge">-</span>
+            <svg class="dropdown-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div id="userDropdownMenu" class="user-dropdown-menu" style="display:none;">
+            <div class="user-dropdown-header">
+              <div class="udh-name" id="dropdownUserName">Ahmad Nur Fatony</div>
+              <div class="udh-role" id="dropdownUserRole">QC-CMS User</div>
+            </div>
+            <div class="udh-divider"></div>
+            <button type="button" class="user-dropdown-item" onclick="openHeaderColorModal(); closeUserDropdown();">
+              <span class="udi-icon">🎨</span>
+              <span>Ganti Warna Header</span>
+            </button>
+            <button type="button" class="user-dropdown-item" onclick="toggleTheme(); closeUserDropdown();">
+              <span class="udi-icon" id="userDropdownThemeIcon">🌙</span>
+              <span id="userDropdownThemeText">Mode Gelap / Terang</span>
+            </button>
+            <button type="button" class="user-dropdown-item" onclick="openQADiagnosticModal(); closeUserDropdown();">
+              <span class="udi-icon">🧪</span>
+              <span>AI QA Diagnostic &amp; Audit</span>
+            </button>
+            <div class="udh-divider"></div>
+            <button type="button" class="user-dropdown-item logout-danger" onclick="handleLogout()">
+              <span class="udi-icon">🚪</span>
+              <span>Keluar (Logout)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Fallback ID kompatibilitas script lama -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" style="display:none;" aria-hidden="true"></button>
+        <button id="headerColorBtn" onclick="openHeaderColorModal()" style="display:none;" aria-hidden="true"></button>
       </div>
     </div>
 
@@ -3762,51 +3798,87 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <div class="mini-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dokumen Mutu Proyek</div>
           </div>
         </div>
+        <!-- 🎯 FOKUS PROYEK -->
         <div class="sidebar-focus" style="margin-top:4px;">
-          <label for="globalProjectFilter">🎯 Fokus Proyek</label>
+          <label for="globalProjectFilter"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>Fokus Proyek</label>
           <select id="globalProjectFilter" onchange="onGlobalProjectFilterChange()"></select>
         </div>
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Dokumen</div>
-          <button class="sidebar-item" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon">📤</span><span class="si-label">Unggah Dokumen</span></button>
-          <button class="sidebar-item active" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon">📋</span><span class="si-label">Daftar Dokumen</span></button>
-          <button class="sidebar-item" id="tabBtnNfilog" onclick="switchTab('nfilog')"><span class="si-icon">📝</span><span class="si-label">NFI Log</span></button>
-          <button class="sidebar-item" id="tabBtnTransmittals" onclick="switchTab('transmittals')" style="display:none;"><span class="si-icon">📬</span><span class="si-label">Transmittal</span></button>
-          <button class="sidebar-item" id="tabBtnArchive" onclick="switchTab('archive')"><span class="si-icon">📦</span><span class="si-label">Arsip &amp; Retensi</span></button>
-          <button class="sidebar-item" id="tabBtnRecyclebin" onclick="switchTab('recyclebin')" style="display:none;"><span class="si-icon">🗑️</span><span class="si-label">Sampah</span></button>
-        </div>
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Review &amp; Monitoring</div>
-          <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon">📌</span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:auto;font-family:var(--font-mono);"></span></span></button>
-          <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon">✅</span><span class="si-label">Approval</span></button>
-          <button class="sidebar-item" id="tabBtnSitereport" onclick="switchTab('sitereport')"><span class="si-icon">📷</span><span class="si-label">Inspeksi Lapangan</span></button>
 
-<button class="sidebar-item" id="tabBtnCalibration" onclick="switchTab('calibration')"><span class="si-icon">📏</span><span class="si-label">Kalibrasi Alat</span></button>
-
-          <button class="sidebar-item" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon">🗺️</span><span class="si-label">Ringkasan Proyek</span></button>
-          <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon">📈</span><span class="si-label">Analisis Dokumen</span></button>
-          <button class="sidebar-item" id="tabBtnCommand" onclick="switchTab('command')"><span class="si-icon">🎯</span><span class="si-label">Command Center</span></button>
-          <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon">📊</span><span class="si-label">Dashboard</span></button>
-        </div>  
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">Administrasi</div>
-          <button class="sidebar-item" id="tabBtnUsers" onclick="switchTab('users')" style="display:none;"><span class="si-icon">👤</span><span class="si-label">Manajemen User</span></button>
-          <button class="sidebar-item" id="tabBtnProjects" onclick="switchTab('projects')" style="display:none;"><span class="si-icon">🏗️</span><span class="si-label">Kelola Proyek</span></button>
-          <button class="sidebar-item" id="tabBtnApprovalsettings" onclick="switchTab('approvalsettings')" style="display:none;"><span class="si-icon">⚙️</span><span class="si-label">Pengaturan Sistem</span></button>
-          <button class="sidebar-item" type="button" onclick="openHeaderColorModal(); closeNavMenu();" title="Kustomisasi Warna Header"><span class="si-icon">🎨</span><span class="si-label">Warna Header</span></button>
-        </div>
-
-        <!-- 🧪 SEKSI KHUSUS AI & DIAGNOSTIK AUDIT -->
-        <div class="sidebar-section">
-          <div class="sidebar-section-title">AI &amp; Diagnostik</div>
-          <button class="sidebar-item" type="button" onclick="openQADiagnosticModal(); closeNavMenu();" style="background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(16,185,129,0.12)); border: 1px solid rgba(59,130,246,0.3); margin-bottom:4px;">
-            <span class="si-icon">🧪</span>
-            <span class="si-label" style="font-weight:700;">AI Audit &amp; Diagnostic</span>
-            <span style="font-size:9.5px; background:linear-gradient(135deg,#2563eb,#10b981); color:#fff; padding:2px 7px; border-radius:6px; font-weight:700; margin-left:auto; letter-spacing:0.5px;">AUDIT</span>
+        <!-- 📂 GRUP 1: DOKUMEN MUTU (ACCORDION) -->
+        <div class="sidebar-accordion-group open" id="groupDokumen">
+          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupDokumen')">
+            <span class="sag-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Dokumen Mutu
+            </span>
+            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <button class="sidebar-item" type="button" onclick="toggleAIChat(); closeNavMenu();">
-            <span class="si-icon">🤖</span>
-            <span class="si-label">AI QC Assistant</span>
+          <div class="sidebar-accordion-content">
+            <button class="sidebar-item active" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor" fill-opacity="0.16"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Daftar Dokumen</span></button>
+            <button class="sidebar-item" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v9m-3-6 3-3 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Unggah Dokumen</span></button>
+            <button class="sidebar-item" id="tabBtnTransmittals" onclick="switchTab('transmittals')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 19 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Transmittal</span></button>
+            <button class="sidebar-item" id="tabBtnArchive" onclick="switchTab('archive')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="4" rx="1" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Arsip &amp; Retensi</span></button>
+          </div>
+        </div>
+
+        <!-- 🛠️ GRUP 2: INSPEKSI & LAPANGAN (ACCORDION) -->
+        <div class="sidebar-accordion-group" id="groupInspeksi">
+          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupInspeksi')">
+            <span class="sag-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v3H9z"/><path d="m9 14 2 2 4-4"/></svg>
+              Inspeksi &amp; Alat
+            </span>
+            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-accordion-content">
+            <button class="sidebar-item" id="tabBtnNfilog" onclick="switchTab('nfilog')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="5" y="4" width="14" height="17" rx="2" fill="currentColor" fill-opacity="0.16"/><rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" fill="currentColor" stroke="currentColor" stroke-width="1.6"/><path d="m9 12 2 2 4-4M9 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">NFI Log</span></button>
+            <button class="sidebar-item" id="tabBtnSitereport" onclick="switchTab('sitereport')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="13" r="1.5" fill="currentColor"/></svg></span><span class="si-label">Inspeksi Lapangan</span></button>
+            <button class="sidebar-item" id="tabBtnCalibration" onclick="switchTab('calibration')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3.34 19a10 10 0 1 1 17.32 0" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="14" r="2.5" fill="currentColor" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 12.5 3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="4" x2="12" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="5" y1="11" x2="7" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="17" y1="11" x2="19" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Kalibrasi Alat</span></button>
+          </div>
+        </div>
+
+        <!-- 📊 GRUP 3: MONITORING & REVIEW (ACCORDION) -->
+        <div class="sidebar-accordion-group" id="groupMonitoring">
+          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupMonitoring')">
+            <span class="sag-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              Monitoring &amp; Laporan
+            </span>
+            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-accordion-content">
+            <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Dashboard</span></button>
+            <button class="sidebar-item" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Ringkasan Proyek</span></button>
+            <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 9l-5 5-4-4-5 5" fill="currentColor" fill-opacity="0.16"/><path d="M18 9l-5 5-4-4-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="9" r="2" fill="currentColor"/></svg></span><span class="si-label">Analisis Dokumen</span></button>
+            <button class="sidebar-item" id="tabBtnCommand" onclick="switchTab('command')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="1.8"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="1.8"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Command Center</span></button>
+            <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="7" r="1" fill="currentColor"/><circle cx="12" cy="7" r="1" fill="currentColor"/><circle cx="16" cy="7" r="1" fill="currentColor"/></svg></span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:auto;font-family:var(--font-mono);"></span></span></button>
+            <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Approval</span></button>
+          </div>
+        </div>
+
+        <!-- ⚙️ GRUP 4: ADMINISTRASI SISTEM (ACCORDION) -->
+        <div class="sidebar-accordion-group" id="groupAdmin">
+          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupAdmin')">
+            <span class="sag-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+              Administrasi
+            </span>
+            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-accordion-content">
+            <button class="sidebar-item" id="tabBtnUsers" onclick="switchTab('users')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="7" r="4" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Manajemen User</span></button>
+            <button class="sidebar-item" id="tabBtnProjects" onclick="switchTab('projects')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="6" x2="14" y2="6" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="10" x2="14" y2="10" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="14" x2="14" y2="14" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="18" x2="14" y2="18" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Kelola Proyek</span></button>
+            <button class="sidebar-item" id="tabBtnApprovalsettings" onclick="switchTab('approvalsettings')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" fill="currentColor" fill-opacity="0.25"/><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Pengaturan Sistem</span></button>
+            <button class="sidebar-item" id="tabBtnRecyclebin" onclick="switchTab('recyclebin')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M3 7h18M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="10" y1="11" x2="10" y2="17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="14" y1="11" x2="14" y2="17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Sampah</span></button>
+          </div>
+        </div>
+
+        <!-- 🤖 SEKSI RINGKAS AI ASSISTANT -->
+        <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border);">
+          <button class="sidebar-item" type="button" onclick="toggleAIChat(); closeNavMenu();" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:12px;">
+            <span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M12 8V4M9 4h6M2 14h2M20 14h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><path d="M9 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span class="si-label" style="font-weight:700;">Tanya AI QC</span>
+            <span style="font-size:9.5px; background:linear-gradient(135deg,#2563eb,#10b981); color:#fff; padding:2px 7px; border-radius:6px; font-weight:800; margin-left:auto;">AI</span>
           </button>
         </div>
 
@@ -6396,6 +6468,186 @@ function handleForgotPassword(event) {
     /* Monospace khusus kode dokumen, angka hash & hex color */
     code, pre, kbd, samp, .font-mono, [data-mono="true"], .clock-time, #authClockTime, #headerClockTime, #headerCustomHex, .doc-code {
       font-family: var(--font-mono, monospace) !important;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════ */
+    /* 💎 DUOTONE MODERN SVG ICONS STYLING                           */
+    /* ═══════════════════════════════════════════════════════════════ */
+    .si-icon {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 24px !important;
+      height: 24px !important;
+      min-width: 24px !important;
+      flex-shrink: 0 !important;
+      color: var(--ink-muted) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .si-icon svg {
+      width: 19px !important;
+      height: 19px !important;
+      display: block !important;
+      transition: transform 0.25s ease, stroke 0.25s ease, color 0.25s ease !important;
+    }
+    .sidebar-item:hover .si-icon {
+      color: var(--accent, #ed2e35) !important;
+      transform: scale(1.12);
+    }
+    .sidebar-item.active .si-icon {
+      color: var(--sidebar-active-text, #ed2e35) !important;
+    }
+    .sidebar-item.active .si-icon svg [fill-opacity] {
+      fill-opacity: 0.28 !important;
+    }
+
+
+    /* ═══════════════════════════════════════════════════════════════ */
+    /* 🌟 STREAMLINED HEADER & ACCORDION SIDEBAR STYLING             */
+    /* ═══════════════════════════════════════════════════════════════ */
+    .user-profile-trigger {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      user-select: none !important;
+      transition: transform 0.2s ease !important;
+    }
+    .user-profile-trigger:hover {
+      transform: translateY(-1px) !important;
+    }
+    .dropdown-caret {
+      color: rgba(255, 255, 255, 0.7) !important;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .user-profile-wrap.open .dropdown-caret {
+      transform: rotate(180deg) !important;
+    }
+    .user-dropdown-menu {
+      position: absolute !important;
+      top: calc(100% + 10px) !important;
+      right: 0 !important;
+      width: 250px !important;
+      background: var(--surface-card, #131b2e) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45) !important;
+      padding: 8px !important;
+      z-index: 9999 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      animation: dropInMenu 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    @keyframes dropInMenu {
+      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .user-dropdown-header {
+      padding: 10px 12px 6px !important;
+    }
+    .udh-name {
+      font-size: 13.5px !important;
+      font-weight: 800 !important;
+      color: var(--ink) !important;
+      line-height: 1.2 !important;
+    }
+    .udh-role {
+      font-size: 11px !important;
+      color: var(--accent) !important;
+      font-weight: 700 !important;
+      margin-top: 3px !important;
+    }
+    .udh-divider {
+      height: 1px !important;
+      background: var(--border) !important;
+      margin: 6px 0 !important;
+    }
+    .user-dropdown-item {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 9px 12px !important;
+      border-radius: 10px !important;
+      border: none !important;
+      background: transparent !important;
+      color: var(--ink) !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      text-align: left !important;
+      width: 100% !important;
+      transition: all 0.15s ease !important;
+    }
+    .user-dropdown-item:hover {
+      background: var(--surface-hover) !important;
+      color: var(--ink) !important;
+    }
+    .user-dropdown-item.logout-danger {
+      color: #ef4444 !important;
+    }
+    .user-dropdown-item.logout-danger:hover {
+      background: rgba(239, 68, 68, 0.12) !important;
+      color: #dc2626 !important;
+    }
+
+    /* 📂 Accordion Sidebar Styling */
+    .sidebar-accordion-group {
+      margin-bottom: 7px !important;
+    }
+    .sidebar-accordion-header {
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 8px 12px !important;
+      background: var(--surface-subtle) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 12px !important;
+      color: var(--ink) !important;
+      font-size: 11.5px !important;
+      font-weight: 800 !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.6px !important;
+      cursor: pointer !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .sidebar-accordion-header:hover {
+      background: var(--surface-hover) !important;
+      border-color: rgba(237, 46, 53, 0.3) !important;
+    }
+    .sidebar-accordion-group.open .sidebar-accordion-header {
+      background: var(--surface-hover) !important;
+      border-bottom-left-radius: 4px !important;
+      border-bottom-right-radius: 4px !important;
+    }
+    .sag-title {
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      color: var(--ink) !important;
+    }
+    .sag-arrow {
+      color: var(--ink-faint) !important;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .sidebar-accordion-group.open .sag-arrow {
+      transform: rotate(180deg) !important;
+    }
+    .sidebar-accordion-content {
+      display: none;
+      padding: 6px 0 6px 8px !important;
+      border-left: 2px solid var(--border) !important;
+      margin-left: 14px !important;
+      margin-top: 3px !important;
+    }
+    .sidebar-accordion-group.open .sidebar-accordion-content {
+      display: block !important;
+      animation: fadeInContent 0.2s ease !important;
+    }
+    @keyframes fadeInContent {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
 </style>
@@ -12495,6 +12747,72 @@ window.addEventListener('offline', updateFooterStatus);
           if (meta) meta.setAttribute('content', saved);
         }
       } catch(e) {}
+    })();
+
+
+    // 👤 KONTROLER PROFIL DROPDOWN DI HEADER
+    window.toggleUserDropdown = function(e) {
+      if (e) e.stopPropagation();
+      var menu = document.getElementById('userDropdownMenu');
+      var wrap = document.getElementById('userProfileWrap');
+      if (!menu) return;
+      var isClosed = menu.style.display === 'none' || menu.style.display === '';
+      menu.style.display = isClosed ? 'flex' : 'none';
+      if (wrap) wrap.classList.toggle('open', isClosed);
+
+      // Sync data profil di dropdown
+      try {
+        var uName = document.getElementById('dropdownUserName');
+        var uRole = document.getElementById('dropdownUserRole');
+        if (typeof currentUser !== 'undefined' && currentUser) {
+          if (uName) uName.textContent = currentUser.fullName || 'Ahmad Nur Fatony';
+          if (uRole) uRole.textContent = (currentUser.role || 'User') + (currentUser.email ? ' · ' + currentUser.email : '');
+        }
+        var curTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        var tIcon = document.getElementById('userDropdownThemeIcon');
+        var tText = document.getElementById('userDropdownThemeText');
+        if (tIcon) tIcon.textContent = curTheme === 'dark' ? '☀️' : '🌙';
+        if (tText) tText.textContent = curTheme === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap';
+      } catch(err) {}
+    };
+
+    window.closeUserDropdown = function() {
+      var menu = document.getElementById('userDropdownMenu');
+      var wrap = document.getElementById('userProfileWrap');
+      if (menu) menu.style.display = 'none';
+      if (wrap) wrap.classList.remove('open');
+    };
+
+    // Tutup dropdown otomatis jika klik di luar
+    document.addEventListener('click', function(e) {
+      var wrap = document.getElementById('userProfileWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        window.closeUserDropdown();
+      }
+    });
+
+    // 📂 KONTROLER ACCORDION SIDEBAR
+    window.toggleSidebarGroup = function(groupId) {
+      var group = document.getElementById(groupId);
+      if (!group) return;
+      group.classList.toggle('open');
+    };
+
+    // Buka otomatis grup accordion saat menu aktif dipilih
+    (function enhanceSwitchTabForAccordion() {
+      var oldSwitch = window.switchTab;
+      window.switchTab = function(tabName) {
+        if (typeof oldSwitch === 'function') oldSwitch(tabName);
+        try {
+          var btn = document.getElementById('tabBtn' + (tabName.charAt(0).toUpperCase() + tabName.slice(1)));
+          if (btn) {
+            var parentGroup = btn.closest('.sidebar-accordion-group');
+            if (parentGroup && !parentGroup.classList.contains('open')) {
+              parentGroup.classList.add('open');
+            }
+          }
+        } catch(e) {}
+      };
     })();
 
 </script>
