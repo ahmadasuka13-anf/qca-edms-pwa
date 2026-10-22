@@ -2760,31 +2760,90 @@ canvas#disciplineChart {
   pointer-events: none;
 }
 .welcome-bg-wrapper {
-  position: absolute;
-  inset: -40px;
+  position: fixed;
+  inset: 0;
   overflow: hidden;
   z-index: 1;
   pointer-events: none;
+  display: flex;
+  flex-direction: column; /* 📱 Di layar HP: 3 foto ditumpuk vertikal 33% atas, tengah, bawah agar layar 100% penuh */
+  width: 100%;
+  height: 100%;
 }
+
+.welcome-bg-slot {
+  position: relative;
+  flex: 1 1 33.333%;
+  width: 100%;
+  height: 33.333%;
+  overflow: hidden;
+  background: #090d16;
+}
+
 .welcome-bg-media {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  animation: kenBurnsZoom 26s infinite alternate ease-in-out;
+  object-position: center;
+  display: block;
   transform-origin: center center;
   pointer-events: none;
 }
-@keyframes kenBurnsZoom {
-  0% { transform: scale(1.04) translate(0, 0); }
-  50% { transform: scale(1.12) translate(-1%, -1%); }
-  100% { transform: scale(1.08) translate(1%, 0.5%); }
+
+/* 🎬 Ken-Burns micro-motion terpisah di tiap foto agar background sinematik dan hidup */
+.welcome-bg-media-1 {
+  animation: kenBurnsSlot1 22s infinite alternate ease-in-out;
 }
-.welcome-overlay-scrim {
+.welcome-bg-media-2 {
+  animation: kenBurnsSlot2 26s infinite alternate ease-in-out;
+}
+.welcome-bg-media-3 {
+  animation: kenBurnsSlot3 24s infinite alternate ease-in-out;
+}
+
+@keyframes kenBurnsSlot1 {
+  0%   { transform: scale(1.02) translate(0, 0); }
+  100% { transform: scale(1.08) translate(-1%, -1%); }
+}
+@keyframes kenBurnsSlot2 {
+  0%   { transform: scale(1.08) translate(1%, 0); }
+  100% { transform: scale(1.02) translate(-1%, 0.5%); }
+}
+@keyframes kenBurnsSlot3 {
+  0%   { transform: scale(1.03) translate(0, 0); }
+  100% { transform: scale(1.09) translate(1%, -1%); }
+}
+
+/* 🌫️ Vignette soft gradient antar slot agar transisi antar foto menyatu halus */
+.welcome-slot-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at center, rgba(8, 12, 22, 0.2) 0%, rgba(6, 10, 20, 0.55) 60%, rgba(4, 7, 14, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(9, 13, 22, 0.45) 0%, rgba(9, 13, 22, 0.08) 35%, rgba(9, 13, 22, 0.08) 65%, rgba(9, 13, 22, 0.45) 100%);
+  pointer-events: none;
+}
+
+/* 🛡️ Scrim global elegan agar teks, logo Asuka, dan kartu kaca sangat terbaca jernih */
+.welcome-overlay-scrim {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(6, 10, 20, 0.42) 0%, rgba(4, 7, 14, 0.70) 65%, rgba(2, 4, 10, 0.88) 100%);
   z-index: 2;
   pointer-events: none;
+}
+
+/* 💻 Di Desktop / Layar Lebar (Landscape): 3 foto ditampilkan berjajar 3 kolom triptych */
+@media (min-width: 769px) and (orientation: landscape) {
+  .welcome-bg-wrapper {
+    flex-direction: row;
+  }
+  .welcome-bg-slot {
+    flex: 1 1 33.333%;
+    height: 100%;
+    width: 33.333%;
+  }
+  .welcome-slot-vignette {
+    background: linear-gradient(90deg, rgba(9, 13, 22, 0.5) 0%, rgba(9, 13, 22, 0.1) 35%, rgba(9, 13, 22, 0.1) 65%, rgba(9, 13, 22, 0.5) 100%);
+  }
 }
 .welcome-skip-btn {
   position: absolute;
@@ -12013,9 +12072,23 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- 🎬 CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;" onclick="if(event.target===this) closeWelcomeScreen()">
-    <!-- Background layer (Foto sinematik bergerak / Video mini loop) -->
-    <div class="welcome-bg-wrapper">
-      <img src="/welcome-bg.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1600&auto=format&fit=crop';" alt="Asuka Engineering Project" class="welcome-bg-media" id="welcomeImgBg">
+    <!-- Background layer (3 Foto Sinematik: 100% Penuh Vertikal di HP & Triptych di Desktop) -->
+    <div class="welcome-bg-wrapper" id="welcomeBgWrapper">
+      <!-- 📸 Foto 1 (Atas): Proyek Lapangan / Aerial Drone -->
+      <div class="welcome-bg-slot welcome-bg-slot-1">
+        <img src="/welcome-bg-1.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Proyek Lapangan 1" class="welcome-bg-media welcome-bg-media-1" id="welcomeImgBg">
+        <div class="welcome-slot-vignette"></div>
+      </div>
+      <!-- 📸 Foto 2 (Tengah): Workshop Fabrikasi & Manufaktur -->
+      <div class="welcome-bg-slot welcome-bg-slot-2">
+        <img src="/welcome-bg-2.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Fabrikasi Workshop 2" class="welcome-bg-media welcome-bg-media-2" id="welcomeImgBg2">
+        <div class="welcome-slot-vignette"></div>
+      </div>
+      <!-- 📸 Foto 3 (Bawah): Konstruksi & Ereksi Struktur Baja -->
+      <div class="welcome-bg-slot welcome-bg-slot-3">
+        <img src="/welcome-bg-3.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Ereksi Struktur 3" class="welcome-bg-media welcome-bg-media-3" id="welcomeImgBg3">
+        <div class="welcome-slot-vignette"></div>
+      </div>
     </div>
 
     <!-- Scrim radial gradient overlay -->
