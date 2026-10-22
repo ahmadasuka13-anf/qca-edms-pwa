@@ -612,6 +612,83 @@ body {
     .badge-rejected { background: var(--rejected-bg); color: var(--rejected-text); }
     .badge-superseded, .badge-inactive { background: var(--superseded-bg); color: var(--superseded-text); }
 
+    /* Command Center — Detail Dokumen Proyek Tabs (Open vs Closed) */
+    .cc-detail-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .cc-detail-tab:hover {
+      background: var(--surface-hover);
+      color: var(--ink);
+      transform: translateY(-1px);
+    }
+    .cc-detail-tab.active-open {
+      background: var(--pending-bg) !important;
+      color: var(--pending-text) !important;
+      border-color: var(--pending-text) !important;
+      box-shadow: 0 0 0 1px var(--pending-text);
+      font-weight: 700;
+    }
+    .cc-detail-tab.active-closed {
+      background: var(--approved-bg) !important;
+      color: var(--approved-text) !important;
+      border-color: var(--approved-text) !important;
+      box-shadow: 0 0 0 1px var(--approved-text);
+      font-weight: 700;
+    }
+    .cc-detail-tab.active-all {
+      background: var(--surface-hover) !important;
+      color: var(--ink) !important;
+      border-color: var(--ink) !important;
+      font-weight: 700;
+    }
+    .cc-tab-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .cc-tab-dot.dot-open {
+      background: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+    }
+    .cc-tab-dot.dot-closed {
+      background: #10b981;
+      box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+    }
+    .cc-tab-count {
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .badge-open {
+      background: rgba(245, 158, 11, 0.18);
+      color: var(--pending-text);
+    }
+    .badge-closed {
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--approved-text);
+    }
+    .badge-all {
+      background: var(--surface-subtle);
+      color: var(--ink-muted);
+    }
+
     /* ═══════════════════════════════════════════════════════════════ */
     /* SKELETON SCREEN — Loading shimmer untuk tabel dokumen           */
     /* ═══════════════════════════════════════════════════════════════ */
@@ -8284,7 +8361,14 @@ function fileLinksHtml(d) {
       document.getElementById('docDetailContent').innerHTML = '<div class="loading-row"><span class="spinner dark"></span>...</div>';
       google.script.run.withSuccessHandler(renderDocDetail).withFailureHandler(function (err) { document.getElementById('docDetailContent').innerHTML = '<div class="empty-state"><div class="msg">Gagal: ' + esc(err.message) + '</div></div>'; }).getDocumentDetail(sessionToken, id);
     }
-    function closeDocDetail() { document.getElementById('docDetailModal').classList.remove('show'); }
+    function closeDocDetail() {
+      var m = document.getElementById('docDetailModal');
+      if (m) {
+        m.classList.remove('show');
+        var b = m.querySelector('.modal-box');
+        if (b) { b.style.maxWidth = ''; b.style.width = ''; }
+      }
+    }
     function renderDocDetail(res) {
       if (!res.success) { document.getElementById('docDetailContent').innerHTML = '<div class="empty-state"><div class="msg">' + esc(res.message) + '</div></div>'; return; }
       const d = res.doc;
@@ -9663,6 +9747,8 @@ function fileLinksHtml(d) {
       btn.innerHTML = (shown ? '▲ Sembunyikan Detail' : '▼ Lihat Detail Disiplin & Tipe');
     }
 
+var _ccProjDetailState_ = null;
+
 function openProjectDetailCC_(code) {
   if (!ccCache_) return;
   var p = ccCache_.projects.filter(function (x) { return x.code === code; })[0];
@@ -9671,61 +9757,312 @@ function openProjectDetailCC_(code) {
   // ✨ Panggil analitik (Aging, Trend, Breakdown)
   loadAnalytics(code);
 
-  // Buka modal & tampilkan loading
-  document.getElementById('docDetailModal').classList.add('show');
+  // Perlebar modal-box agar nyaman melihat tabel 6 kolom
+  var modalEl = document.getElementById('docDetailModal');
+  if (modalEl) {
+    var box = modalEl.querySelector('.modal-box');
+    if (box) { box.style.maxWidth = '920px'; box.style.width = '94vw'; }
+    modalEl.classList.add('show');
+  }
   document.getElementById('docDetailTitle').textContent = p.code + ' — ' + p.name;
   document.getElementById('docDetailContent').innerHTML =
-    '<div class="loading-row"><span class="spinner dark"></span>Memuat detail...</div>';
+    '<div class="loading-row"><span class="spinner dark"></span>Memuat detail proyek...</div>';
 
   // ✅ Panggil fungsi server SEKALI SAJA
   google.script.run
     .withSuccessHandler(function (res) {
       if (!res || !res.success) {
         document.getElementById('docDetailContent').innerHTML = 
-          '<div class="empty-state"><div class="msg">' + esc((res && res.message) || 'Gagal') + '</div></div>';
+          '<div class="empty-state"><div class="msg">' + esc((res && res.message) || 'Gagal memuat data') + '</div></div>';
         return;
       }
       var items = res.items || [];
       if (!items.length) {
         document.getElementById('docDetailContent').innerHTML = 
-          '<div class="empty-state"><div class="msg">Tidak ada dokumen.</div></div>';
+          '<div class="empty-state"><div class="msg">Tidak ada dokumen untuk proyek ini.</div></div>';
         return;
       }
-      var rows = items.map(function (it) {
-        var sc = String(it.status || '').toLowerCase();
-        var badge = sc === 'closed'
-          ? '<span class="badge badge-approved">Closed</span>'
-          : (sc === 'open' 
-              ? '<span class="badge badge-pending">Open</span>' 
-              : '<span class="badge">' + esc(it.status || '-') + '</span>');
-        return '<tr>' +
-          '<td class="doc-code" style="font-size:11.5px;">' + esc(it.noNFI || '-') + '</td>' +
-          '<td style="font-size:12px;max-width:280px;">' + esc(it.subject || '-') + '</td>' +
-          '<td style="font-size:11.5px;">' + esc(it.discipline || '-') + '</td>' +
-          '<td style="font-size:11.5px;">' + esc(it.typeInsp || '-') + '</td>' +
-          '<td style="font-size:11.5px;">' + esc(it.location || '-') + '</td>' +
-          '<td style="text-align:center;">' + badge + '</td>' +
-          '</tr>';
-      }).join('');
 
-      document.getElementById('docDetailContent').innerHTML =
-        '<div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;">' +
-          '<span class="badge badge-pending">' + p.open + ' Open</span>' +
-          '<span class="badge badge-approved">' + p.closed + ' Closed</span>' +
-          '<span class="badge">' + p.total + ' Total</span>' +
-        '</div>' +
-        '<div class="table-scroll" style="max-height:60vh;overflow-y:auto;">' +
-          '<table style="min-width:100%;">' +
-            '<thead><tr><th>No. NFI</th><th>Subject</th><th>Disiplin</th><th>Type</th><th>Location</th><th style="text-align:center;">Status</th></tr></thead>' +
-            '<tbody>' + rows + '</tbody>' +
-          '</table>' +
-        '</div>';
+      // Pisahkan list Open dan Closed
+      var openItems = [];
+      var closedItems = [];
+      var otherItems = [];
+
+      items.forEach(function (it) {
+        var sc = String(it.status || '').trim().toLowerCase();
+        if (sc === 'closed' || sc === 'close') {
+          closedItems.push(it);
+        } else if (sc === 'open') {
+          openItems.push(it);
+        } else if (sc === 'canceled' || sc === 'cancelled' || sc === 'cancel') {
+          otherItems.push(it);
+        } else {
+          openItems.push(it);
+        }
+      });
+
+      // Default tab: prioritas ke Open jika ada dokumen open, jika tidak ada baru Closed / Semua
+      var defaultTab = openItems.length > 0 ? 'open' : (closedItems.length > 0 ? 'closed' : 'all');
+
+      _ccProjDetailState_ = {
+        code: code,
+        project: p,
+        allItems: items,
+        openItems: openItems,
+        closedItems: closedItems,
+        otherItems: otherItems,
+        activeTab: defaultTab,
+        searchQuery: ''
+      };
+
+      renderCCDetailUI_();
     })
     .withFailureHandler(function (err) {
       document.getElementById('docDetailContent').innerHTML = 
         '<div class="empty-state"><div class="msg">Gagal: ' + esc(err.message) + '</div></div>';
     })
     .getProjectDetailFromMaster(code);
+}
+
+function renderCCDetailUI_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+
+  var openCount = st.openItems.length;
+  var closedCount = st.closedItems.length;
+  var totalCount = st.allItems.length;
+
+  var html = '' +
+    '<div class="cc-detail-container" style="display:flex; flex-direction:column; gap:12px;">' +
+      '<!-- BARIS FILTER: TAB STATUS + PENCARIAN + UNDUH -->' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:12px;">' +
+        '<!-- TAB BUTTONS: PISAHKAN OPEN DAN CLOSED -->' +
+        '<div style="display:flex; gap:8px; flex-wrap:wrap;" role="tablist">' +
+          '<button type="button" id="ccTabOpen" class="cc-detail-tab' + (st.activeTab === 'open' ? ' active-open' : '') + '" onclick="switchCCDetailTab_(\'open\')" title="Tampilkan hanya dokumen Open">' +
+            '<span class="cc-tab-dot dot-open"></span>' +
+            '<span>Open</span>' +
+            '<span class="cc-tab-count badge-open">' + openCount + '</span>' +
+          '</button>' +
+          '<button type="button" id="ccTabClosed" class="cc-detail-tab' + (st.activeTab === 'closed' ? ' active-closed' : '') + '" onclick="switchCCDetailTab_(\'closed\')" title="Tampilkan hanya dokumen Closed">' +
+            '<span class="cc-tab-dot dot-closed"></span>' +
+            '<span>Closed</span>' +
+            '<span class="cc-tab-count badge-closed">' + closedCount + '</span>' +
+          '</button>' +
+          '<button type="button" id="ccTabAll" class="cc-detail-tab' + (st.activeTab === 'all' ? ' active-all' : '') + '" onclick="switchCCDetailTab_(\'all\')" title="Tampilkan semua dokumen">' +
+            '<span>Semua</span>' +
+            '<span class="cc-tab-count badge-all">' + totalCount + '</span>' +
+          '</button>' +
+        '</div>' +
+
+        '<!-- SEARCH & EXPORT ACTION -->' +
+        '<div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; min-width:240px;">' +
+          '<div style="position:relative; width:100%; max-width:280px;">' +
+            '<input type="text" id="ccDetailSearchInput" value="' + esc(st.searchQuery) + '" placeholder="Cari No. NFI, Subject, Disiplin..." oninput="filterCCDetailList_()" style="width:100%; padding:7px 10px 7px 30px; border-radius:8px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-size:12.5px; outline:none;">' +
+            '<span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); font-size:13px; opacity:0.6; pointer-events:none;">🔍</span>' +
+          '</div>' +
+          '<button type="button" class="btn-small" onclick="exportCCDetailCSV_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Unduh daftar yang sedang tampil ke file CSV">' +
+            '📥 Unduh CSV' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<!-- INFO BARIS HASIL -->' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--ink-muted); padding:0 2px;">' +
+        '<div id="ccDetailInfoText"></div>' +
+      '</div>' +
+
+      '<!-- TABEL DAFTAR DOKUMEN -->' +
+      '<div class="table-scroll" style="max-height:60vh; overflow-y:auto; border-radius:10px; border:1px solid var(--border);">' +
+        '<table style="min-width:100%; width:100%; border-collapse:collapse;">' +
+          '<thead style="position:sticky; top:0; z-index:2; background:var(--surface-subtle);">' +
+            '<tr>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">No. NFI</th>' +
+              '<th style="padding:10px 12px; font-size:12px;">Subject</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Disiplin</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Type</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Location</th>' +
+              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Status</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody id="ccDetailTableBody">' +
+          '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('docDetailContent').innerHTML = html;
+  renderCCDetailRows_();
+}
+
+function switchCCDetailTab_(tab) {
+  if (!_ccProjDetailState_) return;
+  _ccProjDetailState_.activeTab = tab;
+
+  // Update class tombol tab
+  var btnOpen = document.getElementById('ccTabOpen');
+  var btnClosed = document.getElementById('ccTabClosed');
+  var btnAll = document.getElementById('ccTabAll');
+
+  if (btnOpen) {
+    btnOpen.className = 'cc-detail-tab' + (tab === 'open' ? ' active-open' : '');
+  }
+  if (btnClosed) {
+    btnClosed.className = 'cc-detail-tab' + (tab === 'closed' ? ' active-closed' : '');
+  }
+  if (btnAll) {
+    btnAll.className = 'cc-detail-tab' + (tab === 'all' ? ' active-all' : '');
+  }
+
+  renderCCDetailRows_();
+}
+
+function filterCCDetailList_() {
+  if (!_ccProjDetailState_) return;
+  var input = document.getElementById('ccDetailSearchInput');
+  _ccProjDetailState_.searchQuery = input ? input.value.trim() : '';
+  renderCCDetailRows_();
+}
+
+function renderCCDetailRows_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+  var sourceList = [];
+
+  if (st.activeTab === 'open') {
+    sourceList = st.openItems;
+  } else if (st.activeTab === 'closed') {
+    sourceList = st.closedItems;
+  } else {
+    // Tab "Semua": tampilkan Open di atas agar yang masih pending terlihat jelas lebih dulu
+    sourceList = st.openItems.concat(st.closedItems, st.otherItems || []);
+  }
+
+  // Filter pencarian
+  var q = (st.searchQuery || '').toLowerCase();
+  var filtered = sourceList;
+  if (q) {
+    filtered = sourceList.filter(function (it) {
+      return (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.status || '').toLowerCase().indexOf(q) !== -1);
+    });
+  }
+
+  // Update info text
+  var infoEl = document.getElementById('ccDetailInfoText');
+  if (infoEl) {
+    var tabLabel = st.activeTab === 'open' ? 'Open' : (st.activeTab === 'closed' ? 'Closed' : 'Semua');
+    if (q) {
+      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dari ' + sourceList.length + ' dokumen ' + tabLabel + ' (filter: "<em>' + esc(q) + '</em>")';
+    } else {
+      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dokumen ' + tabLabel;
+    }
+  }
+
+  var tbody = document.getElementById('ccDetailTableBody');
+  if (!tbody) return;
+
+  if (!filtered.length) {
+    var emptyMsg = '';
+    if (q) {
+      emptyMsg = 'Tidak ada dokumen yang cocok dengan pencarian "<b>' + esc(q) + '</b>".';
+    } else if (st.activeTab === 'open') {
+      emptyMsg = '🎉 <b>Luar biasa!</b> Tidak ada dokumen Open (semua pekerjaan telah Closed).';
+    } else if (st.activeTab === 'closed') {
+      emptyMsg = 'Belum ada dokumen yang berstatus Closed.';
+    } else {
+      emptyMsg = 'Tidak ada dokumen yang tersedia.';
+    }
+
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
+      '<div style="font-size:24px; margin-bottom:8px;">' + (st.activeTab === 'open' && !q ? '🎉' : '🔍') + '</div>' +
+      '<div>' + emptyMsg + '</div>' +
+      '</td></tr>';
+    return;
+  }
+
+  var rowsHtml = filtered.map(function (it) {
+    var sc = String(it.status || '').trim().toLowerCase();
+    var badge = sc === 'closed' || sc === 'close'
+      ? '<span class="badge badge-approved">Closed</span>'
+      : (sc === 'open' 
+          ? '<span class="badge badge-pending">Open</span>' 
+          : '<span class="badge">' + esc(it.status || '-') + '</span>');
+
+    // NFI link jika ada link dokumen
+    var nfiHtml = esc(it.noNFI || '-');
+    if (it.link && String(it.link).trim().indexOf('http') === 0) {
+      nfiHtml = '<a href="' + esc(it.link) + '" target="_blank" rel="noopener noreferrer" style="color:var(--link); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px;" title="Buka berkas dokumen">' +
+        esc(it.noNFI || 'Buka') + ' <span style="font-size:10px; opacity:0.8;">↗</span></a>';
+    }
+
+    return '<tr>' +
+      '<td class="doc-code" style="font-size:11.5px; font-weight:600; white-space:nowrap;">' + nfiHtml + '</td>' +
+      '<td style="font-size:12px; max-width:280px; line-height:1.4;">' + esc(it.subject || '-') + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.discipline || '-') + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.typeInsp || '-') + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.location || '-') + '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' + badge + '</td>' +
+      '</tr>';
+  }).join('');
+
+  tbody.innerHTML = rowsHtml;
+
+  // Panggil autoLabelTables_ agar card view di mobile bekerja
+  if (typeof autoLabelTables_ === 'function') {
+    autoLabelTables_();
+  }
+}
+
+function exportCCDetailCSV_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+  var sourceList = st.activeTab === 'open' ? st.openItems : (st.activeTab === 'closed' ? st.closedItems : st.allItems);
+  
+  var q = (st.searchQuery || '').toLowerCase();
+  if (q) {
+    sourceList = sourceList.filter(function (it) {
+      return (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
+             (String(it.status || '').toLowerCase().indexOf(q) !== -1);
+    });
+  }
+
+  if (!sourceList.length) {
+    showToast('Tidak ada data untuk diekspor.', 'error');
+    return;
+  }
+
+  var csv = ['"No. NFI","Subject","Disiplin","Type","Location","Status","Link"'];
+  sourceList.forEach(function (it) {
+    csv.push([
+      '"' + (it.noNFI || '').replace(/"/g, '""') + '"',
+      '"' + (it.subject || '').replace(/"/g, '""') + '"',
+      '"' + (it.discipline || '').replace(/"/g, '""') + '"',
+      '"' + (it.typeInsp || '').replace(/"/g, '""') + '"',
+      '"' + (it.location || '').replace(/"/g, '""') + '"',
+      '"' + (it.status || '').replace(/"/g, '""') + '"',
+      '"' + (it.link || '').replace(/"/g, '""') + '"'
+    ].join(','));
+  });
+
+  var blob = new Blob([csv.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  var safeCode = (st.code || 'PROYEK').replace(/[^a-zA-Z0-9_-]/g, '_');
+  a.download = 'Detail-' + safeCode + '-' + st.activeTab + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV berhasil diunduh (' + sourceList.length + ' dokumen)', 'success');
 }
     function runSyncFromUI_() {
       if (!confirm('Sync semua proyek dari spreadsheet? Proses 30-60 detik.')) return;
