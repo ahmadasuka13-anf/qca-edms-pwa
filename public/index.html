@@ -6586,13 +6586,18 @@ function handleForgotPassword(event) {
       box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45) !important;
       padding: 8px !important;
       z-index: 9999 !important;
-      display: flex !important;
+      display: none !important;
       flex-direction: column !important;
-      animation: dropInMenu 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      transform: translateY(-8px) scale(0.96) !important;
+      transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
-    @keyframes dropInMenu {
-      from { opacity: 0; transform: translateY(-8px) scale(0.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .user-profile-wrap.open .user-dropdown-menu {
+      display: flex !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      transform: translateY(0) scale(1) !important;
     }
     .user-dropdown-header {
       padding: 10px 12px 8px !important;
@@ -12836,56 +12841,64 @@ window.addEventListener('offline', updateFooterStatus);
 
     // 👤 KONTROLER PROFIL DROPDOWN DI HEADER
     window.toggleUserDropdown = function(e) {
-      if (e) e.stopPropagation();
-      var menu = document.getElementById('userDropdownMenu');
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       var wrap = document.getElementById('userProfileWrap');
-      if (!menu) return;
-      var isClosed = menu.style.display === 'none' || menu.style.display === '';
-      menu.style.display = isClosed ? 'flex' : 'none';
-      if (wrap) wrap.classList.toggle('open', isClosed);
+      if (!wrap) return;
+      var isOpen = wrap.classList.toggle('open');
 
-      // Sync data profil di dropdown
-      try {
-        var uName = document.getElementById('dropdownUserName');
-        var uRole = document.getElementById('dropdownUserRole');
-        var user = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : window.__currentUser;
-        if (user) {
-          if (uName) uName.textContent = user.fullName || 'Ahmad Nur Fatony';
-          if (uRole) uRole.textContent = user.role || 'Admin';
-        } else {
-          var ub = document.getElementById('userBadge');
-          if (ub) {
-            var rb = ub.querySelector('.role-badge');
-            var roleText = rb ? rb.textContent.trim() : (localStorage.getItem('qccms_user_role') || 'Admin');
-            var clone = ub.cloneNode(true);
-            var innerRb = clone.querySelector('.role-badge');
-            if (innerRb) innerRb.remove();
-            var nameText = clone.textContent.trim();
-            if (uName && nameText && nameText !== '-') uName.textContent = nameText;
-            if (uRole && roleText) uRole.textContent = roleText;
+      if (isOpen) {
+        // Sync data profil di dropdown
+        try {
+          var uName = document.getElementById('dropdownUserName');
+          var uRole = document.getElementById('dropdownUserRole');
+          var user = (typeof currentUser !== 'undefined' && currentUser) ? currentUser : window.__currentUser;
+          if (user) {
+            if (uName) uName.textContent = user.fullName || 'Ahmad Nur Fatony';
+            if (uRole) uRole.textContent = user.role || 'Admin';
+          } else {
+            var ub = document.getElementById('userBadge');
+            if (ub) {
+              var rb = ub.querySelector('.role-badge');
+              var roleText = rb ? rb.textContent.trim() : (localStorage.getItem('qccms_user_role') || 'Admin');
+              var clone = ub.cloneNode(true);
+              var innerRb = clone.querySelector('.role-badge');
+              if (innerRb) innerRb.remove();
+              var nameText = clone.textContent.trim();
+              if (uName && nameText && nameText !== '-') uName.textContent = nameText;
+              if (uRole && roleText) uRole.textContent = roleText;
+            }
           }
-        }
-        var curTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        var tIcon = document.getElementById('userDropdownThemeIcon');
-        var tText = document.getElementById('userDropdownThemeText');
-        var sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8"/><line x1="12" y1="1" x2="12" y2="3" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/></svg>';
-        var moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        if (tIcon) tIcon.innerHTML = curTheme === 'dark' ? sunSvg : moonSvg;
-        if (tText) tText.textContent = curTheme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
-      } catch(err) {}
+          var curTheme = document.documentElement.getAttribute('data-theme') || 'light';
+          var tIcon = document.getElementById('userDropdownThemeIcon');
+          var tText = document.getElementById('userDropdownThemeText');
+          var sunSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8"/><line x1="12" y1="1" x2="12" y2="3" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="21" x2="12" y2="23" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="12" x2="3" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="21" y1="12" x2="23" y2="12" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round"/></svg>';
+          var moonSvg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#f59e0b" fill-opacity="0.2" stroke="#f59e0b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          if (tIcon) tIcon.innerHTML = curTheme === 'dark' ? sunSvg : moonSvg;
+          if (tText) tText.textContent = curTheme === 'dark' ? 'Mode Terang' : 'Mode Gelap';
+        } catch(err) {}
+      }
     };
 
     window.closeUserDropdown = function() {
-      var menu = document.getElementById('userDropdownMenu');
       var wrap = document.getElementById('userProfileWrap');
-      if (menu) menu.style.display = 'none';
       if (wrap) wrap.classList.remove('open');
     };
 
-    // Tutup dropdown otomatis jika klik di luar
+    // Tutup dropdown otomatis jika klik di luar atau tekan tombol Esc
     document.addEventListener('click', function(e) {
       var wrap = document.getElementById('userProfileWrap');
-      if (wrap && !wrap.contains(e.target)) {
+      if (wrap && wrap.classList.contains('open')) {
+        if (!wrap.contains(e.target)) {
+          window.closeUserDropdown();
+        }
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
         window.closeUserDropdown();
       }
     });
