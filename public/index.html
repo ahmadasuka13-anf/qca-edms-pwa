@@ -5741,10 +5741,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         sessionToken = res.sessionToken;
         currentUser  = res.user;
         try { localStorage.setItem('qccms_session', sessionToken); } catch (err) {}
+        try { sessionStorage.removeItem('qccms_welcome_seen'); } catch (err) {}
         // Bersihkan form
         document.getElementById('loginForm').reset();
         showAuthForm('login');
-        enterApp();
+        enterApp(true);
       })
       .withFailureHandler(function (err) {
         btn.disabled = false;
@@ -6567,13 +6568,14 @@ function syncThemeToggleIcon() {
       // handleForgotPassword didefinisikan di Auth.html
 
     function handleLogout() {
+      try { sessionStorage.removeItem('qccms_welcome_seen'); } catch (e) {}
       google.script.run.logout(sessionToken);
       if (typeof QC_SECURITY !== 'undefined') QC_SECURITY.clearSession();
       else localStorage.removeItem('qccms_session');
       sessionToken = null; currentUser = null; location.reload();
     }
     function greetingWord_() { const h = new Date().getHours(); return h < 10 ? 'Selamat pagi' : h < 15 ? 'Selamat siang' : h < 18 ? 'Selamat sore' : 'Selamat malam'; }
-function enterApp() {
+function enterApp(isFreshLogin) {
   // 1. Sembunyikan authScreen, aktifkan appScreen di latar belakang
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
@@ -6587,8 +6589,22 @@ function enterApp() {
     try { localStorage.setItem('qccms_user_name', currentUser.fullName); } catch (e) {}
   }
 
-  // 3. Masuk langsung ke menu kerja (Layar sambutan dapat dibuka kapan saja via ikon 🎬 di sidebar)
-  try { sessionStorage.setItem('qccms_welcome_seen', '1'); } catch (e) {}
+  // 3. 🎬 Tampilkan Layar Sambutan Sinematik jika login baru atau sesi baru
+  var alreadySeen = false;
+  try { alreadySeen = sessionStorage.getItem('qccms_welcome_seen') === '1'; } catch (e) {}
+  if (isFreshLogin || !alreadySeen) {
+    try { sessionStorage.setItem('qccms_welcome_seen', '1'); } catch (e) {}
+    var showWelcome = function () {
+      if (typeof openWelcomeScreen === 'function') {
+        openWelcomeScreen(currentUser);
+      }
+    };
+    if (typeof openWelcomeScreen === 'function') {
+      showWelcome();
+    } else {
+      setTimeout(showWelcome, 300);
+    }
+  }
 
   // 4. Muat data aplikasi di latar belakang
   google.script.run
