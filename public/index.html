@@ -5080,257 +5080,669 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <!-- 🤖 AI CHATBOT -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
-<!-- Floating Button -->
-<button id="aiChatBtn" onclick="toggleAIChat()" aria-label="AI Assistant QC" title="AI Assistant QC">
-  🤖
-  <span id="aiChatNotifDot" style="display:none; position:absolute; top:6px; right:6px; width:12px; height:12px; background:#22c55e; border-radius:50%; border:2px solid #fff;"></span>
+<!-- Floating AI Copilot Launcher Button -->
+<button id="aiChatBtn" class="ai-launcher-btn" onclick="toggleAIChat()" aria-label="Buka Asisten AI QA/QC" title="Asisten AI QA/QC Copilot">
+  <div class="ai-launcher-icon-wrap">
+    <svg class="ai-launcher-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="url(#aiSparkleGrad)" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round"/>
+      <circle cx="19" cy="5" r="2.2" fill="#60a5fa"/>
+      <circle cx="5" cy="19" r="1.8" fill="#34d399"/>
+      <defs>
+        <linearGradient id="aiSparkleGrad" x1="3" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#ffffff"/>
+          <stop offset="0.5" stop-color="#93c5fd"/>
+          <stop offset="1" stop-color="#3b82f6"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>
 </button>
 
-<!-- Chat Panel -->
-<div id="aiChatPanel" style="display:none; position:fixed; bottom:90px; right:20px; width:420px; max-width:calc(100vw - 40px); height:600px; max-height:calc(100vh - 120px); background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,0.25); z-index:9999; overflow:hidden; flex-direction:column; animation:aiSlideIn 0.25s ease-out;">
+<!-- Chat Panel Modern AI QA Copilot -->
+<div id="aiChatPanel" class="ai-chat-card" style="display:none;">
 
-    <!-- Header -->
-  <div style="background:linear-gradient(135deg, #163d78, #0d6ab0); color:#fff; padding:16px 18px; display:flex; align-items:center; justify-content:space-between;">
-    <div style="display:flex; align-items:center; gap:10px;">
-      <span style="font-size:22px;">🤖</span>
+  <!-- Header -->
+  <div class="ai-chat-header">
+    <div class="ai-header-info">
+      <div class="ai-header-avatar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#60a5fa" stroke="#ffffff" stroke-width="1.2"/>
+          <circle cx="19" cy="5" r="2" fill="#38bdf8"/>
+        </svg>
+      </div>
       <div>
-        <div style="font-size:14px; font-weight:700;">Asisten QA/QC All-in-One</div>
-        <div style="font-size:10.5px; opacity:0.8;" id="aiChatContext">Pilih proyek untuk analisis spesifik</div>
+        <div class="ai-header-title-row">
+          <span class="ai-header-title">Asisten QA/QC Copilot</span>
+          <span class="ai-header-badge">AI COPILOT</span>
+        </div>
+        <div class="ai-header-sub" id="aiChatContext">Fokus: Semua Proyek · PT Asuka Engineering Indonesia</div>
       </div>
     </div>
-    <div style="display:flex; gap:6px;">
-      <button onclick="exportAIChatMenu()" style="background:rgba(255,255,255,0.15); color:#fff; border:none; width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px;" title="Export percakapan">📥</button>
-      <button onclick="clearAIChat()" style="background:rgba(255,255,255,0.15); color:#fff; border:none; width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px;" title="Hapus percakapan">🗑️</button>
-      <button onclick="toggleAIChat()" style="background:rgba(255,255,255,0.15); color:#fff; border:none; width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:14px;" title="Tutup">✕</button>
+    <div class="ai-header-actions">
+      <button type="button" class="ai-hdr-btn" onclick="exportAIChatMenu()" title="Export percakapan">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </button>
+      <button type="button" class="ai-hdr-btn" onclick="clearAIChat()" title="Hapus percakapan">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+      <button type="button" class="ai-hdr-btn ai-hdr-close" onclick="toggleAIChat()" title="Tutup">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
   </div>
 
-  <!-- Messages -->
-  <div id="aiChatMessages" style="flex:1; overflow-y:auto; padding:16px; background:#f9f6f0; display:flex; flex-direction:column; gap:12px;">
-    <!-- Welcome message -->
-    <div style="display:flex; gap:10px; align-items:flex-start;">
-      <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #163d78, #0d6ab0); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0;">🤖</div>
-      <div style="background:#fff; border-radius:12px 12px 12px 4px; padding:12px 14px; font-size:13px; color:#2b2621; line-height:1.5; max-width:85%; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
-        <b>Halo! 👋</b><br>
-        Saya <b>Asisten QA/QC All-in-One</b> PT Asuka Engineering Indonesia. Tanyakan status proyek, dokumen NFI/ITR, atau konsultasi standar teknik (ASME, AWS, ISO, Hydrotest, Las)!
-        <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
-          <button class="ai-suggest" onclick="quickAIQuestion('Buatkan executive morning briefing status dokumen dan kalibrasi hari ini')">🌅 Morning Briefing Harian</button>
-          <button class="ai-suggest" onclick="quickAIQuestion('Berapa dokumen Open di proyek yang sedang aktif?')">📊 Status Dokumen Proyek Aktif</button>
-          <button class="ai-suggest" onclick="quickAIQuestion('Buatkan draft NCR untuk temuan cacat las undercut sedalam 1.5mm pada butt joint pipa')">📝 Buat Draft NCR Cepat</button>
-          <button class="ai-suggest" onclick="quickAIQuestion('Berapa tekanan uji hydrotest untuk piping bertekanan kerja 10 bar menurut ASME B31.3?')">🔬 Konsultasi ASME B31.3 Hydrotest</button>
-          <button class="ai-suggest" onclick="quickAIQuestion('Validasi MTR pipa ASTM A106 Gr. B dengan data: C: 0.28%, Mn: 0.85%, Tensile: 450 MPa, Yield: 260 MPa')">🔍 Validasi Sertifikat Material (MTR)</button>
+  <!-- Messages Body -->
+  <div id="aiChatMessages" class="ai-chat-body">
+    <!-- Welcome message card -->
+    <div class="ai-msg-row bot">
+      <div class="ai-msg-avatar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#3b82f6"/></svg>
+      </div>
+      <div class="ai-msg-bot">
+        <div class="ai-bot-greeting">
+          <strong>Halo, Tim QA/QC!</strong> 👋
+        </div>
+        <p class="ai-bot-desc">
+          Saya <strong>Asisten QA/QC Copilot</strong> PT Asuka Engineering Indonesia. Tanyakan status dokumen, validasi inspeksi NFI/ITR, atau konsultasi standar teknik fabrikasi &amp; konstruksi.
+        </p>
+
+        <!-- Modern Suggestion Action Cards -->
+        <div class="ai-suggest-grid">
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Buatkan executive morning briefing status dokumen dan kalibrasi hari ini')">
+            <div class="asc-left">
+              <span class="asc-icon orange">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" fill="#f97316" fill-opacity="0.2" stroke="#ea580c" stroke-width="1.8"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="#ea580c" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Morning Briefing Harian</span>
+                <span class="asc-hint">Ringkasan status kalibrasi &amp; dokumen aktif</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Berapa dokumen Open di proyek yang sedang aktif?')">
+            <div class="asc-left">
+              <span class="asc-icon blue">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="8" rx="1" fill="#3b82f6" fill-opacity="0.2" stroke="#2563eb" stroke-width="1.8"/><rect x="10" y="8" width="4" height="12" rx="1" fill="#3b82f6" fill-opacity="0.2" stroke="#2563eb" stroke-width="1.8"/><rect x="17" y="4" width="4" height="16" rx="1" fill="#3b82f6" fill-opacity="0.2" stroke="#2563eb" stroke-width="1.8"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Status Dokumen Proyek Aktif</span>
+                <span class="asc-hint">Monitoring dokumen Pending &amp; Approval</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Buatkan draft NCR untuk temuan cacat las undercut sedalam 1.5mm pada butt joint pipa')">
+            <div class="asc-left">
+              <span class="asc-icon red">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="#ef4444" fill-opacity="0.18" stroke="#dc2626" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke="#dc2626" stroke-width="1.8"/><line x1="12" y1="12" x2="12" y2="16" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="18.5" r="1" fill="#dc2626"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Buat Draft NCR Cepat</span>
+                <span class="asc-hint">Format resmi temuan ketidaksesuaian mutu</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Berapa tekanan uji hydrotest untuk piping bertekanan kerja 10 bar menurut ASME B31.3?')">
+            <div class="asc-left">
+              <span class="asc-icon green">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#10b981" fill-opacity="0.18" stroke="#059669" stroke-width="1.8"/><polyline points="12 6 12 12 16 14" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Konsultasi ASME B31.3 Hydrotest</span>
+                <span class="asc-hint">Kalkulasi tekanan uji perpipaan proses</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Validasi MTR pipa ASTM A106 Gr. B dengan data: C: 0.28%, Mn: 0.85%, Tensile: 450 MPa, Yield: 260 MPa')">
+            <div class="asc-left">
+              <span class="asc-icon purple">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#8b5cf6" fill-opacity="0.18" stroke="#7c3aed" stroke-width="1.8"/><polyline points="9 12 11 14 15 10" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Validasi Sertifikat Material (MTR)</span>
+                <span class="asc-hint">Verifikasi komposisi kimia &amp; tensile test</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Input -->
-  <div style="padding:12px 14px; background:#fff; border-top:1px solid #e4dccb; display:flex; gap:8px; align-items:flex-end;">
-    <textarea id="aiChatInput" placeholder="Tanya apa saja..." rows="1" style="flex:1; resize:none; border:1px solid #e4dccb; border-radius:10px; padding:10px 12px; font-size:13px; font-family:inherit; max-height:100px; outline:none;" onkeydown="handleAIKeydown(event)" oninput="autoResizeAIInput(this)"></textarea>
-    <button onclick="startVoiceInput()" id="aiVoiceBtn" class="ai-voice-btn" title="Voice Input">🎤</button>
-    <button onclick="sendAIMessage()" id="aiChatSendBtn" style="background:linear-gradient(135deg, #163d78, #0d6ab0); color:#fff; border:none; width:42px; height:42px; border-radius:10px; cursor:pointer; font-size:18px; flex-shrink:0;">➤</button>
+  <!-- Modern Floating Input Bar -->
+  <div class="ai-chat-footer">
+    <div class="ai-input-wrapper">
+      <textarea id="aiChatInput" placeholder="Tanyakan standar teknis, dokumen, atau NCR..." rows="1" onkeydown="handleAIKeydown(event)" oninput="autoResizeAIInput(this)"></textarea>
+      <div class="ai-input-controls">
+        <button type="button" onclick="startVoiceInput()" id="aiVoiceBtn" class="ai-voice-btn" title="Voice Input (Bicara)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <button type="button" onclick="sendAIMessage()" id="aiChatSendBtn" class="ai-send-btn" title="Kirim Pesan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>
 
 <style>
-@keyframes aiSlideIn {
-  from { opacity:0; transform:translateY(20px) scale(0.95); }
-  to { opacity:1; transform:translateY(0) scale(1); }
+@keyframes aiCardSlideIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes aiTypingDot {
-  0%, 60%, 100% { transform:translateY(0); opacity:0.5; }
-  30% { transform:translateY(-6px); opacity:1; }
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
 }
-.ai-suggest {
-  background:#f1ede4;
-  border:1px solid #e4dccb;
-  border-radius:8px;
-  padding:8px 12px;
-  font-size:12px;
-  color:#163d78;
-  cursor:pointer;
-  text-align:left;
-  font-weight:600;
-  transition:background 0.15s ease;
-}
-.ai-suggest:hover { background:#e8e2d5; }
-.ai-msg-user {
-  align-self:flex-end;
-  background:linear-gradient(135deg, #163d78, #0d6ab0);
-  color:#fff;
-  border-radius:12px 12px 4px 12px;
-  padding:10px 14px;
-  font-size:13px;
-  max-width:85%;
-  line-height:1.5;
-  box-shadow:0 2px 6px rgba(22,61,120,0.15);
-}
-.ai-msg-bot {
-  background:#fff;
-  color:#2b2621;
-  border-radius:12px 12px 12px 4px;
-  padding:12px 14px;
-  font-size:13px;
-  max-width:85%;
-  line-height:1.55;
-  box-shadow:0 2px 6px rgba(0,0,0,0.05);
-}
-.ai-msg-bot b, .ai-msg-bot strong { color:#163d78; }
-.ai-msg-bot ul { margin:6px 0; padding-left:18px; }
-.ai-msg-bot li { margin-bottom:3px; }
-.ai-typing {
-  display:inline-flex;
-  gap:4px;
-  align-items:center;
-  padding:12px 16px;
-}
-.ai-typing span {
-  width:7px;
-  height:7px;
-  background:#163d78;
-  border-radius:50%;
-  animation:aiTypingDot 1.2s infinite ease-in-out;
-}
-.ai-typing span:nth-child(2) { animation-delay:0.15s; }
-.ai-typing span:nth-child(3) { animation-delay:0.3s; }
-
-/* AI Suggest Actions */
-.ai-actions-wrap {
-  margin-top:10px;
-  padding-top:10px;
-  border-top:1px dashed #e4dccb;
-}
-.ai-actions-label {
-  font-size:10.5px;
-  color:#6b6459;
-  text-transform:uppercase;
-  letter-spacing:0.3px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-.ai-action-btn {
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  background:linear-gradient(135deg, #e8f1fb, #d6e4f7);
-  border:1px solid #a3c1e8;
-  color:#163d78;
-  padding:6px 12px;
-  border-radius:8px;
-  font-size:11.5px;
-  font-weight:600;
-  cursor:pointer;
-  margin:3px 3px 3px 0;
-  transition:all 0.15s ease;
-  text-decoration:none;
-}
-.ai-action-btn:hover {
-  background:linear-gradient(135deg, #163d78, #0d6ab0);
-  color:#fff;
-  transform:translateY(-1px);
-  box-shadow:0 4px 8px rgba(22,61,120,0.2);
-}
-.ai-export-menu {
-  position:absolute;
-  top:60px;
-  right:16px;
-  background:#fff;
-  border-radius:10px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.15);
-  padding:8px;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  z-index:10;
-  min-width:150px;
-}
-.ai-export-menu button {
-  background:none;
-  border:none;
-  text-align:left;
-  padding:9px 12px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:12.5px;
-  color:#2b2621;
-  font-weight:500;
-  transition:background 0.15s;
-}
-.ai-export-menu button:hover { background:#f1ede4; }
-
-/* Language Badge */
-.ai-lang-badge {
-  display:inline-block;
-  background:rgba(22,61,120,0.1);
-  color:#163d78;
-  font-size:10px;
-  padding:2px 8px;
-  border-radius:999px;
-  font-weight:700;
-  margin-left:6px;
-  text-transform:uppercase;
+@keyframes beaconPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
-/* Voice Input Button */
-.ai-voice-btn {
-  background:linear-gradient(135deg, #16a34a, #22c55e);
-  color:#fff;
-  border:none;
-  width:42px;
-  height:42px;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:18px;
-  flex-shrink:0;
-  transition:all 0.15s ease;
-}
-.ai-voice-btn.recording {
-  background:linear-gradient(135deg, #dc2626, #ef4444);
-  animation:aiPulse 1s infinite;
-}
-@keyframes aiPulse {
-  0%, 100% { box-shadow:0 0 0 0 rgba(220,38,38,0.4); }
-  50% { box-shadow:0 0 0 10px rgba(220,38,38,0); }
-}
-/* Styling Tombol Floating AI Chat */
-#aiChatBtn {
+/* Floating Launcher Orb */
+#aiChatBtn.ai-launcher-btn {
   position: fixed;
   bottom: 24px;
   right: 24px;
   width: 58px;
   height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #163d78, #0d6ab0);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
   color: #fff;
-  border: none;
-  box-shadow: 0 8px 24px rgba(22,61,120,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   cursor: pointer;
-  font-size: 26px;
   z-index: 9998;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+#aiChatBtn.ai-launcher-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 14px 38px rgba(37, 99, 235, 0.45);
+}
+#aiChatBtn.ai-launcher-btn:active {
+  transform: scale(0.94);
+}
+.ai-launcher-icon-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#aiChatBtn:hover {
-  transform: scale(1.05);
+.ai-notif-beacon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: beaconPulse 2s infinite;
 }
-#aiChatBtn:active {
+
+/* AI Chat Card Frame */
+.ai-chat-card {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  width: 440px;
+  max-width: calc(100vw - 32px);
+  height: 640px;
+  max-height: calc(100vh - 120px);
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.32), 0 4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: aiCardSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Chat Header */
+.ai-chat-header {
+  background: var(--bezel, linear-gradient(135deg, #1e293b, #0f172a));
+  color: #ffffff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.ai-header-info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.ai-header-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.ai-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ai-header-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+}
+.ai-header-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(147, 197, 253, 0.4);
+  color: #dbeafe;
+}
+.ai-header-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 230px;
+}
+.ai-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ai-hdr-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+}
+.ai-hdr-btn:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+.ai-hdr-btn.ai-hdr-close:hover {
+  background: rgba(239, 68, 68, 0.8);
+  border-color: #ef4444;
+}
+
+/* Chat Messages Body */
+.ai-chat-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: var(--surface-subtle, #f8fafc);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ai-msg-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.ai-msg-row.user {
+  justify-content: flex-end;
+}
+.ai-msg-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+}
+.ai-msg-bot {
+  background: var(--surface-card, #ffffff);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 16px 4px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  max-width: 86%;
+  line-height: 1.55;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+.ai-bot-greeting {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.ai-bot-desc {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.ai-msg-user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+  border-radius: 16px 16px 4px 16px;
+  padding: 11px 16px;
+  font-size: 13.5px;
+  font-weight: 500;
+  max-width: 85%;
+  line-height: 1.5;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+}
+.ai-typing {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  padding: 10px 14px;
+}
+.ai-typing span {
+  width: 7px;
+  height: 7px;
+  background: #3b82f6;
+  border-radius: 50%;
+  animation: aiTypingDot 1.2s infinite ease-in-out;
+}
+.ai-typing span:nth-child(2) { animation-delay: 0.15s; }
+.ai-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+/* Prompt Suggestion Cards */
+.ai-suggest-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.ai-suggest-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface-subtle, #f1f5f9);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--ink);
+}
+.ai-suggest-card:hover {
+  background: var(--surface-hover, #e2e8f0);
+  border-color: rgba(59, 130, 246, 0.45);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+.ai-suggest-card:hover .asc-arrow {
+  transform: translateX(3px);
+  color: #3b82f6;
+}
+.asc-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.asc-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.asc-icon.orange { background: rgba(249, 115, 22, 0.12); }
+.asc-icon.blue { background: rgba(59, 130, 246, 0.12); }
+.asc-icon.red { background: rgba(239, 68, 68, 0.12); }
+.asc-icon.green { background: rgba(16, 185, 129, 0.12); }
+.asc-icon.purple { background: rgba(139, 92, 246, 0.12); }
+.asc-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.asc-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+.asc-hint {
+  font-size: 11px;
+  color: var(--ink-faint);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.asc-arrow {
+  color: var(--ink-faint);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Modern AI Input Bar */
+.ai-chat-footer {
+  padding: 12px 14px;
+  background: var(--surface-card, #ffffff);
+  border-top: 1px solid var(--border);
+}
+.ai-input-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: var(--surface-subtle, #f8fafc);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 6px 8px 6px 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.ai-input-wrapper:focus-within {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16) !important;
+  background: var(--surface-card, #ffffff);
+}
+#aiChatInput {
+  flex: 1;
+  resize: none;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 8px 0;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--ink);
+  max-height: 100px;
+  line-height: 1.45;
+}
+#aiChatInput::placeholder {
+  color: var(--ink-faint);
+}
+.ai-input-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.ai-voice-btn {
+  background: var(--surface-card, #ffffff);
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.ai-voice-btn:hover {
+  background: var(--surface-hover);
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+.ai-voice-btn.recording {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+  animation: aiPulse 1s infinite;
+}
+@keyframes aiPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+}
+.ai-send-btn {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+}
+.ai-send-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45);
+}
+.ai-send-btn:active {
   transform: scale(0.92);
 }
 
+/* AI Action Pills in Chat */
+.ai-actions-wrap {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+.ai-actions-label {
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.ai-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 3px 4px 3px 0;
+  transition: all 0.15s ease;
+}
+.ai-action-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #ffffff;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+.ai-export-menu {
+  position: absolute;
+  top: 56px;
+  right: 18px;
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  z-index: 10;
+  min-width: 160px;
+}
+.ai-export-menu button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--ink);
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+.ai-export-menu button:hover {
+  background: var(--surface-hover);
+  color: #2563eb;
+}
+.ai-lang-badge {
+  display: inline-block;
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 700;
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
 @media (max-width: 860px) {
-  /* 📱 MOBILE: Pindahkan AI Button ke KIRI BAWAH agar TIDAK bertabrakan dengan FAB di KANAN BAWAH */
-  #aiChatBtn {
+  #aiChatBtn.ai-launcher-btn {
     bottom: 20px !important;
     left: 18px !important;
     right: auto !important;
     width: 52px !important;
     height: 52px !important;
-    font-size: 24px !important;
   }
-  #aiChatPanel {
+  .ai-chat-card {
     bottom: 80px !important;
     right: 12px !important;
     left: 12px !important;
@@ -5338,10 +5750,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     max-width: 100% !important;
     height: calc(100vh - 100px) !important;
     max-height: none !important;
-    border-radius: 14px !important;
+    border-radius: 16px !important;
   }
 }
 </style>
+
 
   <!-- ============ INCLUDE PARTIALS ============ -->
   <script>
@@ -11483,11 +11896,11 @@ function toggleAIChat() {
   var isOpen = panel.style.display !== 'none';
   if (isOpen) {
     panel.style.display = 'none';
-    btn.innerHTML = '🤖';
+    btn.innerHTML = '<div class="ai-launcher-icon-wrap"><svg class="ai-launcher-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="url(#aiSparkleGrad)" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round"/><circle cx="19" cy="5" r="2.2" fill="#60a5fa"/><circle cx="5" cy="19" r="1.8" fill="#34d399"/><defs><linearGradient id="aiSparkleGrad" x1="3" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#ffffff"/><stop offset="0.5" stop-color="#93c5fd"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs></svg></div><span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>';
   } else {
     if (typeof toggleMobileFab === 'function') toggleMobileFab(false);
     panel.style.display = 'flex';
-    btn.innerHTML = '✕';
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
     if (typeof updateAIChatContext === 'function') updateAIChatContext();
     setTimeout(function() {
       var input = document.getElementById('aiChatInput');
@@ -11515,7 +11928,7 @@ function clearAIChat() {
   var welcome = document.createElement('div');
   welcome.style.cssText = 'display:flex; gap:10px; align-items:flex-start;';
   welcome.innerHTML =
-    '<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #163d78, #0d6ab0); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0;">🤖</div>' +
+    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
     '<div style="background:#fff; border-radius:12px 12px 12px 4px; padding:12px 14px; font-size:13px; color:#2b2621; line-height:1.5; max-width:85%; box-shadow:0 2px 6px rgba(0,0,0,0.05);">' +
       '<b>Percakapan baru dimulai ✨</b><br>Tanya apa saja tentang QC-CMS!' +
     '</div>';
@@ -11648,7 +12061,7 @@ function appendAIMessage(role, text, time, actions, lang, modelInfo) {
     }
 
     wrap.innerHTML =
-      '<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #163d78, #0d6ab0); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0;">🤖</div>' +
+      '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
       '<div class="ai-msg-bot">' + formatAIText(text) + langBadge + modelBadge + actionsHtml + '</div>';
   } else {
     wrap.innerHTML = '<div class="ai-msg-user">' + escapeAIHtml(text) + '</div>';
@@ -11667,7 +12080,7 @@ function appendAITyping() {
   wrap.id = id;
   wrap.style.cssText = 'display:flex; gap:10px; align-items:flex-start;';
   wrap.innerHTML =
-    '<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg, #163d78, #0d6ab0); display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; flex-shrink:0;">🤖</div>' +
+    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
     '<div class="ai-msg-bot ai-typing"><span></span><span></span><span></span></div>';
   msgs.appendChild(wrap);
   msgs.scrollTop = msgs.scrollHeight;
@@ -12350,7 +12763,7 @@ window.addEventListener('offline', updateFooterStatus);
 
       if (!list) return;
       runBtn.disabled = true;
-      runBtn.textContent = '⏳ Memindai...';
+      runBtn.innerHTML = '<svg class="ai-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg><span>Memindai Sistem...</span>';
       list.innerHTML = '';
       progress.style.width = '0%';
       scoreCircle.textContent = '...';
@@ -12510,14 +12923,14 @@ window.addEventListener('offline', updateFooterStatus);
           if (res.warn) {
             warned++;
             itemEl.classList.add('warn');
-            itemEl.innerHTML = '<span class="ai-diag-item-icon">⚠️</span>' +
+            itemEl.innerHTML = '<span class="ai-diag-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="rgba(245,158,11,0.18)" stroke="#f59e0b" stroke-width="2"/><line x1="12" y1="9" x2="12" y2="13" stroke="#f59e0b" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#f59e0b" stroke-width="2"/></svg></span>' +
               '<div class="ai-diag-item-content"><div class="ai-diag-item-title">' + esc(t.name) + ' <span style="font-size:10.5px; opacity:0.7;">[' + esc(t.category) + ']</span></div>' +
               '<div class="ai-diag-item-desc">' + esc(res.msg) + '</div></div>';
             logReport.push('[WARN] ' + t.name + ': ' + res.msg);
           } else {
             passed++;
             itemEl.classList.add('pass');
-            itemEl.innerHTML = '<span class="ai-diag-item-icon">✅</span>' +
+            itemEl.innerHTML = '<span class="ai-diag-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(16,185,129,0.18)" stroke="#10b981" stroke-width="2"/><polyline points="8 12 11 15 16 9" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
               '<div class="ai-diag-item-content"><div class="ai-diag-item-title">' + esc(t.name) + ' <span style="font-size:10.5px; opacity:0.7;">[' + esc(t.category) + ']</span></div>' +
               '<div class="ai-diag-item-desc">' + esc(res.msg) + '</div></div>';
             logReport.push('[PASS] ' + t.name + ': ' + res.msg);
@@ -12525,7 +12938,7 @@ window.addEventListener('offline', updateFooterStatus);
         } catch (err) {
           failed++;
           itemEl.classList.add('fail');
-          itemEl.innerHTML = '<span class="ai-diag-item-icon">❌</span>' +
+          itemEl.innerHTML = '<span class="ai-diag-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="rgba(239,68,68,0.18)" stroke="#ef4444" stroke-width="2"/><line x1="15" y1="9" x2="9" y2="15" stroke="#ef4444" stroke-width="2"/><line x1="9" y1="9" x2="15" y2="15" stroke="#ef4444" stroke-width="2"/></svg></span>' +
             '<div class="ai-diag-item-content"><div class="ai-diag-item-title" style="color:#f87171;">' + esc(t.name) + ' [' + esc(t.category) + ']</div>' +
             '<div class="ai-diag-item-desc" style="color:#fca5a5;">' + esc(err.message) + '</div></div>';
           logReport.push('[FAIL] ' + t.name + ': ' + err.message);
@@ -12559,8 +12972,9 @@ window.addEventListener('offline', updateFooterStatus);
       }
 
       runBtn.disabled = false;
-      runBtn.textContent = '🔄 Uji Ulang';
-      copyBtn.style.display = 'inline-block';
+      runBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/></svg><span>Uji Ulang Diagnostik</span>';
+      copyBtn.style.display = 'inline-flex';
+      copyBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Salin Laporan</span>';
       window._lastQADiagReport = '=== LAPORAN AI QA DIAGNOSTIC QC-CMS EDMS ===\n' +
         'Pengembang: Ahmad Nur Fatony (Lead QA/QC & System Developer)\n' +
         'Perusahaan: PT Asuka Engineering Indonesia\n' +
@@ -13090,15 +13504,22 @@ window.addEventListener('offline', updateFooterStatus);
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!-- 🧪 AI QA DIAGNOSTIC AGENT MODAL                                -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 🧪 AI QA DIAGNOSTIC AGENT MODAL (HEALTH & INTEGRITY)           -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="aiDiagnosticModal" class="ai-diag-overlay" onclick="if(event.target===this) closeQADiagnosticModal()">
     <div class="ai-diag-card">
       <div class="ai-diag-header">
         <div class="ai-diag-title">
-          <span>🤖</span>
-          <span>AI QA Diagnostic Agent</span>
-          <span class="ai-diag-badge">QC-CMS Inspector</span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="rgba(59,130,246,0.18)" stroke="#3b82f6" stroke-width="1.8"/>
+            <polyline points="9 12 11 14 15 10" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>AI QA Diagnostic Inspector</span>
+          <span class="ai-diag-badge">SYSTEM INTEGRITY v4.0</span>
         </div>
-        <button type="button" class="ai-diag-close-btn" onclick="closeQADiagnosticModal()" title="Tutup">✕</button>
+        <button type="button" class="ai-diag-close-btn" onclick="closeQADiagnosticModal()" title="Tutup">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <div class="ai-diag-body">
@@ -13106,34 +13527,45 @@ window.addEventListener('offline', updateFooterStatus);
           <div class="ai-diag-score-wrap">
             <div class="ai-diag-score-circle" id="aiDiagScoreVal">--</div>
             <div>
-              <div style="font-weight:700; font-size:14px; color:var(--ink);" id="aiDiagStatusText">Siap Menjalankan Uji Fitur</div>
-              <div style="font-size:11.5px; color:var(--ink-muted);" id="aiDiagStatusDesc">Klik tombol di bawah untuk memindai kesehatan sistem.</div>
+              <div style="font-weight:800; font-size:14.5px; color:var(--ink);" id="aiDiagStatusText">Siap Menjalankan Uji Diagnostik</div>
+              <div style="font-size:12px; color:var(--ink-muted); margin-top:2px;" id="aiDiagStatusDesc">Klik tombol di bawah untuk memindai kesehatan &amp; kepatuhan sistem.</div>
             </div>
           </div>
-          <div style="text-align:right; font-size:11.5px; color:var(--ink-muted);" id="aiDiagStatsCount">
-            0 Tes Selesai
+          <div style="text-align:right; font-size:12px; font-weight:700; color:var(--ink-muted);" id="aiDiagStatsCount">
+            0 / 7 Modul Diuji
           </div>
         </div>
 
-        <div class="ai-diag-progress-track">
+        <div class="ai-diag-caps-bar">
+          <span class="diag-cap-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> AES-256-GCM</span>
+          <span class="diag-cap-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> IndexedDB v2</span>
+          <span class="diag-cap-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg> Cloud Engine</span>
+          <span class="diag-cap-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> PWA Cache</span>
+          <span class="diag-cap-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> 12 Modul QC</span>
+        </div>
+
+        <div class="ai-diag-progress-track" style="margin-top:16px;">
           <div class="ai-diag-progress-fill" id="aiDiagProgress"></div>
         </div>
 
         <!-- Daftar Hasil Item Pengujian -->
-        <div id="aiDiagResultsList">
-          <div style="text-align:center; padding:30px 10px; color:var(--ink-muted); font-size:12.5px;">
-            <div>🔬 AI Agent siap memindai <b>Enkripsi AES</b>, <b>Offline DB</b>, <b>Server Cloud</b>, <b>Integritas 12 Modul</b>, dan <b>File Limit</b>.</div>
+        <div id="aiDiagResultsList" style="margin-top:14px;">
+          <div style="text-align:center; padding:36px 14px; color:var(--ink-muted); font-size:13px; background:var(--surface-subtle); border-radius:14px; border:1px dashed var(--border);">
+            <div style="font-weight:700; color:var(--ink); margin-bottom:4px;">Memvalidasi Infrastruktur Digital QA/QC</div>
+            <div>AI Inspector siap memvalidasi Web Crypto AES-256-GCM, Database Offline multi-titik, Endpoint Cloud, dan Keutuhan DOM 12 Modul Kerja.</div>
           </div>
         </div>
       </div>
 
       <div class="ai-diag-footer">
-        <button type="button" class="btn btn-secondary btn-small" id="aiDiagCopyBtn" onclick="copyQADiagnosticReport()" style="display:none;">
-          📋 Salin Laporan Diagnostik
+        <button type="button" class="btn btn-secondary btn-small" id="aiDiagCopyBtn" onclick="copyQADiagnosticReport()" style="display:none; align-items:center; gap:6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Salin Laporan</span>
         </button>
         <div style="flex:1;"></div>
-        <button type="button" class="btn btn-primary" id="aiDiagRunBtn" onclick="runQADiagnostics()">
-          ▶️ Jalankan Diagnostic Scan
+        <button type="button" class="btn btn-primary" id="aiDiagRunBtn" onclick="runQADiagnostics()" style="display:inline-flex; align-items:center; gap:8px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+          <span>Jalankan Diagnostic Scan</span>
         </button>
       </div>
     </div>
