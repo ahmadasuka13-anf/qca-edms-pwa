@@ -261,6 +261,10 @@
 
     
     :root, :root[data-theme="light"] {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-text: #ffffff;
+      --primary-subtle: rgba(37, 99, 235, 0.1);
       --ink: #0f172a;               /* Deep slate high-contrast text */
       --ink-muted: #475569;         /* Clean slate readable secondary */
       --ink-faint: #94a3b8;         /* Subtle placeholder / icons */
@@ -291,6 +295,10 @@
       --radius-xl: 20px;
     }
     :root[data-theme="dark"] {
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-text: #ffffff;
+      --primary-subtle: rgba(59, 130, 246, 0.2);
       --ink: #f8fafc;               /* Crisp bright white slate */
       --ink-muted: #94a3b8;         /* Clear readable secondary */
       --ink-faint: #64748b;         /* Muted tertiary */
@@ -892,8 +900,111 @@ body {
     .modal-box .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
     .modal-box .modal-actions .btn { flex: 1; min-height: 44px; touch-action: manipulation; }
 
+    
     /* ==========================================================================
-       ENTERPRISE DOCUMENT PREVIEW MODAL (FULL-VIEW & RESPONSIVE)
+       USER PROFILE TRIGGER IN HEADER (POLISHED GLASS PILL)
+       ========================================================================== */
+    .user-profile-trigger {
+      background: rgba(255, 255, 255, 0.14) !important;
+      border: 1px solid rgba(255, 255, 255, 0.24) !important;
+      border-radius: 999px !important;
+      padding: 5px 14px 5px 12px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      color: #ffffff !important;
+      outline: none !important;
+      font-family: inherit !important;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+      height: 38px !important;
+      box-sizing: border-box !important;
+    }
+    .user-profile-trigger:hover {
+      background: rgba(255, 255, 255, 0.24) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
+    }
+    .user-profile-trigger:active {
+      transform: translateY(0);
+    }
+    .user-profile-trigger .user-badge {
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      color: #ffffff !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+    }
+    .user-profile-trigger .dropdown-caret {
+      color: rgba(255, 255, 255, 0.8) !important;
+      transition: transform 0.22s ease !important;
+      flex-shrink: 0 !important;
+    }
+    .user-profile-wrap.open .dropdown-caret {
+      transform: rotate(180deg) !important;
+    }
+
+    /* ==========================================================================
+       ACTION BUTTONS IN TABLES (PREVIEW, COPY, NEW TAB)
+       ========================================================================== */
+    .btn-preview-action {
+      padding: 5px 11px !important;
+      font-size: 11.5px !important;
+      font-weight: 700 !important;
+      border-radius: var(--radius-sm, 8px) !important;
+      background: var(--primary, #2563eb) !important;
+      color: #ffffff !important;
+      border: 1px solid var(--primary, #2563eb) !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 5px !important;
+      touch-action: manipulation !important;
+      transition: all 0.18s ease !important;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25) !important;
+      line-height: 1.2 !important;
+    }
+    .btn-preview-action svg {
+      color: #ffffff !important;
+      flex-shrink: 0 !important;
+    }
+    .btn-preview-action:hover {
+      background: var(--primary-hover, #1d4ed8) !important;
+      border-color: var(--primary-hover, #1d4ed8) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35) !important;
+    }
+    .btn-action-icon {
+      padding: 5px 8px !important;
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius-sm, 8px) !important;
+      background: var(--surface-card) !important;
+      color: var(--ink) !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-decoration: none !important;
+      touch-action: manipulation !important;
+      transition: all 0.18s ease !important;
+      line-height: 1.2 !important;
+    }
+    .btn-action-icon:hover {
+      background: var(--surface-hover) !important;
+      color: var(--primary, #2563eb) !important;
+      border-color: var(--primary, #2563eb) !important;
+    }
+
+    /* ==========================================================================
+       ENTERPRISE DOCUMENT PREVIEW MODAL (THEME-ADAPTIVE & RESPONSIVE)
        ========================================================================== */
     #previewModal {
       padding: 16px !important;
@@ -905,14 +1016,14 @@ body {
       height: 90vh !important;
       max-height: 92vh !important;
       padding: 0 !important;
-      border-radius: 14px !important;
-      background: #0f172a !important;
-      color: #f8fafc !important;
+      border-radius: var(--radius-lg, 16px) !important;
+      background: var(--surface-card, #ffffff) !important;
+      color: var(--ink, #0f172a) !important;
       display: flex !important;
       flex-direction: column !important;
       overflow: hidden !important;
-      border: 1px solid rgba(255, 255, 255, 0.12) !important;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8) !important;
+      border: 1px solid var(--border, #e2e8f0) !important;
+      box-shadow: var(--shadow-float, 0 20px 45px rgba(0, 0, 0, 0.25)) !important;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     #previewModal.preview-fullscreen-active {
@@ -931,24 +1042,25 @@ body {
       align-items: center;
       justify-content: space-between;
       padding: 12px 18px;
-      background: #1e293b;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--surface-subtle, #f1f5f9);
+      border-bottom: 1px solid var(--border, #e2e8f0);
       gap: 12px;
       flex-shrink: 0;
+      color: var(--ink, #0f172a);
     }
     .preview-modal-head .card-title {
-      color: #f8fafc !important;
-      font-size: 14px !important;
+      color: var(--ink, #0f172a) !important;
+      font-size: 14.5px !important;
       font-weight: 700 !important;
       margin: 0 !important;
       letter-spacing: -0.01em;
     }
     .preview-modal-head .btn-small {
-      background: rgba(255, 255, 255, 0.08) !important;
-      color: #f1f5f9 !important;
-      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      background: var(--surface-card, #ffffff) !important;
+      color: var(--ink, #0f172a) !important;
+      border: 1px solid var(--border, #e2e8f0) !important;
       padding: 6px 12px !important;
-      border-radius: 8px !important;
+      border-radius: var(--radius-sm, 8px) !important;
       font-size: 12px !important;
       font-weight: 600 !important;
       display: inline-flex !important;
@@ -958,22 +1070,33 @@ body {
       cursor: pointer !important;
       transition: all 0.18s ease !important;
       line-height: 1.2;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     .preview-modal-head .btn-small:hover {
-      background: rgba(255, 255, 255, 0.18) !important;
-      border-color: rgba(255, 255, 255, 0.3) !important;
-      color: #fff !important;
+      background: var(--surface-hover, #e2e8f0) !important;
+      color: var(--ink, #0f172a) !important;
+      border-color: var(--ink-faint, #94a3b8) !important;
       transform: translateY(-1px);
     }
+    .preview-modal-head .btn-small.btn-primary-preview {
+      background: var(--primary, #2563eb) !important;
+      color: #ffffff !important;
+      border-color: var(--primary, #2563eb) !important;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25) !important;
+    }
+    .preview-modal-head .btn-small.btn-primary-preview:hover {
+      background: var(--primary-hover, #1d4ed8) !important;
+      color: #ffffff !important;
+    }
     .preview-modal-head .btn-close-preview {
-      background: rgba(239, 68, 68, 0.15) !important;
-      color: #fca5a5 !important;
-      border-color: rgba(239, 68, 68, 0.3) !important;
+      background: rgba(239, 68, 68, 0.1) !important;
+      color: #dc2626 !important;
+      border-color: rgba(239, 68, 68, 0.25) !important;
       padding: 6px 10px !important;
     }
     .preview-modal-head .btn-close-preview:hover {
       background: #ef4444 !important;
-      color: #fff !important;
+      color: #ffffff !important;
       border-color: #ef4444 !important;
     }
     .preview-banner-hint {
@@ -982,14 +1105,15 @@ body {
       justify-content: space-between;
       gap: 10px;
       padding: 8px 18px;
-      background: rgba(14, 165, 233, 0.12);
-      border-bottom: 1px solid rgba(14, 165, 233, 0.22);
-      color: #bae6fd;
+      background: rgba(37, 99, 235, 0.08);
+      border-bottom: 1px solid rgba(37, 99, 235, 0.15);
+      color: var(--link, #2563eb);
       font-size: 11.5px;
+      font-weight: 500;
       flex-shrink: 0;
     }
     .preview-banner-hint a {
-      color: #38bdf8;
+      color: var(--link, #2563eb);
       font-weight: 700;
       text-decoration: underline;
       cursor: pointer;
@@ -1000,7 +1124,7 @@ body {
       width: 100% !important;
       height: 100% !important;
       min-height: 0;
-      background: #090d16;
+      background: var(--surface, #f8fafc);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1012,7 +1136,7 @@ body {
       flex: 1 1 auto !important;
       border: none !important;
       display: block !important;
-      background: #090d16;
+      background: var(--surface, #f8fafc);
     }
     .preview-image-wrap {
       position: absolute;
@@ -1021,8 +1145,56 @@ body {
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: #090d16;
+      background: var(--surface, #f8fafc);
       overflow: auto;
+    }
+    /* Mode Gelap (Dark Theme) untuk Preview Modal */
+    [data-theme="dark"] #previewModal .modal-box.preview-modal-box {
+      background: #111827 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8) !important;
+      color: #f9fafb !important;
+    }
+    [data-theme="dark"] .preview-modal-head {
+      background: #1f2937 !important;
+      border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+      color: #f9fafb !important;
+    }
+    [data-theme="dark"] .preview-modal-head .card-title {
+      color: #f9fafb !important;
+    }
+    [data-theme="dark"] .preview-modal-head .btn-small {
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #f3f4f6 !important;
+      border-color: rgba(255, 255, 255, 0.16) !important;
+    }
+    [data-theme="dark"] .preview-modal-head .btn-small:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      color: #ffffff !important;
+    }
+    [data-theme="dark"] .preview-modal-head .btn-small.btn-primary-preview {
+      background: #3b82f6 !important;
+      color: #ffffff !important;
+      border-color: #3b82f6 !important;
+    }
+    [data-theme="dark"] .preview-modal-head .btn-close-preview {
+      background: rgba(239, 68, 68, 0.2) !important;
+      color: #fca5a5 !important;
+      border-color: rgba(239, 68, 68, 0.35) !important;
+    }
+    [data-theme="dark"] .preview-banner-hint {
+      background: rgba(59, 130, 246, 0.15) !important;
+      border-bottom-color: rgba(59, 130, 246, 0.25) !important;
+      color: #93c5fd !important;
+    }
+    [data-theme="dark"] .preview-banner-hint a {
+      color: #60a5fa !important;
+    }
+    [data-theme="dark"] .preview-modal-body,
+    [data-theme="dark"] .preview-iframe,
+    [data-theme="dark"] .preview-image-wrap {
+      background: #0b0f19 !important;
     }
     @media (max-width: 768px) {
       #previewModal {
@@ -1048,8 +1220,6 @@ body {
         font-size: 11px;
       }
     }
-
-
     /* Sembunyikan FAB & Chat Panel saat Modal atau Sidebar terbuka */
     body.sidebar-open #mobileFabContainer,
     body.sidebar-open #aiChatBtn,
@@ -8447,7 +8617,7 @@ function fileLinksHtml(d) {
         let a = '';
         var docUrl = n.attachmentUrl || n.link || '';
         if (docUrl) {
-          a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(docUrl) + '\',\'Dokumen NFI ' + escapeJs_(n.noNfi || '') + '\')" style="padding:4px 9px; font-size:11px; font-weight:600; border-radius:6px; background:var(--primary); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation;" title="Buka Pratinjau Dokumen PDF"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Buka PDF</button> ';
+          a += '<button type="button" class="btn-preview-action" onclick="previewFile_(\'' + escapeJs_(docUrl) + '\',\'Dokumen NFI ' + escapeJs_(n.noNfi || '') + '\')" title="Buka Pratinjau Dokumen PDF"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>Buka PDF</span></button> ';
           a += '<button type="button" class="btn-small" onclick="copyDocLink_(\'' + escapeJs_(docUrl) + '\',\'' + escapeJs_(n.noNfi || 'NFI') + '\')" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--surface-subtle); color:var(--ink); cursor:pointer; touch-action:manipulation;" title="Salin Tautan Dokumen"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button> ';
           a += '<a href="' + esc(docUrl) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink-muted); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka di Google Drive Tab Baru">↗</a> ';
         }
@@ -10525,13 +10695,13 @@ function renderCCDetailRows_() {
 
       // Kolom Dokumen / Aksi: tombol Pratinjau Modal + tombol Tab Baru Drive
       docActionHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
-        '<button type="button" class="btn-small" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="padding:4px 9px; font-size:11px; font-weight:600; border-radius:6px; background:var(--primary); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation;" title="Buka pratinjau dokumen langsung di modal">' +
-          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="12" r="3"/></svg>Preview' +
+        '<button type="button" class="btn-preview-action" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Buka pratinjau dokumen langsung di modal">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="3"/></svg><span>Preview</span>' +
         '</button>' +
-        '<button type="button" class="btn-small" onclick="copyDocLink_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--surface-subtle); color:var(--ink); cursor:pointer; touch-action:manipulation;" title="Salin tautan dokumen ke clipboard">' +
+        '<button type="button" class="btn-action-icon" onclick="copyDocLink_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Salin tautan dokumen ke clipboard">' +
           '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
         '</button>' +
-        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink-muted); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka berkas di tab baru Google Drive">↗</a>' +
+        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Buka berkas di tab baru Google Drive">↗</a>' +
       '</div>';
     } else {
       nfiHtml = esc(it.noNFI || '-');
@@ -12459,7 +12629,7 @@ window.addEventListener('offline', updateFooterStatus);
                 '</div>' +
                 '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
                   '<button type="button" class="btn-small" id="previewFullscreenBtn" onclick="togglePreviewFullscreen_()" title="Layar Penuh / Pulihkan"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg><span class="btn-label">Layar Penuh</span></button>' +
-                  '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="btn-label">Tab Baru</span></a>' +
+                  '<a class="btn-small btn-primary-preview" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="btn-label">Tab Baru</span></a>' +
                   '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="btn-label">Unduh</span></a>' +
                   '<button type="button" class="btn-small btn-close-preview" onclick="closePreviewModal()" title="Tutup preview (Esc)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
                 '</div>' +
@@ -12472,7 +12642,7 @@ window.addEventListener('offline', updateFooterStatus);
                 '<button type="button" onclick="document.getElementById(\'previewBannerHint\').style.display=\'none\'" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:2px 6px;font-size:12px;" title="Tutup pemberitahuan">✕</button>' +
               '</div>' +
               '<div class="preview-modal-body" id="previewModalBody">' +
-                '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
+                '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink);"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -12593,7 +12763,7 @@ window.addEventListener('offline', updateFooterStatus);
           renderPreviewBody_(body, __previewCache[fileUrl]);
           return;
         } else {
-          body.innerHTML = '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat preview dokumen...</div>';
+          body.innerHTML = '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink);"><span class="spinner"></span>Memuat pratinjau dokumen...</div>';
         }
 
         // 2. BACKGROUND PERMISSION SYNC: Hubungi server jika ada handler
