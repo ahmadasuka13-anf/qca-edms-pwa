@@ -4583,19 +4583,19 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
               <!-- PANEL: COMMAND CENTER -->
             <div class="panel" id="panelCommand">
-              <h2 class="panel-title">🎯 QA/QC Command Center</h2>
+              <h2 class="panel-title" style="display:flex;align-items:center;gap:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(225,29,72,0.12);color:var(--accent,#e11d48);flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>QA/QC Command Center</span></h2>
               <p class="hint" style="margin:-10px 0 16px;">Monitor semua proyek dalam 1 halaman — update otomatis dari Master Hub.</p>
 
 <div class="filter-row" style="margin-bottom:16px;">
-  <button class="btn btn-secondary" onclick="loadCommandCenter()">🔄 Refresh</button>
-  <button class="btn btn-secondary" onclick="runSyncFromUI_()">🔄 Sync Semua Proyek</button>
-  <button class="btn btn-secondary" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_()" title="Atur sinkronisasi otomatis tiap 1 jam di background">⏰ Cek Auto-Sync</button>
-  <label style="font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-left:10px;">🔧 Disiplin:</label>
+  <button class="btn btn-secondary" onclick="loadCommandCenter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>Refresh</button>
+  <button class="btn btn-secondary" onclick="runSyncFromUI_()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>Sync Semua Proyek</button>
+  <button class="btn btn-secondary" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_()" title="Atur sinkronisasi otomatis tiap 1 jam di background"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Cek Auto-Sync</button>
+  <label style="font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-left:10px;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin:</label>
   <select id="ccDisciplineFilter" onchange="onCCDisciplineChange_()" style="min-width:180px;">
     <option value="">Semua Disiplin</option>
   </select>
   <!-- Tambahkan setelah dropdown Disiplin -->
-<label style="margin-left:12px; font-weight:600;">📅 Periode:</label>
+<label style="margin-left:12px;font-weight:600;display:inline-flex;align-items:center;font-size:12.5px;color:var(--ink-muted);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="currentColor" fill-opacity="0.16"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Periode:</label>
 <select id="filterPeriod" onchange="applyPeriodFilter()" style="padding:6px 10px; border-radius:6px;">
   <option value="all">Semua Waktu</option>
   <option value="thisMonth">Bulan Ini</option>
@@ -4604,9 +4604,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <option value="thisYear">Tahun Ini</option>
 </select>
 
-<button onclick="exportToCSV()" style="padding:8px 14px; margin-left:8px; background:#2e7d32; color:#fff; border:none; border-radius:6px; cursor:pointer;">
-  📥 Export CSV
-</button>
+<button onclick="exportToCSV()" style="padding:8px 14px; margin-left:8px; background:#166534; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(22,101,52,0.25);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
   <button class="btn-small" onclick="resetCCDisciplineFilter_()">Reset</button>
   <span class="hint" style="margin-left:auto;" id="ccLastUpdate">—</span>
 </div>
@@ -4619,7 +4617,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
       <div style="display:flex; align-items:center; gap:12px;">
-        <span style="font-size:22px;">📊</span>
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
         <div>
           <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek</div>
           <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
@@ -4632,16 +4630,12 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   </div>
 
   <!-- KOSONG STATE - Muncul kalau belum ada proyek terpilih -->
-  <div id="analyticsEmptyState" style="padding:40px 20px; background:#f9f6f0; border:2px dashed #ddd; border-radius:12px; text-align:center; color:#888;">
-    <div style="font-size:42px; margin-bottom:12px;">👆</div>
-    <div style="font-size:14px; font-weight:600; color:#555;">Pilih proyek di bawah untuk melihat analisis</div>
-    <div style="font-size:12px; margin-top:6px;">Klik salah satu kartu proyek di section "Status per Proyek"</div>
-  </div>
+  <div id="analyticsEmptyState" style="padding:40px 20px; background:var(--surface-subtle,#f8fafc); border:2px dashed var(--border,#e2e8f0); border-radius:14px; text-align:center; color:var(--ink-muted,#64748b);"><div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:rgba(22,61,120,0.08);color:var(--primary,#163d78);margin-bottom:12px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.15"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div style="font-size:14px; font-weight:700; color:var(--ink,#1e293b);">Pilih Proyek untuk Melihat Analisis</div><div style="font-size:12.5px; margin-top:6px; opacity:0.85;">Klik salah satu kartu proyek di daftar "Status per Proyek" di bawah</div></div>
 
   <!-- Aging Analysis -->
   <div id="analyticsChartsWrapper" style="display:none;">
     <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;">⏳ Analisis Umur Dokumen Open</h3>
+      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open</span></h3>
       <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
         <div style="flex:1; min-width:120px; padding:12px; background:#fff3e0; border-radius:8px; cursor:pointer;" onclick="drillDownAging('0-30')">
           <div style="font-size:22px; font-weight:bold; color:#e65100;" id="age0_30">-</div>
@@ -4668,7 +4662,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <div id="backlogCard" style="margin-top:16px; padding:16px 20px; background:linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); border-left:5px solid #dc2626; border-radius:10px;">
   <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
     <div style="display:flex; align-items:center; gap:14px;">
-      <span style="font-size:32px;">📦</span>
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:rgba(220,38,38,0.12);color:#dc2626;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(220,38,38,0.2);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2" fill="currentColor" fill-opacity="0.2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
       <div>
         <div style="font-size:11.5px; color:#991b1b; text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Backlog — Belum Selesai</div>
         <div style="font-size:32px; font-weight:800; color:#dc2626; font-family:'Nunito', monospace; line-height:1.1;" id="backlogTotal">—</div>
@@ -4696,14 +4690,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     </div>
 
     <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;">📈 Tren Bulanan (6 Bulan Terakhir)</h3>
+      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>Tren Bulanan (6 Bulan Terakhir)</span></h3>
       <div style="position:relative; height:320px; width:100%;">
         <canvas id="trendChart"></canvas>
       </div>
     </div>
 
     <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;">📊 Breakdown per Disiplin <span style="font-size:12px; color:#999; font-weight:normal;">(klik bar untuk detail)</span></h3>
+      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Breakdown per Disiplin</span> <span style="font-size:12px; color:var(--ink-muted); font-weight:normal;">(klik bar untuk detail)</span></h3>
       <div style="position:relative; height:320px; width:100%;">
         <canvas id="disciplineChart"></canvas>
       </div>
@@ -9865,7 +9859,7 @@ function fileLinksHtml(d) {
     }
     function renderTransmittals(list) {
       const c = document.getElementById('transmittalListContent');
-      if (!list.length) { c.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div class="msg">Belum ada transmittal.</div></div>'; return; }
+      if (!list.length) { c.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada transmittal.</div></div>'; return; }
       let rows = '';
       list.forEach(function (t) {
         const d = t.timestamp ? new Date(t.timestamp).toLocaleDateString('id-ID') : '-';
@@ -11061,8 +11055,8 @@ function fileLinksHtml(d) {
       wrap.innerHTML =
         '<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:8px;">' +
           '<div class="stat-card"><div class="stat-value">' + t.projects + '</div><div class="stat-label">Proyek Aktif</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalNFI || 0) + '</div><div class="stat-label">📄 NFI</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalITR || 0) + '</div><div class="stat-label">📋 ITR</div></div>' +
+          '<div class="stat-card"><div class="stat-value">' + (t.totalNFI || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</div></div>' +
+          '<div class="stat-card"><div class="stat-value">' + (t.totalITR || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR</div></div>' +
           '<div class="stat-card"><div class="stat-value">' + t.total + '</div><div class="stat-label">Total Records</div></div>' +
         '</div>' +
         '<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:8px;">' +
@@ -11070,7 +11064,7 @@ function fileLinksHtml(d) {
           '<div class="stat-card"><div class="stat-value">' + t.closed + '</div><div class="stat-label">Closed</div></div>' +
           '<div class="stat-card ' + ((t.canceled || 0) > 0 ? 'warn' : '') + '">' +
             '<div class="stat-value" style="' + ((t.canceled || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.canceled || 0) + '</div>' +
-            '<div class="stat-label">🚫 Canceled</div>' +
+            '<div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Canceled</div>' +
           '</div>' +
           '<div class="stat-card ' + ((t.other || 0) > 0 ? 'warn' : '') + '">' +
             '<div class="stat-value" style="' + ((t.other || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.other || 0) + '</div>' +
@@ -11079,18 +11073,22 @@ function fileLinksHtml(d) {
           '<div class="stat-card"><div class="stat-value">' + progress + '%</div><div class="stat-label">Progress</div></div>' +
         '</div>' +
         '<div style="margin-top:12px;padding:12px 16px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:10px;font-size:12.5px;color:var(--ink-muted);line-height:1.8;">' +
-          '<div style="font-weight:700;color:var(--ink);margin-bottom:6px;">📊 Rincian</div>' +
-          '<div>' + (checkSum === t.total ? '✅' : '⚠️') + ' <b style="color:var(--ink);">' + t.total + '</b> records = ' +
+          '<div style="font-weight:700;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Rincian Rekapitulasi</span></div>' +
+          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
+            (checkSum === t.total 
+              ? '<span style="color:#16a34a;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="#16a34a" fill-opacity="0.15"/><path d="m9 12 2 2 4-4"/></svg></span>' 
+              : '<span style="color:#d97706;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>') +
+            '<span><b style="color:var(--ink);">' + t.total + '</b> records = ' +
             '<b style="color:var(--ink);">' + t.open + '</b> Open + ' +
             '<b style="color:var(--ink);">' + t.closed + '</b> Closed + ' +
             '<b style="color:var(--ink);">' + (t.canceled || 0) + '</b> Canceled' +
             ((t.other || 0) > 0 ? ' + <b style="color:var(--ink);">' + t.other + '</b> Lain' : '') +
           '</div>' +
-          '<div>📄 <b style="color:var(--ink);">' + t.totalNFI + '</b> NFI unik</div>' +
-          '<div>📋 <b style="color:var(--ink);">' + t.totalITR + '</b> ITR unik' +
+          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg><span><b style="color:var(--ink);">' + t.totalNFI + '</b> NFI unik</span></div>' +
+          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span><b style="color:var(--ink);">' + t.totalITR + '</b> ITR unik' +
             (t.itrEmpty > 0 ? ' · <b style="color:var(--rejected-text);">' + t.itrEmpty + '</b> baris tanpa ITR' : '') +
           '</div>' +
-          (t.projectsInactive > 0 ? '<div>⏸️ ' + t.projectsInactive + ' proyek nonaktif tidak dihitung</div>' : '') +
+          (t.projectsInactive > 0 ? '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg><span>' + t.projectsInactive + ' proyek nonaktif tidak dihitung</span></div>' : '') +
         '</div>';
     }
 
@@ -11098,7 +11096,7 @@ function fileLinksHtml(d) {
       var wrap = document.getElementById('ccProjectsWrap');
       if (!wrap) return;
       if (!projects || !projects.length) {
-        wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div class="msg">Belum ada proyek.</div></div>';
+        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada proyek.</div></div>';
         return;
       }
 
@@ -11125,18 +11123,22 @@ function fileLinksHtml(d) {
       }
 
       if (!filtered.length) {
-        html += '<div class="empty-state"><div class="icon">🔍</div><div class="msg">Tidak ada proyek dengan disiplin "' + esc(filter) + '".</div></div>';
+        html += '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="msg">Tidak ada proyek dengan disiplin "' + esc(filter) + '".</div></div>';
         wrap.innerHTML = html;
         return;
       }
 
-      html += '<div class="section-heading" style="margin-top:24px;">📊 Status per Proyek</div>';
+      html += '<div class="section-heading" style="margin-top:24px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.2"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.2"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Status per Proyek</span></div>';
       html += '<div class="project-grid" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">';
 
       filtered.forEach(function (p, idx) {
         var closedPct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
         var healthCls = p.health === 'red' ? 'kritis' : (p.health === 'yellow' ? 'warning' : 'ok');
-        var healthIcon = p.health === 'red' ? '🔴' : (p.health === 'yellow' ? '🟡' : '🟢');
+        var healthIcon = p.health === 'red' 
+          ? '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.6);margin-right:4px;"></span>'
+          : (p.health === 'yellow'
+              ? '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,0.6);margin-right:4px;"></span>'
+              : '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10b981;box-shadow:0 0 8px rgba(16,185,129,0.6);margin-right:4px;"></span>');
         var healthText = p.health === 'red' ? 'Kritis' : (p.health === 'yellow' ? 'Perlu Perhatian' : 'On-track');
 
         var discChips = '';
@@ -11166,8 +11168,8 @@ function fileLinksHtml(d) {
             '</div>' +
             '<div class="cc-card-name">' + esc(p.name) + '</div>' +
             '<div class="cc-mini-stats">' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span><span class="cc-mini-stat-lbl">📄 NFI</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span><span class="cc-mini-stat-lbl">📋 ITR</span></div>' +
+              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</span></div>' +
+              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>ITR</span></div>' +
               '<div class="cc-mini-stat"><span class="cc-mini-stat-val open">' + p.open + '</span><span class="cc-mini-stat-lbl">Open</span></div>' +
               '<div class="cc-mini-stat"><span class="cc-mini-stat-val closed">' + p.closed + '</span><span class="cc-mini-stat-lbl">Closed</span></div>' +
             '</div>' +
@@ -11177,9 +11179,9 @@ function fileLinksHtml(d) {
             (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="font-size:11px;color:var(--rejected-text);font-weight:600;margin-bottom:8px;">⏰ Open terlama: ' + p.oldestOpenDays + ' hari</div>' : '') +
             '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)">▼ Lihat Detail Disiplin & Tipe</button>' +
             '<div class="cc-detail-section" id="' + detailId + '">' +
-              '<div class="cc-section-label">🔧 Disiplin (' + discs.length + ')</div>' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin (' + discs.length + ')</div>' +
               '<div class="cc-chip-row">' + (discChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
-              '<div class="cc-section-label">📋 Tipe (' + types.length + ')</div>' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Tipe (' + types.length + ')</div>' +
               '<div class="cc-chip-row">' + (typeChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
             '</div>' +
           '</div>';
@@ -11206,11 +11208,11 @@ function openProjectDetailCC_(code) {
   // ✨ Panggil analitik (Aging, Trend, Breakdown)
   loadAnalytics(code);
 
-  // Perlebar modal-box agar nyaman melihat tabel 6 kolom
+  // Perlebar modal-box agar nyaman melihat tabel 7 kolom
   var modalEl = document.getElementById('docDetailModal');
   if (modalEl) {
     var box = modalEl.querySelector('.modal-box');
-    if (box) { box.style.maxWidth = '920px'; box.style.width = '94vw'; }
+    if (box) { box.style.maxWidth = '1040px'; box.style.width = '95vw'; }
     modalEl.classList.add('show');
   }
   document.getElementById('docDetailTitle').textContent = p.code + ' — ' + p.name;
@@ -11253,9 +11255,11 @@ function openProjectDetailCC_(code) {
       // Default tab: prioritas ke Open jika ada dokumen open, jika tidak ada baru Closed / Semua
       var defaultTab = openItems.length > 0 ? 'open' : (closedItems.length > 0 ? 'closed' : 'all');
 
+      var projectObj = Object.assign({}, p, res.project || {});
+
       _ccProjDetailState_ = {
         code: code,
-        project: p,
+        project: projectObj,
         allItems: items,
         openItems: openItems,
         closedItems: closedItems,
@@ -11304,11 +11308,14 @@ function renderCCDetailUI_() {
         '</div>' +
 
         '<!-- SEARCH & EXPORT ACTION -->' +
-        '<div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; min-width:240px;">' +
-          '<div style="position:relative; width:100%; max-width:280px;">' +
+        '<div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; min-width:240px; flex-wrap:wrap;">' +
+          '<div style="position:relative; width:100%; max-width:260px;">' +
             '<input type="text" id="ccDetailSearchInput" value="' + esc(st.searchQuery) + '" placeholder="Cari No. NFI, Subject, Disiplin..." oninput="filterCCDetailList_()" style="width:100%; padding:7px 10px 7px 30px; border-radius:8px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-size:12.5px; outline:none;">' +
             '<span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); font-size:13px; opacity:0.6; pointer-events:none;">🔍</span>' +
           '</div>' +
+          '<button type="button" class="btn-small" onclick="previewProjectSpreadsheet_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Buka pratinjau spreadsheet master proyek">' +
+            '📊 Pratinjau Sheet' +
+          '</button>' +
           '<button type="button" class="btn-small" onclick="exportCCDetailCSV_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Unduh daftar yang sedang tampil ke file CSV">' +
             '📥 Unduh CSV' +
           '</button>' +
@@ -11331,6 +11338,7 @@ function renderCCDetailUI_() {
               '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Type</th>' +
               '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Location</th>' +
               '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Status</th>' +
+              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Dokumen / Aksi</th>' +
             '</tr>' +
           '</thead>' +
           '<tbody id="ccDetailTableBody">' +
@@ -11426,7 +11434,7 @@ function renderCCDetailRows_() {
       emptyMsg = 'Tidak ada dokumen yang tersedia.';
     }
 
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
       '<div style="font-size:24px; margin-bottom:8px;">' + (st.activeTab === 'open' && !q ? '🎉' : '🔍') + '</div>' +
       '<div>' + emptyMsg + '</div>' +
       '</td></tr>';
@@ -11441,20 +11449,49 @@ function renderCCDetailRows_() {
           ? '<span class="badge badge-pending">Open</span>' 
           : '<span class="badge">' + esc(it.status || '-') + '</span>');
 
-    // NFI link jika ada link dokumen
-    var nfiHtml = esc(it.noNFI || '-');
-    if (it.link && String(it.link).trim().indexOf('http') === 0) {
-      nfiHtml = '<a href="' + esc(it.link) + '" target="_blank" rel="noopener noreferrer" style="color:var(--link); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px;" title="Buka berkas dokumen">' +
-        esc(it.noNFI || 'Buka') + ' <span style="font-size:10px; opacity:0.8;">↗</span></a>';
+    // Evaluasi & Normalisasi Link Dokumen
+    var rawLink = String(it.link || '').trim();
+    var cleanLink = '';
+    if (rawLink) {
+      if (/^https?:\/\//i.test(rawLink)) {
+        cleanLink = rawLink;
+      } else if (/^(?:drive|docs)\.google\.com\//i.test(rawLink)) {
+        cleanLink = 'https://' + rawLink;
+      } else {
+        var matchUrl = rawLink.match(/https?:\/\/[^\s"'<>\)]+/i);
+        if (matchUrl) cleanLink = matchUrl[0];
+      }
+    }
+
+    var nfiHtml = '';
+    var docActionHtml = '';
+    var docLabel = esc(it.noNFI || it.subject || 'Dokumen');
+
+    if (cleanLink) {
+      // Kolom NFI: bisa diklik langsung untuk memicu pratinjau modal dokumen
+      nfiHtml = '<a href="javascript:void(0)" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="color:var(--primary); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Klik untuk pratinjau dokumen di modal">' +
+        '<span style="font-size:13px;">📄</span> <span>' + esc(it.noNFI || 'Buka') + '</span></a>';
+
+      // Kolom Dokumen / Aksi: tombol Pratinjau Modal + tombol Tab Baru Drive
+      docActionHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
+        '<button type="button" class="btn-small" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="padding:4px 9px; font-size:11px; font-weight:600; border-radius:6px; background:var(--primary); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation;" title="Buka pratinjau dokumen langsung di modal">' +
+          '👁️ Preview' +
+        '</button>' +
+        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka berkas di tab baru Google Drive">↗</a>' +
+      '</div>';
+    } else {
+      nfiHtml = esc(it.noNFI || '-');
+      docActionHtml = '<span style="font-size:11px; color:var(--ink-muted); opacity:0.65; font-style:italic;">Belum ada link</span>';
     }
 
     return '<tr>' +
       '<td class="doc-code" style="font-size:11.5px; font-weight:600; white-space:nowrap;">' + nfiHtml + '</td>' +
-      '<td style="font-size:12px; max-width:280px; line-height:1.4;">' + esc(it.subject || '-') + '</td>' +
+      '<td style="font-size:12px; max-width:260px; line-height:1.4;">' + esc(it.subject || '-') + '</td>' +
       '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.discipline || '-') + '</td>' +
       '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.typeInsp || '-') + '</td>' +
       '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.location || '-') + '</td>' +
       '<td style="text-align:center; white-space:nowrap;">' + badge + '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' + docActionHtml + '</td>' +
       '</tr>';
   }).join('');
 
@@ -11465,6 +11502,53 @@ function renderCCDetailRows_() {
     autoLabelTables_();
   }
 }
+
+function escAttr_(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '&quot;');
+}
+
+window.previewDocFromCC_ = function (fileUrl, title) {
+  if (!fileUrl) {
+    if (typeof showToast === 'function') showToast('Link dokumen tidak tersedia', 'warning');
+    return;
+  }
+  if (typeof window.previewFile_ === 'function') {
+    window.previewFile_(fileUrl, title || 'Preview Dokumen');
+  } else {
+    window.open(fileUrl, '_blank', 'noopener,noreferrer');
+  }
+};
+
+window.previewProjectSpreadsheet_ = function () {
+  if (!_ccProjDetailState_ || !_ccProjDetailState_.project) {
+    if (typeof showToast === 'function') showToast('Data proyek belum dimuat', 'warning');
+    return;
+  }
+  var p = _ccProjDetailState_.project;
+  var ssId = p.id || '';
+  if (!ssId && typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.projects) {
+    var cp = ccCache_.projects.filter(function (x) { return x.code === p.code; })[0];
+    if (cp && cp.id) ssId = cp.id;
+  }
+
+  if (!ssId) {
+    if (typeof showToast === 'function') showToast('ID spreadsheet untuk proyek ini tidak ditemukan di master.', 'warning');
+    return;
+  }
+
+  var fullUrl = 'https://docs.google.com/spreadsheets/d/' + ssId + '/edit';
+  var title = 'Spreadsheet — ' + (p.code ? p.code + ' ' : '') + (p.name || 'Proyek');
+
+  if (typeof window.previewFile_ === 'function') {
+    window.previewFile_(fullUrl, title);
+  } else {
+    window.open(fullUrl, '_blank', 'noopener,noreferrer');
+  }
+};
 
 function exportCCDetailCSV_() {
   if (!_ccProjDetailState_) return;
@@ -11534,10 +11618,10 @@ function exportCCDetailCSV_() {
         .withSuccessHandler(function (res) {
           if (!btn) return;
           if (res && res.active) {
-            btn.innerHTML = '⏰ Auto-Sync: <b style="color:#10b981;">Aktif (1 Jam)</b>';
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Auto-Sync: <b style="color:#10b981;">Aktif (1 Jam)</b>';
             btn.title = 'Trigger aktif! Data dari semua spreadsheet proyek otomatis di-sync setiap 1 jam.';
           } else {
-            btn.innerHTML = '⏰ Aktifkan Auto-Sync 1 Jam';
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Aktifkan Auto-Sync 1 Jam';
             btn.title = 'Klik untuk mengaktifkan trigger sinkronisasi otomatis tiap 1 jam di background.';
           }
         })
@@ -11595,7 +11679,7 @@ function exportCCDetailCSV_() {
     function renderProjectsUI_(items) {
       var wrap = document.getElementById('projectsUIWrap');
       if (!items || !items.length) {
-        wrap.innerHTML = '<div class="empty-state"><div class="icon">📭</div><div class="msg">Belum ada proyek. Klik "+ Tambah Proyek".</div></div>';
+        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada proyek. Klik "+ Tambah Proyek".</div></div>';
         return;
       }
 

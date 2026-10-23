@@ -34,7 +34,8 @@
     const CACHEABLE_READ_ACTIONS = [
       'getDocumentList', 'getInitData', 'getNFILogList', 'getProjectsListForUI',
       'getProjectsSettings', 'getSiteReportEntries', 'getDashboardStats',
-      'getCalibrationTools', 'getMyTasks', 'getDisciplinesSettings', 'getDocTypesSettings'
+      'getCalibrationTools', 'getMyTasks', 'getDisciplinesSettings', 'getDocTypesSettings',
+      'getProjectDetailFromMaster', 'getExecutiveDashboard'
     ];
 
     // Action yang tidak perlu session token
