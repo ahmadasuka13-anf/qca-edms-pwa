@@ -4513,6 +4513,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <div class="filter-row" style="margin-bottom:16px;">
   <button class="btn btn-secondary" onclick="loadCommandCenter()">🔄 Refresh</button>
   <button class="btn btn-secondary" onclick="runSyncFromUI_()">🔄 Sync Semua Proyek</button>
+  <button class="btn btn-secondary" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_()" title="Atur sinkronisasi otomatis tiap 1 jam di background">⏰ Cek Auto-Sync</button>
   <label style="font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-left:10px;">🔧 Disiplin:</label>
   <select id="ccDisciplineFilter" onchange="onCCDisciplineChange_()" style="min-width:180px;">
     <option value="">Semua Disiplin</option>
@@ -10918,6 +10919,7 @@ function fileLinksHtml(d) {
     var ccDisciplineFilter_ = '';
 
     function loadCommandCenter() {
+      checkAutoSyncTriggerStatus_();
       var statsWrap = document.getElementById('ccStatsWrap');
       var prjWrap = document.getElementById('ccProjectsWrap');
       if (!statsWrap) return;
@@ -11447,6 +11449,45 @@ function exportCCDetailCSV_() {
           showToast('Gagal: ' + err.message, 'error');
         })
         .runSyncAll();
+    }
+
+    function checkAutoSyncTriggerStatus_() {
+      var btn = document.getElementById('btnToggleAutoSync');
+      if (!btn) return;
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (!btn) return;
+          if (res && res.active) {
+            btn.innerHTML = '⏰ Auto-Sync: <b style="color:#10b981;">Aktif (1 Jam)</b>';
+            btn.title = 'Trigger aktif! Data dari semua spreadsheet proyek otomatis di-sync setiap 1 jam.';
+          } else {
+            btn.innerHTML = '⏰ Aktifkan Auto-Sync 1 Jam';
+            btn.title = 'Klik untuk mengaktifkan trigger sinkronisasi otomatis tiap 1 jam di background.';
+          }
+        })
+        .withFailureHandler(function () {})
+        .getSyncTriggerStatus();
+    }
+
+    function toggleAutoSyncTrigger_() {
+      var btn = document.getElementById('btnToggleAutoSync');
+      if (!confirm('Aktifkan trigger Auto-Sync tiap 1 jam di background Google Apps Script?\n\n(Data dari seluruh spreadsheet proyek akan otomatis ditarik dan diperbarui ke Master Hub secara periodik)')) return;
+      if (btn) btn.innerHTML = '⏳ Menyiapkan trigger...';
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || 'Trigger auto-sync berhasil diaktifkan!', 'success');
+            checkAutoSyncTriggerStatus_();
+          } else {
+            showToast('Gagal: ' + ((res && res.message) || 'Error'), 'error');
+            checkAutoSyncTriggerStatus_();
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal: ' + err.message, 'error');
+          checkAutoSyncTriggerStatus_();
+        })
+        .setupHourlyTrigger();
     }
 
         // ============================================================================

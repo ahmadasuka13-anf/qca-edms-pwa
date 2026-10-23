@@ -224,7 +224,7 @@
       // ── Kirim ke server ──
       const _doRequest = async (retryCount) => {
         const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry' || action === 'saveNFILogEntry' || action === 'submitCalibration' || action === 'updateDocumentMetadata';
-        const isLongRunningSync = action === 'runSyncAll' || action === 'autoSyncAllProjects' || action === 'syncProjectMaster_';
+        const isLongRunningSync = action === 'runSyncAll' || action === 'autoSyncAllProjects' || action === 'syncProjectMaster_' || action === 'setupHourlyTrigger';
         const isPayloadExceedingVercel = jsonStr.length > 2.5 * 1024 * 1024; // > 2.5 MB
 
         // Jika form upload dokumen/foto, payload besar, atau proses sync berdurasi panjang, LANGSUNG kirim ke Google Apps Script (Bypass limit 10-15s Vercel)
