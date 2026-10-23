@@ -6850,49 +6850,8 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 </style>
 
 
-  <!-- ============ CORE RUNTIME STATE & CONSTANTS ============ -->
+  <!-- ============ KONSTANTA STRING ============ -->
   <script>
-  // ============================================================
-  // STATE GLOBAL APLIKASI
-  // ============================================================
-  var sessionToken = window.sessionToken || null;
-  var currentUser = window.currentUser || null;
-  var initData = window.initData || null;
-
-  var documentsCache = window.documentsCache || {};
-  var approvalCache = window.approvalCache || {};
-  var usersCache = window.usersCache || {};
-  var nfiCache_ = window.nfiCache_ || {};
-  var siteReportEntriesCache = window.siteReportEntriesCache || {};
-  var recycleBinCache = window.recycleBinCache || { documents: [], nfiEntries: [] };
-  var myTasksCache = window.myTasksCache || null;
-  var historyRevisionsCache_ = window.historyRevisionsCache_ || [];
-
-  var approvalView = window.approvalView || 'pending';
-  var globalProjectFilter = window.globalProjectFilter || '';
-  var nfiQuickContinueOnly = window.nfiQuickContinueOnly || false;
-  var recycleBinView = window.recycleBinView || 'docs';
-  var siteReportInitialized = window.siteReportInitialized || false;
-  var nfiZoomLevel = window.nfiZoomLevel || 100;
-  window.selectedApprovalIds = window.selectedApprovalIds || new Set();
-
-  var notifPollTimer = null;
-  var myTasksPollTimer = null;
-  var searchDebounceTimer = null;
-  var nfiSearchDebounce = null;
-
-  var NFI_ZOOM_MIN = 60, NFI_ZOOM_MAX = 200, NFI_ZOOM_STEP = 10;
-  var NFI_OPTIONAL_COLS = [
-    'area','type','issued','location','inspdate','itr',
-    'itp','repsub','compdate','pic','remark'
-  ];
-  var NFI_COL_CHECKBOX_MAP = {
-    area:'nfiColArea', type:'nfiColType', issued:'nfiColIssued',
-    location:'nfiColLocation', inspdate:'nfiColInspDate', itr:'nfiColItr',
-    itp:'nfiColItp', repsub:'nfiColRepSub', compdate:'nfiColCompDate',
-    pic:'nfiColPicAei', remark:'nfiColRemark'
-  };
-
   // ============================================================
   // KONSTANTA STRING
   // ============================================================
