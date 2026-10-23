@@ -1,3 +1,16 @@
+/**
+ * QC-CMS EDMS Utility Library & Global State Initializer
+ */
+var sessionToken = sessionToken || '';
+var currentUser = currentUser || null;
+var initData = initData || null;
+var globalProjectFilter = globalProjectFilter || '';
+var approvalView = approvalView || 'pending';
+var approvalCache = approvalCache || {};
+var selectedApprovalIds = selectedApprovalIds || new Set();
+var nfiCache_ = nfiCache_ || {};
+var documentsCache = documentsCache || {};
+
 // ============================================================
   // UTILITY MURNI
   // Fungsi helper yang TIDAK menyentuh state global.
@@ -216,10 +229,10 @@
   // ============================================================
   // SCANNER QR / BARCODE VIA KAMERA HP (Html5Qrcode)
   // ============================================================
-  let _html5QrInstance = null;
-  let _currentQrInputId = null;
-  let _currentFacingMode = 'environment';
-  let _isTorchActive = false;
+  var _html5QrInstance = null;
+  var _currentQrInputId = null;
+  var _currentFacingMode = 'environment';
+  var _isTorchActive = false;
 
   window.openQrScanner = function (targetInputId, title) {
     _currentQrInputId = targetInputId;
