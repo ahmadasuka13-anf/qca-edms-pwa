@@ -10688,12 +10688,14 @@ function renderCCDetailRows_() {
     var docActionHtml = '';
     var docLabel = esc(it.noNFI || it.subject || 'Dokumen');
 
-    if (cleanLink) {
-      // Kolom NFI: bisa diklik langsung untuk memicu pratinjau modal dokumen
-      nfiHtml = '<a href="javascript:void(0)" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="color:var(--primary); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Klik untuk pratinjau dokumen di modal">' +
+    var isClosed = sc === 'closed' || sc === 'close';
+    var hasValidDoc = cleanLink && isClosed;
+
+    if (hasValidDoc) {
+      // Dokumen CLOSED dengan Link Valid: Tampilkan tombol Preview aktif
+      nfiHtml = '<a href="javascript:void(0)" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="color:var(--link, #2563eb); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Klik untuk pratinjau dokumen di modal">' +
         '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>' + esc(it.noNFI || 'Buka') + '</span></a>';
 
-      // Kolom Dokumen / Aksi: tombol Pratinjau Modal + tombol Tab Baru Drive
       docActionHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
         '<button type="button" class="btn-preview-action" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Buka pratinjau dokumen langsung di modal">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="3"/></svg><span>Preview</span>' +
@@ -10703,9 +10705,14 @@ function renderCCDetailRows_() {
         '</button>' +
         '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Buka berkas di tab baru Google Drive">↗</a>' +
       '</div>';
-    } else {
+    } else if (isClosed) {
+      // Dokumen CLOSED tapi link belum diinput di sheet
       nfiHtml = esc(it.noNFI || '-');
       docActionHtml = '<span style="font-size:11px; color:var(--ink-muted); opacity:0.65; font-style:italic;">Belum ada link</span>';
+    } else {
+      // Dokumen OPEN / In Progress: belum ada berkas closed, cegah link salah pasang
+      nfiHtml = '<span style="font-weight:600; color:var(--ink);">' + esc(it.noNFI || '-') + '</span>';
+      docActionHtml = '<span style="font-size:10.5px; font-weight:600; color:var(--pending-text); background:var(--pending-bg); padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;" title="Inspeksi masih berlangsung (berkas PDF baru tersedia setelah Closed)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Menunggu Closed</span>';
     }
 
     return '<tr>' +
