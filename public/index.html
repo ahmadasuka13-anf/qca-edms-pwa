@@ -6474,7 +6474,34 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       setTimeout(hide, 1200);
     })();
 
-        // 🔍 NFI ZOOM STATE & CONSTANTS
+            // 🛡️ GLOBAL ESCAPE HTML UTILITY (Digunakan oleh 280+ fungsi render)
+    function esc(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // 📋 NFI COLUMN CONFIGURATIONS
+    const NFI_OPTIONAL_COLS = ['area', 'type', 'issued', 'location', 'inspdate', 'itr', 'itp', 'repsub', 'compdate', 'pic', 'remark'];
+    const NFI_COL_CHECKBOX_MAP = {
+      area: 'nfiColArea',
+      type: 'nfiColType',
+      issued: 'nfiColIssued',
+      location: 'nfiColLocation',
+      inspdate: 'nfiColInspDate',
+      itr: 'nfiColItr',
+      itp: 'nfiColItp',
+      repsub: 'nfiColRepSub',
+      compdate: 'nfiColCompDate',
+      pic: 'nfiColPicAei',
+      remark: 'nfiColRemark'
+    };
+
+// 🔍 NFI ZOOM STATE & CONSTANTS
     var nfiZoomLevel = 100;
     var NFI_ZOOM_MIN = 60;
     var NFI_ZOOM_MAX = 140;
@@ -10870,14 +10897,14 @@ if (typeof MutationObserver !== 'undefined') {
 // ═══════════════════════════════════════════════════════════════
 (function injectPwaManifest() {
   try {
-    var LOGO_URL = '/icons/logo.png';
+    var LOGO_URL = (window.location.origin || '') + '/icons/icon-192.png';
     
     var manifest = {
       name: 'QC-CMS EDMS',
       short_name: 'QC-CMS',
       description: 'QA/QC Electronic Document Management System - PT Asuka Engineering Indonesia',
-      start_url: window.location.href.split('?')[0],
-      scope: window.location.href.split('?')[0],
+      start_url: '/',
+      scope: '/',
       display: 'standalone',
       orientation: 'portrait',
       background_color: '#13275a',
@@ -12499,10 +12526,7 @@ window.addEventListener('offline', updateFooterStatus);
     ↑
   </button>
 
-  <!-- ✅ PRIORITAS TINGGI: Security (Enkripsi Token AES-256-GCM + CSRF) -->
-  <script src="/security.js"></script>
-  <!-- ✅ PRIORITAS TINGGI: Offline Queue (IndexedDB — sync otomatis) -->
-  <script src="/offline-queue.js"></script>
+  <!-- Security & OfflineQueue loaded in head -->
   <script>
     // 🎨 KONTROLER KUSTOMISASI WARNA HEADER & TAMPILAN
     window.openHeaderColorModal = function() {
