@@ -6475,7 +6475,70 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       setTimeout(hide, 1200);
     })();
 
-            // 🛡️ GLOBAL ESCAPE HTML UTILITY (Digunakan oleh 280+ fungsi render)
+            // 🛡️ ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
+var sessionToken = sessionToken || '';
+var currentUser = currentUser || null;
+var initData = initData || null;
+var globalProjectFilter = globalProjectFilter || '';
+var approvalView = approvalView || 'pending';
+var approvalCache = approvalCache || {};
+var selectedApprovalIds = selectedApprovalIds || new Set();
+var nfiCache_ = nfiCache_ || {};
+var documentsCache = documentsCache || {};
+
+var notifPollTimer = notifPollTimer || null;
+var myTasksPollTimer = myTasksPollTimer || null;
+var toastTimer = toastTimer || null;
+var searchDebounceTimer = searchDebounceTimer || null;
+var _mobileLabelTimer = _mobileLabelTimer || null;
+
+var ROLE_OPTIONS = ['Inspector', 'QA/QC Engineer', 'Admin', 'Project Manager', 'Viewer'];
+
+var usersCache = usersCache || {};
+var myTasksCache = myTasksCache || {};
+var siteReportEntriesCache = siteReportEntriesCache || {};
+var recycleBinCache = recycleBinCache || {};
+var ccCache_ = ccCache_ || {};
+var projectsCache_ = projectsCache_ || {};
+var analisisCache_ = analisisCache_ || {};
+var historyRevisionsCache_ = historyRevisionsCache_ || {};
+var __previewCache = __previewCache || {};
+
+    // 🛡️ GLOBAL ESCAPE HTML UTILITY (Digunakan oleh 280+ fungsi render)
+    function escapeJs_(s) {
+      if (s == null) return '';
+      return String(s)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\r?\n/g, '\\n')
+        .replace(/</g, '\\x3c');
+    }
+
+    function truncateText_(s, n) {
+      s = s || '';
+      return s.length > n ? s.slice(0, n) + '…' : s;
+    }
+
+    function fmtDateShort_(iso) {
+      if (!iso) return '—';
+      try {
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return String(iso);
+        var months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+      } catch (e) { return '—'; }
+    }
+
+    function toDateInputValue_(d) {
+      if (!d) return '';
+      var dt = new Date(d);
+      if (isNaN(dt.getTime())) return '';
+      return dt.getFullYear() + '-' +
+        String(dt.getMonth() + 1).padStart(2, '0') + '-' +
+        String(dt.getDate()).padStart(2, '0');
+    }
+
     function esc(s) {
       if (s == null) return '';
       return String(s)

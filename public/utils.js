@@ -1,6 +1,7 @@
 /**
  * QC-CMS EDMS Utility Library & Global State Initializer
  */
+// 🛡️ ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
 var sessionToken = sessionToken || '';
 var currentUser = currentUser || null;
 var initData = initData || null;
@@ -10,6 +11,24 @@ var approvalCache = approvalCache || {};
 var selectedApprovalIds = selectedApprovalIds || new Set();
 var nfiCache_ = nfiCache_ || {};
 var documentsCache = documentsCache || {};
+
+var notifPollTimer = notifPollTimer || null;
+var myTasksPollTimer = myTasksPollTimer || null;
+var toastTimer = toastTimer || null;
+var searchDebounceTimer = searchDebounceTimer || null;
+var _mobileLabelTimer = _mobileLabelTimer || null;
+
+var ROLE_OPTIONS = ['Inspector', 'QA/QC Engineer', 'Admin', 'Project Manager', 'Viewer'];
+
+var usersCache = usersCache || {};
+var myTasksCache = myTasksCache || {};
+var siteReportEntriesCache = siteReportEntriesCache || {};
+var recycleBinCache = recycleBinCache || {};
+var ccCache_ = ccCache_ || {};
+var projectsCache_ = projectsCache_ || {};
+var analisisCache_ = analisisCache_ || {};
+var historyRevisionsCache_ = historyRevisionsCache_ || {};
+var __previewCache = __previewCache || {};
 
 // ============================================================
   // UTILITY MURNI
