@@ -5432,16 +5432,161 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
 }
+/* 📝 AI Typography & Modern Markdown Formatting */
 .ai-msg-bot {
   background: var(--surface-card, #ffffff);
   color: var(--ink);
   border: 1px solid var(--border);
   border-radius: 16px 16px 16px 4px;
   padding: 14px 16px;
-  font-size: 13.5px;
-  max-width: 86%;
+  font-family: var(--font-ui, 'Nunito', sans-serif);
+  font-size: 13px;
+  max-width: 90%;
+  line-height: 1.6;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+  word-break: break-word;
+}
+.ai-msg-bot .ai-md-p {
+  margin: 0 0 8px 0;
+  line-height: 1.6;
+}
+.ai-msg-bot .ai-md-p:last-child {
+  margin-bottom: 0;
+}
+.ai-msg-bot .ai-md-heading {
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  margin: 14px 0 6px 0;
+  line-height: 1.35;
+}
+.ai-msg-bot .ai-md-heading:first-child {
+  margin-top: 0;
+}
+.ai-msg-bot h2.ai-md-heading { font-size: 15px; }
+.ai-msg-bot h3.ai-md-heading { font-size: 14px; }
+.ai-msg-bot h4.ai-md-heading { font-size: 13.5px; }
+.ai-msg-bot h5.ai-md-heading { font-size: 12.5px; }
+
+.ai-msg-bot .ai-md-hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+.ai-msg-bot strong {
+  color: var(--ink);
+  font-weight: 750;
+}
+.ai-msg-bot em {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* 📊 AI Responsive Data Tables */
+.ai-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: var(--surface-card, #ffffff);
+}
+.ai-md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  text-align: left;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.ai-md-table thead {
+  background: var(--surface-subtle, #f8fafc);
+  border-bottom: 2px solid var(--border);
+}
+.ai-md-table th {
+  padding: 8px 10px;
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-bottom: 2px solid var(--border);
+}
+.ai-md-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+.ai-md-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.ai-md-table tbody tr:hover {
+  background: var(--surface-hover);
+}
+.ai-md-table .ai-table-section-row td {
+  font-weight: 800;
+  background: var(--surface-subtle);
+  color: var(--ink);
+  letter-spacing: 0.3px;
+  border-top: 1px solid var(--border);
+}
+
+/* 💬 AI Lists & Blockquotes */
+.ai-msg-bot .ai-md-ul, .ai-msg-bot .ai-md-ol {
+  margin: 6px 0 10px 0;
+  padding-left: 20px;
+}
+.ai-msg-bot .ai-md-ul li, .ai-msg-bot .ai-md-ol li {
+  margin-bottom: 4px;
   line-height: 1.55;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+.ai-msg-bot .ai-md-quote {
+  margin: 10px 0;
+  padding: 8px 14px;
+  background: rgba(59, 130, 246, 0.06);
+  border-left: 3.5px solid #3b82f6;
+  border-radius: 0 10px 10px 0;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+/* 💻 AI Code formatting */
+.ai-code-wrap {
+  margin: 10px 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #0f172a;
+}
+.ai-code-header {
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 10.5px;
+  font-family: var(--font-mono, monospace);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.ai-code-pre {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  color: #f1f5f9;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ai-inline-code {
+  padding: 2px 6px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 600;
 }
 .ai-bot-greeting {
   font-size: 14px;
@@ -12012,14 +12157,190 @@ function escapeAIHtml(text) {
   return div.innerHTML;
 }
 
-function formatAIText(text) {
-  if (!text) return '';
-  var html = escapeAIHtml(text);
-  html = html.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
-  html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>\n?)+/g, function(m) { return '<ul>' + m + '</ul>'; });
-  html = html.replace(/\n/g, '<br>');
-  return html;
+function formatAIText(raw) {
+  if (!raw) return '';
+  var text = String(raw).replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  // 1. Protect code blocks (```lang ... ```)
+  var codeBlocks = [];
+  text = text.replace(/```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g, function(match, lang, code) {
+    var placeholder = '@@@CODEBLOCK_' + codeBlocks.length + '@@@';
+    codeBlocks.push('<div class="ai-code-wrap"><div class="ai-code-header">' + (lang || 'code') + '</div><pre class="ai-code-pre"><code>' + escapeAIHtml(code.trim()) + '</code></pre></div>');
+    return placeholder;
+  });
+
+  // 2. Protect inline code (`code`)
+  var inlineCodes = [];
+  text = text.replace(/`([^`\n]+)`/g, function(match, code) {
+    var placeholder = '@@@INLINECODE_' + inlineCodes.length + '@@@';
+    inlineCodes.push('<code class="ai-inline-code">' + escapeAIHtml(code) + '</code>');
+    return placeholder;
+  });
+
+  var lines = text.split('\n');
+  var out = [];
+  var inTable = false;
+  var tableRows = [];
+  var inUl = false;
+  var inOl = false;
+
+  function closeLists() {
+    if (inUl) { out.push('</ul>'); inUl = false; }
+    if (inOl) { out.push('</ol>'); inOl = false; }
+  }
+
+  function inlineFormat(str) {
+    if (!str) return '';
+    var s = escapeAIHtml(str);
+    // Bold & italic combinations
+    s = s.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+    s = s.replace(/__(.+?)__/g, '<strong>$1</strong>');
+    s = s.replace(/\*([^\*\n]+)\*/g, '<em>$1</em>');
+    s = s.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+    // Restore inline codes
+    inlineCodes.forEach(function(codeHtml, idx) {
+      s = s.replace('@@@INLINECODE_' + idx + '@@@', codeHtml);
+    });
+    return s;
+  }
+
+  function parseCells(rowStr) {
+    var raw = rowStr.trim();
+    if (raw.charAt(0) === '|') raw = raw.slice(1);
+    if (raw.charAt(raw.length - 1) === '|') raw = raw.slice(0, -1);
+    return raw.split('|').map(function(c) { return c.trim(); });
+  }
+
+  function flushTable() {
+    if (!inTable) return;
+    if (tableRows.length > 0) {
+      var html = '<div class="ai-table-wrap"><table class="ai-md-table">';
+      var headerRow = tableRows[0];
+      var startIndex = 1;
+
+      // Check if second row is markdown separator like |---|---|
+      if (tableRows.length > 1) {
+        var sepTest = tableRows[1].replace(/[\s\-|:]/g, '');
+        if (sepTest === '' || sepTest === '|') {
+          startIndex = 2;
+        }
+      }
+
+      // Render Table Head
+      var ths = parseCells(headerRow);
+      html += '<thead><tr>';
+      for (var h = 0; h < ths.length; h++) {
+        html += '<th>' + inlineFormat(ths[h]) + '</th>';
+      }
+      html += '</tr></thead><tbody>';
+
+      // Render Table Body
+      for (var r = startIndex; r < tableRows.length; r++) {
+        var tds = parseCells(tableRows[r]);
+        // Section separator row like | Per Proyek ||||||
+        var isSection = tds.length > 1 && tds.slice(1).every(function(c) { return !c.trim(); });
+        html += '<tr' + (isSection ? ' class="ai-table-section-row"' : '') + '>';
+        for (var c = 0; c < ths.length; c++) {
+          var val = (c < tds.length) ? tds[c] : '';
+          var isNum = /^[0-9\s,\.\-%]+$/.test(val.trim()) && val.trim() !== '-';
+          var numStyle = isNum ? ' style="text-align:right; font-variant-numeric:tabular-nums;"' : '';
+          if (isSection && c === 0) {
+            html += '<td colspan="' + ths.length + '" style="font-weight:700; background:var(--surface-subtle); color:var(--ink);">' + inlineFormat(val) + '</td>';
+          } else if (isSection) {
+            // omitted because of colspan
+          } else {
+            html += '<td' + numStyle + '>' + inlineFormat(val) + '</td>';
+          }
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table></div>';
+      out.push(html);
+    }
+    inTable = false;
+    tableRows = [];
+  }
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+
+    // Table Row detection (| ... |)
+    if (line.charAt(0) === '|' && line.charAt(line.length - 1) === '|') {
+      closeLists();
+      inTable = true;
+      tableRows.push(line);
+      continue;
+    } else {
+      flushTable();
+    }
+
+    if (!line) {
+      closeLists();
+      continue;
+    }
+
+    // Horizontal Rule (---, ***, ___)
+    if (/^(\-{3,}|\*{3,}|_{3,})$/.test(line)) {
+      closeLists();
+      out.push('<hr class="ai-md-hr">');
+      continue;
+    }
+
+    // Headings (#, ##, ###, ####)
+    var mHead = line.match(/^(#{1,6})\s+(.+)$/);
+    if (mHead) {
+      closeLists();
+      var level = mHead[1].length;
+      var hText = mHead[2];
+      var tag = 'h' + Math.min(level + 1, 5); // h2, h3, h4, h5
+      out.push('<' + tag + ' class="ai-md-heading ai-md-' + tag + '">' + inlineFormat(hText) + '</' + tag + '>');
+      continue;
+    }
+
+    // Blockquote (> ...)
+    if (line.indexOf('> ') === 0) {
+      closeLists();
+      out.push('<blockquote class="ai-md-quote">' + inlineFormat(line.slice(2)) + '</blockquote>');
+      continue;
+    }
+
+    // Unordered List (- or *)
+    var mUl = line.match(/^[\-\*]\s+(.+)$/);
+    if (mUl) {
+      if (inOl) { out.push('</ol>'); inOl = false; }
+      if (!inUl) { out.push('<ul class="ai-md-ul">'); inUl = true; }
+      out.push('<li>' + inlineFormat(mUl[1]) + '</li>');
+      continue;
+    }
+
+    // Ordered List (1., 2.)
+    var mOl = line.match(/^\d+\.\s+(.+)$/);
+    if (mOl) {
+      if (inUl) { out.push('</ul>'); inUl = false; }
+      if (!inOl) { out.push('<ol class="ai-md-ol">'); inOl = true; }
+      out.push('<li>' + inlineFormat(mOl[1]) + '</li>');
+      continue;
+    }
+
+    closeLists();
+
+    // Regular Paragraph
+    out.push('<p class="ai-md-p">' + inlineFormat(line) + '</p>');
+  }
+
+  flushTable();
+  closeLists();
+
+  var result = out.join('\n');
+
+  // Restore code blocks
+  codeBlocks.forEach(function(cbHtml, idx) {
+    result = result.replace('@@@CODEBLOCK_' + idx + '@@@', cbHtml);
+  });
+
+  return result;
 }
 
 // ─── Append message + per-message actions (FIX utama) ───
