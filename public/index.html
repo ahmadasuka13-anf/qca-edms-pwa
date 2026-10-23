@@ -3688,46 +3688,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   -webkit-tap-highlight-color: transparent;
 }
 
-    /* ═══════════════════════════════════════════════════════════════════════════
-       UX ENHANCEMENTS: STICKY COLUMNS & GLOBAL COMMAND SEARCH (CTRL + K)
-       ═══════════════════════════════════════════════════════════════════════════ */
-    .header-search-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      padding: 5px 12px;
-      border-radius: 999px;
-      cursor: pointer;
-      color: var(--ink-muted);
-      font-size: 12.5px;
-      font-family: inherit;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      user-select: none;
-      touch-action: manipulation;
-    }
-    .header-search-btn:hover {
-      background: var(--surface-hover);
-      border-color: var(--primary);
-      color: var(--ink);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .header-search-btn .hsb-kbd {
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 2px 5px;
-      border-radius: 5px;
-      background: var(--surface-card);
-      border: 1px solid var(--border);
-      color: var(--ink-muted);
-      line-height: 1;
-    }
-    @media (max-width: 640px) {
-      .header-search-btn .hsb-text,
-      .header-search-btn .hsb-kbd { display: none; }
-      .header-search-btn { padding: 7px; border-radius: 50%; }
-    }
+
 
     
     /* ==========================================================================
@@ -4078,6 +4039,131 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       }
     }
 
+    
+    /* ==========================================================================
+       SIDEBAR ACCORDION: 4 GRUP RAMPING (Hanya grup terbuka yang tampil)
+       ========================================================================== */
+    .sidebar-accordion-group {
+      margin-bottom: 4px;
+    }
+    .sidebar-accordion-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      color: var(--ink-muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .sidebar-accordion-header:hover {
+      background: var(--surface-subtle);
+      color: var(--ink);
+    }
+    .sag-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .sag-arrow {
+      transition: transform 0.25s ease;
+      color: var(--ink-muted);
+    }
+    .sidebar-accordion-content {
+      display: none !important;
+      padding: 2px 0 4px 0;
+    }
+    .sidebar-accordion-group.open .sidebar-accordion-content {
+      display: block !important;
+    }
+    .sidebar-accordion-group.open .sag-arrow {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    /* ==========================================================================
+       USER PROFILE DROPDOWN MENU
+       ========================================================================== */
+    .user-profile-wrap {
+      position: relative;
+    }
+    .user-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      width: 250px;
+      background: var(--surface-card, #ffffff);
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+      z-index: 999999;
+      padding: 8px 0;
+      animation: modalPop 0.16s ease-out;
+    }
+    .user-dropdown-header {
+      padding: 10px 16px 8px 16px;
+    }
+    .udh-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink, #0f172a);
+    }
+    .udh-role-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+    .udh-role-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(22, 61, 120, 0.12);
+      color: var(--primary, #163d78);
+    }
+    .udh-company {
+      font-size: 10.5px;
+      color: var(--ink-muted, #64748b);
+    }
+    .udh-divider {
+      height: 1px;
+      background: var(--border, #e2e8f0);
+      margin: 6px 0;
+    }
+    .user-dropdown-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 16px;
+      background: transparent;
+      border: none;
+      color: var(--ink, #0f172a);
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .user-dropdown-item:hover {
+      background: var(--surface-hover, #f1f5f9);
+    }
+    .user-dropdown-item.logout-danger {
+      color: #ef4444;
+    }
+    .user-dropdown-item.logout-danger:hover {
+      background: #fef2f2;
+    }
+
     /* Sticky Columns on Data Tables */
     .nfi-tbl-wrap, .table-scroll {
       position: relative;
@@ -4235,14 +4321,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <span class="clock-date" id="headerClockDate">-</span>
         </div>
 
-        <!-- 🔍 QUICK SEARCH (CTRL + K) -->
-        <button type="button" class="header-search-btn" onclick="openGlobalSearchModal()" title="Cari cepat dokumen, NFI, proyek (Ctrl + K)" aria-label="Cari Cepat">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span class="hsb-text">Cari...</span>
-          <kbd class="hsb-kbd">Ctrl K</kbd>
-        </button>
-
-        
         <!-- 🟢 HEADER LIVE SYNC STATUS WIDGET (FASE 2) -->
         <div class="header-sync-wrap" style="position:relative;" id="headerSyncWrap">
           <button type="button" class="header-sync-pill" id="headerSyncPill" onclick="toggleSyncStatusPopover(event)" title="Status Sinkronisasi Real-Time (Klik untuk detail)">
@@ -12684,8 +12762,12 @@ window.addEventListener('offline', updateFooterStatus);
         e.stopPropagation();
       }
       var wrap = document.getElementById('userProfileWrap');
-      if (!wrap) return;
-      var isOpen = wrap.classList.toggle('open');
+      var menu = document.getElementById('userDropdownMenu');
+      if (!menu) return;
+      var isHidden = menu.style.display === 'none' || menu.style.display === '';
+      menu.style.display = isHidden ? 'block' : 'none';
+      var isOpen = isHidden;
+      if (wrap) wrap.classList.toggle('open', isOpen);
 
       if (isOpen) {
         // Sync data profil di dropdown
@@ -12722,6 +12804,8 @@ window.addEventListener('offline', updateFooterStatus);
 
     window.closeUserDropdown = function() {
       var wrap = document.getElementById('userProfileWrap');
+      var menu = document.getElementById('userDropdownMenu');
+      if (menu) menu.style.display = 'none';
       if (wrap) wrap.classList.remove('open');
     };
 
@@ -12745,7 +12829,15 @@ window.addEventListener('offline', updateFooterStatus);
     window.toggleSidebarGroup = function(groupId) {
       var group = document.getElementById(groupId);
       if (!group) return;
-      group.classList.toggle('open');
+      var wasOpen = group.classList.contains('open');
+      // Tutup semua grup lain agar ramping dan tidak bertumpuk
+      document.querySelectorAll('.sidebar-accordion-group').forEach(function(g) {
+        g.classList.remove('open');
+      });
+      // Jika sebelumnya tertutup, sekarang buka
+      if (!wasOpen) {
+        group.classList.add('open');
+      }
     };
 
     // Buka otomatis grup accordion saat menu aktif dipilih
@@ -13386,26 +13478,6 @@ window.addEventListener('offline', updateFooterStatus);
         <button type="button" class="btn btn-primary btn-small" onclick="closeHeaderColorModal(); if(typeof showToast==='function') showToast('Warna header berhasil disimpan!', 'success');">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:#16a34a;"><polyline points="20 6 9 17 4 12"/></svg>Simpan &amp; Tutup
         </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════════════════════════
-       MODAL: GLOBAL COMMAND PALETTE SEARCH (CTRL + K)
-       ═══════════════════════════════════════════════════════════════════════════ -->
-  <div id="globalSearchModal" class="modal-backdrop" style="display:none; align-items:flex-start; padding-top:10vh; z-index:9999;" onclick="if(event.target===this)closeGlobalSearchModal()">
-    <div class="global-search-box" style="width:100%; max-width:620px; background:var(--surface-card); border-radius:16px; box-shadow:0 24px 56px rgba(0,0,0,0.28); border:1px solid var(--border); overflow:hidden; animation:modalPop 0.18s ease-out; margin:0 12px;">
-      <div class="gs-input-wrap" style="display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); gap:12px; background:var(--surface-subtle);">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="globalSearchInput" placeholder="Ketik No. NFI, ITR, nama berkas, atau menu..." style="width:100%; border:none; background:transparent; font-size:15px; font-weight:600; color:var(--ink); outline:none;" oninput="onGlobalSearchInput(this.value)" onkeydown="onGlobalSearchKeydown(event)" autocomplete="off">
-        <kbd style="padding:2px 6px; font-size:10px; font-weight:700; border-radius:4px; background:var(--surface-card); border:1px solid var(--border); color:var(--ink-muted); cursor:pointer;" onclick="closeGlobalSearchModal()">ESC</kbd>
-      </div>
-      <div id="globalSearchResults" style="max-height:420px; overflow-y:auto; padding:8px 0;">
-        <!-- Hasil pencarian dinamis disuntikkan di sini -->
-      </div>
-      <div class="gs-footer" style="padding:10px 18px; background:var(--surface-subtle); border-top:1px solid var(--border); font-size:11.5px; color:var(--ink-muted); display:flex; justify-content:space-between; align-items:center;">
-        <span>Gunakan <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">↑</kbd> <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">↓</kbd> navigasi, <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">Enter</kbd> buka</span>
-        <span><b>QC-CMS</b> Quick Search</span>
       </div>
     </div>
   </div>
