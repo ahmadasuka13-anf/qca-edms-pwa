@@ -27,6 +27,9 @@
   <script src="/security.js"></script>
   <script src="/offline-queue.js"></script>
   <script src="/gas-adapter.js"></script>
+  <script src="/auth.js"></script>
+  <script src="/api.js"></script>
+  <script src="/calibration.js"></script>
   <script>
     (function () {
       try {
@@ -4594,7 +4597,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       <div class="auth-clock" style="text-align:center;"><b id="authClockTime">--:--:--</b> · <span id="authClockDate">-</span></div>
       <div class="auth-error" id="authError"></div>
       <div class="auth-msg" id="authMsg"></div>
-<form id="loginForm">
+<form id="loginForm" onsubmit="handleLogin(event); return false;">
         <div class="form-group" style="margin-bottom:14px;"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
         <div class="form-group" style="margin-bottom:10px;">
           <label>Password</label>
@@ -4604,7 +4607,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
         <div style="text-align:right;margin-bottom:14px;"><a onclick="showAuthForm('forgot')" style="font-size:12px;color:var(--ink-muted);cursor:pointer;">Lupa password?</a></div>
-<button type="button" class="btn btn-primary btn-full" id="loginBtn" onclick="handleLogin(event)">Masuk</button>
+<button type="submit" class="btn btn-primary btn-full" id="loginBtn" onclick="handleLogin(event)">Masuk</button>
       </form>
       <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
         <div class="form-group" style="margin-bottom:14px;"><label>Nama Lengkap</label><input type="text" id="regFullName" required></div>
@@ -6847,14 +6850,130 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 </style>
 
 
-  <!-- ============ INCLUDE PARTIALS ============ -->
-  <?!= include('State') ?>
-  <?!= include('Constants') ?>
-  <?!= include('Utils') ?>
-  <?!= include('Api') ?>
-  <?!= include('Auth') ?>
-  <?!= include('Preview') ?>
-  <?!= include('CalibrationLoader') ?>
+  <!-- ============ CORE RUNTIME STATE & CONSTANTS ============ -->
+  <script>
+  // ============================================================
+  // STATE GLOBAL APLIKASI
+  // ============================================================
+  var sessionToken = window.sessionToken || null;
+  var currentUser = window.currentUser || null;
+  var initData = window.initData || null;
+
+  var documentsCache = window.documentsCache || {};
+  var approvalCache = window.approvalCache || {};
+  var usersCache = window.usersCache || {};
+  var nfiCache_ = window.nfiCache_ || {};
+  var siteReportEntriesCache = window.siteReportEntriesCache || {};
+  var recycleBinCache = window.recycleBinCache || { documents: [], nfiEntries: [] };
+  var myTasksCache = window.myTasksCache || null;
+  var historyRevisionsCache_ = window.historyRevisionsCache_ || [];
+
+  var approvalView = window.approvalView || 'pending';
+  var globalProjectFilter = window.globalProjectFilter || '';
+  var nfiQuickContinueOnly = window.nfiQuickContinueOnly || false;
+  var recycleBinView = window.recycleBinView || 'docs';
+  var siteReportInitialized = window.siteReportInitialized || false;
+  var nfiZoomLevel = window.nfiZoomLevel || 100;
+  window.selectedApprovalIds = window.selectedApprovalIds || new Set();
+
+  var notifPollTimer = null;
+  var myTasksPollTimer = null;
+  var searchDebounceTimer = null;
+  var nfiSearchDebounce = null;
+
+  var NFI_ZOOM_MIN = 60, NFI_ZOOM_MAX = 200, NFI_ZOOM_STEP = 10;
+  var NFI_OPTIONAL_COLS = [
+    'area','type','issued','location','inspdate','itr',
+    'itp','repsub','compdate','pic','remark'
+  ];
+  var NFI_COL_CHECKBOX_MAP = {
+    area:'nfiColArea', type:'nfiColType', issued:'nfiColIssued',
+    location:'nfiColLocation', inspdate:'nfiColInspDate', itr:'nfiColItr',
+    itp:'nfiColItp', repsub:'nfiColRepSub', compdate:'nfiColCompDate',
+    pic:'nfiColPicAei', remark:'nfiColRemark'
+  };
+
+  // ============================================================
+  // KONSTANTA STRING
+  // ============================================================
+  var STATUS = window.STATUS || Object.freeze({
+    PENDING:    'Pending',
+    APPROVED:   'Approved',
+    REJECTED:   'Rejected',
+    SUPERSEDED: 'Superseded'
+  });
+
+  var LIFECYCLE = window.LIFECYCLE || Object.freeze({
+    DRAFT:      'Draft',
+    IN_REVIEW:  'In Review',
+    APPROVED:   'Approved',
+    REJECTED:   'Rejected',
+    SUPERSEDED: 'Superseded',
+    ARCHIVED:   'Archived',
+    OBSOLETE:   'Obsolete',
+    DELETED:    'Deleted'
+  });
+
+  var ROLE = window.ROLE || Object.freeze({
+    ADMIN:     'Admin',
+    MANAGER:   'Manager',
+    QAQC:      'QA/QC Engineer',
+    INSPECTOR: 'Inspector',
+    CLIENT:    'Client/Konsultan'
+  });
+
+  var USER_STATUS = window.USER_STATUS || Object.freeze({
+    ACTIVE:   'Active',
+    PENDING:  'Pending',
+    INACTIVE: 'Inactive'
+  });
+
+  var NFI_RESULT = window.NFI_RESULT || Object.freeze({
+    PASS:     'Pass',
+    FAIL:     'Fail',
+    CONTINUE: 'Continue',
+    PENDING:  'Pending',
+    NA:       'N/A'
+  });
+
+  var NFI_STATUS = window.NFI_STATUS || Object.freeze({
+    OPEN:        'Open',
+    IN_PROGRESS: 'In Progress',
+    CLOSED:      'Closed',
+    CANCELLED:   'Cancelled'
+  });
+
+  var CONF = window.CONF || Object.freeze({
+    PUBLIC:       'Public',
+    INTERNAL:     'Internal',
+    CONFIDENTIAL: 'Confidential',
+    RESTRICTED:   'Restricted'
+  });
+
+  var TRANSMITTAL_STATUS = window.TRANSMITTAL_STATUS || Object.freeze({
+    SENT:         'Sent',
+    ACKNOWLEDGED: 'Acknowledged',
+    CLOSED:       'Closed'
+  });
+
+  var SITE_STATUS = window.SITE_STATUS || Object.freeze({
+    ACC:      'ACC (Accepted)',
+    REJECT:   'Reject / Repair',
+    PROGRESS: 'On Progress'
+  });
+
+  var TOAST = window.TOAST || Object.freeze({
+    SUCCESS: 'success',
+    ERROR:   'error'
+  });
+
+  var THEME = window.THEME || Object.freeze({
+    LIGHT: 'light',
+    DARK:  'dark'
+  });
+
+  var ROLE_OPTIONS = window.ROLE_OPTIONS || [ROLE.ADMIN, ROLE.MANAGER, ROLE.QAQC, ROLE.INSPECTOR, ROLE.CLIENT];
+  </script>
 
   <script>
     // State, Constants, Utils, dan Api sudah di-include di atas.
