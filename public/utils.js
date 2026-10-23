@@ -14,7 +14,6 @@ var documentsCache = documentsCache || {};
 
 var notifPollTimer = notifPollTimer || null;
 var myTasksPollTimer = myTasksPollTimer || null;
-var toastTimer = toastTimer || null;
 var searchDebounceTimer = searchDebounceTimer || null;
 var _mobileLabelTimer = _mobileLabelTimer || null;
 
@@ -26,7 +25,6 @@ var siteReportEntriesCache = siteReportEntriesCache || {};
 var recycleBinCache = recycleBinCache || {};
 var ccCache_ = ccCache_ || {};
 var projectsCache_ = projectsCache_ || {};
-var analisisCache_ = analisisCache_ || {};
 var historyRevisionsCache_ = historyRevisionsCache_ || {};
 var __previewCache = __previewCache || {};
 

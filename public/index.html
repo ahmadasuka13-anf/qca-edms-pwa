@@ -6488,7 +6488,6 @@ var documentsCache = documentsCache || {};
 
 var notifPollTimer = notifPollTimer || null;
 var myTasksPollTimer = myTasksPollTimer || null;
-var toastTimer = toastTimer || null;
 var searchDebounceTimer = searchDebounceTimer || null;
 var _mobileLabelTimer = _mobileLabelTimer || null;
 
@@ -6500,7 +6499,6 @@ var siteReportEntriesCache = siteReportEntriesCache || {};
 var recycleBinCache = recycleBinCache || {};
 var ccCache_ = ccCache_ || {};
 var projectsCache_ = projectsCache_ || {};
-var analisisCache_ = analisisCache_ || {};
 var historyRevisionsCache_ = historyRevisionsCache_ || {};
 var __previewCache = __previewCache || {};
 
@@ -8763,7 +8761,7 @@ function fileLinksHtml(d) {
       google.script.run.withSuccessHandler(function (res) { btn.disabled = false; btn.textContent = 'Arsipkan'; showToast(res.message, res.success ? 'success' : 'error'); if (res.success) { closeArchiveModal(); closeDocDetail(); loadDocumentList(); loadArchive(); } }).withFailureHandler(function (err) { btn.disabled = false; btn.textContent = 'Arsipkan'; showToast('Gagal: ' + err.message, 'error'); }).archiveDocument(sessionToken, id, y);
     }
 
-    let toastTimer = null;
+    var toastTimer = null;
     function showToast(m, t) {
       const el = document.getElementById('toast');
       el.textContent = m;
@@ -9549,7 +9547,7 @@ function fileLinksHtml(d) {
         // ============================================================================
     // ANALISIS DOKUMEN — Panel terpisah
     // ============================================================================
-    let analisisCache_ = null;
+    var analisisCache_ = null;
 
     function loadAnalisis() {
       const statsWrap   = document.getElementById('analisisStatsWrap');
