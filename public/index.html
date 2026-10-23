@@ -892,6 +892,164 @@ body {
     .modal-box .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
     .modal-box .modal-actions .btn { flex: 1; min-height: 44px; touch-action: manipulation; }
 
+    /* ==========================================================================
+       ENTERPRISE DOCUMENT PREVIEW MODAL (FULL-VIEW & RESPONSIVE)
+       ========================================================================== */
+    #previewModal {
+      padding: 16px !important;
+      z-index: 100050 !important;
+    }
+    #previewModal .modal-box.preview-modal-box {
+      max-width: 95vw !important;
+      width: 1280px !important;
+      height: 90vh !important;
+      max-height: 92vh !important;
+      padding: 0 !important;
+      border-radius: 14px !important;
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    #previewModal.preview-fullscreen-active {
+      padding: 0 !important;
+    }
+    #previewModal.preview-fullscreen-active .modal-box.preview-modal-box {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+    .preview-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .preview-modal-head .card-title {
+      color: #f8fafc !important;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+      margin: 0 !important;
+      letter-spacing: -0.01em;
+    }
+    .preview-modal-head .btn-small {
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #f1f5f9 !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      transition: all 0.18s ease !important;
+      line-height: 1.2;
+    }
+    .preview-modal-head .btn-small:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      color: #fff !important;
+      transform: translateY(-1px);
+    }
+    .preview-modal-head .btn-close-preview {
+      background: rgba(239, 68, 68, 0.15) !important;
+      color: #fca5a5 !important;
+      border-color: rgba(239, 68, 68, 0.3) !important;
+      padding: 6px 10px !important;
+    }
+    .preview-modal-head .btn-close-preview:hover {
+      background: #ef4444 !important;
+      color: #fff !important;
+      border-color: #ef4444 !important;
+    }
+    .preview-banner-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 18px;
+      background: rgba(14, 165, 233, 0.12);
+      border-bottom: 1px solid rgba(14, 165, 233, 0.22);
+      color: #bae6fd;
+      font-size: 11.5px;
+      flex-shrink: 0;
+    }
+    .preview-banner-hint a {
+      color: #38bdf8;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .preview-modal-body {
+      position: relative;
+      flex: 1 1 auto;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 0;
+      background: #090d16;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .preview-iframe {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 100% !important;
+      flex: 1 1 auto !important;
+      border: none !important;
+      display: block !important;
+      background: #090d16;
+    }
+    .preview-image-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #090d16;
+      overflow: auto;
+    }
+    @media (max-width: 768px) {
+      #previewModal {
+        padding: 0 !important;
+        align-items: flex-end !important;
+      }
+      #previewModal .modal-box.preview-modal-box {
+        max-width: 100vw !important;
+        width: 100vw !important;
+        height: 94vh !important;
+        max-height: 94vh !important;
+        padding: 0 !important;
+        border-radius: 18px 18px 0 0 !important;
+      }
+      .preview-modal-head {
+        padding: 10px 14px;
+      }
+      .preview-modal-head .btn-small span.btn-label {
+        display: none;
+      }
+      .preview-banner-hint {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+    }
+
+
     /* Sembunyikan FAB & Chat Panel saat Modal atau Sidebar terbuka */
     body.sidebar-open #mobileFabContainer,
     body.sidebar-open #aiChatBtn,
@@ -12260,14 +12418,14 @@ window.addEventListener('offline', updateFooterStatus);
       });
     };
 
-    // ============================================================================
-    // In-Browser Document Preview Engine (Self-contained fallback & Fast-Path)
+        // ============================================================================
+    // In-Browser Document Preview Engine (Enterprise Multi-Format Viewer)
     // ============================================================================
     (function () {
       if (window.previewFile_ && window._previewEngineReady) return;
       window._previewEngineReady = true;
 
-      var __previewCache = {};
+      var __previewCache = window.__previewCache || {};
 
       function escSafe_(s) {
         if (typeof esc === 'function') return esc(s);
@@ -12278,11 +12436,15 @@ window.addEventListener('offline', updateFooterStatus);
       function extractDriveIdClient_(url) {
         if (!url) return '';
         var str = String(url).trim();
-        var m = str.match(/\/(?:folders|d|file\/d)\/([a-zA-Z0-9_-]{15,})/);
+        var m = str.match(/\/(?:folders|d|file\/d|document\/d|spreadsheets\/d|presentation\/d)\/([a-zA-Z0-9_-]{15,})/);
         if (m) return m[1];
         m = str.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
         if (m) return m[1];
         return '';
+      }
+
+      function isDriveFolderUrl_(url) {
+        return /\/folders\/[a-zA-Z0-9_-]+/i.test(String(url || ''));
       }
 
       function injectPreviewModal() {
@@ -12292,14 +12454,22 @@ window.addEventListener('offline', updateFooterStatus);
             '<div class="modal-box preview-modal-box">' +
               '<div class="preview-modal-head">' +
                 '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">' +
-                  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
-                  '<h3 class="card-title" id="previewModalTitle" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px;">Preview Dokumen</h3>' +
+                  '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:#38bdf8;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.2"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                  '<h3 class="card-title" id="previewModalTitle" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:700;">Preview Dokumen</h3>' +
                 '</div>' +
                 '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
-                  '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive">↗ Tab Baru</a>' +
-                  '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen">⬇ Unduh</a>' +
-                  '<button type="button" class="btn-small" onclick="closePreviewModal()" title="Tutup preview"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+                  '<button type="button" class="btn-small" id="previewFullscreenBtn" onclick="togglePreviewFullscreen_()" title="Layar Penuh / Pulihkan"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg><span class="btn-label">Layar Penuh</span></button>' +
+                  '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="btn-label">Tab Baru</span></a>' +
+                  '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span class="btn-label">Unduh</span></a>' +
+                  '<button type="button" class="btn-small btn-close-preview" onclick="closePreviewModal()" title="Tutup preview (Esc)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
                 '</div>' +
+              '</div>' +
+              '<div class="preview-banner-hint" id="previewBannerHint">' +
+                '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' +
+                  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
+                  '<span>Pratinjau Google Drive terenkripsi. Jika dokumen terhalang izin akun atau browser, silakan klik <a href="#" id="previewBannerLink" target="_blank" rel="noopener noreferrer">Buka di Tab Baru ↗</a></span>' +
+                '</div>' +
+                '<button type="button" onclick="document.getElementById(\'previewBannerHint\').style.display=\'none\'" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:2px 6px;font-size:12px;" title="Tutup pemberitahuan">✕</button>' +
               '</div>' +
               '<div class="preview-modal-body" id="previewModalBody">' +
                 '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
@@ -12315,8 +12485,15 @@ window.addEventListener('offline', updateFooterStatus);
         if (!body) return;
         var previewUrl = res.previewUrl || '';
         var fileId = res.fileId || extractDriveIdClient_(res.downloadUrl || previewUrl);
+        var isFolder = res.isFolder || isDriveFolderUrl_(res.downloadUrl || previewUrl);
         var downloadUrl = res.directDownloadUrl || res.downloadUrl || (fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : '');
         var viewUrl = res.downloadUrl || (fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : '');
+
+        if (isFolder && fileId) {
+          body.innerHTML =
+            '<iframe class="preview-iframe" src="https://drive.google.com/embeddedfolderview?id=' + encodeURIComponent(fileId) + '#grid" allow="autoplay" allowfullscreen title="Folder Google Drive"></iframe>';
+          return;
+        }
 
         if (!previewUrl && fileId) {
           previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
@@ -12336,12 +12513,12 @@ window.addEventListener('offline', updateFooterStatus);
 
         if (previewUrl) {
           body.innerHTML =
-            '<iframe class="preview-iframe" src="' + escSafe_(previewUrl) + '" allow="autoplay" allowfullscreen></iframe>';
+            '<iframe class="preview-iframe" src="' + escSafe_(previewUrl) + '" allow="autoplay" allowfullscreen title="Pratinjau Dokumen"></iframe>';
         } else {
           body.innerHTML =
             '<div class="empty-state" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:#fff;">' +
               '<div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.14"/><polyline points="14 2 14 8 20 8"/></svg></div>' +
-              '<div class="msg" style="font-size:13.5px;color:#cbd5e1;">' +
+              '<div class="msg" style="font-size:13.5px;color:#cbd5e1;text-align:center;">' +
                 '<b style="color:#fff;">Pratinjau langsung tidak tersedia untuk format file ini.</b><br>' +
                 '<span style="font-size:12px;opacity:0.8;">Silakan buka langsung di Google Drive atau unduh berkas.</span><br><br>' +
                 '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
@@ -12356,7 +12533,7 @@ window.addEventListener('offline', updateFooterStatus);
       window.prefetchPreview_ = function (fileUrl) {
         if (!fileUrl || __previewCache[fileUrl]) return;
         if (!sessionToken) return;
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
+        if (typeof google !== 'undefined' && google.script && google.script.run && typeof google.script.run.getFilePreviewInfo === 'function') {
           google.script.run
             .withSuccessHandler(function (res) {
               if (res && res.success) __previewCache[fileUrl] = res;
@@ -12364,6 +12541,12 @@ window.addEventListener('offline', updateFooterStatus);
             .withFailureHandler(function () {})
             .getFilePreviewInfo(sessionToken, fileUrl);
         }
+      };
+
+      window.togglePreviewFullscreen_ = function () {
+        var modal = document.getElementById('previewModal');
+        if (!modal) return;
+        modal.classList.toggle('preview-fullscreen-active');
       };
 
       window.previewFile_ = function (fileUrl, fileName) {
@@ -12379,23 +12562,30 @@ window.addEventListener('offline', updateFooterStatus);
         var body  = document.getElementById('previewModalBody');
         var dlBtn = document.getElementById('previewDownloadBtn');
         var tabBtn = document.getElementById('previewNewTabBtn');
+        var bannerLink = document.getElementById('previewBannerLink');
+        var hint = document.getElementById('previewBannerHint');
 
+        var isFolder = isDriveFolderUrl_(fileUrl);
         var fileId = extractDriveIdClient_(fileUrl);
-        var directDl = fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : fileUrl;
-        var newTabUrl = fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : fileUrl;
+        var directDl = (!isFolder && fileId) ? 'https://drive.google.com/uc?export=download&id=' + fileId : fileUrl;
+        var newTabUrl = fileUrl || (fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : '#');
 
         if (title) title.textContent = fileName || 'Preview Dokumen';
         if (dlBtn) dlBtn.href = directDl;
         if (tabBtn) tabBtn.href = newTabUrl;
+        if (bannerLink) bannerLink.href = newTabUrl;
+        if (hint) hint.style.display = 'flex';
         if (modal) modal.classList.add('show');
+        if (typeof window.syncModalOpenClass === 'function') window.syncModalOpenClass();
 
         // 1. FAST PATH: Langsung muat pratinjau seketika jika ada Google Drive ID
         if (fileId) {
           renderPreviewBody_(body, {
             mode: 'native',
-            previewUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
+            previewUrl: isFolder ? '' : ('https://drive.google.com/file/d/' + fileId + '/preview'),
             fileName: fileName,
             fileId: fileId,
+            isFolder: isFolder,
             downloadUrl: fileUrl,
             directDownloadUrl: directDl
           });
@@ -12406,15 +12596,18 @@ window.addEventListener('offline', updateFooterStatus);
           body.innerHTML = '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat preview dokumen...</div>';
         }
 
-        // 2. BACKGROUND PERMISSION SYNC: Hubungi server untuk memastikan file sharing ANYONE_WITH_LINK aktif
-        if (sessionToken && typeof google !== 'undefined' && google.script && google.script.run) {
+        // 2. BACKGROUND PERMISSION SYNC: Hubungi server jika ada handler
+        if (sessionToken && typeof google !== 'undefined' && google.script && google.script.run && typeof google.script.run.getFilePreviewInfo === 'function') {
           google.script.run
             .withSuccessHandler(function (res) {
               if (res && res.success) {
                 __previewCache[fileUrl] = res;
                 if (title && res.fileName) title.textContent = res.fileName;
                 if (dlBtn && (res.directDownloadUrl || res.downloadUrl)) dlBtn.href = res.directDownloadUrl || res.downloadUrl;
-                if (tabBtn && res.downloadUrl) tabBtn.href = res.downloadUrl;
+                if (tabBtn && res.downloadUrl) {
+                  tabBtn.href = res.downloadUrl;
+                  if (bannerLink) bannerLink.href = res.downloadUrl;
+                }
                 if (!fileId) renderPreviewBody_(body, res);
               }
             })
@@ -12429,8 +12622,10 @@ window.addEventListener('offline', updateFooterStatus);
         var modal = document.getElementById('previewModal');
         if (!modal) return;
         modal.classList.remove('show');
+        modal.classList.remove('preview-fullscreen-active');
         var body = document.getElementById('previewModalBody');
         if (body) body.innerHTML = '';
+        if (typeof window.syncModalOpenClass === 'function') window.syncModalOpenClass();
       };
 
       document.addEventListener('click', function (e) {
@@ -12450,6 +12645,7 @@ window.addEventListener('offline', updateFooterStatus);
         injectPreviewModal();
       }
     })();
+
 
     // ═══════════════════════════════════════════════════════════════
     // 📱 LIGHTWEIGHT MODAL STATE MANAGER (TANPA MUTATION OBSERVER LOOP)
