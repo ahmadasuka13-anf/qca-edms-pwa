@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- PWA & Mobile Meta Tags -->
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#1a2332">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="QC-CMS EDMS">
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <link rel="icon" type="image/png" href="/icons/icon-192.png">
-
-  <!-- GAS Universal Client Adapter for PWA & Vercel -->
-  <script src="/gas-adapter.js"></script>
-
   <base target="_top">
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -32,8 +20,8 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script>
     (function () {
       try {
@@ -2824,14 +2812,6 @@ canvas#disciplineChart {
 .scroll-top-btn:hover {
   background: var(--surface-hover);
 }
-@media (max-width: 860px) {
-  .scroll-top-btn {
-    bottom: 80px;
-    left: 24px;
-    right: auto;
-  }
-}
-
 /* ═══════════════════════════════════════════════════════════════ */
 /* 🎬 CINEMATIC WELCOME SCREEN OVERLAY (KONSEP B)                 */
 /* ═══════════════════════════════════════════════════════════════ */
@@ -3702,6 +3682,455 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+
+    /* ═══════════════════════════════════════════════════════════════════════════
+       UX ENHANCEMENTS: STICKY COLUMNS & GLOBAL COMMAND SEARCH (CTRL + K)
+       ═══════════════════════════════════════════════════════════════════════════ */
+    .header-search-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--ink-muted);
+      font-size: 12.5px;
+      font-family: inherit;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .header-search-btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .header-search-btn .hsb-kbd {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      color: var(--ink-muted);
+      line-height: 1;
+    }
+    @media (max-width: 640px) {
+      .header-search-btn .hsb-text,
+      .header-search-btn .hsb-kbd { display: none; }
+      .header-search-btn { padding: 7px; border-radius: 50%; }
+    }
+
+    
+    /* ==========================================================================
+       FASE 2: HEADER LIVE SYNC STATUS WIDGET
+       ========================================================================== */
+    .header-sync-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .header-sync-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .header-sync-pill:hover {
+      background: rgba(255, 255, 255, 0.22);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+    .sync-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: syncPulse 2s infinite ease-in-out;
+      flex-shrink: 0;
+    }
+    .sync-pulse-dot.offline {
+      background: #f59e0b;
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    @keyframes syncPulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+    .sync-refresh-icon {
+      transition: transform 0.4s ease;
+      opacity: 0.85;
+    }
+    .sync-refresh-icon.spinning {
+      animation: spinRefresh 0.8s linear infinite;
+    }
+    @keyframes spinRefresh {
+      100% { transform: rotate(360deg); }
+    }
+    .sync-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 290px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+      z-index: 999;
+      padding: 12px 14px;
+      animation: modalPop 0.16s ease-out;
+    }
+    .sync-popover-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .sph-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .sph-status-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .sync-popover-body {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    .sync-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sir-label { color: var(--ink-muted); font-size: 11.5px; }
+    .sir-val { color: var(--ink); font-weight: 600; font-size: 11.5px; }
+    .btn-sync-now {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .btn-sync-now:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       FASE 2: VISUAL SLA AGING ALERTS & BADGES
+       ========================================================================== */
+    .sla-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      vertical-align: middle;
+      line-height: 1.3;
+      margin-left: 4px;
+    }
+    .sla-warning {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #fde68a;
+    }
+    .sla-overdue {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      animation: overduePulse 2s infinite ease-in-out;
+    }
+    @keyframes overduePulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+      }
+    }
+
+    /* ==========================================================================
+       FASE 2: ADAPTIVE MOBILE INSPECTION CARDS (< 768px)
+       ========================================================================== */
+    .nfi-mobile-cards-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 4px 0 20px 0;
+    }
+    .inspection-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+      padding: 14px 16px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .inspection-card.card-overdue {
+      border-left: 4px solid #ef4444;
+    }
+    .inspection-card.card-warning {
+      border-left: 4px solid #f59e0b;
+    }
+    .ic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+    .ic-title-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .ic-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+    }
+    .ic-nonfi {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--primary);
+      word-break: break-all;
+    }
+    .ic-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .ic-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+    }
+    .ic-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .ic-label {
+      color: var(--ink-muted);
+      font-size: 11.5px;
+      flex-shrink: 0;
+      min-width: 85px;
+    }
+    .ic-val {
+      color: var(--ink);
+      text-align: right;
+      word-break: break-word;
+    }
+    .ic-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-ic-primary {
+      flex: 1;
+      height: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(19, 39, 90, 0.25);
+    }
+    .btn-ic-primary:active {
+      transform: scale(0.98);
+      filter: brightness(0.95);
+    }
+    .btn-ic-secondary {
+      height: 44px;
+      min-height: 44px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .btn-ic-edit {
+      height: 44px;
+      min-height: 44px;
+      width: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--ink-muted);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .ic-no-doc {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    /* Tampilan Adaptif Berdasarkan Layar */
+    @media (max-width: 768px) {
+      .nfi-table-scroll {
+        display: none !important;
+      }
+      .nfi-mobile-cards-wrap {
+        display: flex !important;
+      }
+      .header-sync-pill .sync-text {
+        display: none;
+      }
+      .header-sync-pill {
+        padding: 6px 8px;
+      }
+    }
+    @media (min-width: 769px) {
+      .nfi-mobile-cards-wrap {
+        display: none !important;
+      }
+      .nfi-table-scroll {
+        display: block !important;
+      }
+    }
+
+    /* Sticky Columns on Data Tables */
+    .nfi-tbl-wrap, .table-scroll {
+      position: relative;
+      overflow-x: auto;
+    }
+    .nfi-tbl {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    .nfi-tbl th.sticky-col-no,
+    .nfi-tbl td.nfi-row-num {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--surface-card);
+    }
+    .nfi-tbl th.sticky-col-nfi,
+    .nfi-tbl td.nfi-no-nfi {
+      position: sticky;
+      left: 45px;
+      z-index: 2;
+      background: var(--surface-card);
+      box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.08);
+    }
+    .nfi-tbl thead th.sticky-col-no,
+    .nfi-tbl thead th.sticky-col-nfi {
+      z-index: 6;
+      background: var(--surface-subtle);
+    }
+    .nfi-tbl tbody tr:hover td.nfi-row-num,
+    .nfi-tbl tbody tr:hover td.nfi-no-nfi {
+      background: var(--surface-hover, #f1f5f9);
+    }
+
+    #ccDetailTable {
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    #ccDetailTable th:nth-child(1),
+    #ccDetailTable td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--surface-card);
+      box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.08);
+    }
+    #ccDetailTable thead th:nth-child(1) {
+      z-index: 6;
+      background: var(--surface-subtle);
+    }
+    #ccDetailTable tbody tr:hover td:nth-child(1) {
+      background: var(--surface-hover, #f1f5f9);
+    }
+
+    /* Global Search Command Modal */
+    .gs-result-item:hover, .gs-result-item.active {
+      background: var(--surface-hover) !important;
+    }
 </style>
 
 <script>
@@ -3799,6 +4228,53 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         <div class="header-clock" style="display:none;">
           <span class="clock-time" id="headerClockTime">--:--:--</span>
           <span class="clock-date" id="headerClockDate">-</span>
+        </div>
+
+        <!-- 🔍 QUICK SEARCH (CTRL + K) -->
+        <button type="button" class="header-search-btn" onclick="openGlobalSearchModal()" title="Cari cepat dokumen, NFI, proyek (Ctrl + K)" aria-label="Cari Cepat">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="hsb-text">Cari...</span>
+          <kbd class="hsb-kbd">Ctrl K</kbd>
+        </button>
+
+        
+        <!-- 🟢 HEADER LIVE SYNC STATUS WIDGET (FASE 2) -->
+        <div class="header-sync-wrap" style="position:relative;" id="headerSyncWrap">
+          <button type="button" class="header-sync-pill" id="headerSyncPill" onclick="toggleSyncStatusPopover(event)" title="Status Sinkronisasi Real-Time (Klik untuk detail)">
+            <span class="sync-pulse-dot" id="headerSyncDot"></span>
+            <span class="sync-text" id="headerSyncText">Tersinkronisasi</span>
+            <svg class="sync-refresh-icon" id="headerSyncRefreshIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+          
+          <div id="syncStatusPopover" class="sync-popover" style="display:none;" onclick="event.stopPropagation()">
+            <div class="sync-popover-header">
+              <div class="sph-title">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                <span>Status Sinkronisasi Sistem</span>
+              </div>
+              <span class="sph-status-tag" id="syncPopoverBadge">Online</span>
+            </div>
+            <div class="sync-popover-body">
+              <div class="sync-info-row">
+                <span class="sir-label">Terakhir Sinkron:</span>
+                <span class="sir-val" id="syncPopoverLastTime">Baru saja</span>
+              </div>
+              <div class="sync-info-row">
+                <span class="sir-label">Pusat Data Master:</span>
+                <span class="sir-val" id="syncPopoverHubStatus">Google Sheets &amp; Drive</span>
+              </div>
+              <div class="sync-info-row">
+                <span class="sir-label">PWA Offline Mode:</span>
+                <span class="sir-val" id="syncPopoverPwaStatus">Aktif (v6.0 Ready)</span>
+              </div>
+            </div>
+            <div class="sync-popover-footer">
+              <button type="button" class="btn-sync-now" id="btnSyncNowHeader" onclick="triggerQuickSyncFromHeader(event)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                <span>Sinkronkan Sekarang</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- 🔔 NOTIFIKASI -->
@@ -4771,22 +5247,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   <div class="form-row single"><div class="form-group"><label>Tindak Lanjut</label><textarea id="srFollowUpInput"></textarea></div></div>
                   <div class="form-row single"><div class="form-group"><label>Status QC</label><select id="srStatusSelect" required></select></div></div>
                   <div class="form-group" style="margin-bottom:18px;">
-                    <label>Foto Dokumentasi Lapangan</label>
-                    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-                      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('srPhotoCameraInput').click()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">
-                        📸 Ambil Foto Kamera
-                      </button>
-                      <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('srPhotoInput').click()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">
-                        📁 Buka File / Galeri
-                      </button>
-                    </div>
-                    <input type="file" id="srPhotoCameraInput" accept="image/*" capture="environment" style="display:none;" onchange="onSiteReportCameraChosen(this)">
+                    <label>Foto Dokumentasi</label>
                     <div class="file-drop">
                       <input type="file" id="srPhotoInput" accept="image/*" multiple onchange="onSiteReportPhotoChosen()">
                       <div class="file-name" id="srPhotoNameDisplay"></div>
-                    </div>
-                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
-                      💡 Foto otomatis dioptimasi &amp; distempel waktu inspeksi
                     </div>
                   </div>
                   <button type="submit" class="btn btn-primary btn-full" id="srSubmitBtn">Simpan</button>
@@ -5973,1902 +6437,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
 
   <!-- ============ INCLUDE PARTIALS ============ -->
-  <script>
-  // ============================================================
-  // STATE GLOBAL APLIKASI
-  // Semua variabel mutable terpusat di sini.
-  // File ini WAJIB di-include PALING AWAL sebelum file JS lainnya.
-  // ============================================================
-
-  // Session & user
-  let sessionToken = null;
-  let currentUser = null;
-  let initData = null;
-
-  // Caches
-  let documentsCache = {};
-  let approvalCache = {};
-  let usersCache = {};
-  let nfiCache_ = {};
-  let siteReportEntriesCache = {};
-  let recycleBinCache = { documents: [], nfiEntries: [] };
-  let myTasksCache = null;
-  let historyRevisionsCache_ = [];
-
-  // UI state
-  let approvalView = 'pending';
-  let globalProjectFilter = '';
-  let nfiQuickContinueOnly = false;
-  let recycleBinView = 'docs';
-  let siteReportInitialized = false;
-  let nfiZoomLevel = 100;
-  const selectedApprovalIds = new Set();
-
-  // Timers
-  let notifPollTimer = null;
-  let myTasksPollTimer = null;
-  let searchDebounceTimer = null;
-  let nfiSearchDebounce = null;
-
-  // NFI Zoom constants
-  const NFI_ZOOM_MIN = 60, NFI_ZOOM_MAX = 200, NFI_ZOOM_STEP = 10;
-
-  // NFI Columns
-  const NFI_OPTIONAL_COLS = [
-    'area','type','issued','location','inspdate','itr',
-    'itp','repsub','compdate','pic','remark'
-  ];
-  const NFI_COL_CHECKBOX_MAP = {
-    area:'nfiColArea', type:'nfiColType', issued:'nfiColIssued',
-    location:'nfiColLocation', inspdate:'nfiColInspDate', itr:'nfiColItr',
-    itp:'nfiColItp', repsub:'nfiColRepSub', compdate:'nfiColCompDate',
-    pic:'nfiColPicAei', remark:'nfiColRemark'
-  };
-</script>
-  <script>
-  // ============================================================
-  // KONSTANTA STRING
-  // Semua string literal yang sering dipakai terpusat di sini.
-  // Tujuan: hindari typo, mudah refactor, self-documenting.
-  // ============================================================
-
-  const STATUS = Object.freeze({
-    PENDING:    'Pending',
-    APPROVED:   'Approved',
-    REJECTED:   'Rejected',
-    SUPERSEDED: 'Superseded'
-  });
-
-  const LIFECYCLE = Object.freeze({
-    DRAFT:      'Draft',
-    IN_REVIEW:  'In Review',
-    APPROVED:   'Approved',
-    REJECTED:   'Rejected',
-    SUPERSEDED: 'Superseded',
-    ARCHIVED:   'Archived',
-    OBSOLETE:   'Obsolete',
-    DELETED:    'Deleted'
-  });
-
-  const ROLE = Object.freeze({
-    ADMIN:     'Admin',
-    MANAGER:   'Manager',
-    QAQC:      'QA/QC Engineer',
-    INSPECTOR: 'Inspector',
-    CLIENT:    'Client/Konsultan'
-  });
-
-  const USER_STATUS = Object.freeze({
-    ACTIVE:   'Active',
-    PENDING:  'Pending',
-    INACTIVE: 'Inactive'
-  });
-
-  const NFI_RESULT = Object.freeze({
-    PASS:     'Pass',
-    FAIL:     'Fail',
-    CONTINUE: 'Continue',
-    PENDING:  'Pending',
-    NA:       'N/A'
-  });
-
-  const NFI_STATUS = Object.freeze({
-    OPEN:        'Open',
-    IN_PROGRESS: 'In Progress',
-    CLOSED:      'Closed',
-    CANCELLED:   'Cancelled'
-  });
-
-  const CONF = Object.freeze({
-    PUBLIC:       'Public',
-    INTERNAL:     'Internal',
-    CONFIDENTIAL: 'Confidential',
-    RESTRICTED:   'Restricted'
-  });
-
-  const TRANSMITTAL_STATUS = Object.freeze({
-    SENT:         'Sent',
-    ACKNOWLEDGED: 'Acknowledged',
-    CLOSED:       'Closed'
-  });
-
-  const SITE_STATUS = Object.freeze({
-    ACC:      'ACC (Accepted)',
-    REJECT:   'Reject / Repair',
-    PROGRESS: 'On Progress'
-  });
-
-  const TOAST = Object.freeze({
-    SUCCESS: 'success',
-    ERROR:   'error'
-  });
-
-  const THEME = Object.freeze({
-    LIGHT: 'light',
-    DARK:  'dark'
-  });
-
-  // Options untuk dropdown
-  const ROLE_OPTIONS = [ROLE.ADMIN, ROLE.MANAGER, ROLE.QAQC, ROLE.INSPECTOR, ROLE.CLIENT];
-</script>
-  <script>
-  // ============================================================
-  // UTILITY MURNI
-  // Fungsi helper yang TIDAK menyentuh state global.
-  // Semua fungsi di sini bisa ditest secara independen.
-  // ============================================================
-
-  /** Escape HTML untuk mencegah XSS. */
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-  window.escapeHtml = esc;
-
-
-  /** Potong teks panjang dengan ellipsis. */
-  function truncateText_(s, n) {
-    s = s || '';
-    return s.length > n ? s.slice(0, n) + '…' : s;
-  }
-
-  /** Format ISO date → "17 Sep 2026". */
-  function fmtDateShort_(iso) {
-    if (!iso) return '—';
-    try {
-      return new Date(iso).toLocaleDateString('id-ID', {
-        day: '2-digit', month: 'short', year: 'numeric'
-      });
-    } catch (e) { return '—'; }
-  }
-
-  /** Format ISO date → "17 Sep 2026, 14:30". */
-  function fmtDateTime_(iso) {
-    if (!iso) return '—';
-    try {
-      return new Date(iso).toLocaleString('id-ID', {
-        day: '2-digit', month: 'short', year: 'numeric',
-        hour: '2-digit', minute: '2-digit'
-      });
-    } catch (e) { return '—'; }
-  }
-
-  /** Date object → "YYYY-MM-DD" untuk input[type=date]. */
-  function toDateInputValue_(d) {
-    return d.getFullYear() + '-' +
-      String(d.getMonth() + 1).padStart(2, '0') + '-' +
-      String(d.getDate()).padStart(2, '0');
-  }
-
-  /** File → base64 data URL. */
-  function fileToBase64(file) {
-    return new Promise(function (res, rej) {
-      const r = new FileReader();
-      r.onload = () => res(r.result);
-      r.onerror = rej;
-      r.readAsDataURL(file);
-    });
-  }
-
-  /** Kompres gambar besar sebelum upload & tambahkan watermark jika foto inspeksi. */
-  function compressImageIfNeeded_(file, stampWatermark) {
-    const TH = 1.5 * 1024 * 1024, MAX = 1600, Q = 0.75;
-    if (!file.type || file.type.indexOf('image/') !== 0 ||
-        file.type === 'image/svg+xml' || (!stampWatermark && file.size <= TH)) {
-      return Promise.resolve(file);
-    }
-    return new Promise(function (resolve) {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      img.onload = function () {
-        URL.revokeObjectURL(url);
-        let w = img.naturalWidth, h = img.naturalHeight;
-        if (!w || !h || (w <= MAX && h <= MAX)) { resolve(file); return; }
-        const s = MAX / Math.max(w, h);
-        w = Math.round(w * s); h = Math.round(h * s);
-        const c = document.createElement('canvas');
-        c.width = w; c.height = h;
-        const ctx = c.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-
-        if (stampWatermark) {
-          const barH = Math.max(26, Math.round(h * 0.052));
-          ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-          ctx.fillRect(0, h - barH, w, barH);
-
-          const fontSize = Math.max(11, Math.round(barH * 0.44));
-          ctx.font = '600 ' + fontSize + 'px sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.textBaseline = 'middle';
-
-          const now = new Date();
-          const pad = n => String(n).padStart(2, '0');
-          const dateStr = pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear() + ' ' +
-                          pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds()) + ' WIB';
-          ctx.fillText('📷 QC-CMS EDMS · ' + dateStr, 12, h - (barH / 2));
-        }
-        c.toBlob(function (blob) {
-          if (!blob || blob.size >= file.size) { resolve(file); return; }
-          resolve(new File(
-            [blob],
-            file.name.replace(/\.[^.]+$/, '') + '.jpg',
-            { type: 'image/jpeg' }
-          ));
-        }, 'image/jpeg', Q);
-      };
-      img.onerror = function () { URL.revokeObjectURL(url); resolve(file); };
-      img.src = url;
-    });
-  }
-
-  /** FileList → array payload siap kirim ke backend. */
-  function filesToPayload(list, stampWatermark) {
-    return Promise.all(Array.from(list).map(function (file) {
-      return compressImageIfNeeded_(file, stampWatermark).then(function (pf) {
-        return fileToBase64(pf).then(function (b64) {
-          return {
-            fileName: pf.name,
-            mimeType: pf.type || 'application/octet-stream',
-            base64Data: b64
-          };
-        });
-      });
-    }));
-  }
-
-  /** Download blob dari base64. */
-  function downloadBase64File(base64, fileName, mimeType) {
-    const bc = atob(base64);
-    const bn = new Array(bc.length);
-    for (let i = 0; i < bc.length; i++) bn[i] = bc.charCodeAt(i);
-    const blob = new Blob([new Uint8Array(bn)], {
-      type: mimeType || 'application/octet-stream'
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = fileName;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  /** Debounce: tunda eksekusi sampai user berhenti memicu. */
-  function debounce_(fn, ms) {
-    let timer = null;
-    return function () {
-      const ctx = this, args = arguments;
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(ctx, args), ms);
-    };
-  }
-
-  /** Mime type untuk format laporan. */
-  function mimeForFormat_(f) {
-    if (f === 'docx') return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    if (f === 'xlsx') return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    return 'application/pdf';
-  }
-
-  /** Sanitasi string untuk onclick handler. */
-  function escapeJs_(s) {
-    return String(s || '')
-      .replace(/\\/g, '\\\\')
-      .replace(/'/g, "\\'")
-      .replace(/\r?\n/g, '\\n')
-      .replace(/</g, '\\x3c');
-  }
-
-  // ============================================================
-  // HAPTIC FEEDBACK (Getaran Responsif di HP)
-  // ============================================================
-  function triggerHaptic(pattern) {
-    if ('vibrate' in navigator) {
-      try { navigator.vibrate(pattern || [30, 20, 30]); } catch (e) {}
-    }
-  }
-  window.triggerHaptic = triggerHaptic;
-
-  // ============================================================
-  // REAL-TIME UPLOAD PROGRESS BAR (0% - 100%)
-  // ============================================================
-  window.showUploadProgress = function (percent, totalBytes, action, loadedBytes) {
-    const container = document.getElementById('uploadProgressBarContainer');
-    const bar = document.getElementById('uploadProgressBar');
-    const pctText = document.getElementById('uploadProgressPercent');
-    const detailText = document.getElementById('uploadProgressDetail');
-    const actionText = document.getElementById('uploadProgressAction');
-    const titleText = document.getElementById('uploadProgressTitle');
-    if (!container || !bar) return;
-
-    container.style.display = 'block';
-    container.style.opacity = '1';
-    container.style.transform = 'translateY(0)';
-    bar.style.width = percent + '%';
-    if (pctText) pctText.textContent = percent + '%';
-
-    const formatSize = function (bytes) {
-      if (!bytes || bytes <= 0) return '0 KB';
-      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-    };
-
-    const loaded = loadedBytes || (totalBytes ? Math.round((percent / 100) * totalBytes) : 0);
-    if (detailText) detailText.textContent = formatSize(loaded) + ' / ' + formatSize(totalBytes);
-
-    const actionMap = {
-      submitDocument: 'Dokumen',
-      submitSiteReportEntry: 'Laporan Inspeksi',
-      saveNFILogEntry: 'NFI Log',
-      submitCalibration: 'Kalibrasi Alat'
-    };
-    if (actionText) actionText.textContent = actionMap[action] || '';
-
-    if (percent >= 100) {
-      if (titleText) titleText.innerHTML = '<span>⚡ Menyimpan ke Drive & Spreadsheet...</span>';
-    } else {
-      if (titleText) titleText.innerHTML = '<span class="spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></span><span>Mengunggah berkas...</span>';
-    }
-  };
-
-  window.hideUploadProgress = function () {
-    const container = document.getElementById('uploadProgressBarContainer');
-    if (!container) return;
-    container.style.opacity = '0';
-    container.style.transform = 'translateY(10px)';
-    setTimeout(function () {
-      container.style.display = 'none';
-      container.style.opacity = '1';
-      container.style.transform = 'translateY(0)';
-    }, 400);
-  };
-
-  // ============================================================
-  // SCANNER QR / BARCODE VIA KAMERA HP (Html5Qrcode)
-  // ============================================================
-  let _html5QrInstance = null;
-  let _currentQrInputId = null;
-  let _currentFacingMode = 'environment';
-  let _isTorchActive = false;
-
-  window.openQrScanner = function (targetInputId, title) {
-    _currentQrInputId = targetInputId;
-    const modal = document.getElementById('qrScannerModal');
-    const titleEl = document.getElementById('qrScannerTitle');
-    if (titleEl && title) titleEl.textContent = title;
-    if (!modal) return;
-
-    modal.style.display = 'flex';
-    modal.classList.add('show');
-
-    if (typeof Html5Qrcode === 'undefined') {
-      const s = document.createElement('script');
-      s.src = '/html5-qrcode.min.js';
-      s.onload = function () { _startQrCamera(); };
-      s.onerror = function () {
-        if (typeof showToast === 'function') showToast('Gagal memuat pustaka scanner kamera', 'error');
-        window.closeQrScanner();
-      };
-      document.head.appendChild(s);
-    } else {
-      _startQrCamera();
-    }
-  };
-
-  async function _startQrCamera() {
-    try {
-      if (_html5QrInstance) {
-        try { await _html5QrInstance.stop(); } catch (e) {}
-      }
-      _html5QrInstance = new Html5Qrcode('qrScannerReader');
-      const config = {
-        fps: 15,
-        qrbox: { width: 230, height: 230 },
-        aspectRatio: 1.0
-      };
-
-      await _html5QrInstance.start(
-        { facingMode: _currentFacingMode },
-        config,
-        function (decodedText) {
-          triggerHaptic([40, 30, 40]);
-          if (_currentQrInputId) {
-            const inp = document.getElementById(_currentQrInputId);
-            if (inp) {
-              inp.value = decodedText;
-              inp.dispatchEvent(new Event('input', { bubbles: true }));
-              inp.dispatchEvent(new Event('change', { bubbles: true }));
-              if (_currentQrInputId === 'filterSearch' && typeof loadDocumentList === 'function') {
-                loadDocumentList();
-              } else if (_currentQrInputId === 'nfiSearch' && typeof loadNFILog === 'function') {
-                loadNFILog();
-              }
-            }
-          }
-          if (typeof showToast === 'function') {
-            showToast('✅ Berhasil scan: ' + decodedText, 'success');
-          }
-          window.closeQrScanner();
-        },
-        function () {}
-      );
-
-      setTimeout(function () {
-        try {
-          const cap = _html5QrInstance.getRunningTrackCapabilities();
-          const torchBtn = document.getElementById('qrTorchBtn');
-          if (cap && cap.torch && torchBtn) {
-            torchBtn.style.display = 'inline-block';
-          }
-        } catch (e) {}
-      }, 1000);
-
-    } catch (err) {
-      console.error('[QR Scanner] Gagal akses kamera:', err);
-      if (typeof showToast === 'function') {
-        showToast('Kamera tidak dapat diakses: ' + (err.message || 'Izin kamera ditolak'), 'error');
-      }
-      window.closeQrScanner();
-    }
-  }
-
-  window.closeQrScanner = async function () {
-    const modal = document.getElementById('qrScannerModal');
-    if (modal) {
-      modal.style.display = 'none';
-      modal.classList.remove('show');
-    }
-    if (_html5QrInstance) {
-      try {
-        await _html5QrInstance.stop();
-        _html5QrInstance.clear();
-      } catch (e) {}
-      _html5QrInstance = null;
-    }
-    _isTorchActive = false;
-  };
-
-  window.flipQrCamera = async function () {
-    _currentFacingMode = _currentFacingMode === 'environment' ? 'user' : 'environment';
-    await _startQrCamera();
-  };
-
-  window.toggleQrTorch = async function () {
-    if (!_html5QrInstance) return;
-    try {
-      _isTorchActive = !_isTorchActive;
-      await _html5QrInstance.applyVideoConstraints({
-        advanced: [{ torch: _isTorchActive }]
-      });
-      const btn = document.getElementById('qrTorchBtn');
-      if (btn) btn.textContent = _isTorchActive ? '🔦 Matikan Flash' : 'Flashlight';
-    } catch (e) {
-      console.warn('Torch error:', e);
-    }
-  };
-</script>
-  <script>
-  // ============================================================
-  // API WRAPPER
-  // Semua komunikasi ke backend lewat sini.
-  //  1. Hilangkan duplikasi withSuccessHandler/withFailureHandler
-  //  2. Bisa pakai async/await (lebih rapi dari callback)
-  //  3. Central error handling
-  // ============================================================
-
-  /** Promise wrapper untuk google.script.run. */
-  function callApi(fnName) {
-    const args = Array.prototype.slice.call(arguments, 1);
-    return new Promise(function (resolve, reject) {
-      if (typeof google === 'undefined' || !google.script || !google.script.run) {
-        reject(new Error('google.script.run tidak tersedia.'));
-        return;
-      }
-      const runner = google.script.run
-        .withSuccessHandler(resolve)
-        .withFailureHandler(reject);
-      if (typeof runner[fnName] !== 'function') {
-        reject(new Error('Fungsi backend "' + fnName + '" tidak ditemukan.'));
-        return;
-      }
-      runner[fnName].apply(runner, args);
-    });
-  }
-
-  /** Seperti callApi, tapi otomatis prepend sessionToken. */
-  function callAuthed(fnName) {
-    const args = Array.prototype.slice.call(arguments, 1);
-    if (!sessionToken) {
-      return Promise.reject(new Error('Session tidak aktif. Silakan login ulang.'));
-    }
-    return callApi.apply(null, [fnName, sessionToken].concat(args));
-  }
-
-  /**
-   * Panggil API dengan auto-handling UI:
-   *  - Auto disable button + tampilkan spinner
-   *  - Auto restore button text saat selesai
-   *  - Auto toast success/error
-   */
-  async function callWithUI(fnName, payload, btn, originalText) {
-    const original = originalText || (btn ? btn.textContent : 'Simpan');
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>...';
-    }
-    try {
-      const res = await callAuthed(fnName, payload);
-      if (btn) { btn.disabled = false; btn.textContent = original; }
-      if (res && typeof res.message === 'string') {
-        showToast(res.message, res.success ? TOAST.SUCCESS : TOAST.ERROR);
-      }
-      return res;
-    } catch (err) {
-      if (btn) { btn.disabled = false; btn.textContent = original; }
-      showToast('Gagal: ' + (err.message || 'Unknown error'), TOAST.ERROR);
-      throw err;
-    }
-  }
-
-  /** Sama seperti callWithUI tapi tidak auto-toast. */
-  async function callSilent(fnName, payload, btn, originalText) {
-    const original = originalText || (btn ? btn.textContent : 'Simpan');
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>...';
-    }
-    try {
-      return await callAuthed(fnName, payload);
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = original; }
-    }
-  }
-</script>
-  <script>
-  // ============================================================
-  // AUTH — Login, Register, Forgot Password, Toggle Password
-  // ============================================================
-
-  function showAuthError(msg) {
-    var e = document.getElementById('authError');
-    var m = document.getElementById('authMsg');
-    if (m) { m.style.display = 'none'; m.textContent = ''; }
-    if (e) { e.textContent = msg; e.style.display = 'block'; }
-  }
-
-  function showAuthMsg(msg) {
-    var m = document.getElementById('authMsg');
-    var e = document.getElementById('authError');
-    if (e) { e.style.display = 'none'; e.textContent = ''; }
-    if (m) { m.textContent = msg; m.style.display = 'block'; }
-  }
-
-  function togglePassword(inputId, btn) {
-    var inp = document.getElementById(inputId);
-    if (!inp) return;
-    if (inp.type === 'password') {
-      inp.type = 'text';
-      btn.textContent = 'Sembunyikan';
-    } else {
-      inp.type = 'password';
-      btn.textContent = 'Lihat';
-    }
-  }
-
-  function handleLogin(e) {
-    if (e) e.preventDefault();
-    var email = (document.getElementById('loginEmail').value || '').trim();
-    var pass  = document.getElementById('loginPassword').value || '';
-    if (!email || !pass) { showAuthError('Email & password wajib diisi.'); return false; }
-    var btn = document.getElementById('loginBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span>Memproses...';
-
-    google.script.run
-      .withSuccessHandler(function (res) {
-        btn.disabled = false;
-        btn.textContent = 'Masuk';
-        if (!res || !res.success) {
-          showAuthError((res && res.message) || 'Login gagal.');
-          return;
-        }
-        sessionToken = res.sessionToken;
-        currentUser  = res.user;
-        try { localStorage.setItem('qccms_session', sessionToken); } catch (err) {}
-        try { sessionStorage.removeItem('qccms_welcome_seen'); } catch (err) {}
-        // Bersihkan form
-        document.getElementById('loginForm').reset();
-        showAuthForm('login');
-        enterApp(true);
-      })
-      .withFailureHandler(function (err) {
-        btn.disabled = false;
-        btn.textContent = 'Masuk';
-        showAuthError('Gagal: ' + (err && err.message ? err.message : 'Unknown'));
-      })
-      .login(email, pass);
-
-    return false;
-  }
-
-  function handleRegister(event) {
-  event.preventDefault();
-  var btn = document.getElementById('registerBtn');
-  var originalText = btn.textContent;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Mendaftar...';
-  
-  var payload = {
-    fullName: document.getElementById('regFullName').value.trim(),
-    email: document.getElementById('regEmail').value.trim(),
-    password: document.getElementById('regPassword').value,
-    role: document.getElementById('regRole').value
-  };
-  
-  google.script.run
-    .withSuccessHandler(function(res) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-      
-      if (res.success) {
-        showSuccessOverlay({
-          title: '🎉 Registrasi Berhasil!',
-          message: 'Akun Anda telah dibuat:<br><b style="color:#163d78;">' + payload.email + '</b><br><br>' +
-                   'Silakan login dengan akun baru Anda.',
-          buttonText: '→ Login Sekarang',
-          autoClose: 6000,
-          onClose: function() {
-            showAuthForm('login');
-            document.getElementById('registerForm').reset();
-          }
-        });
-      } else {
-        showSuccessOverlay({
-          title: '⚠️ Registrasi Gagal',
-          message: res.message || 'Terjadi kesalahan saat mendaftar.',
-          buttonText: 'Coba Lagi',
-          isError: true
-        });
-      }
-    })
-    .withFailureHandler(function(err) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-      showSuccessOverlay({
-        title: '❌ Error',
-        message: 'Terjadi kesalahan: ' + err.message,
-        buttonText: 'Tutup',
-        isError: true
-      });
-    })
-    .registerAccount(payload);   // ✨ FIX: registerAccount, bukan registerUser
-
-     return false;   // ← TAMBAHKAN BARIS INI
-}   // ← ini penutup fungsi (biarkan)
-
-
-
-function handleForgotPassword(event) {
-  event.preventDefault();
-  var btn = document.getElementById('forgotBtn');
-  var originalText = btn.textContent;
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Mengirim...';
-  
-  var email = document.getElementById('forgotEmail').value.trim();
-  
-  google.script.run
-    .withSuccessHandler(function(res) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-      
-      if (res.success) {
-        showSuccessOverlay({
-          title: '📧 Email Terkirim!',
-          message: 'Link reset password telah dikirim ke:<br><b style="color:#163d78;">' + email + '</b><br><br>' +
-                   'Silakan cek <b>Inbox</b> atau <b>Spam</b> Anda.<br>Link berlaku selama <b>24 jam</b>.',
-          buttonText: '← Kembali ke Login',
-          autoClose: 8000,
-          onClose: function() {
-            showAuthForm('login');
-            document.getElementById('forgotForm').reset();
-          }
-        });
-      } else {
-        showSuccessOverlay({
-          title: '⚠️ Gagal Mengirim',
-          message: res.message || 'Email tidak ditemukan atau ada masalah pada server.',
-          buttonText: 'Coba Lagi',
-          isError: true,
-          onClose: function() {
-            document.getElementById('forgotEmail').focus();
-          }
-        });
-      }
-    })
-    .withFailureHandler(function(err) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-      showSuccessOverlay({
-        title: '❌ Terjadi Kesalahan',
-        message: 'Gagal mengirim email: ' + err.message,
-        buttonText: 'Tutup',
-        isError: true
-      });
-    })
-    .requestPasswordReset(email);   // ← Nama fungsi ini SUDAH BENAR di Code.gs
-}
-</script>
-  <style>
-  #previewModal {
-    z-index: 100020 !important;
-  }
-  .preview-modal-box {
-    max-width: 1200px !important;
-    width: 95vw !important;
-    height: 92vh !important;
-    max-height: 92vh !important;
-    padding: 16px 20px 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: hidden !important;
-    background: var(--surface-card, #1e293b) !important;
-    border: 1px solid var(--border, #334155) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 25px 65px rgba(0,0,0,0.5) !important;
-    animation: previewFadeIn 0.22s ease-out;
-    box-sizing: border-box !important;
-  }
-  @keyframes previewFadeIn {
-    0% { opacity: 0; transform: scale(0.97) translateY(8px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  .preview-modal-head {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-    margin-bottom: 12px !important;
-    padding-bottom: 12px !important;
-    border-bottom: 1px solid var(--border, rgba(255,255,255,0.1)) !important;
-    flex-shrink: 0 !important;
-  }
-  .preview-modal-body {
-    flex: 1 1 0 !important;
-    min-height: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
-    border-radius: 10px !important;
-    background: #0f172a !important;
-    position: relative !important;
-    box-sizing: border-box !important;
-  }
-  .preview-iframe {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    border: none !important;
-    border-radius: 10px !important;
-    background: #fff !important;
-    display: block !important;
-  }
-  .preview-image-wrap {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: auto !important;
-    background: #0f172a !important;
-    border-radius: 10px !important;
-    padding: 12px !important;
-    box-sizing: border-box !important;
-  }
-  @media (max-width: 768px) {
-    #previewModal {
-      padding: 6px !important;
-      align-items: center !important;
-    }
-    .preview-modal-box {
-      width: 100% !important;
-      max-width: 100% !important;
-      height: 96vh !important;
-      max-height: 96vh !important;
-      padding: 10px 12px !important;
-      border-radius: 14px !important;
-    }
-    .preview-modal-head {
-      margin-bottom: 8px !important;
-      padding-bottom: 8px !important;
-    }
-  }
-
-    /* ═══════════════════════════════════════════════════════════════ */
-    /* 🌟 MODERN HUMAN-CENTRIC & PROFESSIONAL UI OVERHAUL            */
-    /* ═══════════════════════════════════════════════════════════════ */
-    .app-header {
-      background: var(--bezel, #13275a) !important;
-      color: var(--bezel-text, #ffffff) !important;
-      padding: 10px 20px !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      transition: background 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease !important;
-    }
-
-    .user-badge {
-      background: rgba(255, 255, 255, 0.12) !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      border-radius: 999px !important;
-      padding: 5px 12px !important;
-      font-weight: 700 !important;
-      font-size: 12px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 6px !important;
-      color: #fff !important;
-    }
-    .user-badge .role-badge {
-      background: rgba(237, 46, 53, 0.85) !important;
-      color: #fff !important;
-      padding: 2px 7px !important;
-      border-radius: 6px !important;
-      font-size: 10px !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.4px !important;
-    }
-
-    .logout-btn {
-      background: rgba(239, 68, 68, 0.15) !important;
-      border: 1px solid rgba(239, 68, 68, 0.35) !important;
-      color: #fca5a5 !important;
-      border-radius: 999px !important;
-      padding: 5px 14px !important;
-      font-weight: 700 !important;
-      font-size: 12px !important;
-      cursor: pointer !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .logout-btn:hover {
-      background: #ef4444 !important;
-      color: #fff !important;
-      border-color: #ef4444 !important;
-      transform: translateY(-1px) !important;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
-    }
-
-    .theme-toggle {
-      background: rgba(255, 255, 255, 0.12) !important;
-      border: 1px solid rgba(255, 255, 255, 0.18) !important;
-      border-radius: 10px !important;
-      width: 36px !important;
-      height: 36px !important;
-      min-width: 36px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      color: #fff !important;
-      transition: all 0.2s ease !important;
-    }
-    .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.24) !important;
-      transform: translateY(-1.5px) !important;
-    }
-
-    /* 🧭 Sidebar Overhaul */
-    .app-sidebar {
-      background: var(--sidebar-bg) !important;
-      border-right: 1px solid var(--border) !important;
-      box-shadow: 2px 0 16px rgba(0, 0, 0, 0.02) !important;
-      padding: 16px 12px !important;
-      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease !important;
-    }
-
-    .sidebar-focus label {
-      font-size: 11px !important;
-      font-weight: 800 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      color: var(--ink-muted) !important;
-      margin-bottom: 6px !important;
-      display: block !important;
-    }
-
-    .sidebar-focus select {
-      border-radius: 12px !important;
-      border: 1px solid var(--border) !important;
-      background: var(--surface-subtle) !important;
-      font-weight: 700 !important;
-      font-size: 13px !important;
-      padding: 9px 12px !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
-    }
-
-    .sidebar-section-title {
-      font-size: 10.5px !important;
-      font-weight: 800 !important;
-      letter-spacing: 0.8px !important;
-      text-transform: uppercase !important;
-      color: var(--ink-faint) !important;
-      padding: 12px 10px 6px !important;
-    }
-
-    .sidebar-item {
-      width: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      gap: 11px !important;
-      font-family: var(--font-ui) !important;
-      font-size: 13.5px !important;
-      font-weight: 600 !important;
-      text-align: left !important;
-      padding: 10px 13px !important;
-      background: transparent !important;
-      color: var(--ink) !important;
-      border: 1px solid transparent !important;
-      border-radius: 12px !important;
-      cursor: pointer !important;
-      margin-bottom: 3px !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .sidebar-item:hover {
-      background: var(--surface-hover) !important;
-      color: var(--ink) !important;
-      transform: translateX(3px) !important;
-    }
-    .sidebar-item.active {
-      background: var(--sidebar-active) !important;
-      color: var(--sidebar-active-text) !important;
-      font-weight: 700 !important;
-      border-color: rgba(237, 46, 53, 0.22) !important;
-      box-shadow: 0 2px 10px rgba(237, 46, 53, 0.10) !important;
-    }
-
-    /* 📦 Modern Elevated Cards & Panels */
-    .panel-wrapper {
-      background: var(--surface-card) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 20px !important;
-      position: relative !important;
-      z-index: 1 !important;
-      padding: 28px !important;
-      box-shadow: var(--shadow-card) !important;
-      transition: all 0.25s ease !important;
-    }
-
-    h2.panel-title {
-      font-size: 20px !important;
-      margin: 0 0 6px !important;
-      color: var(--ink) !important;
-      font-weight: 800 !important;
-      letter-spacing: -0.3px !important;
-    }
-    p.hint {
-      font-size: 13px !important;
-      color: var(--ink-muted) !important;
-      line-height: 1.5 !important;
-    }
-
-    .card-section {
-      background: var(--surface-subtle) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 16px !important;
-      padding: 22px !important;
-      margin-bottom: 22px !important;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
-    }
-
-    /* 🔍 Filters & Form Inputs */
-    .filter-row {
-      display: flex !important;
-      gap: 10px !important;
-      flex-wrap: wrap !important;
-      margin-bottom: 18px !important;
-      align-items: center !important;
-    }
-
-    input[type="text"], input[type="email"], input[type="password"], input[type="file"], input[type="date"], input[type="number"], input[type="search"], select, textarea {
-      border-radius: 12px !important;
-      border: 1px solid var(--border) !important;
-      background: var(--surface-subtle) !important;
-      color: var(--ink) !important;
-      padding: 10px 14px !important;
-      font-size: 13.5px !important;
-      font-family: var(--font-ui) !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent) !important;
-      background: var(--surface-card) !important;
-      outline: none !important;
-      box-shadow: 0 0 0 3px rgba(237, 46, 53, 0.18) !important;
-    }
-
-    /* 🚀 Vibrant Primary & Secondary Buttons */
-    .btn-primary {
-      background: linear-gradient(135deg, #ed2e35, #c81e24) !important;
-      color: #fff !important;
-      border-radius: 12px !important;
-      font-weight: 700 !important;
-      padding: 10px 18px !important;
-      border: none !important;
-      box-shadow: 0 4px 14px rgba(237, 46, 53, 0.3) !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      cursor: pointer !important;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, #f2565c, #ed2e35) !important;
-      transform: translateY(-1.5px) !important;
-      box-shadow: 0 6px 20px rgba(237, 46, 53, 0.42) !important;
-    }
-
-    .btn-secondary {
-      background: var(--surface-subtle) !important;
-      color: var(--ink) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 12px !important;
-      font-weight: 600 !important;
-      padding: 9px 15px !important;
-      transition: all 0.2s ease !important;
-      cursor: pointer !important;
-    }
-    .btn-secondary:hover:not(:disabled) {
-      background: var(--surface-hover) !important;
-      transform: translateY(-1px) !important;
-    }
-
-    /* 📊 Table Rows Modernization */
-    table {
-      border-collapse: separate !important;
-      border-spacing: 0 !important;
-    }
-    table th {
-      background: var(--surface-subtle) !important;
-      color: var(--ink-muted) !important;
-      font-weight: 700 !important;
-      font-size: 11.5px !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      padding: 12px 14px !important;
-      border-bottom: 2px solid var(--border) !important;
-    }
-    table td {
-      padding: 13px 14px !important;
-      border-bottom: 1px solid var(--border) !important;
-      color: var(--ink) !important;
-      font-size: 13.5px !important;
-      transition: background 0.15s ease !important;
-    }
-    table tbody tr:hover td {
-      background: var(--surface-hover) !important;
-    }
-
-    .badge {
-      border-radius: 999px !important;
-      padding: 4px 10px !important;
-      font-size: 11px !important;
-      font-weight: 700 !important;
-      letter-spacing: 0.3px !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 5px !important;
-    }
-
-    /* 🎨 Preset Swatches di Modal Kustomisasi Header */
-    .color-preset-btn {
-      height: 38px;
-      border-radius: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .color-preset-btn:hover {
-      transform: scale(1.08);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      border-color: #fff;
-    }
-
-
-    /* 🔤 Petrosea-Style Nunito Typography — 100% Universal Coverage */
-    *, *::before, *::after {
-      font-family: var(--font-ui, "Nunito", sans-serif);
-    }
-    body, button, input, select, textarea, .btn, .sidebar-item, h1, h2, h3, h4, h5, h6, .panel-title, .brand-text, .user-badge, .badge, .card-section, .modal-box, table, th, td, p, span, label, div, a {
-      font-family: var(--font-ui, "Nunito", sans-serif) !important;
-    }
-    /* Monospace khusus kode dokumen, angka hash & hex color */
-    code, pre, kbd, samp, .font-mono, [data-mono="true"], .clock-time, #authClockTime, #headerClockTime, #headerCustomHex, .doc-code {
-      font-family: var(--font-mono, monospace) !important;
-    }
-
-
-    /* ═══════════════════════════════════════════════════════════════ */
-    /* 💎 DUOTONE MODERN SVG ICONS STYLING                           */
-    /* ═══════════════════════════════════════════════════════════════ */
-    .si-icon {
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 24px !important;
-      height: 24px !important;
-      min-width: 24px !important;
-      flex-shrink: 0 !important;
-      color: var(--ink-muted) !important;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .si-icon svg {
-      width: 19px !important;
-      height: 19px !important;
-      display: block !important;
-      transition: transform 0.25s ease, stroke 0.25s ease, color 0.25s ease !important;
-    }
-    .sidebar-item:hover .si-icon {
-      color: var(--accent, #ed2e35) !important;
-      transform: scale(1.12);
-    }
-    .sidebar-item.active .si-icon {
-      color: var(--sidebar-active-text, #ed2e35) !important;
-    }
-    .sidebar-item.active .si-icon svg [fill-opacity] {
-      fill-opacity: 0.28 !important;
-    }
-
-
-    /* ═══════════════════════════════════════════════════════════════ */
-    /* 🌟 STREAMLINED HEADER & ACCORDION SIDEBAR STYLING             */
-    /* ═══════════════════════════════════════════════════════════════ */
-    /* 👤 USER PROFILE TRIGGER & DROPDOWN */
-    .user-profile-trigger {
-      display: inline-flex !important;
-      align-items: center !important;
-      gap: 9px !important;
-      cursor: pointer !important;
-      user-select: none !important;
-      background: rgba(255, 255, 255, 0.12) !important;
-      border: 1px solid rgba(255, 255, 255, 0.22) !important;
-      padding: 5px 12px 5px 14px !important;
-      border-radius: 9999px !important;
-      color: #ffffff !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
-    }
-    .user-profile-trigger:hover {
-      background: rgba(255, 255, 255, 0.2) !important;
-      border-color: rgba(255, 255, 255, 0.38) !important;
-      transform: translateY(-1px) !important;
-    }
-    .user-profile-wrap.open .user-profile-trigger {
-      background: rgba(255, 255, 255, 0.26) !important;
-      border-color: rgba(255, 255, 255, 0.45) !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-    }
-    .user-badge {
-      display: inline-flex !important;
-      align-items: center !important;
-      font-size: 13px !important;
-      background: transparent !important;
-      padding: 0 !important;
-      border: none !important;
-      border-radius: 0 !important;
-      color: #ffffff !important;
-      font-weight: 600 !important;
-      letter-spacing: 0.2px !important;
-    }
-    .role-badge {
-      font-size: 10.5px !important;
-      background: #ed2e35 !important;
-      color: #ffffff !important;
-      padding: 2px 9px !important;
-      border-radius: 9999px !important;
-      font-weight: 700 !important;
-      margin-left: 8px !important;
-      letter-spacing: 0.3px !important;
-      text-transform: uppercase !important;
-      box-shadow: 0 2px 6px rgba(237, 46, 53, 0.35) !important;
-    }
-    .dropdown-caret {
-      color: rgba(255, 255, 255, 0.85) !important;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      flex-shrink: 0 !important;
-    }
-    .user-profile-wrap.open .dropdown-caret {
-      transform: rotate(180deg) !important;
-    }
-    .user-dropdown-menu {
-      position: absolute !important;
-      top: calc(100% + 10px) !important;
-      right: 0 !important;
-      width: 260px !important;
-      background: var(--surface-card, #131b2e) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 16px !important;
-      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45) !important;
-      padding: 8px !important;
-      z-index: 9999 !important;
-      display: none !important;
-      flex-direction: column !important;
-      pointer-events: none !important;
-      opacity: 0 !important;
-      transform: translateY(-8px) scale(0.96) !important;
-      transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .user-profile-wrap.open .user-dropdown-menu {
-      display: flex !important;
-      pointer-events: auto !important;
-      opacity: 1 !important;
-      transform: translateY(0) scale(1) !important;
-    }
-    .user-dropdown-header {
-      padding: 10px 12px 8px !important;
-    }
-    .udh-name {
-      font-size: 14px !important;
-      font-weight: 800 !important;
-      color: var(--ink) !important;
-      line-height: 1.25 !important;
-    }
-    .udh-role-wrap {
-      display: flex !important;
-      align-items: center !important;
-      gap: 7px !important;
-      margin-top: 5px !important;
-    }
-    .udh-role-badge {
-      display: inline-block !important;
-      font-size: 10px !important;
-      font-weight: 800 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.5px !important;
-      padding: 2px 8px !important;
-      border-radius: 9999px !important;
-      background: #ed2e35 !important;
-      color: #ffffff !important;
-    }
-    .udh-company {
-      font-size: 11px !important;
-      color: var(--ink-faint) !important;
-      font-weight: 600 !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-    }
-    .udh-divider {
-      height: 1px !important;
-      background: var(--border) !important;
-      margin: 6px 0 !important;
-    }
-    .user-dropdown-item {
-      display: flex !important;
-      align-items: center !important;
-      gap: 11px !important;
-      padding: 9px 12px !important;
-      border-radius: 10px !important;
-      border: none !important;
-      background: transparent !important;
-      color: var(--ink) !important;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      cursor: pointer !important;
-      text-align: left !important;
-      width: 100% !important;
-      transition: all 0.15s ease !important;
-    }
-    .user-dropdown-item:hover {
-      background: var(--surface-hover) !important;
-      color: var(--ink) !important;
-    }
-    .user-dropdown-item .udi-icon {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 20px !important;
-      height: 20px !important;
-      flex-shrink: 0 !important;
-    }
-    .user-dropdown-item.logout-danger {
-      color: #ef4444 !important;
-    }
-    .user-dropdown-item.logout-danger:hover {
-      background: rgba(239, 68, 68, 0.12) !important;
-      color: #dc2626 !important;
-    }
-
-    /* 📂 Accordion Sidebar Styling */
-    .sidebar-accordion-group {
-      margin-bottom: 7px !important;
-    }
-    .sidebar-accordion-header {
-      width: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      padding: 8px 12px !important;
-      background: var(--surface-subtle) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 12px !important;
-      color: var(--ink) !important;
-      font-size: 11.5px !important;
-      font-weight: 800 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.6px !important;
-      cursor: pointer !important;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .sidebar-accordion-header:hover {
-      background: var(--surface-hover) !important;
-      border-color: rgba(237, 46, 53, 0.3) !important;
-    }
-    .sidebar-accordion-group.open .sidebar-accordion-header {
-      background: var(--surface-hover) !important;
-      border-bottom-left-radius: 4px !important;
-      border-bottom-right-radius: 4px !important;
-    }
-    .sag-title {
-      display: flex !important;
-      align-items: center !important;
-      gap: 7px !important;
-      color: var(--ink) !important;
-    }
-    .sag-arrow {
-      color: var(--ink-faint) !important;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    .sidebar-accordion-group.open .sag-arrow {
-      transform: rotate(180deg) !important;
-    }
-    .sidebar-accordion-content {
-      display: none;
-      padding: 6px 0 6px 8px !important;
-      border-left: 2px solid var(--border) !important;
-      margin-left: 14px !important;
-      margin-top: 3px !important;
-    }
-    .sidebar-accordion-group.open .sidebar-accordion-content {
-      display: block !important;
-      animation: fadeInContent 0.2s ease !important;
-    }
-    @keyframes fadeInContent {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-</style>
-
-<script>
-  // ============================================================================
-  // Preview In-Browser (Instant Fast-Path + Drive Resolver + Image Support)
-  // ============================================================================
-  (function () {
-    'use strict';
-
-    var __previewCache = {};
-
-    function extractDriveIdClient_(url) {
-      if (!url) return '';
-      var str = String(url).trim();
-      var m = str.match(/\/(?:folders|d|file\/d)\/([a-zA-Z0-9_-]{15,})/);
-      if (m) return m[1];
-      m = str.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
-      if (m) return m[1];
-      return '';
-    }
-
-    function injectPreviewModal() {
-      if (document.getElementById('previewModal')) return;
-      var html =
-        '<div class="modal-overlay" id="previewModal">' +
-          '<div class="modal-box preview-modal-box">' +
-            '<div class="preview-modal-head">' +
-              '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">' +
-                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
-                '<h3 class="card-title" id="previewModalTitle" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px;">Preview Dokumen</h3>' +
-              '</div>' +
-              '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
-                '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive">↗ Tab Baru</a>' +
-                '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen">⬇ Unduh</a>' +
-                '<button type="button" class="btn-small" onclick="closePreviewModal()" title="Tutup preview"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
-              '</div>' +
-            '</div>' +
-            '<div class="preview-modal-body" id="previewModalBody">' +
-              '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>';
-      var tmp = document.createElement('div');
-      tmp.innerHTML = html;
-      document.body.appendChild(tmp.firstElementChild);
-    }
-
-    function renderPreviewBody_(body, res) {
-      if (!body) return;
-      var previewUrl = res.previewUrl || '';
-      var fileId = res.fileId || extractDriveIdClient_(res.downloadUrl || previewUrl);
-      var downloadUrl = res.directDownloadUrl || res.downloadUrl || (fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : '');
-      var viewUrl = res.downloadUrl || (fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : '');
-
-      if (!previewUrl && fileId) {
-        previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
-      }
-
-      var isImage = (res.mimeType && res.mimeType.indexOf('image/') === 0) ||
-                    /\.(jpe?g|png|gif|webp|bmp)$/i.test(res.fileName || '');
-
-      if (isImage && fileId) {
-        var imgSrc = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1600';
-        body.innerHTML =
-          '<div class="preview-image-wrap">' +
-            '<img src="' + imgSrc + '" alt="' + esc(res.fileName || 'Preview') + '" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; box-shadow:0 4px 20px rgba(0,0,0,0.5);" onerror="this.onerror=null; this.src=\'' + esc(downloadUrl) + '\';">' +
-          '</div>';
-        return;
-      }
-
-      if (previewUrl) {
-        body.innerHTML =
-          '<iframe class="preview-iframe" src="' + esc(previewUrl) + '" allow="autoplay" allowfullscreen></iframe>';
-      } else {
-        body.innerHTML =
-          '<div class="empty-state" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:#fff;">' +
-            '<div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.14"/><polyline points="14 2 14 8 20 8"/></svg></div>' +
-            '<div class="msg" style="font-size:13.5px;color:#cbd5e1;">' +
-              '<b style="color:#fff;">Pratinjau langsung tidak tersedia untuk format file ini.</b><br>' +
-              '<span style="font-size:12px;opacity:0.8;">Silakan buka langsung di Google Drive atau unduh berkas.</span><br><br>' +
-              '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
-                (viewUrl ? '<a href="' + esc(viewUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-small">↗ Buka di Google Drive</a>' : '') +
-                (downloadUrl ? '<a href="' + esc(downloadUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-small">⬇ Unduh File</a>' : '') +
-              '</div>' +
-            '</div>' +
-          '</div>';
-      }
-    }
-
-    window.prefetchPreview_ = function (fileUrl) {
-      if (!fileUrl || __previewCache[fileUrl]) return;
-      if (!sessionToken) return;
-      if (typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run
-          .withSuccessHandler(function (res) {
-            if (res && res.success) __previewCache[fileUrl] = res;
-          })
-          .withFailureHandler(function () {})
-          .getFilePreviewInfo(sessionToken, fileUrl);
-      }
-    };
-
-    window.previewFile_ = function (fileUrl, fileName) {
-      if (!fileUrl) {
-        if (typeof showToast === 'function') showToast('URL file dokumen tidak tersedia.', 'error');
-        return;
-      }
-
-      injectPreviewModal();
-
-      var modal = document.getElementById('previewModal');
-      var title = document.getElementById('previewModalTitle');
-      var body  = document.getElementById('previewModalBody');
-      var dlBtn = document.getElementById('previewDownloadBtn');
-      var tabBtn = document.getElementById('previewNewTabBtn');
-
-      var fileId = extractDriveIdClient_(fileUrl);
-      var directDl = fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : fileUrl;
-      var newTabUrl = fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : fileUrl;
-
-      if (title) title.textContent = fileName || 'Preview Dokumen';
-      if (dlBtn) dlBtn.href = directDl;
-      if (tabBtn) tabBtn.href = newTabUrl;
-      if (modal) modal.classList.add('show');
-
-      // 1. FAST PATH: Langsung muat pratinjau seketika jika ada Google Drive ID
-      if (fileId) {
-        renderPreviewBody_(body, {
-          mode: 'native',
-          previewUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
-          fileName: fileName,
-          fileId: fileId,
-          downloadUrl: fileUrl,
-          directDownloadUrl: directDl
-        });
-      } else if (__previewCache[fileUrl]) {
-        renderPreviewBody_(body, __previewCache[fileUrl]);
-        return;
-      } else {
-        body.innerHTML = '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat preview dokumen...</div>';
-      }
-
-      // 2. BACKGROUND PERMISSION SYNC: Hubungi server untuk memastikan file sharing ANYONE_WITH_LINK aktif
-      if (sessionToken && typeof google !== 'undefined' && google.script && google.script.run) {
-        google.script.run
-          .withSuccessHandler(function (res) {
-            if (res && res.success) {
-              __previewCache[fileUrl] = res;
-              if (title && res.fileName) title.textContent = res.fileName;
-              if (dlBtn && (res.directDownloadUrl || res.downloadUrl)) dlBtn.href = res.directDownloadUrl || res.downloadUrl;
-              if (tabBtn && res.downloadUrl) tabBtn.href = res.downloadUrl;
-              if (!fileId) renderPreviewBody_(body, res);
-            }
-          })
-          .withFailureHandler(function (err) {
-            console.warn('[Preview] Background check warning:', err);
-          })
-          .getFilePreviewInfo(sessionToken, fileUrl);
-      }
-    };
-
-    window.closePreviewModal = function () {
-      var modal = document.getElementById('previewModal');
-      if (!modal) return;
-      modal.classList.remove('show');
-      var body = document.getElementById('previewModalBody');
-      if (body) body.innerHTML = '';
-    };
-
-    document.addEventListener('click', function (e) {
-      var modal = document.getElementById('previewModal');
-      if (modal && modal.classList.contains('show') && e.target === modal) closePreviewModal();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') {
-        var modal = document.getElementById('previewModal');
-        if (modal && modal.classList.contains('show')) closePreviewModal();
-      }
-    });
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', injectPreviewModal);
-    } else {
-      injectPreviewModal();
-    }
-  })();
-</script>
-  <!--
-  CalibrationLoader.html — v2 (auto-inject semua)
--->
-<script>
-(function () {
-  if (window.__calLoaderInjected) return;
-  window.__calLoaderInjected = true;
-
-  function injectSidebar() {
-    if (document.getElementById('tabBtnCalibration')) return;
-    var sections = document.querySelectorAll('.app-sidebar .sidebar-section');
-    if (!sections.length) return;
-    var target = null;
-    sections.forEach(function (sec) {
-      var title = sec.querySelector('.sidebar-section-title');
-      if (title && /review|monitoring/i.test(title.textContent)) target = sec;
-    });
-    if (!target) target = sections[0];
-
-    var btn = document.createElement('button');
-    btn.className = 'sidebar-item';
-    btn.id = 'tabBtnCalibration';
-    btn.setAttribute('onclick', "switchTab('calibration')");
-    btn.innerHTML = '<span class="si-icon">📏</span><span class="si-label">Kalibrasi Alat</span>';
-    target.appendChild(btn);
-  }
-
-  function injectPanel() {
-    if (document.getElementById('panelCalibration')) return;
-    var wrapper = document.getElementById('panelWrapper');
-    if (!wrapper) return;
-
-    var div = document.createElement('div');
-    div.className = 'panel';
-    div.id = 'panelCalibration';
-    div.innerHTML = [
-      '<h2 class="panel-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;color:var(--primary);"><path d="M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-4.6-4.6a1 1 0 0 1 0-1.4L15.3 2.7a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4z" fill="currentColor" fill-opacity="0.16"/><line x1="14" y1="4" x2="16" y2="6"/><line x1="11" y1="7" x2="14" y2="10"/><line x1="8" y1="10" x2="10" y2="12"/><line x1="5" y1="13" x2="8" y2="16"/></svg>Kalibrasi & Alat Ukur</h2>',
-      '<p class="hint" style="margin:-10px 0 16px;">Monitoring status kalibrasi alat ukur per disiplin.</p>',
-      '<div class="filter-row" style="margin-bottom:16px; display:flex; flex-wrap:wrap; gap:8px;">',
-      '  <button class="btn btn-secondary" onclick="loadCalibrationData()">↻ Muat Ulang</button>',
-      '  <button class="btn btn-primary" onclick="openCalibrationForm()">+ Update Kalibrasi</button>',
-      '  <button class="btn btn-primary" onclick="openCalibrationAiScanner()" style="background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#fff; border:none; box-shadow:0 2px 8px rgba(79,70,229,0.35); font-weight:600;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision OCR)</button>',
-      '  <button class="btn btn-secondary" onclick="openCalibrationForm(); setTimeout(function(){ openQrScanner(\'calToolId\', \'Scan Label Alat\'); }, 300);" title="Scan Barcode / QR Label Alat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Scan Label Alat</button>',
-      '</div>',
-      '<div class="card-section" id="calKpiWrap">',
-      '  <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>',
-      '</div>',
-      '<div id="calTableContent">',
-      '  <div class="loading-row"><span class="spinner dark"></span>Memuat data...</div>',
-      '</div>',
-      '<div class="modal-overlay" id="calibrationModal">',
-      '  <div class="modal-box" style="max-width:560px;">',
-      '    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">',
-      '      <h3 class="card-title" style="margin:0;">Update Data Kalibrasi</h3>',
-      '      <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()" style="padding:4px 10px; font-size:16px; border:none; cursor:pointer;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>',
-      '    </div>',
-      '    <div style="background:linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%); border:1.5px dashed #6366f1; border-radius:10px; padding:12px 14px; margin-bottom:16px; text-align:center;">',
-      '      <div style="font-size:13px; font-weight:700; color:#4338ca; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision AI OCR)</div>',
-      '      <div style="font-size:11px; color:#4b5563; margin-bottom:10px; line-height:1.4;">Upload foto sertifikat kalibrasi atau PDF, AI membaca & mengisikan seluruh kolom form otomatis.</div>',
-      '      <button type="button" class="btn btn-primary btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="background:#4f46e5; border-radius:6px; font-weight:600; font-size:12px; padding:7px 16px; box-shadow:0 2px 8px rgba(79,70,229,0.3); cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="13" r="4"/></svg>Upload / Foto Sertifikat</button>',
-      '      <input type="file" id="calCertFileInput" accept="image/*,application/pdf" capture="environment" style="display:none;" onchange="handleAiCertScan(this)">',
-      '    </div>',
-      '    <form id="calibrationForm" onsubmit="saveCalibrationData(event)">',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Tool ID *</label><div style="display:flex;gap:6px;"><input type="text" id="calToolId" required style="flex:1;"><button type="button" class="btn-small" onclick="openQrScanner(\'calToolId\', \'Scan Tool ID Kalibrasi\')" title="Scan QR / Barcode Alat" style="white-space:nowrap;padding:4px 8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Scan</button></div></div>',
-      '        <div class="form-group"><label>Nama Alat *</label><input type="text" id="calToolName" required></div>',
-      '      </div>',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Disiplin *</label><input type="text" id="calDiscipline" required></div>',
-      '        <div class="form-group"><label>Status *</label>',
-      '          <select id="calStatus" required>',
-      '            <option value="Valid">Valid</option>',
-      '            <option value="Overdue">Overdue</option>',
-      '            <option value="Dalam Proses">Dalam Proses</option>',
-      '          </select>',
-      '        </div>',
-      '      </div>',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Tgl Kalibrasi *</label><input type="date" id="calDate" required></div>',
-      '        <div class="form-group"><label>Tgl Berikutnya *</label><input type="date" id="calNextDate" required></div>',
-      '      </div>',
-      '      <div class="form-row single">',
-      '        <div class="form-group"><label>PIC *</label><input type="text" id="calPic" required></div>',
-      '      </div>',
-      '      <div class="modal-actions">',
-      '        <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()">Batal</button>',
-      '        <button type="submit" class="btn btn-primary" id="calSubmitBtn">Simpan</button>',
-      '      </div>',
-      '    </form>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
-    wrapper.appendChild(div);
-  }
-
-  function hookSwitchTab() {
-    if (typeof window.switchTab !== 'function') return;
-    if (window.switchTab.__calHooked) return;
-    var orig = window.switchTab;
-    var wrapped = function (name) {
-      orig.apply(this, arguments);
-      if (name === 'calibration') {
-        setTimeout(function () {
-          if (typeof loadCalibrationData === 'function') loadCalibrationData();
-        }, 30);
-      }
-    };
-    wrapped.__calHooked = true;
-    window.switchTab = wrapped;
-  }
-
-  function escHtml(s) {
-    if (typeof esc === 'function') return esc(s);
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  var _calLoading = false;
-  window.loadCalibrationData = function () {
-    if (_calLoading) return;
-    _calLoading = true;
-
-    var kpiWrap = document.getElementById('calKpiWrap');
-    if (kpiWrap) kpiWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat...</div>';
-
-    google.script.run
-      .withSuccessHandler(function (res) {
-        if (!kpiWrap) return;
-        if (!res || !res.success) { kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">' + escHtml((res && res.error) || 'Gagal memuat ringkasan.') + '</div></div>'; return; }
-        kpiWrap.innerHTML =
-          '<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">' +
-            '<div class="stat-card"><div class="stat-value">' + (res.total || 0)   + '</div><div class="stat-label">Total Alat</div></div>' +
-            '<div class="stat-card"><div class="stat-value">' + (res.valid || 0)   + '</div><div class="stat-label">Valid</div></div>' +
-            '<div class="stat-card warn"><div class="stat-value">' + (res.overdue || 0) + '</div><div class="stat-label">Jatuh Tempo</div></div>' +
-          '</div>';
-      })
-      .withFailureHandler(function (err) {
-        if (kpiWrap) kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">Gagal: ' + escHtml(err && err.message ? err.message : String(err)) + '</div></div>';
-      })
-      .getCalibrationSummary();
-
-    var tblWrap = document.getElementById('calTableContent');
-    if (tblWrap) tblWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat data...</div>';
-
-    google.script.run
-      .withSuccessHandler(function (res) {
-        _calLoading = false;
-        if (!tblWrap) return;
-        if (!res || !res.success) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">' + escHtml((res && res.error) || 'Gagal memuat data alat.') + '</div></div>'; return; }
-        var data = res.data;
-        if (!data || data.length < 2) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Belum ada data alat.</div></div>'; return; }
-        var rows = '';
-        for (var i = 1; i < data.length; i++) {
-          var r = data[i];
-          var statusStr = String(r[5] || '').trim();
-          var statusCls = statusStr === 'Valid' ? 'badge-approved' : (statusStr === 'Overdue' ? 'badge-rejected' : 'badge-pending');
-          rows += '<tr>' +
-            '<td class="doc-code">' + escHtml(r[0] || '-') + '</td>' +
-            '<td>' + escHtml(r[1] || '-') + '</td>' +
-            '<td>' + escHtml(r[2] || '-') + '</td>' +
-            '<td>' + escHtml(r[3] || '-') + '</td>' +
-            '<td>' + escHtml(r[4] || '-') + '</td>' +
-            '<td><span class="badge ' + statusCls + '">' + escHtml(statusStr || '-') + '</span></td>' +
-            '<td>' + escHtml(r[6] || '-') + '</td>' +
-            '</tr>';
-        }
-        tblWrap.innerHTML = '<div class="table-scroll"><table><thead><tr>' +
-          '<th>Tool ID</th><th>Nama Alat</th><th>Disiplin</th>' +
-          '<th>Tgl Kalibrasi</th><th>Tgl Berikutnya</th><th>Status</th><th>PIC</th>' +
-          '</tr></thead><tbody>' + rows + '</tbody></table></div>';
-      })
-      .withFailureHandler(function (err) {
-        _calLoading = false;
-        if (tblWrap) tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Gagal memuat data: ' + escHtml(err && err.message ? err.message : String(err)) + '</div></div>';
-      })
-      .getCalibrationTools();
-  };
-
-  window.openCalibrationForm = function () {
-    var m = document.getElementById('calibrationModal');
-    if (m) m.classList.add('show');
-    var f = document.getElementById('calibrationForm');
-    if (f) f.reset();
-  };
-
-  window.closeCalibrationForm = function () {
-    var m = document.getElementById('calibrationModal');
-    if (m) m.classList.remove('show');
-  };
-
-  window.openCalibrationAiScanner = function() {
-    window.openCalibrationForm();
-    setTimeout(function() {
-      window.triggerAiCertScan();
-    }, 280);
-  };
-
-  window.triggerAiCertScan = function () {
-    var inp = document.getElementById('calCertFileInput');
-    if (inp) inp.click();
-  };
-
-  function compressImageForAi_(file, maxDim, quality, cb) {
-    if (!file || !file.type || !file.type.match(/^image\//)) {
-      var reader = new FileReader();
-      reader.onload = function(e) { cb(e.target.result, file.type || 'application/pdf'); };
-      reader.readAsDataURL(file);
-      return;
-    }
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var img = new Image();
-      img.onload = function() {
-        var w = img.width, h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) {
-            h = Math.round((h * maxDim) / w);
-            w = maxDim;
-          } else {
-            w = Math.round((w * maxDim) / h);
-            h = maxDim;
-          }
-        }
-        var canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, w, h);
-        var dataUrl = canvas.toDataURL('image/jpeg', quality || 0.82);
-        cb(dataUrl, 'image/jpeg');
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-
-  window.handleAiCertScan = function (input) {
-    if (!input.files || !input.files[0]) return;
-    var file = input.files[0];
-    var btn = document.getElementById('btnAiCertScan');
-    var oldText = btn ? btn.innerHTML : '';
-    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Menganalisis...'; }
-    if (typeof showToast === 'function') showToast('Membaca sertifikat via Vision AI OCR...', 'info');
-
-    compressImageForAi_(file, 1280, 0.82, function(base64Data, mimeType) {
-      var token = window.sessionToken || '';
-
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
-          if (res && res.success && res.data) {
-            var d = res.data;
-            if (d.toolId && document.getElementById('calToolId')) document.getElementById('calToolId').value = d.toolId;
-            if (d.toolName && document.getElementById('calToolName')) document.getElementById('calToolName').value = d.toolName;
-            if (d.discipline && document.getElementById('calDiscipline')) document.getElementById('calDiscipline').value = d.discipline;
-            if (d.calDate && document.getElementById('calDate')) document.getElementById('calDate').value = d.calDate;
-            if (d.nextCalDate && document.getElementById('calNextDate')) document.getElementById('calNextDate').value = d.nextCalDate;
-            if (d.status && document.getElementById('calStatus')) document.getElementById('calStatus').value = d.status;
-            if (d.pic && document.getElementById('calPic')) document.getElementById('calPic').value = d.pic;
-            if (typeof showToast === 'function') showToast('✅ Data sertifikat berhasil diisi otomatis oleh AI!', 'success');
-          } else {
-            if (typeof showToast === 'function') showToast('⚠️ ' + ((res && res.message) || 'Gagal membaca sertifikat'), 'warning');
-          }
-        })
-        .withFailureHandler(function (err) {
-          if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
-          if (typeof showToast === 'function') showToast('Error Vision AI: ' + err.message, 'error');
-        })
-        .aiScanCertificate(token, base64Data, mimeType);
-    });
-
-    input.value = '';
-  };
-
-  window.saveCalibrationData = function (e) {
-    if (e) e.preventDefault();
-    var btn = document.getElementById('calSubmitBtn');
-    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Menyimpan...'; }
-    var payload = {
-      toolId:      document.getElementById('calToolId').value.trim(),
-      toolName:    document.getElementById('calToolName').value.trim(),
-      discipline:  document.getElementById('calDiscipline').value.trim(),
-      calDate:     document.getElementById('calDate').value,
-      nextCalDate: document.getElementById('calNextDate').value,
-      status:      document.getElementById('calStatus').value,
-      pic:         document.getElementById('calPic').value.trim()
-    };
-    google.script.run.withSuccessHandler(function (res) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; }
-      if (typeof showToast === 'function')
-        showToast(res.message || (res.success ? 'Berhasil' : 'Gagal'), res.success ? 'success' : 'error');
-      if (res.success) { closeCalibrationForm(); loadCalibrationData(); }
-    }).withFailureHandler(function (err) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; }
-      if (typeof showToast === 'function') showToast('Gagal: ' + err.message, 'error');
-    }).submitCalibration(payload);
-  };
-
-  function boot() {
-    injectSidebar();
-    injectPanel();
-    hookSwitchTab();
-    var tries = 0;
-    var interval = setInterval(function () {
-      hookSwitchTab();
-      if (window.switchTab && window.switchTab.__calHooked) { clearInterval(interval); return; }
-      if (++tries > 20) clearInterval(interval);
-    }, 300);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 50); });
-  } else {
-    setTimeout(boot, 50);
-  }
-})();
-</script>
+  <?!= include('State') ?>
+  <?!= include('Constants') ?>
+  <?!= include('Utils') ?>
+  <?!= include('Api') ?>
+  <?!= include('Auth') ?>
+  <?!= include('Preview') ?>
+  <?!= include('CalibrationLoader') ?>
 
   <script>
     // State, Constants, Utils, dan Api sudah di-include di atas.
@@ -8101,15 +6676,7 @@ function enterApp(isFreshLogin) {
 
       // Default landing page adalah DAFTAR DOKUMEN (bukan form kosong)
       const defaultTab = 'list';
-      let initialTab = defaultTab;
-      const hash = (window.location.hash || '').replace('#', '').toLowerCase();
-      if (hash && document.getElementById('panel' + capitalize(hash))) {
-        initialTab = hash;
-      }
-      switchTab(initialTab);
-      if (hash === 'scanner' && typeof window.openQrScanner === 'function') {
-        setTimeout(window.openQrScanner, 400);
-      }
+      switchTab(defaultTab);
       loadDocumentList();
       loadDashboard();
       if (data.canApprove) loadApprovals();
@@ -8290,6 +6857,90 @@ function openCalibrationForm() {
 function closeCalibrationForm() {
   var m = document.getElementById('calibrationModal');
   if (m) m.classList.remove('show');
+}
+
+function openCalibrationAiScanner() {
+  openCalibrationForm();
+  setTimeout(function() {
+    triggerAiCertScan();
+  }, 280);
+}
+
+function triggerAiCertScan() {
+  var inp = document.getElementById('calCertFileInput');
+  if (inp) inp.click();
+}
+
+function compressImageForAi_(file, maxDim, quality, cb) {
+  if (!file || !file.type || !file.type.match(/^image\//)) {
+    var reader = new FileReader();
+    reader.onload = function(e) { cb(e.target.result, file.type || 'application/pdf'); };
+    reader.readAsDataURL(file);
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var w = img.width, h = img.height;
+      if (w > maxDim || h > maxDim) {
+        if (w > h) {
+          h = Math.round((h * maxDim) / w);
+          w = maxDim;
+        } else {
+          w = Math.round((w * maxDim) / h);
+          h = maxDim;
+        }
+      }
+      var canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      var dataUrl = canvas.toDataURL('image/jpeg', quality || 0.82);
+      cb(dataUrl, 'image/jpeg');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleAiCertScan(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var btn = document.getElementById('btnAiCertScan');
+  var oldText = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Menganalisis...'; }
+  if (typeof showToast === 'function') showToast('Membaca sertifikat via Vision AI OCR...', 'info');
+
+  compressImageForAi_(file, 1280, 0.82, function(base64Data, mimeType) {
+    var token = window.sessionToken || '';
+
+    google.script.run
+      .withSuccessHandler(function (res) {
+        if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
+        if (res && res.success && res.data) {
+          var d = res.data;
+          if (d.toolId && document.getElementById('calToolId')) document.getElementById('calToolId').value = d.toolId;
+          if (d.toolName && document.getElementById('calToolName')) document.getElementById('calToolName').value = d.toolName;
+          if (d.discipline && document.getElementById('calDiscipline')) document.getElementById('calDiscipline').value = d.discipline;
+          if (d.calDate && document.getElementById('calDate')) document.getElementById('calDate').value = d.calDate;
+          if (d.nextCalDate && document.getElementById('calNextDate')) document.getElementById('calNextDate').value = d.nextCalDate;
+          if (d.status && document.getElementById('calStatus')) document.getElementById('calStatus').value = d.status;
+          if (d.pic && document.getElementById('calPic')) document.getElementById('calPic').value = d.pic;
+          if (typeof showToast === 'function') showToast('✅ Data sertifikat berhasil diisi otomatis oleh AI!', 'success');
+        } else {
+          if (typeof showToast === 'function') showToast('⚠️ ' + ((res && res.message) || 'Gagal membaca sertifikat'), 'warning');
+        }
+      })
+      .withFailureHandler(function (err) {
+        if (btn) { btn.disabled = false; btn.innerHTML = oldText; }
+        if (typeof showToast === 'function') showToast('Error Vision AI: ' + err.message, 'error');
+      })
+      .aiScanCertificate(token, base64Data, mimeType);
+  });
+
+  input.value = '';
 }
 
 function saveCalibrationData(e) {
@@ -9238,39 +7889,17 @@ function fileLinksHtml(d) {
       document.getElementById('srFilterTo').value = toDateInputValue_(to);
       loadSiteReportEntries();
     }
-    let srSelectedPhotos_ = [];
-
-    function onSiteReportCameraChosen(input) {
-      if (input.files && input.files.length) {
-        srSelectedPhotos_.push(input.files[0]);
-        updateSrPhotoDisplay();
-        input.value = '';
-      }
-    }
-
     function onSiteReportPhotoChosen() {
       const files = document.getElementById('srPhotoInput').files;
-      if (files && files.length) {
-        Array.from(files).forEach(f => srSelectedPhotos_.push(f));
-        updateSrPhotoDisplay();
-      }
+      document.getElementById('srPhotoNameDisplay').textContent = files.length ? Array.from(files).map(f => f.name).join(', ') : '';
     }
-
-    function updateSrPhotoDisplay() {
-      const disp = document.getElementById('srPhotoNameDisplay');
-      if (disp) {
-        disp.textContent = srSelectedPhotos_.length ? (srSelectedPhotos_.length + ' foto siap diunggah: ' + srSelectedPhotos_.map(f => f.name).join(', ')) : '';
-      }
-    }
-
     function handleSiteReportSubmit(e) {
       e.preventDefault();
-      const filesFromInput = document.getElementById('srPhotoInput').files;
-      const files = srSelectedPhotos_.length ? srSelectedPhotos_ : Array.from(filesFromInput);
-      if (files.length > 6) { showToast('Maksimal 6 foto.', 'error'); return; }
+      const files = document.getElementById('srPhotoInput').files;
+      if (files.length > 6) { showToast('Maks 6 foto.', 'error'); return; }
       const btn = document.getElementById('srSubmitBtn');
       btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>...';
-      filesToPayload(files, true).then(function (po) {
+      filesToPayload(files).then(function (po) {
         const payload = {
           projectCode: document.getElementById('srProjectSelect').value,
           reportDate: document.getElementById('srDateInput').value,
@@ -9285,14 +7914,7 @@ function fileLinksHtml(d) {
         google.script.run.withSuccessHandler(function (res) {
           btn.disabled = false; btn.textContent = 'Simpan';
           showToast(res.message, res.success ? 'success' : 'error');
-          if (res.success) {
-            document.getElementById('siteReportForm').reset();
-            srSelectedPhotos_ = [];
-            updateSrPhotoDisplay();
-            document.getElementById('srDateInput').value = toDateInputValue_(new Date());
-            if (globalProjectFilter) document.getElementById('srProjectSelect').value = globalProjectFilter;
-            loadSiteReportEntries();
-          }
+          if (res.success) { document.getElementById('siteReportForm').reset(); document.getElementById('srDateInput').value = toDateInputValue_(new Date()); document.getElementById('srPhotoNameDisplay').textContent = ''; if (globalProjectFilter) document.getElementById('srProjectSelect').value = globalProjectFilter; loadSiteReportEntries(); }
         }).withFailureHandler(function (err) { btn.disabled = false; btn.textContent = 'Simpan'; showToast('Gagal: ' + err.message, 'error'); }).submitSiteReportEntry(sessionToken, payload);
       }).catch(function (err) { btn.disabled = false; btn.textContent = 'Simpan'; showToast('Gagal: ' + err.message, 'error'); });
     }
@@ -9382,10 +8004,76 @@ function fileLinksHtml(d) {
       const m = { 'Pass': 'nfi-pass', 'Fail': 'nfi-fail', 'Continue': 'nfi-continue', 'Pending': 'nfi-pending', 'N/A': 'nfi-na' };
       return '<span class="nfi-badge ' + (m[r] || 'nfi-na') + '">' + esc(r) + '</span>';
     }
-    function nfiStatusBadge(s) {
+    function getNfiAgingDays_(n) {
+      if (!n) return 0;
+      var dStr = n.inspectionDate || n.issuedDate || n.reportSubmissionDate;
+      if (!dStr) return 0;
+      var d = new Date(dStr);
+      if (isNaN(d.getTime())) return 0;
+      var diffTime = Date.now() - d.getTime();
+      var days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      return Math.max(0, days);
+    }
+
+    function nfiStatusBadge(s, n) {
       if (!s) return '<span class="hint" style="margin:0;">—</span>';
       const m = { 'Open': 'nfi-status-open', 'In Progress': 'nfi-status-inprogress', 'Closed': 'nfi-status-closed', 'Cancelled': 'nfi-status-cancelled' };
-      return '<span class="nfi-badge ' + (m[s] || 'nfi-na') + '">' + esc(s) + '</span>';
+      var html = '<span class="nfi-badge ' + (m[s] || 'nfi-na') + '">' + esc(s) + '</span>';
+      if (n && (s === 'Open' || s === 'In Progress')) {
+        var days = getNfiAgingDays_(n);
+        if (days >= 14) {
+          html += ' <span class="sla-badge sla-overdue" title="Dokumen pending lebih dari 14 hari (' + days + ' hari)">🚨 Overdue ' + days + 'h</span>';
+        } else if (days >= 7) {
+          html += ' <span class="sla-badge sla-warning" title="Dokumen pending lebih dari 7 hari (' + days + ' hari)">⚠️ ' + days + 'h</span>';
+        }
+      }
+      return html;
+    }
+
+    function renderNfiMobileCard_(n) {
+      var docUrl = n.attachmentUrl || n.link || '';
+      var statusHtml = nfiStatusBadge(n.status, n);
+      var resultHtml = nfiResultBadge(n.result);
+      var days = getNfiAgingDays_(n);
+      var overdueCls = (days >= 14 && (n.status === 'Open' || n.status === 'In Progress')) ? ' card-overdue' : ((days >= 7 && (n.status === 'Open' || n.status === 'In Progress')) ? ' card-warning' : '');
+
+      var card = '<div class="inspection-card' + overdueCls + '">' +
+        '<div class="ic-header">' +
+          '<div class="ic-title-box">' +
+            '<span class="ic-num">#' + esc(n.no || '') + '</span>' +
+            '<strong class="ic-nonfi">' + esc(n.noNfi || '—') + '</strong>' +
+          '</div>' +
+          '<div class="ic-badges">' + resultHtml + ' ' + statusHtml + '</div>' +
+        '</div>' +
+        '<div class="ic-body">' +
+          '<div class="ic-row"><span class="ic-label">Proyek:</span><span class="ic-val"><b>' + esc(n.projectName || n.projectCode || '—') + '</b></span></div>' +
+          '<div class="ic-row"><span class="ic-label">Subjek:</span><span class="ic-val">' + esc(n.subjectDescription || '—') + '</span></div>' +
+          '<div class="ic-row"><span class="ic-label">Disiplin / Tipe:</span><span class="ic-val">' + esc(n.discipline || '—') + ' • ' + esc(n.typeOfInspection || '—') + '</span></div>' +
+          '<div class="ic-row"><span class="ic-label">Area / Lokasi:</span><span class="ic-val">' + esc(n.area || '—') + ' (' + esc(n.location || '—') + ')</span></div>' +
+          '<div class="ic-row"><span class="ic-label">Tgl Inspeksi:</span><span class="ic-val">' + fmtDateShort_(n.inspectionDate) + ' (PIC: ' + esc(n.picAei || '—') + ')</span></div>' +
+        '</div>' +
+        '<div class="ic-actions">';
+
+      if (docUrl) {
+        card += '<button type="button" class="btn-ic-primary" onclick="previewFile_(\'' + escapeJs_(docUrl) + '\',\'Dokumen NFI ' + escapeJs_(n.noNfi || '') + '\')">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+          '<span>Buka Berkas PDF</span>' +
+        '</button>';
+        card += '<button type="button" class="btn-ic-secondary" onclick="copyDocLink_(\'' + escapeJs_(docUrl) + '\',\'' + escapeJs_(n.noNfi || 'NFI') + '\')" title="Salin Tautan">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+          '<span>Salin</span>' +
+        '</button>';
+      } else {
+        card += '<span class="ic-no-doc">Tautan berkas belum tersedia</span>';
+      }
+
+      if (n.canManage) {
+        card += '<button type="button" class="btn-ic-edit" onclick="editNfiEntry(\'' + n.nfiId + '\')" title="Edit Data">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>' +
+        '</button>';
+      }
+      card += '</div></div>';
+      return card;
     }
 
     function renderNFILog(list) {
@@ -9398,8 +8086,8 @@ function fileLinksHtml(d) {
       if (!list.length) { content.innerHTML = '<div class="empty-state"><div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada entri NFI.</div></div>'; return; }
       const colVis = getNfiColVisibility_();
       const cols = [];
-      cols.push({ k: 'no', l: 'No.', a: true, r: n => '<td class="nfi-row-num">' + esc(n.no || '') + '</td>' });
-      cols.push({ k: 'nonfi', l: 'No. NFI', a: true, r: n => '<td class="nfi-no-nfi">' + esc(n.noNfi || '—') + '<br><span class="hint" style="margin:0;font-size:10.5px;">' + esc(n.projectName || n.projectCode || '') + '</span></td>' });
+      cols.push({ k: 'no', l: 'No.', a: true, r: n => '<td class="nfi-row-num sticky-col-no">' + esc(n.no || '') + '</td>' });
+      cols.push({ k: 'nonfi', l: 'No. NFI', a: true, r: n => '<td class="nfi-no-nfi sticky-col-nfi">' + esc(n.noNfi || '—') + '<br><span class="hint" style="margin:0;font-size:10.5px;">' + esc(n.projectName || n.projectCode || '') + '</span></td>' });
       cols.push({ k: 'subject', l: 'Subject Description', a: true, r: n => '<td class="nfi-sub-cell"><span class="nfi-subject">' + esc(n.subjectDescription || '—') + '</span></td>' });
       cols.push({ k: 'area', l: 'Area', r: n => '<td style="white-space:normal;min-width:120px;">' + esc(n.area || '—') + '</td>' });
       cols.push({ k: 'type', l: 'Type of Inspection', r: n => '<td style="white-space:normal;min-width:130px;">' + esc(n.typeOfInspection || '—') + '</td>' });
@@ -9412,20 +8100,32 @@ function fileLinksHtml(d) {
       cols.push({ k: 'itp', l: 'ITP No.', r: n => '<td>' + esc(n.itpNo || '—') + '</td>' });
       cols.push({ k: 'repsub', l: 'Report Submission Date', r: n => '<td>' + fmtDateShort_(n.reportSubmissionDate) + '</td>' });
       cols.push({ k: 'compdate', l: 'Complete Date', r: n => '<td>' + fmtDateShort_(n.completeDate) + '</td>' });
-      cols.push({ k: 'status', l: 'Status', a: true, r: n => '<td>' + nfiStatusBadge(n.status) + '</td>' });
+      cols.push({ k: 'status', l: 'Status', a: true, r: n => '<td>' + nfiStatusBadge(n.status, n) + '</td>' });
       cols.push({ k: 'pic', l: 'PIC AEI', r: n => '<td>' + esc(n.picAei || '—') + '</td>' });
       cols.push({ k: 'remark', l: 'Remark', r: n => '<td style="max-width:200px;white-space:normal;">' + esc(n.remark || '—') + '</td>' });
-      cols.push({ k: 'actions', l: 'Aksi', a: true, r: n => {
+      cols.push({ k: 'actions', l: 'Dokumen & Aksi', a: true, r: n => {
         let a = '';
-        if (n.attachmentUrl) a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(n.attachmentUrl) + '\',\'Lampiran NFI ' + escapeJs_(n.noNfi || '') + '\')" title="Preview Lampiran NFI"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="12" r="3"/></svg></button> <a href="' + esc(n.attachmentUrl) + '" target="_blank" class="btn-small" title="Buka lampiran di tab baru"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></a> ';
-        if (n.canManage) a += '<button class="btn-small" onclick="editNfiEntry(\'' + n.nfiId + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" fill="currentColor" fill-opacity="0.16"/></svg></button> <button class="btn-small danger" onclick="doDeleteNfi(\'' + n.nfiId + '\')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;color:#ef4444;"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" fill="currentColor" fill-opacity="0.16"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>';
+        var docUrl = n.attachmentUrl || n.link || '';
+        if (docUrl) {
+          a += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(docUrl) + '\',\'Dokumen NFI ' + escapeJs_(n.noNfi || '') + '\')" style="padding:4px 9px; font-size:11px; font-weight:600; border-radius:6px; background:var(--primary); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation;" title="Buka Pratinjau Dokumen PDF"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Buka PDF</button> ';
+          a += '<button type="button" class="btn-small" onclick="copyDocLink_(\'' + escapeJs_(docUrl) + '\',\'' + escapeJs_(n.noNfi || 'NFI') + '\')" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--surface-subtle); color:var(--ink); cursor:pointer; touch-action:manipulation;" title="Salin Tautan Dokumen"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button> ';
+          a += '<a href="' + esc(docUrl) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink-muted); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka di Google Drive Tab Baru">↗</a> ';
+        }
+        if (n.canManage) {
+          a += '<button class="btn-small" onclick="editNfiEntry(\'' + n.nfiId + '\')" title="Edit Data"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button> ';
+          a += '<button class="btn-small danger" onclick="doDeleteNfi(\'' + n.nfiId + '\')" title="Hapus"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#ef4444;"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>';
+        }
         return '<td style="white-space:nowrap;">' + (a || '<span class="hint" style="margin:0;">—</span>') + '</td>';
       } });
       const vc = cols.filter(c => c.a || colVis[c.k] !== false);
-      const hd = '<tr>' + vc.map(c => '<th>' + esc(c.l) + '</th>').join('') + '</tr>';
+      const hd = '<tr>' + vc.map(c => {
+        var cls = c.k === 'no' ? ' class="sticky-col-no"' : (c.k === 'nonfi' ? ' class="sticky-col-nfi"' : '');
+        return '<th' + cls + '>' + esc(c.l) + '</th>';
+      }).join('') + '</tr>';
       const bd = list.map(n => '<tr>' + vc.map(c => c.r(n)).join('') + '</tr>').join('');
       const minW = Math.max(720, vc.length * 130);
-      content.innerHTML = '<div class="nfi-table-scroll"><table class="nfi-tbl" style="min-width:' + minW + 'px;"><thead>' + hd + '</thead><tbody>' + bd + '</tbody></table></div>';
+      const mobileCardsHtml = '<div class="nfi-mobile-cards-wrap">' + list.map(n => renderNfiMobileCard_(n)).join('') + '</div>';
+      content.innerHTML = '<div class="nfi-table-scroll"><table class="nfi-tbl" style="min-width:' + minW + 'px;"><thead>' + hd + '</thead><tbody>' + bd + '</tbody></table></div>' + mobileCardsHtml;
     }
     function openNfiModal() {
       document.getElementById('nfiModal').classList.add('show');
@@ -10201,7 +8901,6 @@ function fileLinksHtml(d) {
               '<td>' + esc(d.projectName) + '</td>' +
               '<td>' + esc(d.documentType) + '</td>' +
               '<td>' + esc(d.uploaderName) + '</td>' +
-              '<td style="font-family:var(--font-mono);font-size:12px;">' + ageStr + '</td>' +
               '<td style="white-space:nowrap;">' +
               (d.fileUrl ? '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(d.fileUrl) + '\',\'' + escapeJs_(d.title || d.documentCode || 'Dokumen') + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="12" r="3"/></svg>Preview</button> ' : '') +
               '<button class="btn btn-approve" style="padding:6px 12px;font-size:12px;" onclick="quickApprove(\'' + d.docId + '\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:#16a34a;"><polyline points="20 6 9 17 4 12"/></svg>Setuju</button> ' +
@@ -11446,7 +10145,19 @@ function renderCCDetailRows_() {
     var badge = sc === 'closed' || sc === 'close'
       ? '<span class="badge badge-approved">Closed</span>'
       : (sc === 'open' 
-          ? '<span class="badge badge-pending">Open</span>' 
+          ? (function() {
+              var sHtml = '<span class="badge badge-pending">Open</span>';
+              var dStr = it.inspDate || it.issuedDate || it.reportSub;
+              if (dStr) {
+                var d = new Date(dStr);
+                if (!isNaN(d.getTime())) {
+                  var days = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)));
+                  if (days >= 14) sHtml += ' <span class="sla-badge sla-overdue" title="Tertunda ' + days + ' hari">🚨 Overdue ' + days + 'h</span>';
+                  else if (days >= 7) sHtml += ' <span class="sla-badge sla-warning" title="Tertunda ' + days + ' hari">⚠️ ' + days + 'h</span>';
+                }
+              }
+              return sHtml;
+            })() 
           : '<span class="badge">' + esc(it.status || '-') + '</span>');
 
     // Evaluasi & Normalisasi Link Dokumen
@@ -11477,7 +10188,10 @@ function renderCCDetailRows_() {
         '<button type="button" class="btn-small" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="padding:4px 9px; font-size:11px; font-weight:600; border-radius:6px; background:var(--primary); color:#fff; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation;" title="Buka pratinjau dokumen langsung di modal">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="12" r="3"/></svg>Preview' +
         '</button>' +
-        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka berkas di tab baru Google Drive">↗</a>' +
+        '<button type="button" class="btn-small" onclick="copyDocLink_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; background:var(--surface-subtle); color:var(--ink); cursor:pointer; touch-action:manipulation;" title="Salin tautan dokumen ke clipboard">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+        '</button>' +
+        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-small" style="padding:4px 7px; font-size:11px; border:1px solid var(--border); border-radius:6px; color:var(--ink-muted); text-decoration:none; display:inline-flex; align-items:center; touch-action:manipulation;" title="Buka berkas di tab baru Google Drive">↗</a>' +
       '</div>';
     } else {
       nfiHtml = esc(it.noNFI || '-');
@@ -12729,9 +11443,9 @@ function exportAIChatMenu() {
   menu.className = 'ai-export-menu';
   menu.innerHTML =
     '<div style="font-size:10.5px; color:#6b6459; padding:6px 12px; font-weight:700; text-transform:uppercase;">Export Percakapan</div>' +
-    '<button onclick="doExportAIChat(\'pdf\')">📄 PDF Document</button>' +
-    '<button onclick="doExportAIChat(\'txt\')">📝 Text File</button>' +
-    '<button onclick="doExportAIChat(\'csv\')">📊 Excel/CSV</button>';
+    '<button onclick="doExportAIChat(\'pdf\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#ef4444;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>PDF Document</button>' +
+    '<button onclick="doExportAIChat(\'txt\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Text File</button>' +
+    '<button onclick="doExportAIChat(\'csv\')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#16a34a;"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fill-opacity="0.16"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Excel/CSV</button>';
   panel.appendChild(menu);
 
   setTimeout(function() {
@@ -12919,157 +11633,6 @@ document.addEventListener('DOMContentLoaded', updateFooterStatus);
 // Deteksi saat koneksi berubah
 window.addEventListener('online', updateFooterStatus);
 window.addEventListener('offline', updateFooterStatus);
-
-
-  </script>
-
-  <!-- ✅ PRIORITAS TINGGI: Security (Enkripsi Token AES-256-GCM + CSRF) -->
-  <script src="/security.js"></script>
-  <!-- ✅ PRIORITAS TINGGI: Offline Queue (IndexedDB — sync otomatis) -->
-  <script src="/offline-queue.js"></script>
-  
-
-  <!-- PWA Update Notification Banner -->
-  <div id="pwaUpdateBanner" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999999;background:#1e293b;color:#fff;padding:10px 18px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.5);border:1px solid rgba(232,114,12,0.6);align-items:center;gap:12px;font-family:var(--font-ui);font-size:13px;max-width:92%;width:auto;">
-    <span>✨ <b>Versi baru tersedia!</b></span>
-    <button id="pwaUpdateBtn" style="background:#e8720c;color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Perbarui Sekarang</button>
-    <button id="pwaUpdateDismissBtn" style="background:transparent;color:#94a3b8;border:none;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;">&times;</button>
-  </div>
-
-  <!-- PWA Install Prompt Banner -->
-  <div id="pwaInstallBanner" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99999;background:#1a2332;color:#fff;padding:12px 20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.15);align-items:center;gap:14px;font-family:var(--font-ui);max-width:92%;width:420px;">
-    <img src="/icons/icon-192.png" style="width:40px;height:40px;border-radius:8px;object-fit:cover;" alt="App Icon">
-    <div style="flex:1;">
-      <div style="font-weight:700;font-size:13.5px;">Install QC-CMS EDMS</div>
-      <div style="font-size:11.5px;color:#94a3b8;">Akses cepat, layar penuh & mode offline</div>
-    </div>
-    <button id="pwaInstallBtn" style="background:#e8720c;color:#fff;border:none;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation;">Install</button>
-    <button id="pwaDismissBtn" style="background:transparent;color:#94a3b8;border:none;font-size:20px;cursor:pointer;padding:4px 8px;touch-action:manipulation;">&times;</button>
-  </div>
-
-  <div id="pwaOfflineBanner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:999999;background:#ef4444;color:#fff;text-align:center;padding:8px 16px;font-size:12.5px;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,0.2);">
-    ⚠️ Anda sedang offline. Beberapa fitur mungkin terbatas sampai koneksi internet kembali.
-  </div>
-
-  <script>
-    // PWA Auto-Update & Service Worker Manager
-    let waitingWorker = null;
-    function showUpdateBanner(worker) {
-      waitingWorker = worker;
-      const banner = document.getElementById('pwaUpdateBanner');
-      if (banner) banner.style.display = 'flex';
-    }
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(reg) {
-          console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
-
-          // 1. Cek jika sudah ada update menunggu saat app dibuka
-          if (reg.waiting) {
-            showUpdateBanner(reg.waiting);
-          }
-
-          // 2. Deteksi pembaruan baru dari server
-          reg.addEventListener('updatefound', function() {
-            const newWorker = reg.installing;
-            if (!newWorker) return;
-            newWorker.addEventListener('statechange', function() {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                showUpdateBanner(newWorker);
-              }
-            });
-          });
-
-          // 3. Periksa pembaruan otomatis saat user membuka kembali aplikasi
-          document.addEventListener('visibilitychange', function() {
-            if (document.visibilityState === 'visible') {
-              reg.update();
-            }
-          });
-
-          // 4. Periksa pembaruan berkala setiap 10 menit
-          setInterval(function() {
-            reg.update();
-          }, 10 * 60 * 1000);
-        }).catch(function(err) {
-          console.log('[PWA] ServiceWorker registration failed:', err);
-        });
-
-        // 5. Reload otomatis saat Service Worker baru aktif mengambil alih
-        let refreshing = false;
-        navigator.serviceWorker.addEventListener('controllerchange', function() {
-          if (refreshing) return;
-          refreshing = true;
-          window.location.reload();
-        });
-      });
-    }
-
-    const updateBtn = document.getElementById('pwaUpdateBtn');
-    if (updateBtn) {
-      updateBtn.addEventListener('click', function() {
-        if (waitingWorker) {
-          waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-        } else {
-          window.location.reload();
-        }
-      });
-    }
-
-    const updateDismissBtn = document.getElementById('pwaUpdateDismissBtn');
-    if (updateDismissBtn) {
-      updateDismissBtn.addEventListener('click', function() {
-        const banner = document.getElementById('pwaUpdateBanner');
-        if (banner) banner.style.display = 'none';
-      });
-    }
-
-    // PWA Install Prompt
-    let deferredPrompt;
-    const installBanner = document.getElementById('pwaInstallBanner');
-    const installBtn = document.getElementById('pwaInstallBtn');
-    const dismissBtn = document.getElementById('pwaDismissBtn');
-
-    window.addEventListener('beforeinstallprompt', function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (installBanner && !localStorage.getItem('pwa_prompt_dismissed')) {
-        installBanner.style.display = 'flex';
-      }
-    });
-
-    if (installBtn) {
-      installBtn.addEventListener('click', async function() {
-        if (deferredPrompt) {
-          installBanner.style.display = 'none';
-          deferredPrompt.prompt();
-          const choice = await deferredPrompt.userChoice;
-          console.log('[PWA] User choice:', choice.outcome);
-          deferredPrompt = null;
-        }
-      });
-    }
-
-    if (dismissBtn) {
-      dismissBtn.addEventListener('click', function() {
-        installBanner.style.display = 'none';
-        localStorage.setItem('pwa_prompt_dismissed', '1');
-      });
-    }
-
-    // Online / Offline Detection
-    const offlineBanner = document.getElementById('pwaOfflineBanner');
-    function updateOnlineStatus() {
-      if (!navigator.onLine) {
-        if (offlineBanner) offlineBanner.style.display = 'block';
-      } else {
-        if (offlineBanner) offlineBanner.style.display = 'none';
-      }
-    }
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
 
     // Toggle Informasi Tambahan Form Unggah
     window.toggleUploadExtraInfo = function() {
@@ -13515,6 +12078,197 @@ window.addEventListener('offline', updateFooterStatus);
       });
     };
 
+    // ============================================================================
+    // In-Browser Document Preview Engine (Self-contained fallback & Fast-Path)
+    // ============================================================================
+    (function () {
+      if (window.previewFile_ && window._previewEngineReady) return;
+      window._previewEngineReady = true;
+
+      var __previewCache = {};
+
+      function escSafe_(s) {
+        if (typeof esc === 'function') return esc(s);
+        if (!s) return '';
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function extractDriveIdClient_(url) {
+        if (!url) return '';
+        var str = String(url).trim();
+        var m = str.match(/\/(?:folders|d|file\/d)\/([a-zA-Z0-9_-]{15,})/);
+        if (m) return m[1];
+        m = str.match(/[?&]id=([a-zA-Z0-9_-]{15,})/);
+        if (m) return m[1];
+        return '';
+      }
+
+      function injectPreviewModal() {
+        if (document.getElementById('previewModal')) return;
+        var html =
+          '<div class="modal-overlay" id="previewModal">' +
+            '<div class="modal-box preview-modal-box">' +
+              '<div class="preview-modal-head">' +
+                '<div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;">' +
+                  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                  '<h3 class="card-title" id="previewModalTitle" style="margin:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14.5px;">Preview Dokumen</h3>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
+                  '<a class="btn-small" id="previewNewTabBtn" href="#" target="_blank" rel="noopener noreferrer" title="Buka di tab baru Google Drive">↗ Tab Baru</a>' +
+                  '<a class="btn-small" id="previewDownloadBtn" href="#" target="_blank" rel="noopener noreferrer" title="Unduh file dokumen">⬇ Unduh</a>' +
+                  '<button type="button" class="btn-small" onclick="closePreviewModal()" title="Tutup preview"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+                '</div>' +
+              '</div>' +
+              '<div class="preview-modal-body" id="previewModalBody">' +
+                '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        var tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        document.body.appendChild(tmp.firstElementChild);
+      }
+
+      function renderPreviewBody_(body, res) {
+        if (!body) return;
+        var previewUrl = res.previewUrl || '';
+        var fileId = res.fileId || extractDriveIdClient_(res.downloadUrl || previewUrl);
+        var downloadUrl = res.directDownloadUrl || res.downloadUrl || (fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : '');
+        var viewUrl = res.downloadUrl || (fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : '');
+
+        if (!previewUrl && fileId) {
+          previewUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
+        }
+
+        var isImage = (res.mimeType && res.mimeType.indexOf('image/') === 0) ||
+                      /\.(jpe?g|png|gif|webp|bmp)$/i.test(res.fileName || '');
+
+        if (isImage && fileId) {
+          var imgSrc = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1600';
+          body.innerHTML =
+            '<div class="preview-image-wrap">' +
+              '<img src="' + imgSrc + '" alt="' + escSafe_(res.fileName || 'Preview') + '" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; box-shadow:0 4px 20px rgba(0,0,0,0.5);" onerror="this.onerror=null; this.src=\'' + escSafe_(downloadUrl) + '\';">' +
+            '</div>';
+          return;
+        }
+
+        if (previewUrl) {
+          body.innerHTML =
+            '<iframe class="preview-iframe" src="' + escSafe_(previewUrl) + '" allow="autoplay" allowfullscreen></iframe>';
+        } else {
+          body.innerHTML =
+            '<div class="empty-state" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:#fff;">' +
+              '<div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.14"/><polyline points="14 2 14 8 20 8"/></svg></div>' +
+              '<div class="msg" style="font-size:13.5px;color:#cbd5e1;">' +
+                '<b style="color:#fff;">Pratinjau langsung tidak tersedia untuk format file ini.</b><br>' +
+                '<span style="font-size:12px;opacity:0.8;">Silakan buka langsung di Google Drive atau unduh berkas.</span><br><br>' +
+                '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">' +
+                  (viewUrl ? '<a href="' + escSafe_(viewUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-small">↗ Buka di Google Drive</a>' : '') +
+                  (downloadUrl ? '<a href="' + escSafe_(downloadUrl) + '" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-small">⬇ Unduh File</a>' : '') +
+                '</div>' +
+              '</div>' +
+            '</div>';
+        }
+      }
+
+      window.prefetchPreview_ = function (fileUrl) {
+        if (!fileUrl || __previewCache[fileUrl]) return;
+        if (!sessionToken) return;
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function (res) {
+              if (res && res.success) __previewCache[fileUrl] = res;
+            })
+            .withFailureHandler(function () {})
+            .getFilePreviewInfo(sessionToken, fileUrl);
+        }
+      };
+
+      window.previewFile_ = function (fileUrl, fileName) {
+        if (!fileUrl) {
+          if (typeof showToast === 'function') showToast('URL file dokumen tidak tersedia.', 'error');
+          return;
+        }
+
+        injectPreviewModal();
+
+        var modal = document.getElementById('previewModal');
+        var title = document.getElementById('previewModalTitle');
+        var body  = document.getElementById('previewModalBody');
+        var dlBtn = document.getElementById('previewDownloadBtn');
+        var tabBtn = document.getElementById('previewNewTabBtn');
+
+        var fileId = extractDriveIdClient_(fileUrl);
+        var directDl = fileId ? 'https://drive.google.com/uc?export=download&id=' + fileId : fileUrl;
+        var newTabUrl = fileId ? 'https://drive.google.com/file/d/' + fileId + '/view' : fileUrl;
+
+        if (title) title.textContent = fileName || 'Preview Dokumen';
+        if (dlBtn) dlBtn.href = directDl;
+        if (tabBtn) tabBtn.href = newTabUrl;
+        if (modal) modal.classList.add('show');
+
+        // 1. FAST PATH: Langsung muat pratinjau seketika jika ada Google Drive ID
+        if (fileId) {
+          renderPreviewBody_(body, {
+            mode: 'native',
+            previewUrl: 'https://drive.google.com/file/d/' + fileId + '/preview',
+            fileName: fileName,
+            fileId: fileId,
+            downloadUrl: fileUrl,
+            directDownloadUrl: directDl
+          });
+        } else if (__previewCache[fileUrl]) {
+          renderPreviewBody_(body, __previewCache[fileUrl]);
+          return;
+        } else {
+          body.innerHTML = '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;"><span class="spinner"></span>Memuat preview dokumen...</div>';
+        }
+
+        // 2. BACKGROUND PERMISSION SYNC: Hubungi server untuk memastikan file sharing ANYONE_WITH_LINK aktif
+        if (sessionToken && typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function (res) {
+              if (res && res.success) {
+                __previewCache[fileUrl] = res;
+                if (title && res.fileName) title.textContent = res.fileName;
+                if (dlBtn && (res.directDownloadUrl || res.downloadUrl)) dlBtn.href = res.directDownloadUrl || res.downloadUrl;
+                if (tabBtn && res.downloadUrl) tabBtn.href = res.downloadUrl;
+                if (!fileId) renderPreviewBody_(body, res);
+              }
+            })
+            .withFailureHandler(function (err) {
+              console.warn('[Preview] Background check warning:', err);
+            })
+            .getFilePreviewInfo(sessionToken, fileUrl);
+        }
+      };
+
+      window.closePreviewModal = function () {
+        var modal = document.getElementById('previewModal');
+        if (!modal) return;
+        modal.classList.remove('show');
+        var body = document.getElementById('previewModalBody');
+        if (body) body.innerHTML = '';
+      };
+
+      document.addEventListener('click', function (e) {
+        var modal = document.getElementById('previewModal');
+        if (modal && modal.classList.contains('show') && e.target === modal) closePreviewModal();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          var modal = document.getElementById('previewModal');
+          if (modal && modal.classList.contains('show')) closePreviewModal();
+        }
+      });
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectPreviewModal);
+      } else {
+        injectPreviewModal();
+      }
+    })();
+
     // ═══════════════════════════════════════════════════════════════
     // 📱 LIGHTWEIGHT MODAL STATE MANAGER (TANPA MUTATION OBSERVER LOOP)
     // ═══════════════════════════════════════════════════════════════
@@ -13687,7 +12441,54 @@ window.addEventListener('offline', updateFooterStatus);
         } catch (e) {}
       });
     })();
-  
+  </script>
+
+  <!-- Mobile FAB Backdrop -->
+  <div class="fab-backdrop" id="fabBackdrop" onclick="toggleMobileFab(false)"></div>
+
+  <!-- Mobile Floating Action Button (Speed Dial) -->
+  <div class="mobile-fab-container" id="mobileFabContainer">
+    <div class="mobile-fab-menu" id="mobileFabMenu">
+      <button type="button" class="fab-item" onclick="handleFabAction('ai-diag')" title="AI Audit & Diagnostic Agent">
+        <span class="fab-label">AI Audit Agent</span>
+        <span class="fab-icon" style="background:linear-gradient(135deg, #2563eb, #10b981); color:#fff; display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#10b981;"><path d="M10 2v7.31L4.62 18.5A2 2 0 0 0 6.36 21h11.28a2 2 0 0 0 1.74-2.5L14 9.31V2" fill="currentColor" fill-opacity="0.16"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg></span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('ai')" title="Tanya AI Assistant">
+        <span class="fab-label">AI Assistant QC</span>
+        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:var(--primary);"><rect x="3" y="11" width="18" height="10" rx="2" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg></span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('upload')" title="Unggah Dokumen Baru">
+        <span class="fab-label">Unggah Dokumen</span>
+        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);margin-bottom:6px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-6 3-3 3 3"/></svg></span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('sitereport')" title="Laporan Inspeksi Lapangan">
+        <span class="fab-label">Laporan Lapangan</span>
+        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="13" r="4"/></svg></span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('qr')" title="Pindai QR / Barcode">
+        <span class="fab-label">Pindai QR</span>
+        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+      </button>
+      <button type="button" class="fab-item" onclick="handleFabAction('nfilog')" title="Catat / Lihat NFI">
+        <span class="fab-label">NFI Log</span>
+        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+      </button>
+    </div>
+    <button type="button" class="mobile-main-fab" id="mobileMainFab" onclick="toggleMobileFab()" aria-label="Menu Tindakan Cepat" title="Menu Tindakan Cepat">
+      <span class="fab-plus-icon">+</span>
+    </button>
+  </div>
+
+  <!-- Scroll-to-Top Floating Button -->
+  <button type="button" class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTopSmooth()" aria-label="Kembali ke atas" title="Kembali ke atas">
+    ↑
+  </button>
+
+  <!-- ✅ PRIORITAS TINGGI: Security (Enkripsi Token AES-256-GCM + CSRF) -->
+  <script src="/security.js"></script>
+  <!-- ✅ PRIORITAS TINGGI: Offline Queue (IndexedDB — sync otomatis) -->
+  <script src="/offline-queue.js"></script>
+  <script>
     // 🎨 KONTROLER KUSTOMISASI WARNA HEADER & TAMPILAN
     window.openHeaderColorModal = function() {
       var modal = document.getElementById('headerColorModal');
@@ -13883,53 +12684,309 @@ window.addEventListener('offline', updateFooterStatus);
       setTimeout(ensureInitialAccordionOpen, 500);
     })();
 
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UX ENHANCEMENT: GLOBAL SEARCH (CTRL + K) & COPY LINK HELPER
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FASE 2: HEADER LIVE SYNC STATUS & REAL-TIME CONTROLLER
+    // ═══════════════════════════════════════════════════════════════════════════
+    var _lastSyncTime_ = Date.now();
+
+    function formatRelativeSyncTime_(ts) {
+      if (!ts) return 'Baru saja';
+      var diffSec = Math.floor((Date.now() - ts) / 1000);
+      if (diffSec < 45) return 'Baru saja';
+      if (diffSec < 3600) return Math.floor(diffSec / 60) + ' mnt lalu';
+      if (diffSec < 86400) return Math.floor(diffSec / 3600) + ' jam lalu';
+      return Math.floor(diffSec / 86400) + ' hr lalu';
+    }
+
+    function updateHeaderSyncUI_() {
+      var textEl = document.getElementById('headerSyncText');
+      var dotEl = document.getElementById('headerSyncDot');
+      var popLast = document.getElementById('syncPopoverLastTime');
+      var popBadge = document.getElementById('syncPopoverBadge');
+
+      var isOnline = navigator.onLine !== false;
+      if (!isOnline) {
+        if (textEl) textEl.textContent = 'Mode Offline';
+        if (dotEl) { dotEl.className = 'sync-pulse-dot offline'; }
+        if (popBadge) { popBadge.textContent = 'Offline'; popBadge.style.color = '#f59e0b'; }
+      } else {
+        var rel = formatRelativeSyncTime_(_lastSyncTime_);
+        if (textEl) textEl.textContent = 'Tersinkronisasi • ' + rel;
+        if (dotEl) { dotEl.className = 'sync-pulse-dot'; }
+        if (popBadge) { popBadge.textContent = 'Online'; popBadge.style.color = '#10b981'; }
+      }
+      if (popLast) popLast.textContent = formatRelativeSyncTime_(_lastSyncTime_);
+    }
+
+    window.toggleSyncStatusPopover = function(e) {
+      if (e) e.stopPropagation();
+      var pop = document.getElementById('syncStatusPopover');
+      if (!pop) return;
+      var isOpen = pop.style.display !== 'none';
+      pop.style.display = isOpen ? 'none' : 'block';
+      if (!isOpen) updateHeaderSyncUI_();
+    };
+
+    window.closeSyncStatusPopover = function() {
+      var pop = document.getElementById('syncStatusPopover');
+      if (pop) pop.style.display = 'none';
+    };
+
+    window.triggerQuickSyncFromHeader = function(e) {
+      if (e) e.stopPropagation();
+      var icon = document.getElementById('headerSyncRefreshIcon');
+      var btn = document.getElementById('btnSyncNowHeader');
+      if (icon) icon.classList.add('spinning');
+      if (btn) btn.disabled = true;
+
+      if (typeof showToast === 'function') {
+        showToast('Memulai sinkronisasi cepat dengan Master Drive & Sheets...', 'info');
+      }
+
+      // Jalankan fungsi sinkronisasi yang tersedia
+      if (typeof triggerQuickSync === 'function') {
+        try { triggerQuickSync(); } catch(err) { console.warn(err); }
+      } else if (typeof loadMasterData === 'function') {
+        try { loadMasterData(); } catch(err) { console.warn(err); }
+      }
+
+      setTimeout(function() {
+        _lastSyncTime_ = Date.now();
+        if (icon) icon.classList.remove('spinning');
+        if (btn) btn.disabled = false;
+        updateHeaderSyncUI_();
+        if (typeof showToast === 'function') {
+          showToast('Data berhasil diperbarui & tersinkronisasi!', 'success');
+        }
+        closeSyncStatusPopover();
+      }, 1400);
+    };
+
+    // Close popover on outside click
+    document.addEventListener('click', function(e) {
+      var wrap = document.getElementById('headerSyncWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeSyncStatusPopover();
+      }
+    });
+
+    // Update timer sync
+    setInterval(updateHeaderSyncUI_, 30000);
+    window.addEventListener('online', updateHeaderSyncUI_);
+    window.addEventListener('offline', updateHeaderSyncUI_);
+
+    window.openGlobalSearchModal = function() {
+      var modal = document.getElementById('globalSearchModal');
+      if (!modal) return;
+      modal.style.display = 'flex';
+      var input = document.getElementById('globalSearchInput');
+      if (input) {
+        input.value = '';
+        setTimeout(function() { input.focus(); }, 60);
+      }
+      renderGlobalSearchResults_('');
+    };
+
+    window.closeGlobalSearchModal = function() {
+      var modal = document.getElementById('globalSearchModal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.onGlobalSearchInput = function(val) {
+      renderGlobalSearchResults_(val);
+    };
+
+    window.onGlobalSearchKeydown = function(e) {
+      if (e.key === 'Escape') {
+        closeGlobalSearchModal();
+        return;
+      }
+      var container = document.getElementById('globalSearchResults');
+      if (!container) return;
+      var items = container.querySelectorAll('.gs-result-item');
+      if (!items.length) return;
+      
+      var activeIdx = -1;
+      items.forEach(function(it, idx) {
+        if (it.classList.contains('active')) activeIdx = idx;
+      });
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        var nextIdx = (activeIdx + 1) % items.length;
+        items.forEach(function(it) { it.classList.remove('active'); });
+        items[nextIdx].classList.add('active');
+        items[nextIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        var prevIdx = (activeIdx - 1 + items.length) % items.length;
+        items.forEach(function(it) { it.classList.remove('active'); });
+        items[prevIdx].classList.add('active');
+        items[prevIdx].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIdx >= 0 && items[activeIdx]) {
+          items[activeIdx].click();
+        } else if (items[0]) {
+          items[0].click();
+        }
+      }
+    };
+
+    window.renderGlobalSearchResults_ = function(query) {
+      var container = document.getElementById('globalSearchResults');
+      if (!container) return;
+      var q = (query || '').trim().toLowerCase();
+      var results = [];
+
+      var navItems = [
+        { title: 'NFI Register & Log', sub: 'Pusat data registrasi inspeksi lapangan', tab: 'nfilog', icon: '📋' },
+        { title: 'Daftar Dokumen Mutu', sub: 'Repositori dokumen & transmittal proyek', tab: 'list', icon: '📁' },
+        { title: 'Dashboard Mutu & Analytics', sub: 'Grafik KPI & monitoring proyek', tab: 'dashboard', icon: '📊' },
+        { title: 'Command Center Master Hub', sub: 'Monitoring komprehensif seluruh proyek aktif', tab: 'command', icon: '🎯' },
+        { title: 'Kalibrasi Alat QC', sub: 'Validitas sertifikasi alat inspeksi', tab: 'calibration', icon: '⚖️' },
+        { title: 'Kelola Proyek & Hub Sync', sub: 'Pengaturan sinkronisasi Master Hub', tab: 'projects', icon: '⚙️' },
+        { title: 'Laporan Lapangan (Site Report)', sub: 'Entri aktivitas harian site', tab: 'sitereport', icon: '📝' },
+        { title: 'Unggah Dokumen Baru', sub: 'Upload berkas QC/QA baru ke sistem', tab: 'upload', icon: '📤' }
+      ];
+
+      if (!q) {
+        var html = '<div style="padding:6px 16px; font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Menu Pintasan Cepat</div>';
+        navItems.slice(0, 6).forEach(function(item, idx) {
+          html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="switchTab('' + item.tab + ''); closeGlobalSearchModal();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
+            '<span style="font-size:18px;">' + item.icon + '</span>' +
+            '<div style="flex:1; min-width:0;">' +
+              '<div style="font-size:13.5px; font-weight:600; color:var(--ink);">' + item.title + '</div>' +
+              '<div style="font-size:11.5px; color:var(--ink-muted);">' + item.sub + '</div>' +
+            '</div>' +
+            '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px;">Buka ↵</span>' +
+          '</div>';
+        });
+        container.innerHTML = html;
+        return;
+      }
+
+      // Filter Menu
+      navItems.forEach(function(item) {
+        if (item.title.toLowerCase().indexOf(q) !== -1 || item.sub.toLowerCase().indexOf(q) !== -1) {
+          results.push({
+            title: item.title,
+            sub: item.sub,
+            action: function() { switchTab(item.tab); closeGlobalSearchModal(); },
+            icon: item.icon
+          });
+        }
+      });
+
+      // Filter NFI
+      if (typeof nfiCache_ !== 'undefined' && nfiCache_) {
+        Object.keys(nfiCache_).forEach(function(k) {
+          var n = nfiCache_[k];
+          if (!n || results.length >= 15) return;
+          var str = ((n.noNfi || '') + ' ' + (n.subjectDescription || '') + ' ' + (n.itrNo || '') + ' ' + (n.discipline || '')).toLowerCase();
+          if (str.indexOf(q) !== -1) {
+            results.push({
+              title: n.noNfi || 'NFI Entry',
+              sub: (n.subjectDescription || '') + (n.itrNo ? (' • ITR: ' + n.itrNo) : ''),
+              status: n.status,
+              action: function() {
+                if (n.attachmentUrl && typeof previewFile_ === 'function') {
+                  previewFile_(n.attachmentUrl, 'Lampiran ' + (n.noNfi || ''));
+                } else {
+                  switchTab('nfilog');
+                }
+                closeGlobalSearchModal();
+              },
+              icon: '📄'
+            });
+          }
+        });
+      }
+
+      // Filter Dokumen
+      if (typeof documentsCache !== 'undefined' && documentsCache) {
+        Object.keys(documentsCache).forEach(function(k) {
+          var d = documentsCache[k];
+          if (!d || results.length >= 20) return;
+          var str = ((d.docNumber || '') + ' ' + (d.title || '') + ' ' + (d.project || '')).toLowerCase();
+          if (str.indexOf(q) !== -1) {
+            results.push({
+              title: d.docNumber || d.title || 'Dokumen Mutu',
+              sub: (d.title ? (d.title + ' • ') : '') + (d.project || ''),
+              status: d.status,
+              action: function() {
+                if (typeof openPreviewModal === 'function') {
+                  openPreviewModal(d.docId);
+                } else {
+                  switchTab('list');
+                }
+                closeGlobalSearchModal();
+              },
+              icon: '📑'
+            });
+          }
+        });
+      }
+
+      if (!results.length) {
+        container.innerHTML = '<div style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
+          '<div style="font-size:24px; margin-bottom:8px;">🔍</div>' +
+          '<div style="font-weight:600; font-size:13.5px; color:var(--ink);">Tidak ada hasil untuk "' + esc(query) + '"</div>' +
+          '<div style="font-size:12px; margin-top:4px;">Coba gunakan nomor NFI, ITR, nama proyek, atau menu lainnya.</div>' +
+        '</div>';
+        return;
+      }
+
+      var html = '';
+      window._activeGsActions_ = results.map(function(r) { return r.action; });
+      results.forEach(function(res, idx) {
+        html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._activeGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
+          '<span style="font-size:18px;">' + res.icon + '</span>' +
+          '<div style="flex:1; min-width:0;">' +
+            '<div style="font-size:13.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.title) + '</div>' +
+            '<div style="font-size:11.5px; color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.sub) + '</div>' +
+          '</div>' +
+          (res.status ? ('<span class="badge" style="font-size:10.5px;">' + esc(res.status) + '</span>') : '') +
+          '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px;">Buka ↵</span>' +
+        '</div>';
+      });
+      container.innerHTML = html;
+    };
+
+    window.copyDocLink_ = function(url, title) {
+      if (!url) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function() {
+          if (typeof showToast === 'function') {
+            showToast('Tautan dokumen ' + (title ? ('"' + title + '" ') : '') + 'berhasil disalin ke clipboard!', 'success');
+          } else {
+            alert('Tautan berhasil disalin!');
+          }
+        }).catch(function() {
+          prompt('Salin tautan dokumen:', url);
+        });
+      } else {
+        prompt('Salin tautan dokumen:', url);
+      }
+    };
+
+    // Global Key Listener: Ctrl+K / Cmd+K
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        openGlobalSearchModal();
+      }
+    });
 </script>
-
-  <!-- Mobile FAB Backdrop -->
-  <div class="fab-backdrop" id="fabBackdrop" onclick="toggleMobileFab(false)"></div>
-
-  <!-- Mobile Floating Action Button (Speed Dial) -->
-  <div class="mobile-fab-container" id="mobileFabContainer">
-    <div class="mobile-fab-menu" id="mobileFabMenu">
-      <button type="button" class="fab-item" onclick="handleFabAction('ai-diag')" title="AI Audit & Diagnostic Agent">
-        <span class="fab-label">AI Audit Agent</span>
-        <span class="fab-icon" style="background:linear-gradient(135deg, #2563eb, #10b981); color:#fff; display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#10b981;"><path d="M10 2v7.31L4.62 18.5A2 2 0 0 0 6.36 21h11.28a2 2 0 0 0 1.74-2.5L14 9.31V2" fill="currentColor" fill-opacity="0.16"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg></span>
-      </button>
-      <button type="button" class="fab-item" onclick="handleFabAction('ai')" title="Tanya AI Assistant">
-        <span class="fab-label">AI Assistant QC</span>
-        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:var(--primary);"><rect x="3" y="11" width="18" height="10" rx="2" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg></span>
-      </button>
-      <button type="button" class="fab-item" onclick="handleFabAction('upload')" title="Unggah Dokumen Baru">
-        <span class="fab-label">Unggah Dokumen</span>
-        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);margin-bottom:6px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-6 3-3 3 3"/></svg></span>
-      </button>
-      <button type="button" class="fab-item" onclick="handleFabAction('sitereport')" title="Laporan Inspeksi Lapangan">
-        <span class="fab-label">Laporan Lapangan</span>
-        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="13" r="4"/></svg></span>
-      </button>
-      <button type="button" class="fab-item" onclick="handleFabAction('qr')" title="Pindai QR / Barcode">
-        <span class="fab-label">Pindai QR</span>
-        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-      </button>
-      <button type="button" class="fab-item" onclick="handleFabAction('nfilog')" title="Catat / Lihat NFI">
-        <span class="fab-label">NFI Log</span>
-        <span class="fab-icon" style="display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-      </button>
-    </div>
-    <button type="button" class="mobile-main-fab" id="mobileMainFab" onclick="toggleMobileFab()" aria-label="Menu Tindakan Cepat" title="Menu Tindakan Cepat">
-      <span class="fab-plus-icon">+</span>
-    </button>
-  </div>
-
-  <!-- Scroll-to-Top Floating Button -->
-  <button type="button" class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTopSmooth()" aria-label="Kembali ke atas" title="Kembali ke atas">
-    ↑
-  </button>
-
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!-- 🎬 CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;" onclick="if(event.target===this) closeWelcomeScreen()">
+  <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;">
     <!-- Background layer (Adaptif: Full Widescreen di Laptop, 3 Foto Vertikal Penuh di HP) -->
     <div class="welcome-bg-wrapper" id="welcomeBgWrapper">
       <!-- 💻 TAMPILAN LAPTOP / DESKTOP (1 Foto Widescreen Megah Menutupi 100% Layar Penuh) -->
@@ -14229,5 +13286,26 @@ window.addEventListener('offline', updateFooterStatus);
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════════════════
+       MODAL: GLOBAL COMMAND PALETTE SEARCH (CTRL + K)
+       ═══════════════════════════════════════════════════════════════════════════ -->
+  <div id="globalSearchModal" class="modal-backdrop" style="display:none; align-items:flex-start; padding-top:10vh; z-index:9999;" onclick="if(event.target===this)closeGlobalSearchModal()">
+    <div class="global-search-box" style="width:100%; max-width:620px; background:var(--surface-card); border-radius:16px; box-shadow:0 24px 56px rgba(0,0,0,0.28); border:1px solid var(--border); overflow:hidden; animation:modalPop 0.18s ease-out; margin:0 12px;">
+      <div class="gs-input-wrap" style="display:flex; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border); gap:12px; background:var(--surface-subtle);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearchInput" placeholder="Ketik No. NFI, ITR, nama berkas, atau menu..." style="width:100%; border:none; background:transparent; font-size:15px; font-weight:600; color:var(--ink); outline:none;" oninput="onGlobalSearchInput(this.value)" onkeydown="onGlobalSearchKeydown(event)" autocomplete="off">
+        <kbd style="padding:2px 6px; font-size:10px; font-weight:700; border-radius:4px; background:var(--surface-card); border:1px solid var(--border); color:var(--ink-muted); cursor:pointer;" onclick="closeGlobalSearchModal()">ESC</kbd>
+      </div>
+      <div id="globalSearchResults" style="max-height:420px; overflow-y:auto; padding:8px 0;">
+        <!-- Hasil pencarian dinamis disuntikkan di sini -->
+      </div>
+      <div class="gs-footer" style="padding:10px 18px; background:var(--surface-subtle); border-top:1px solid var(--border); font-size:11.5px; color:var(--ink-muted); display:flex; justify-content:space-between; align-items:center;">
+        <span>Gunakan <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">↑</kbd> <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">↓</kbd> navigasi, <kbd style="padding:1px 5px; font-size:10px; border-radius:3px; background:var(--surface-card); border:1px solid var(--border);">Enter</kbd> buka</span>
+        <span><b>QC-CMS</b> Quick Search</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PREVIEW DOKUMEN -->
 </body>
 </html>
