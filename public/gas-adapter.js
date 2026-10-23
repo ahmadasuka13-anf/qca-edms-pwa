@@ -224,10 +224,11 @@
       // ── Kirim ke server ──
       const _doRequest = async (retryCount) => {
         const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry' || action === 'saveNFILogEntry' || action === 'submitCalibration' || action === 'updateDocumentMetadata';
+        const isLongRunningSync = action === 'runSyncAll' || action === 'autoSyncAllProjects' || action === 'syncProjectMaster_';
         const isPayloadExceedingVercel = jsonStr.length > 2.5 * 1024 * 1024; // > 2.5 MB
 
-        // Jika form upload dokumen/foto atau payload melebihi 2.5MB, LANGSUNG kirim ke Google Apps Script
-        if (isUploadAction || isPayloadExceedingVercel) {
+        // Jika form upload dokumen/foto, payload besar, atau proses sync berdurasi panjang, LANGSUNG kirim ke Google Apps Script (Bypass limit 10-15s Vercel)
+        if (isUploadAction || isLongRunningSync || isPayloadExceedingVercel) {
           return await _sendDirectToGas();
         }
 
