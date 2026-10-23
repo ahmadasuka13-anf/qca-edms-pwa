@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>QC-CMS EDMS</title>
-  <link rel="icon" type="image/png" href="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png">
+  <link rel="icon" type="image/png" href="/icons/logo.png">
     <!-- ✅ PWA META TAGS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,6 +22,10 @@
 <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- ✅ CORE PWA & GAS RUNTIME ADAPTERS -->
+  <script src="/security.js"></script>
+  <script src="/offline-queue.js"></script>
+  <script src="/gas-adapter.js"></script>
   <script>
     (function () {
       try {
@@ -4153,7 +4157,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <body>
     <!-- ✅ PWA SPLASH SCREEN -->
   <div id="pwaSplash" style="position:fixed;inset:0;background:#13275a;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:18px;transition:opacity 0.35s ease;">
-      <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="54" alt="ASUKA Logo" style="height:54px;width:auto;max-width:240px;object-fit:contain;">
+      <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="54" alt="ASUKA Logo" style="height:54px;width:auto;max-width:240px;object-fit:contain;">
         <div style="color:#fff;font-family:'Nunito',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.3px;">QC-CMS EDMS</div>
         <div style="color:rgba(255,255,255,0.55);font-size:12px;font-weight:500;">Dokumen Mutu Proyek</div>
         <div style="width:26px;height:26px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:pwaSpin 0.8s linear infinite;margin-top:6px;"></div>
@@ -4165,7 +4169,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <div class="auth-wrapper" id="authScreen">
     <div class="auth-card">
       <div class="brand-row" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;text-align:center;">
-        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="48" alt="ASUKA Logo" style="height:48px;max-height:48px;width:auto;max-width:220px;object-fit:contain;display:block;margin:0 auto;">
+        <img class="qc-seal" src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="48" alt="ASUKA Logo" style="height:48px;max-height:48px;width:auto;max-width:220px;object-fit:contain;display:block;margin:0 auto;">
         <div style="display:flex;align-items:center;gap:6px;justify-content:center;">
           <h1 id="authCompanyName" style="font-size:20px;font-weight:700;margin:0;color:var(--ink);white-space:nowrap;">QC-CMS</h1>
           <span style="font-size:11px;background:rgba(232,114,12,0.15);color:#e8720c;border:1px solid rgba(232,114,12,0.3);padding:2px 7px;border-radius:6px;font-weight:700;">EDMS</span>
@@ -4218,7 +4222,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     <div class="app-header">
       <div class="brand">
         <button class="hamburger-btn" onclick="toggleNavMenu()" aria-label="Buka Menu" title="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-        <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="36" alt="ASUKA Logo" style="height:36px;max-height:36px;width:auto;max-width:160px;object-fit:contain;flex-shrink:0;">
+        <img class="qc-seal" src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="36" alt="ASUKA Logo" style="height:36px;max-height:36px;width:auto;max-width:160px;object-fit:contain;flex-shrink:0;">
         <div class="brand-text">
           <span class="company" id="companyName">QC-CMS</span>
           <span class="system-name" id="headerGreeting">QA/QC EDMS</span>
@@ -4346,7 +4350,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         <button class="sidebar-close-btn" onclick="closeNavMenu()" aria-label="Tutup Menu" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <!-- Logo mini di sidebar disembunyikan agar tidak dobel dengan header -->
         <div class="sidebar-brand-mini" style="display:none;">
-          <img class="qc-seal" src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="26" alt="ASUKA Logo" style="height:26px;max-height:26px;width:auto;max-width:110px;object-fit:contain;flex-shrink:0;">
+          <img class="qc-seal" src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="26" alt="ASUKA Logo" style="height:26px;max-height:26px;width:auto;max-width:110px;object-fit:contain;flex-shrink:0;">
           <div style="min-width:0;flex:1;">
             <div class="mini-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">QC-CMS EDMS</div>
             <div class="mini-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dokumen Mutu Proyek</div>
@@ -4439,7 +4443,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         <!-- 🆕 COPYRIGHT & DEVELOPER DI BOTTOM SIDEBAR -->
         <div class="sidebar-footer">
           <div class="sidebar-footer-brand">
-            <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" 
+            <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" 
                  height="26" alt="ASUKA" style="height:26px;max-height:26px;width:auto;max-width:145px;object-fit:contain;display:block;margin:0 auto;">
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:2px;flex-wrap:wrap;">
               <span class="sidebar-footer-company">PT Asuka Engineering</span>
@@ -6470,6 +6474,12 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       setTimeout(hide, 1200);
     })();
 
+        // 🔍 NFI ZOOM STATE & CONSTANTS
+    var nfiZoomLevel = 100;
+    var NFI_ZOOM_MIN = 60;
+    var NFI_ZOOM_MAX = 140;
+    var NFI_ZOOM_STEP = 10;
+
     document.addEventListener('DOMContentLoaded', function () {
       bootstrapAuth();
       startClock();
@@ -6521,6 +6531,11 @@ function syncThemeToggleIcon() {
       }
       if (!saved) { showAuthScreen(); return; }
       sessionToken = saved;
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        console.warn('[BootstrapAuth] google.script.run belum siap, menunggu adapter...');
+        setTimeout(bootstrapAuth, 250);
+        return;
+      }
       google.script.run.withSuccessHandler(function (res) {
         if (res.success) { currentUser = res.user; enterApp(); }
         else {
@@ -10855,7 +10870,7 @@ if (typeof MutationObserver !== 'undefined') {
 // ═══════════════════════════════════════════════════════════════
 (function injectPwaManifest() {
   try {
-    var LOGO_URL = 'https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png';
+    var LOGO_URL = '/icons/logo.png';
     
     var manifest = {
       name: 'QC-CMS EDMS',
@@ -12857,8 +12872,11 @@ window.addEventListener('offline', updateFooterStatus);
 
       if (!q) {
         var html = '<div style="padding:6px 16px; font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Menu Pintasan Cepat</div>';
+        window._navGsActions_ = navItems.map(function(item) {
+          return function() { switchTab(item.tab); closeGlobalSearchModal(); };
+        });
         navItems.slice(0, 6).forEach(function(item, idx) {
-          html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="switchTab('' + item.tab + ''); closeGlobalSearchModal();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
+          html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._navGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
             '<span style="font-size:18px;">' + item.icon + '</span>' +
             '<div style="flex:1; min-width:0;">' +
               '<div style="font-size:13.5px; font-weight:600; color:var(--ink);">' + item.title + '</div>' +
@@ -13028,7 +13046,7 @@ window.addEventListener('offline', updateFooterStatus);
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:var(--accent);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fill-opacity="0.18"/></svg>PT ASUKA ENGINEERING INDONESIA
       </div>
 
-      <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" alt="ASUKA Logo" class="welcome-logo-img">
+      <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" alt="ASUKA Logo" class="welcome-logo-img">
 
       <h1 class="welcome-title">Selamat Datang di QC-CMS EDMS</h1>
       <div class="welcome-user-greeting" id="welcomeUserGreeting">Halo, Ahmad Nur Fatony</div>
@@ -13251,7 +13269,7 @@ window.addEventListener('offline', updateFooterStatus);
       <!-- Preview Header Miniatur -->
       <div id="headerColorPreview" style="background:#13275a; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; box-shadow:0 4px 14px rgba(0,0,0,0.15); transition:background 0.25s ease;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <img src="https://cdn.imagetourls.com/uploads/tyImg/cSB7KBxo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="22" alt="Logo" style="height:22px; object-fit:contain;">
+          <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="22" alt="Logo" style="height:22px; object-fit:contain;">
           <span id="previewHeaderTitle" style="font-size:12px; font-weight:800; color:#fff;">QC-CMS EDMS</span>
         </div>
         <span id="previewHeaderTag" style="font-size:11px; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,0.18); color:#fff; font-weight:600;">Pratinjau</span>
