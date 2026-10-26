@@ -28,6 +28,11 @@ var projectsCache_ = projectsCache_ || {};
 var historyRevisionsCache_ = historyRevisionsCache_ || {};
 var __previewCache = __previewCache || {};
 
+var siteReportInitialized = siteReportInitialized || false;
+var recycleBinView = recycleBinView || 'docs';
+var nfiQuickContinueOnly = nfiQuickContinueOnly || false;
+var nfiSearchDebounce = nfiSearchDebounce || null;
+
 // ============================================================
   // UTILITY MURNI
   // Fungsi helper yang TIDAK menyentuh state global.
