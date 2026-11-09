@@ -1636,7 +1636,7 @@ body {
     /* ═══ COMMAND CENTER — EXECUTIVE PRESENTATION CHARTS DECK ═══ */
     .cc-charts-deck {
       display: grid;
-      grid-template-columns: 1.35fr 1fr;
+      grid-template-columns: 1.15fr 1fr;
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -1672,7 +1672,7 @@ body {
     }
     .cc-chart-canvas-wrap {
       position: relative;
-      height: 240px;
+      height: 280px;
       width: 100%;
     }
     .btn-chart-active {
@@ -11132,20 +11132,38 @@ function fileLinksHtml(d) {
         subD.textContent = Number(totalAllDocs).toLocaleString('id-ID') + ' Total Dokumen';
       }
 
-      var colorPalette = {
-        'Civil': '#2563eb',
-        'Mechanical': '#7c3aed',
-        'Electrical': '#0d9488',
-        'Fabrikasi': '#0284c7',
-        'E&I': '#ea580c',
-        'Structure': '#475569',
-        'Piping': '#0891b2',
-        'Instrument': '#4f46e5',
-        'MRIR': '#d97706'
-      };
+      // Palet Warna Industri Presisi (Standar Anti-AI Asuka Engineering)
+      var distinctEngineeringColors = [
+        '#1d4ed8', '#4338ca', '#0d9488', '#0284c7', '#d97706',
+        '#ea580c', '#475569', '#dc2626', '#16a34a', '#b45309',
+        '#65a30d', '#7e22ce', '#0891b2', '#be123c', '#854d0e', '#334155'
+      ];
 
-      var backgroundColors = discLabels.map(function (k) {
-        return colorPalette[k] || '#64748b';
+      function getDisciplineColor_(key, index) {
+        var k = String(key || '').toLowerCase().trim();
+        k = k.replace(/^itr\s+/i, '').replace(/[\s\-_]+/g, ' ').trim();
+        if (k.indexOf('civil') !== -1) return '#1d4ed8'; // Asuka Steel Blue
+        if (k.indexOf('mech') !== -1) return '#4338ca'; // Deep Indigo
+        if (k.indexOf('elect') !== -1) return '#0d9488'; // Industrial Teal
+        if (k.indexOf('fabri') !== -1) return '#0284c7'; // Marine Cyan
+        if (k === 'mrir' || k.indexOf('material receiv') !== -1) {
+          if (k === 'mrir') return '#d97706'; // Safety Amber for MRIR
+          return '#b45309'; // Warm Bronze for ITR Material receiving
+        }
+        if (k.indexOf('e&i') !== -1 || k.indexOf('e & i') !== -1) return '#ea580c'; // Rust Orange
+        if (k.indexOf('struct') !== -1) return '#475569'; // Charcoal Slate
+        if (k.indexOf('piping') !== -1 || k.indexOf('pipe') !== -1) return '#dc2626'; // Industrial Red
+        if (k.indexOf('arch') !== -1) return '#16a34a'; // Forest Green
+        if (k.indexOf('paint') !== -1) return '#65a30d'; // Olive Moss
+        if (k.indexOf('inst') !== -1) return '#7e22ce'; // Slate Purple
+        if (k.indexOf('insul') !== -1) return '#854d0e'; // Warm Ochre
+        if (k.indexOf('hvac') !== -1) return '#0891b2'; // Cyan Steel
+        if (k.indexOf('ndt') !== -1) return '#be123c'; // Rose Dark
+        return distinctEngineeringColors[index % distinctEngineeringColors.length];
+      }
+
+      var backgroundColors = discLabels.map(function (k, idx) {
+        return getDisciplineColor_(k, idx);
       });
 
       var ctxD = canvasD.getContext('2d');
@@ -11157,7 +11175,8 @@ function fileLinksHtml(d) {
             data: discValues,
             backgroundColor: backgroundColors,
             borderWidth: 2,
-            borderColor: '#ffffff'
+            borderColor: '#ffffff',
+            hoverOffset: 4
           }]
         },
         options: {
@@ -11170,15 +11189,24 @@ function fileLinksHtml(d) {
               labels: {
                 boxWidth: 10,
                 boxHeight: 10,
-                padding: 8,
-                font: { family: 'Plus Jakarta Sans, sans-serif', size: 10.5, weight: 600 }
+                padding: 5,
+                font: { family: 'Plus Jakarta Sans, sans-serif', size: 10, weight: 600 },
+                color: '#334155'
               }
             },
             tooltip: {
               backgroundColor: '#0f172a',
-              padding: 8,
+              padding: 10,
               cornerRadius: 4,
-              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 }
+              titleFont: { family: 'Plus Jakarta Sans, sans-serif', size: 12, weight: 700 },
+              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 },
+              callbacks: {
+                label: function (context) {
+                  var val = context.raw || 0;
+                  var pct = totalAllDocs > 0 ? ((val / totalAllDocs) * 100).toFixed(1) : 0;
+                  return ' ' + context.label + ': ' + Number(val).toLocaleString('id-ID') + ' dok (' + pct + '%)';
+                }
+              }
             }
           },
           cutout: '62%'
