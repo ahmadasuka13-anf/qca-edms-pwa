@@ -10604,7 +10604,7 @@ function fileLinksHtml(d) {
         var detailId = 'ccDetail_' + idx;
 
         html +=
-          '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_('' + escapeJs_(p.code) + '')">' +
+          '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_(\'' + escapeJs_(p.code) + '\')">' +
             '<div class="cc-card-head">' +
               '<span style="font-size:14px;">' + healthIcon + '</span>' +
               '<span class="cc-card-code">' + esc(p.code) + '</span>' +
@@ -10621,7 +10621,7 @@ function fileLinksHtml(d) {
             '<div class="cc-progress-text">' + closedPct + '% closed</div>' +
             '<div class="cc-status-badge ' + healthCls + '">' + healthIcon + ' ' + healthText + (p.pic ? ' · ' + esc(p.pic) : '') + '</div>' +
             (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="font-size:11px;color:var(--rejected-text);font-weight:600;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg>Open terlama: ' + p.oldestOpenDays + ' hari</div>' : '') +
-            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_('' + detailId + '', this)">▼ Lihat Detail ITR, MRIR & Disiplin</button>' +
+            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)">▼ Lihat Detail ITR, MRIR & Disiplin</button>' +
             '<div class="cc-detail-section" id="' + detailId + '">' +
               '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR per Disiplin & MRIR</div>' +
               '<div class="cc-chip-row">' + (itrChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
