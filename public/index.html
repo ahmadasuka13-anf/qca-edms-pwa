@@ -10704,19 +10704,37 @@ function fileLinksHtml(d) {
       var aggItrByDisc = {};
 
       res.projects.forEach(function (p) {
-        // Hitung MRIR per proyek jika belum ada dari server
-        if (typeof p.totalMRIR !== 'number') {
-          var mrirCount = 0;
+        // 1. Normalisasi nama alias data proyek (Server: totalNFI, totalITR, totalMRIR, pic)
+        var nfi = (typeof p.totalNFI === 'number') ? p.totalNFI : (typeof p.nfiCount === 'number' ? p.nfiCount : (p.nfi || 0));
+        var itr = (typeof p.totalITR === 'number') ? p.totalITR : (typeof p.itrCount === 'number' ? p.itrCount : (p.itr || 0));
+        var mrir = (typeof p.totalMRIR === 'number') ? p.totalMRIR : (typeof p.mrirCount === 'number' ? p.mrirCount : (p.mrir || 0));
+        var pic = p.pic || p.lead || '';
+
+        p.nfiCount = nfi;
+        p.totalNFI = nfi;
+        p.itrCount = itr;
+        p.totalITR = itr;
+        p.mrirCount = mrir;
+        p.totalMRIR = mrir;
+        p.lead = pic;
+        p.pic = pic;
+
+        // 2. Hitung MRIR per proyek jika belum ada dari server
+        if (typeof p.totalMRIR !== 'number' || p.totalMRIR === 0) {
+          var mCount = 0;
           Object.keys(p.byType || {}).forEach(function (t) {
             var tUp = String(t).toUpperCase();
             if (tUp.indexOf('MRIR') !== -1 || tUp.indexOf('MATERIAL RECEIVING') !== -1 || tUp.indexOf('MATERIAL INSPECTION') !== -1) {
-              mrirCount += (p.byType[t] || 0);
+              mCount += (p.byType[t] || 0);
             }
           });
-          p.totalMRIR = mrirCount;
+          if (mCount > 0) {
+            p.totalMRIR = mCount;
+            p.mrirCount = mCount;
+          }
         }
 
-        // Hitung ITR per disiplin jika belum ada dari server
+        // 3. Hitung ITR per disiplin jika belum ada dari server
         if (!p.itrByDiscipline || !Object.keys(p.itrByDiscipline).length) {
           var pItrDisc = {};
           Object.keys(p.byDiscipline || {}).forEach(function (d) {
@@ -10739,13 +10757,23 @@ function fileLinksHtml(d) {
           p.itrByDiscipline = pItrDisc;
         }
 
+        // 4. Jika totalITR masih 0 tapi ada data di itrByDiscipline
+        if (p.itrCount === 0 && p.itrByDiscipline) {
+          var sumItr = 0;
+          Object.keys(p.itrByDiscipline).forEach(function (k) { sumItr += (p.itrByDiscipline[k] || 0); });
+          if (sumItr > 0) {
+            p.itrCount = sumItr;
+            p.totalITR = sumItr;
+          }
+        }
+
         totalMRIR += (p.totalMRIR || 0);
         Object.keys(p.itrByDiscipline || {}).forEach(function (k) {
           aggItrByDisc[k] = (aggItrByDisc[k] || 0) + p.itrByDiscipline[k];
         });
       });
 
-      if (typeof totals.totalMRIR !== 'number') {
+      if (typeof totals.totalMRIR !== 'number' || totals.totalMRIR === 0) {
         totals.totalMRIR = totalMRIR;
       }
       if (!totals.itrByDiscipline || !Object.keys(totals.itrByDiscipline).length) {
@@ -11014,7 +11042,7 @@ function fileLinksHtml(d) {
         if (query) {
           var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
           var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
-          var picMatch = (p.lead || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = ((p.pic || p.lead) || '').toLowerCase().indexOf(query) !== -1;
           if (!codeMatch && !nameMatch && !picMatch) return false;
         }
         if (discFilter) {
@@ -11034,7 +11062,7 @@ function fileLinksHtml(d) {
       var pLabels = displayProjects.map(function (p) { return p.code || 'PRJ'; });
       var pClosed = displayProjects.map(function (p) { return p.closed || 0; });
       var pOpen = displayProjects.map(function (p) { return p.open || 0; });
-      var pMrir = displayProjects.map(function (p) { return p.mrirCount || 0; });
+      var pMrir = displayProjects.map(function (p) { return (typeof p.totalMRIR === 'number') ? p.totalMRIR : (p.mrirCount || 0); });
 
       var subP = document.getElementById('ccProjectsChartSubtitle');
       if (subP) {
@@ -11262,7 +11290,7 @@ function fileLinksHtml(d) {
         if (query) {
           var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
           var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
-          var picMatch = (p.lead || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = ((p.pic || p.lead) || '').toLowerCase().indexOf(query) !== -1;
           if (!codeMatch && !nameMatch && !picMatch) return;
         }
 
@@ -11317,6 +11345,10 @@ function fileLinksHtml(d) {
 
       filtered.forEach(function (p) {
         var pct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
+        var nfiVal = (typeof p.totalNFI === 'number') ? p.totalNFI : (typeof p.nfiCount === 'number' ? p.nfiCount : (p.nfi || 0));
+        var itrVal = (typeof p.totalITR === 'number') ? p.totalITR : (typeof p.itrCount === 'number' ? p.itrCount : (p.itr || 0));
+        var mrirVal = (typeof p.totalMRIR === 'number') ? p.totalMRIR : (typeof p.mrirCount === 'number' ? p.mrirCount : (p.mrir || 0));
+        var picVal = p.pic || p.lead || 'PIC belum diatur';
         var healthClass = 'health-' + (p.health || 'green');
         var healthBadge = (p.health === 'red')
           ? '<span class="cc-status-pill critical"><span style="width:6px;height:6px;border-radius:50%;background:#ef4444;"></span>Kritis</span>'
@@ -11368,15 +11400,15 @@ function fileLinksHtml(d) {
               '<!-- MINI METRIC ROW -->' +
               '<div class="cc-mini-stats">' +
                 '<div class="cc-mini-stat">' +
-                  '<span class="cc-mini-val">' + Number(p.nfiCount || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-val">' + Number(nfiVal).toLocaleString('id-ID') + '</span>' +
                   '<span class="cc-mini-lbl">NFI</span>' +
                 '</div>' +
                 '<div class="cc-mini-stat">' +
-                  '<span class="cc-mini-val">' + Number(p.itrCount || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-val">' + Number(itrVal).toLocaleString('id-ID') + '</span>' +
                   '<span class="cc-mini-lbl">ITR</span>' +
                 '</div>' +
                 '<div class="cc-mini-stat" style="background:rgba(217,119,6,0.06); border-radius:6px;">' +
-                  '<span class="cc-mini-val" style="color:#d97706;">' + Number(mrirCount).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-val" style="color:#d97706;">' + Number(mrirVal).toLocaleString('id-ID') + '</span>' +
                   '<span class="cc-mini-lbl" style="color:#b45309;">MRIR</span>' +
                 '</div>' +
                 '<div class="cc-mini-stat" style="background:rgba(239,68,68,0.06); border-radius:6px;">' +
@@ -11402,7 +11434,7 @@ function fileLinksHtml(d) {
             '<div class="cc-card-footer">' +
               '<div class="cc-pic-badge" title="Project In-Charge (PIC)">' +
                 '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
-                '<span>' + esc(p.lead || 'PIC belum diatur') + '</span>' +
+                '<span>' + esc(picVal) + '</span>' +
               '</div>' +
               (p.oldestOpenDays > 0 && p.open > 0
                 ? '<span style="font-size:10.5px; font-weight:700; color:' + (p.oldestOpenDays > 30 ? 'var(--rejected-text, #dc2626)' : 'var(--pending-text, #d97706)') + '; display:inline-flex; align-items:center; gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + p.oldestOpenDays + ' hari</span>'
