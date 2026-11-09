@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v7.7';
+const CACHE_NAME = 'qccms-edms-v7.8';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

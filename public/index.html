@@ -1438,7 +1438,7 @@ body {
     .matrix-table tr.total-row:hover td {
       background: var(--bezel);
     }
-                /* ═══ COMMAND CENTER — IDE 2: EXECUTIVE 3-COLUMN GLASS DECK ═══ */
+                    /* ═══ COMMAND CENTER — EXECUTIVE 3-COLUMN DECK (TOP) ═══ */
     .cc-deck {
       display: grid;
       grid-template-columns: 1fr 1.25fr 1fr;
@@ -1517,18 +1517,39 @@ body {
     .disc-cell strong { font-weight: 600; color: var(--ink-muted); }
     .disc-cell span { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
 
+    /* ═══ COMMAND CENTER — PROJECTS GRID (IDE A: COMPACT 3-COLUMN) ═══ */
+    .cc-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 1100px) {
+      .cc-projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 700px) {
+      .cc-projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .cc-project-card {
       background: var(--surface-card);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 16px 18px;
+      padding: 16px;
       cursor: pointer;
       transition: box-shadow 0.15s ease, transform 0.1s ease;
       border-left: 4px solid var(--ink-faint);
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .cc-project-card:hover {
-      box-shadow: var(--shadow-card);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
       transform: translateY(-2px);
     }
     .cc-project-card.health-red { border-left-color: var(--rejected-text); }
@@ -1554,6 +1575,7 @@ body {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-weight: 500;
     }
 
     .cc-status-pill {
@@ -1572,25 +1594,26 @@ body {
     .cc-mini-stats {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 6px;
-      margin-bottom: 12px;
+      gap: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 2px;
+      margin-bottom: 10px;
+      text-align: center;
     }
     .cc-mini-stat {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 6px 4px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      text-align: center;
+      padding: 2px 2px;
       min-width: 0;
     }
     .cc-mini-stat-val {
       font-family: var(--font-mono);
       font-weight: 800;
-      font-size: 14.5px;
+      font-size: 13.5px;
       color: var(--ink);
       line-height: 1.1;
     }
@@ -1598,72 +1621,29 @@ body {
     .cc-mini-stat-val.closed { color: var(--approved-text); }
     .cc-mini-stat-val.canceled { color: var(--ink-faint); }
     .cc-mini-stat-lbl {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
-      color: var(--ink-muted);
+      color: var(--ink-faint);
       text-transform: uppercase;
       letter-spacing: 0.3px;
-      margin-top: 3px;
+      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .cc-progress {
-      height: 6px;
+      height: 5px;
       background: var(--surface-subtle);
-      border-radius: 3px;
+      border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 4px;
+      margin-top: 4px;
     }
     .cc-progress-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--approved-text), #22c55e);
-      border-radius: 3px;
+      border-radius: 999px;
       transition: width 0.3s ease;
-    }
-    .cc-progress-text {
-      font-size: 10.5px;
-      color: var(--ink-muted);
-      text-align: right;
-      margin-bottom: 10px;
-    }
-
-    .cc-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .cc-status-badge.kritis { background: var(--rejected-bg); color: var(--rejected-text); }
-    .cc-status-badge.warning { background: var(--pending-bg); color: var(--pending-text); }
-    .cc-status-badge.ok { background: var(--approved-bg); color: var(--approved-text); }
-
-    .cc-expand-btn {
-      width: 100%;
-      padding: 7px 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-subtle);
-      border-radius: 8px;
-      color: var(--ink-muted);
-      font-size: 11.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-      margin-top: 10px;
-    }
-    .cc-expand-btn:hover {
-      background: var(--surface-card);
-      color: var(--primary);
-      border-color: var(--primary);
     }
 
     .cc-detail-section {
@@ -1689,8 +1669,8 @@ body {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 4px 10px;
-      border-radius: 999px;
+      padding: 3px 8px;
+      border-radius: 6px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
       font-size: 11px;
@@ -1718,8 +1698,7 @@ body {
     }
 
     @media (max-width: 560px) {
-      .cc-mini-stats { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 4px !important; }
-      .cc-mini-stat { padding: 4px 2px !important; }
+      .cc-mini-stats { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 2px !important; }
       .cc-mini-stat-val { font-size: 12px !important; }
       .cc-mini-stat-lbl { font-size: 8px !important; }
     }
@@ -10595,7 +10574,7 @@ function fileLinksHtml(d) {
       if (ccCache_) renderCCProjects_(ccCache_.projects);
     }
 
-            function renderCCStats_(t) {
+                function renderCCStats_(t) {
       var wrap = document.getElementById('ccStatsWrap');
       if (!wrap) return;
 
@@ -10766,47 +10745,60 @@ function fileLinksHtml(d) {
 
         html +=
           '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_(\'' + escapeJs_(p.code) + '\')">' +
-            '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">' +
-              '<div style="display:flex; align-items:center; gap:8px;">' +
-                '<span style="font-size:12px;">' + healthIcon + '</span>' +
-                '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+            '<div>' +
+              '<div class="cc-card-head" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">' +
+                '<div style="display:flex; align-items:center; gap:8px;">' +
+                  '<span style="font-size:12px;">' + healthIcon + '</span>' +
+                  '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+                '</div>' +
+                '<span class="cc-status-pill ' + healthCls + '">' +
+                  healthText +
+                '</span>' +
               '</div>' +
-              '<span class="cc-status-pill ' + healthCls + '">' +
-                healthText +
-              '</span>' +
+              '<div class="cc-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
+              '<div class="cc-mini-stats">' +
+                '<div class="cc-mini-stat">' +
+                  '<span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span>' +
+                  '<span class="cc-mini-stat-lbl">NFI</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat">' +
+                  '<span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span>' +
+                  '<span class="cc-mini-stat-lbl">ITR</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="' + (mrirCount > 0 ? 'background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);' : '') + '">' +
+                  '<span class="cc-mini-stat-val" style="' + (mrirCount > 0 ? 'color:#d97706;' : 'color:var(--ink-faint);') + '">' + mrirCount + '</span>' +
+                  '<span class="cc-mini-stat-lbl" style="' + (mrirCount > 0 ? 'color:#d97706;' : '') + '">MRIR</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="' + (p.open > 0 ? 'background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.25);' : '') + '">' +
+                  '<span class="cc-mini-stat-val" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">' + p.open + '</span>' +
+                  '<span class="cc-mini-stat-lbl" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">Open</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-color:rgba(22,163,74,0.25);">' +
+                  '<span class="cc-mini-stat-val" style="color:#16a34a;">' + p.closed + '</span>' +
+                  '<span class="cc-mini-stat-lbl" style="color:#16a34a;">Closed</span>' +
+                '</div>' +
+              '</div>' +
+              '<div style="margin-bottom:8px;">' +
+                '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:600; margin-bottom:4px;">' +
+                  '<span style="color:var(--ink-muted); display:inline-flex; align-items:center; gap:4px; max-width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + esc(p.pic || '—') + '">' +
+                    (p.pic ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ' + esc(p.pic) : '—') +
+                  '</span>' +
+                  '<span style="font-family:var(--font-mono); font-weight:700; color:#16a34a;">' + closedPct + '% Closed</span>' +
+                '</div>' +
+                '<div class="cc-progress">' +
+                  '<div class="cc-progress-fill" style="width:' + closedPct + '%;' + (p.health === 'red' ? 'background:linear-gradient(90deg, #dc2626, #ef4444);' : (p.health === 'yellow' ? 'background:linear-gradient(90deg, #d97706, #f59e0b);' : '')) + '"></div>' +
+                '</div>' +
+              '</div>' +
             '</div>' +
-            '<div class="cc-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
-            '<div class="cc-mini-stats">' +
-              '<div class="cc-mini-stat">' +
-                '<span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span>' +
-                '<span class="cc-mini-stat-lbl">NFI</span>' +
-              '</div>' +
-              '<div class="cc-mini-stat">' +
-                '<span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span>' +
-                '<span class="cc-mini-stat-lbl">ITR</span>' +
-              '</div>' +
-              '<div class="cc-mini-stat" style="' + (mrirCount > 0 ? 'background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);' : '') + '">' +
-                '<span class="cc-mini-stat-val" style="' + (mrirCount > 0 ? 'color:#d97706;' : 'color:var(--ink-faint);') + '">' + mrirCount + '</span>' +
-                '<span class="cc-mini-stat-lbl" style="' + (mrirCount > 0 ? 'color:#d97706;' : '') + '">MRIR</span>' +
-              '</div>' +
-              '<div class="cc-mini-stat" style="' + (p.open > 0 ? 'background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.25);' : '') + '">' +
-                '<span class="cc-mini-stat-val" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">' + p.open + '</span>' +
-                '<span class="cc-mini-stat-lbl" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">Open</span>' +
-              '</div>' +
-              '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-color:rgba(22,163,74,0.25);">' +
-                '<span class="cc-mini-stat-val" style="color:#16a34a;">' + p.closed + '</span>' +
-                '<span class="cc-mini-stat-lbl" style="color:#16a34a;">Closed</span>' +
-              '</div>' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px dashed var(--border); margin-top:4px;">' +
+              (p.oldestOpenDays > 30 && p.open > 0 
+                ? '<span style="font-size:10.5px; font-weight:700; color:#dc2626; display:inline-flex; align-items:center; gap:4px;" title="Open terlama ' + p.oldestOpenDays + ' hari"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Open ' + p.oldestOpenDays + ' hari</span>'
+                : '<span style="font-size:10.5px; font-weight:600; color:var(--ink-faint); display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>On Schedule</span>') +
+              '<button onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)" style="background:none; border:none; color:var(--accent-dark, #2563eb); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px; display:inline-flex; align-items:center; gap:3px;">' +
+                '<span>Rincian</span>' +
+                '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
+              '</button>' +
             '</div>' +
-            '<div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; margin-bottom:4px;">' +
-              '<span style="font-weight:600; color:var(--ink-muted); display:inline-flex; align-items:center; gap:4px;">' +
-                (p.pic ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ' + esc(p.pic) : '') +
-              '</span>' +
-              '<span style="font-family:var(--font-mono); font-weight:700; color:#16a34a;">' + closedPct + '% Closed</span>' +
-            '</div>' +
-            '<div class="cc-progress"><div class="cc-progress-fill" style="width:' + closedPct + '%;"></div></div>' +
-            (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#dc2626; background:rgba(239,68,68,0.06); padding:4px 8px; border-radius:6px; margin:8px 0; border:1px solid rgba(239,68,68,0.15);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Open terlama: ' + p.oldestOpenDays + ' hari</span></div>' : '') +
-            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>Rincian Disiplin &amp; Tipe</span></button>' +
             '<div class="cc-detail-section" id="' + detailId + '">' +
               '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR per Disiplin & MRIR</div>' +
               '<div class="cc-chip-row">' + (itrChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
@@ -10826,9 +10818,10 @@ function fileLinksHtml(d) {
       var el = document.getElementById(id);
       if (!el) return;
       var shown = el.classList.toggle('show');
-      btn.innerHTML = (shown 
-        ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg><span>Sembunyikan Rincian</span>' 
-        : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>Rincian Disiplin &amp; Tipe</span>');
+      var span = btn.querySelector('span');
+      var svg = btn.querySelector('svg');
+      if (span) span.textContent = (shown ? 'Tutup' : 'Rincian');
+      if (svg) svg.innerHTML = (shown ? '<polyline points="18 15 12 9 6 15"/>' : '<polyline points="6 9 12 15 18 9"/>');
     }
 
 var _ccProjDetailState_ = null;
