@@ -1438,15 +1438,115 @@ body {
     .matrix-table tr.total-row:hover td {
       background: var(--bezel);
     }
-                    /* ═══ COMMAND CENTER — EXECUTIVE 3-COLUMN DECK (TOP) ═══ */
-    
-    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
-    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
-      font-variant-numeric: tabular-nums;
-      -webkit-font-feature-settings: "tnum";
-      font-feature-settings: "tnum";
+                        /* ═══ COMMAND CENTER — EXECUTIVE 2-ZONE TOOLBAR ═══ */
+    .cc-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .cc-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 300px;
+    }
+    .cc-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cc-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 190px;
+      max-width: 320px;
+    }
+    .cc-search-icon {
+      position: absolute;
+      left: 11px;
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+    .cc-search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cc-search-input:focus {
+      border-color: var(--accent, #2563eb);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .cc-select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .cc-select:focus {
+      border-color: var(--accent, #2563eb);
+    }
+    .cc-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .cc-dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 6px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      min-width: 210px;
+      z-index: 200;
+      padding: 6px 0;
+    }
+    .cc-dropdown-menu.show {
+      display: block;
+    }
+    .cc-dropdown-item {
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+    .cc-dropdown-item:hover {
+      background: var(--surface-subtle);
+      color: var(--accent, #2563eb);
     }
 
+    /* ═══ COMMAND CENTER — EXECUTIVE 3-COLUMN DECK (TOP) ═══ */
     .cc-deck {
       display: grid;
       grid-template-columns: 1fr 1.25fr 1fr;
@@ -1454,26 +1554,10 @@ body {
       margin-bottom: 24px;
     }
     @media (max-width: 1024px) {
-      
-    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
-    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
-      font-variant-numeric: tabular-nums;
-      -webkit-font-feature-settings: "tnum";
-      font-feature-settings: "tnum";
-    }
-
-    .cc-deck { grid-template-columns: 1fr 1fr; }
+      .cc-deck { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
-      
-    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
-    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
-      font-variant-numeric: tabular-nums;
-      -webkit-font-feature-settings: "tnum";
-      font-feature-settings: "tnum";
-    }
-
-    .cc-deck { grid-template-columns: 1fr; }
+      .cc-deck { grid-template-columns: 1fr; }
     }
     .deck-card {
       background: var(--surface-card);
@@ -1532,16 +1616,24 @@ body {
       border-radius: 6px;
       border: 1px solid var(--border);
       font-size: 11.5px;
+      cursor: pointer;
+      user-select: none;
       transition: all 0.15s ease;
     }
     .disc-cell:hover {
       background: var(--surface-card);
-      border-color: var(--accent);
+      border-color: var(--accent, #2563eb);
+    }
+    .disc-cell.active-disc {
+      border-color: var(--primary, #163d78) !important;
+      background: rgba(22, 61, 120, 0.12) !important;
+      box-shadow: 0 0 0 1.5px var(--primary, #163d78);
+      transform: translateY(-1px);
     }
     .disc-cell strong { font-weight: 600; color: var(--ink-muted); }
     .disc-cell span { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
 
-    /* ═══ COMMAND CENTER — PROJECTS GRID (IDE A: COMPACT 3-COLUMN) ═══ */
+    /* ═══ COMMAND CENTER — PROJECTS GRID (COMPACT 3-COLUMN) ═══ */
     .cc-projects-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1630,104 +1722,122 @@ body {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 2px 2px;
-      min-width: 0;
     }
-    .cc-mini-stat-val {
+    .cc-mini-val {
       font-family: var(--font-mono);
-      font-weight: 800;
       font-size: 13.5px;
+      font-weight: 800;
       color: var(--ink);
       line-height: 1.1;
     }
-    .cc-mini-stat-val.open { color: var(--pending-text); }
-    .cc-mini-stat-val.closed { color: var(--approved-text); }
-    .cc-mini-stat-val.canceled { color: var(--ink-faint); }
-    .cc-mini-stat-lbl {
-      font-size: 9px;
+    .cc-mini-lbl {
+      font-size: 9.5px;
       font-weight: 700;
-      color: var(--ink-faint);
+      color: var(--ink-muted);
       text-transform: uppercase;
-      letter-spacing: 0.3px;
       margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
-    .cc-progress {
-      height: 5px;
-      background: var(--surface-subtle);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 4px;
+    .cc-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
     }
-    .cc-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--approved-text), #22c55e);
+    .cc-progress-bar-bg {
+      flex: 1;
+      height: 6px;
       border-radius: 999px;
+      background: var(--surface-subtle);
+      overflow: hidden;
+    }
+    .cc-progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--approved-text, #16a34a);
       transition: width 0.3s ease;
+    }
+    .cc-progress-pct {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .cc-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      margin-top: auto;
+    }
+    .cc-pic-badge {
+      font-size: 11px;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
     }
 
     .cc-detail-section {
-      display: none;
       margin-top: 10px;
       padding-top: 10px;
       border-top: 1px dashed var(--border);
-      animation: ccFadeIn 0.2s ease;
+      display: none;
     }
-    .cc-detail-section.show { display: block; }
-    @keyframes ccFadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
+    .cc-detail-section.show {
+      display: block;
     }
-
-    .cc-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-    .cc-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink);
-    }
-    .cc-chip .cc-chip-count {
-      font-family: var(--font-mono);
-      font-weight: 800;
-      color: var(--accent-dark);
-    }
-    .cc-chip.active {
-      background: var(--pending-bg);
-      border-color: var(--pending-text);
-      color: var(--pending-text);
-    }
-
     .cc-section-label {
       font-size: 10.5px;
       font-weight: 700;
-      color: var(--ink-faint);
+      color: var(--ink-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       margin-bottom: 6px;
     }
-
-    @media (max-width: 560px) {
-      .cc-mini-stats { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 2px !important; }
-      .cc-mini-stat-val { font-size: 12px !important; }
-      .cc-mini-stat-lbl { font-size: 8px !important; }
+    .cc-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
     }
-    /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
+    .cc-chip-disc {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-family: var(--font-mono);
+    }
+    .cc-chip-disc.mrir {
+      background: rgba(217,119,6,0.08);
+      border-color: rgba(217,119,6,0.25);
+      color: #b45309;
+    }
+    .cc-chip-disc.civil {
+      background: rgba(37,99,235,0.08);
+      border-color: rgba(37,99,235,0.25);
+      color: #2563eb;
+    }
+    .cc-chip-disc.mech {
+      background: rgba(124,58,237,0.08);
+      border-color: rgba(124,58,237,0.25);
+      color: #7c3aed;
+    }
+    .cc-chip-disc.elec {
+      background: rgba(13,148,136,0.08);
+      border-color: rgba(13,148,136,0.25);
+      color: #0d9488;
+    }
+
+    /* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ─── 1. ANTI-ZOOM: Cegah iOS auto-zoom saat tap input ─────────── */
@@ -5591,163 +5701,164 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
               <!-- PANEL: COMMAND CENTER -->
             <div class="panel" id="panelCommand">
               <h2 class="panel-title" style="display:flex;align-items:center;gap:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(225,29,72,0.12);color:var(--accent,#e11d48);flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>QA/QC Command Center</span></h2>
-              <p class="hint" style="margin:-10px 0 16px;">Monitor semua proyek dalam 1 halaman — update otomatis dari Master Hub.</p>
+              <p class="hint" style="margin:-10px 0 16px;">Monitor seluruh portofolio proyek dalam 1 layar — terhubung langsung ke Master Hub & ITR.</p>
 
-<div class="filter-row" style="margin-bottom:16px;">
-  <button class="btn btn-secondary" onclick="loadCommandCenter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>Refresh</button>
-  <button class="btn btn-secondary" onclick="runSyncFromUI_()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>Sync Semua Proyek</button>
-  <button class="btn btn-secondary" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_()" title="Atur sinkronisasi otomatis tiap 1 jam di background"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Cek Auto-Sync</button>
-  <button class="btn btn-secondary" onclick="cleanDuplicatesFromUI_()" title="Bersihkan baris dokumen duplikat yang menumpuk di Master Hub ALL_DOCUMENTS"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Bersihkan Duplikat</button>
-  <label style="font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-left:10px;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin:</label>
-  <select id="ccDisciplineFilter" onchange="onCCDisciplineChange_()" style="min-width:180px;">
-    <option value="">Semua Disiplin</option>
-  </select>
-  <!-- Tambahkan setelah dropdown Disiplin -->
-<label style="margin-left:12px;font-weight:600;display:inline-flex;align-items:center;font-size:12.5px;color:var(--ink-muted);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="currentColor" fill-opacity="0.16"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Periode:</label>
-<select id="filterPeriod" onchange="applyPeriodFilter()" style="padding:6px 10px; border-radius:6px;">
-  <option value="all">Semua Waktu</option>
-  <option value="thisMonth">Bulan Ini</option>
-  <option value="last3">3 Bulan Terakhir</option>
-  <option value="last6">6 Bulan Terakhir</option>
-  <option value="thisYear">Tahun Ini</option>
-</select>
-
-<button onclick="exportToCSV()" style="padding:8px 14px; margin-left:8px; background:#166534; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(22,101,52,0.25);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
-  <button class="btn-small" onclick="resetCCDisciplineFilter_()">Reset</button>
-  <span class="hint" style="margin-left:auto;" id="ccLastUpdate">—</span>
-</div>
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- SECTION: ANALYTICS (Aging, Trend, Breakdown) -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div style="margin-top:24px;">
-
-  <!-- 🆕 INDIKATOR PROYEK AKTIF -->
-  <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
-        <div>
-          <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek</div>
-          <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
-        </div>
-      </div>
-      <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.5); padding:10px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; min-height:48px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-flex; align-items:center; gap:8px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tutup Analisis
-      </button>
-    </div>
-  </div>
-
-  <!-- KOSONG STATE - Muncul kalau belum ada proyek terpilih -->
-  <div id="analyticsEmptyState" style="padding:40px 20px; background:var(--surface-subtle,#f8fafc); border:2px dashed var(--border,#e2e8f0); border-radius:14px; text-align:center; color:var(--ink-muted,#64748b);"><div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:rgba(22,61,120,0.08);color:var(--primary,#163d78);margin-bottom:12px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.15"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div style="font-size:14px; font-weight:700; color:var(--ink,#1e293b);">Pilih Proyek untuk Melihat Analisis</div><div style="font-size:12.5px; margin-top:6px; opacity:0.85;">Klik salah satu kartu proyek di daftar "Status per Proyek" di bawah</div></div>
-
-  <!-- Aging Analysis -->
-  <div id="analyticsChartsWrapper" style="display:none;">
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open</span></h3>
-      <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:120px; padding:12px; background:#fff3e0; border-radius:8px; cursor:pointer;" onclick="drillDownAging('0-30')">
-          <div style="font-size:22px; font-weight:bold; color:#e65100;" id="age0_30">-</div>
-          <div style="font-size:12px; color:#666;">0-30 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffe0b2; border-radius:8px; cursor:pointer;" onclick="drillDownAging('31-60')">
-          <div style="font-size:22px; font-weight:bold; color:#ef6c00;" id="age31_60">-</div>
-          <div style="font-size:12px; color:#666;">31-60 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffcc80; border-radius:8px; cursor:pointer;" onclick="drillDownAging('61-90')">
-          <div style="font-size:22px; font-weight:bold; color:#e65100;" id="age61_90">-</div>
-          <div style="font-size:12px; color:#666;">61-90 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffab91; border-radius:8px; cursor:pointer;" onclick="drillDownAging('&gt;90')">
-          <div style="font-size:22px; font-weight:bold; color:#bf360c;" id="age90plus">-</div>
-          <div style="font-size:12px; color:#666;">&gt; 90 hari</div>
-        </div>
-      </div>
-      <div style="font-size:13px; color:#555;">
-        Rata-rata umur: <b id="avgAge">-</b> hari · Terlama: <b id="maxAge">-</b> hari
-        <span style="margin-left:12px; font-size:11px; color:#999;">(klik kotak untuk lihat detail)</span>
-      </div>
-      <!-- 🆕 BACKLOG CARD -->
-<div id="backlogCard" style="margin-top:16px; padding:16px 20px; background:linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); border-left:5px solid #dc2626; border-radius:10px;">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-    <div style="display:flex; align-items:center; gap:14px;">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:rgba(220,38,38,0.12);color:#dc2626;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(220,38,38,0.2);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2" fill="currentColor" fill-opacity="0.2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
-      <div>
-        <div style="font-size:11.5px; color:#991b1b; text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Backlog — Belum Selesai</div>
-        <div style="font-size:32px; font-weight:800; color:#dc2626; font-family:'Nunito', monospace; line-height:1.1;" id="backlogTotal">—</div>
-        <div style="font-size:11.5px; color:#7f1d1d; margin-top:2px;">
-          <span id="backlogDetail">—</span>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-size:11px; color:#7f1d1d; font-weight:600; text-transform:uppercase;">Completion Rate</div>
-      <div style="font-size:26px; font-weight:800; color:#15803d; font-family:monospace;" id="backlogCompletion">—</div>
-      <div style="font-size:11px; color:#7f1d1d; margin-top:4px;" id="backlogRateText">—</div>
-    </div>
-  </div>
-  <div style="margin-top:14px;">
-    <div style="height:8px; background:#fecaca; border-radius:4px; overflow:hidden;">
-      <div id="backlogProgressBar" style="height:100%; width:0%; background:linear-gradient(90deg, #16a34a, #22c55e); border-radius:4px; transition:width 0.5s ease;"></div>
-    </div>
-    <div style="display:flex; justify-content:space-between; font-size:10.5px; color:#7f1d1d; margin-top:6px; font-weight:600;">
-      <span>Selesai: <b id="backlogClosed">—</b></span>
-      <span>Total: <b id="backlogAll">—</b></span>
-    </div>
-  </div>
-</div>
-    </div>
-
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>Tren Bulanan (6 Bulan Terakhir)</span></h3>
-      <div style="position:relative; height:320px; width:100%;">
-        <canvas id="trendChart"></canvas>
-      </div>
-    </div>
-
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Breakdown per Disiplin</span> <span style="font-size:12px; color:var(--ink-muted); font-weight:normal;">(klik bar untuk detail)</span></h3>
-      <div style="position:relative; height:320px; width:100%;">
-        <canvas id="disciplineChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- MODAL: Drill-down Detail -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div id="drillModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100000 !important; overflow:auto; padding:16px;" onclick="if(event.target===this) closeDrillModal()">
-  <div style="background:var(--surface-card,#fff); max-width:1100px; margin:20px auto; border-radius:14px; padding:24px; position:relative; box-shadow:0 12px 40px rgba(0,0,0,0.35);">
-    <button type="button" onclick="closeDrillModal()" style="position:absolute; right:16px; top:16px; background:#c62828; color:#fff; border:none; border-radius:50%; width:44px; height:44px; min-width:44px; min-height:44px; cursor:pointer; font-size:20px; display:inline-flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; box-shadow:0 3px 12px rgba(0,0,0,0.35); z-index:100010;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h3 id="drillTitle" style="margin-top:0;">Detail</h3>
-    <div style="margin-bottom:12px; font-size:13px; color:#666;" id="drillInfo"></div>
-    <div style="overflow-x:auto; max-height:60vh;">
-      <table id="drillTable" style="width:100%; border-collapse:collapse; font-size:13px;">
-        <thead>
-          <tr style="background:#163d78; color:#fff; position:sticky; top:0;">
-            <th style="padding:8px; text-align:left;">No. NFI</th>
-            <th style="padding:8px; text-align:left;">ITR No.</th>
-            <th style="padding:8px; text-align:left;">Subject</th>
-            <th style="padding:8px; text-align:left;">Disiplin</th>
-            <th style="padding:8px; text-align:left;">Tipe</th>
-            <th style="padding:8px; text-align:left;">PIC</th>
-            <th style="padding:8px; text-align:left;">Issued</th>
-            <th style="padding:8px; text-align:right;">Umur</th>
-          </tr>
-        </thead>
-        <tbody id="drillBody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-              <div id="ccStatsWrap" class="card-section">
-                <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>
+              <!-- ═══ EXECUTIVE 2-ZONE TOOLBAR ═══ -->
+              <div class="cc-toolbar">
+                <div class="cc-toolbar-left">
+                  <div class="cc-search-box">
+                    <svg class="cc-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="ccProjectSearchInput" class="cc-search-input" placeholder="Cari proyek, kode, atau PIC..." oninput="onCCProjectSearchChange_()" autocomplete="off">
+                  </div>
+                  <select id="ccDisciplineFilter" class="cc-select" onchange="onCCDisciplineChange_()" title="Filter berdasarkan disiplin teknis">
+                    <option value="">Semua Disiplin</option>
+                  </select>
+                  <select id="filterPeriod" class="cc-select" onchange="applyPeriodFilter()" title="Filter periode waktu pembuatan dokumen">
+                    <option value="all">Semua Waktu</option>
+                    <option value="thisMonth">Bulan Ini</option>
+                    <option value="last3">3 Bulan Terakhir</option>
+                    <option value="last6">6 Bulan Terakhir</option>
+                    <option value="thisYear">Tahun Ini</option>
+                  </select>
+                  <select id="ccProjectSort" class="cc-select" onchange="onCCProjectSortChange_()" title="Urutkan kartu proyek">
+                    <option value="critical_first">⚡ Prioritas: Kritis Dulu</option>
+                    <option value="progress_asc">📉 Progres: Terendah Dulu</option>
+                    <option value="total_desc">📊 Volume: Terbanyak Dulu</option>
+                    <option value="code_asc">🔤 Kode: A - Z</option>
+                  </select>
+                </div>
+                <div class="cc-toolbar-right">
+                  <button type="button" class="btn btn-primary" onclick="runSyncFromUI_()" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>
+                    <span>Sync Data</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="exportToCSV()" title="Ekspor data ringkasan ke format CSV" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>CSV</span>
+                  </button>
+                  <div class="cc-dropdown" id="ccTechDropdownWrap">
+                    <button type="button" class="btn btn-secondary" onclick="toggleCCTechMenu_(event)" style="display:inline-flex; align-items:center; gap:5px;" title="Opsi teknis pemeliharaan & sinkronisasi">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                      <span>Opsi Teknis ▾</span>
+                    </button>
+                    <div id="ccTechMenu" class="cc-dropdown-menu">
+                      <button type="button" class="cc-dropdown-item" onclick="loadCommandCenter();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                        <span>Refresh Data</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Cek Auto-Sync</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="cleanDuplicatesFromUI_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        <span>Bersihkan Duplikat</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="resetCCDisciplineFilter_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        <span>Reset Semua Filter</span>
+                      </button>
+                    </div>
+                  </div>
+                  <span class="hint" id="ccLastUpdate" style="font-size:11.5px; white-space:nowrap; margin-left:4px;">—</span>
+                </div>
               </div>
 
-              <div id="ccProjectsWrap">
-                <div class="loading-row"><span class="spinner dark"></span>Memuat proyek...</div>
+              <!-- ═══ 1. TOP EXECUTIVE 3-COLUMN GLASS DECK ═══ -->
+              <div id="ccStatsWrap" style="margin-bottom:20px;"></div>
+
+              <!-- ═══ 2. PROJECT PORTFOLIO GRID ═══ -->
+              <div id="ccProjectsWrap" style="margin-bottom:28px;"></div>
+
+              <!-- ═══ 3. DOCKED DEEP ANALYTICS CONTAINER ═══ -->
+              <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+                    <div>
+                      <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek Mendalam</div>
+                      <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.5); padding:8px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; min-height:40px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-flex; align-items:center; gap:8px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tutup Analisis
+                  </button>
+                </div>
+              </div>
+
+              <!-- Aging & Trend Analysis Charts (Docked & Clean) -->
+              <div id="analyticsChartsWrapper" style="display:none; margin-bottom:24px;">
+                <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open (Aging)</span></h3>
+                  <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,163,74,0.08); border-radius:8px; border:1px solid rgba(22,163,74,0.2); cursor:pointer;" onclick="drillDownAging('0-30')">
+                      <div style="font-size:20px; font-weight:800; color:#16a34a; font-family:var(--font-mono);" id="age0_30">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">0-30 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(217,119,6,0.08); border-radius:8px; border:1px solid rgba(217,119,6,0.2); cursor:pointer;" onclick="drillDownAging('31-60')">
+                      <div style="font-size:20px; font-weight:800; color:#d97706; font-family:var(--font-mono);" id="age31_60">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">31-60 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(234,88,12,0.08); border-radius:8px; border:1px solid rgba(234,88,12,0.2); cursor:pointer;" onclick="drillDownAging('61-90')">
+                      <div style="font-size:20px; font-weight:800; color:#ea580c; font-family:var(--font-mono);" id="age61_90">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">61-90 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(220,38,38,0.08); border-radius:8px; border:1px solid rgba(220,38,38,0.2); cursor:pointer;" onclick="drillDownAging('>90')">
+                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="age90plus">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">&gt;90 hari (Kritis)</div>
+                    </div>
+                  </div>
+                  <div style="position:relative; height:200px; width:100%;">
+                    <canvas id="agingChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Monthly Trend Chart -->
+                <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Trend Bulanan Dokumen</span></h3>
+                  <div style="position:relative; height:220px; width:100%;">
+                    <canvas id="trendChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Discipline & Type Breakdown Charts -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+                  <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#7c3aed;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
+                    <div style="position:relative; height:200px; width:100%;">
+                      <canvas id="disciplineChart"></canvas>
+                    </div>
+                  </div>
+                  <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#2563eb;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span>Komposisi Tipe Dokumen</span></h3>
+                    <div style="position:relative; height:200px; width:100%;">
+                      <canvas id="typeChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Drill-down Table (Hidden by Default) -->
+                <div id="drillDownTableWrapper" style="display:none; background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 id="drillDownTitle" style="margin:0;font-size:15px;font-weight:800;color:var(--ink);">Daftar Dokumen</h3>
+                    <button class="btn-small" onclick="closeDrillDown()">✕ Tutup Tabel</button>
+                  </div>
+                  <div style="overflow-x:auto;">
+                    <table class="table-modern" style="width:100%; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>Nomor NFI</th>
+                          <th>Nomor ITR</th>
+                          <th>Deskripsi</th>
+                          <th>Disiplin</th>
+                          <th>Status</th>
+                          <th>Aging</th>
+                        </tr>
+                      </thead>
+                      <tbody id="drillDownTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -10591,20 +10702,81 @@ function fileLinksHtml(d) {
       sel.value = current || ccDisciplineFilter_ || '';
     }
 
+        var ccDisciplineFilter_ = '';
+    var ccProjectSearch_ = '';
+    var ccProjectSort_ = 'critical_first';
+
     function onCCDisciplineChange_() {
       var sel = document.getElementById('ccDisciplineFilter');
       ccDisciplineFilter_ = sel ? sel.value : '';
-      if (ccCache_) renderCCProjects_(ccCache_.projects);
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+      }
+    }
+
+    function setCCDisciplineFilter_(disc) {
+      var sel = document.getElementById('ccDisciplineFilter');
+      if (ccDisciplineFilter_ === disc) {
+        ccDisciplineFilter_ = '';
+        if (sel) sel.value = '';
+      } else {
+        ccDisciplineFilter_ = disc;
+        if (sel) sel.value = disc;
+      }
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+      }
     }
 
     function resetCCDisciplineFilter_() {
       var sel = document.getElementById('ccDisciplineFilter');
       if (sel) sel.value = '';
       ccDisciplineFilter_ = '';
-      if (ccCache_) renderCCProjects_(ccCache_.projects);
+      var searchInput = document.getElementById('ccProjectSearchInput');
+      if (searchInput) searchInput.value = '';
+      ccProjectSearch_ = '';
+      var sortSel = document.getElementById('ccProjectSort');
+      if (sortSel) sortSel.value = 'critical_first';
+      ccProjectSort_ = 'critical_first';
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+      }
     }
 
-                function renderCCStats_(t) {
+    function onCCProjectSearchChange_() {
+      var input = document.getElementById('ccProjectSearchInput');
+      ccProjectSearch_ = input ? input.value.trim().toLowerCase() : '';
+      if (ccCache_) renderCCProjects_(ccCache_.projects || []);
+    }
+
+    function onCCProjectSortChange_() {
+      var sel = document.getElementById('ccProjectSort');
+      ccProjectSort_ = sel ? sel.value : 'critical_first';
+      if (ccCache_) renderCCProjects_(ccCache_.projects || []);
+    }
+
+    function toggleCCTechMenu_(e) {
+      if (e) e.stopPropagation();
+      var menu = document.getElementById('ccTechMenu');
+      if (menu) menu.classList.toggle('show');
+    }
+
+    function closeCCTechMenu_() {
+      var menu = document.getElementById('ccTechMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    document.addEventListener('click', function(e) {
+      var wrap = document.getElementById('ccTechDropdownWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeCCTechMenu_();
+      }
+    });
+
+    function renderCCStats_(t) {
       var wrap = document.getElementById('ccStatsWrap');
       if (!wrap) return;
 
@@ -10630,14 +10802,16 @@ function fileLinksHtml(d) {
         return (t.itrByDiscipline[b] || 0) - (t.itrByDiscipline[a] || 0);
       });
       itrDiscKeys.forEach(function (k) {
-        discHtml += '<div class="disc-cell">' +
+        var isActive = (ccDisciplineFilter_ === k);
+        discHtml += '<div class="disc-cell' + (isActive ? ' active-disc' : '') + '" onclick="setCCDisciplineFilter_(\'' + esc(k) + '\')" title="Klik untuk filter proyek disiplin ' + esc(k) + '">' +
           '<strong>' + esc(k) + '</strong>' +
           '<span>' + Number(t.itrByDiscipline[k]).toLocaleString('id-ID') + '</span>' +
           '</div>';
       });
 
       // Baris MRIR di dalam grid disiplin (span 2 kolom)
-      discHtml += '<div class="disc-cell" style="grid-column:span 2; background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);">' +
+      var isMrirActive = (ccDisciplineFilter_ === 'MRIR');
+      discHtml += '<div class="disc-cell' + (isMrirActive ? ' active-disc' : '') + '" onclick="setCCDisciplineFilter_(\'MRIR\')" title="Klik untuk filter proyek dengan dokumen MRIR" style="grid-column:span 2; background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);">' +
         '<strong style="color:#b45309; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>MRIR (Material Receiving)</strong>' +
         '<span style="color:#d97706;">' + Number(totalMRIR).toLocaleString('id-ID') + '</span>' +
         '</div>';
@@ -10665,12 +10839,12 @@ function fileLinksHtml(d) {
               '</div>' +
             '</div>' +
             '<div style="font-size:11.5px; color:var(--ink-muted); font-weight:600; padding-top:10px; border-top:1px dashed var(--border); display:flex; justify-content:space-between;">' +
-              '<span>Total: <strong style="color:var(--ink);">' + Number(t.total).toLocaleString('id-ID') + ' Records</strong></span>' +
-              '<span>' + (t.projects || 0) + ' Proyek Aktif</span>' +
+              '<span>Total: <strong style="color:var(--ink);">' + Number(t.total).toLocaleString('id-ID') + '</strong> records</span>' +
+              '<span><strong>' + (t.projectCount || 0) + '</strong> Proyek Aktif</span>' +
             '</div>' +
           '</div>' +
 
-          '<!-- KOLOM 2: KLASIFIKASI DISIPLIN -->' +
+          '<!-- KOLOM 2: KLASIFIKASI DISIPLIN (ITR & MRIR) -->' +
           '<div class="deck-card">' +
             '<div>' +
               '<div class="card-title">' +
@@ -10682,7 +10856,7 @@ function fileLinksHtml(d) {
               '</div>' +
             '</div>' +
             '<div style="font-size:11px; color:var(--ink-muted); margin-top:8px;">' +
-              (t.itrEmpty > 0 ? '<span style="color:var(--rejected-text); font-weight:600;">' + t.itrEmpty + ' baris terdeteksi tanpa penomoran ITR</span>' : 'Seluruh data ITR terklasifikasi rapi') +
+              (t.itrEmpty > 0 ? '<span style="color:var(--rejected-text); font-weight:600;">' + t.itrEmpty + ' baris terdeteksi tanpa penomoran ITR</span>' : 'Seluruh data ITR terklasifikasi rapi — klik badge untuk filter.') +
             '</div>' +
           '</div>' +
 
@@ -10717,114 +10891,167 @@ function fileLinksHtml(d) {
       var wrap = document.getElementById('ccProjectsWrap');
       if (!wrap) return;
       if (!projects || !projects.length) {
-        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada proyek.</div></div>';
+        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada portofolio proyek terdaftar.</div></div>';
         return;
       }
 
-      var filter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
+      var discFilter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
+      var query = (typeof ccProjectSearch_ !== 'undefined' ? ccProjectSearch_ : '') || '';
+      var sortMode = (typeof ccProjectSort_ !== 'undefined' ? ccProjectSort_ : 'critical_first');
+
       var filtered = [];
 
       projects.forEach(function (p) {
-        if (!filter) {
-          filtered.push(p);
-          return;
+        // 1. Text Search Filter
+        if (query) {
+          var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
+          var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = (p.lead || '').toLowerCase().indexOf(query) !== -1;
+          if (!codeMatch && !nameMatch && !picMatch) return;
         }
-        var count = p.byDiscipline && p.byDiscipline[filter] ? p.byDiscipline[filter] : 0;
-        if (count > 0) filtered.push(p);
+
+        // 2. Discipline Filter
+        if (discFilter) {
+          if (discFilter === 'MRIR') {
+            var hasMrir = (p.mrirCount && p.mrirCount > 0) || (p.types && p.types.indexOf('MRIR') !== -1);
+            if (!hasMrir) return;
+          } else {
+            var inDisc = (p.disciplines && p.disciplines.indexOf(discFilter) !== -1);
+            var inItrDisc = (p.itrByDiscipline && p.itrByDiscipline[discFilter] > 0);
+            if (!inDisc && !inItrDisc) return;
+          }
+        }
+
+        filtered.push(p);
       });
+
+      // 3. Sorting Logic
+      filtered.sort(function (a, b) {
+        if (sortMode === 'critical_first') {
+          var healthOrder = { 'red': 0, 'yellow': 1, 'green': 2 };
+          var hA = healthOrder[a.health] !== undefined ? healthOrder[a.health] : 3;
+          var hB = healthOrder[b.health] !== undefined ? healthOrder[b.health] : 3;
+          if (hA !== hB) return hA - hB;
+          return (b.oldestOpenDays || 0) - (a.oldestOpenDays || 0);
+        } else if (sortMode === 'progress_asc') {
+          var pctA = a.total > 0 ? (a.closed / a.total) : 0;
+          var pctB = b.total > 0 ? (b.closed / b.total) : 0;
+          return pctA - pctB;
+        } else if (sortMode === 'total_desc') {
+          return (b.total || 0) - (a.total || 0);
+        } else if (sortMode === 'code_asc') {
+          return (a.code || '').localeCompare(b.code || '');
+        }
+        return 0;
+      });
+
+      if (!filtered.length) {
+        wrap.innerHTML = '<div class="empty-state" style="padding:32px 16px; background:var(--surface-card); border:1px solid var(--border); border-radius:14px; text-align:center;">' +
+          '<div style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:var(--surface-subtle); color:var(--ink-muted); margin-bottom:10px;">' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+          '</div>' +
+          '<div style="font-weight:700; color:var(--ink); font-size:14px;">Tidak ada proyek yang sesuai filter</div>' +
+          '<div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Coba ubah kata kunci pencarian atau reset filter disiplin.</div>' +
+          '<button class="btn btn-secondary" onclick="resetCCDisciplineFilter_()" style="margin-top:12px; font-size:12px; padding:6px 14px;">Reset Filter</button>' +
+          '</div>';
+        return;
+      }
 
       var html = '<div class="cc-projects-grid">';
 
-      filtered.forEach(function (p, idx) {
-        var closedPct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
-        var healthIcon = p.health === 'red' ? '🔴' : (p.health === 'yellow' ? '🟡' : '🟢');
-        var healthCls = p.health === 'red' ? 'critical' : (p.health === 'yellow' ? 'warning' : 'good');
-        var healthText = p.health === 'red' ? 'Kritis' : (p.health === 'yellow' ? 'Perlu Perhatian' : 'On-track');
+      filtered.forEach(function (p) {
+        var pct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
+        var healthClass = 'health-' + (p.health || 'green');
+        var healthBadge = (p.health === 'red')
+          ? '<span class="cc-status-pill critical"><span style="width:6px;height:6px;border-radius:50%;background:#ef4444;"></span>Kritis</span>'
+          : (p.health === 'yellow')
+          ? '<span class="cc-status-pill warning"><span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;"></span>Waspada</span>'
+          : '<span class="cc-status-pill good"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;"></span>Lancar</span>';
 
-        var discChips = '';
-        var discs = Object.keys(p.byDiscipline || {}).sort(function (a, b) {
-          return (p.byDiscipline[b] || 0) - (p.byDiscipline[a] || 0);
-        });
-        discs.slice(0, 8).forEach(function (d) {
-          var isActive = (filter === d);
-          discChips += '<span class="cc-chip' + (isActive ? ' active' : '') + '">' + esc(d) + ' <span class="cc-chip-count">' + p.byDiscipline[d] + '</span></span>';
-        });
+        var discs = p.disciplines || [];
+        var types = p.types || [];
+        var discChips = discs.map(function (d) {
+          return '<span class="chip chip-disc">' + esc(d) + '</span>';
+        }).join('');
+        var typeChips = types.map(function (t) {
+          return '<span class="chip chip-type">' + esc(t) + '</span>';
+        }).join('');
 
-        // Chips ITR per Disiplin & MRIR
         var itrChips = '';
-        var pItrKeys = Object.keys(p.itrByDiscipline || {}).sort(function (a, b) {
-          return (p.itrByDiscipline[b] || 0) - (p.itrByDiscipline[a] || 0);
-        });
-        pItrKeys.forEach(function (k) {
-          itrChips += '<span class="cc-chip">' + esc(k) + ' <span class="cc-chip-count">' + p.itrByDiscipline[k] + '</span></span>';
-        });
-        if (p.totalMRIR > 0) {
-          itrChips = '<span class="cc-chip" style="border-color:rgba(217,119,6,0.4); background:rgba(217,119,6,0.1); color:#d97706; font-weight:600;">MRIR <span class="cc-chip-count" style="background:#d97706; color:#fff;">' + p.totalMRIR + '</span></span>' + itrChips;
+        if (p.itrByDiscipline && Object.keys(p.itrByDiscipline).length > 0) {
+          var itrKeys = Object.keys(p.itrByDiscipline).sort(function (a, b) {
+            return (p.itrByDiscipline[b] || 0) - (p.itrByDiscipline[a] || 0);
+          });
+          itrChips = itrKeys.map(function (k) {
+            var count = p.itrByDiscipline[k];
+            var kLow = k.toLowerCase();
+            var chipClass = 'cc-chip-disc';
+            if (kLow.indexOf('civil') !== -1) chipClass += ' civil';
+            else if (kLow.indexOf('mech') !== -1) chipClass += ' mech';
+            else if (kLow.indexOf('elec') !== -1) chipClass += ' elec';
+            return '<span class="' + chipClass + '">' + esc(k) + ' <strong>' + count + '</strong></span>';
+          }).join('');
         }
 
-        var typeChips = '';
-        var types = Object.keys(p.byType || {}).sort(function (a, b) {
-          return (p.byType[b] || 0) - (p.byType[a] || 0);
-        });
-        types.slice(0, 8).forEach(function (t) {
-          typeChips += '<span class="cc-chip">' + esc(t) + ' <span class="cc-chip-count">' + p.byType[t] + '</span></span>';
-        });
+        var mrirCount = (typeof p.mrirCount === 'number') ? p.mrirCount : 0;
+        if (mrirCount > 0) {
+          itrChips += '<span class="cc-chip-disc mrir"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:2px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>MRIR <strong>' + mrirCount + '</strong></span>';
+        }
 
-        var detailId = 'ccDetail_' + idx;
-        var mrirCount = p.totalMRIR || 0;
+        var detailId = 'ccDetail_' + esc(p.code).replace(/[^a-zA-Z0-9_-]/g, '_');
 
         html +=
-          '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_(\'' + escapeJs_(p.code) + '\')">' +
+          '<div class="cc-project-card ' + healthClass + '" onclick="openProjectDetailCC_(\'' + esc(p.code) + '\')">' +
             '<div>' +
-              '<div class="cc-card-head" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;">' +
-                '<div style="display:flex; align-items:center; gap:8px;">' +
-                  '<span style="font-size:12px;">' + healthIcon + '</span>' +
-                  '<span class="cc-card-code">' + esc(p.code) + '</span>' +
-                '</div>' +
-                '<span class="cc-status-pill ' + healthCls + '">' +
-                  healthText +
-                '</span>' +
+              '<div class="cc-card-head">' +
+                '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+                '<div style="margin-left:auto;">' + healthBadge + '</div>' +
               '</div>' +
               '<div class="cc-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
+
+              '<!-- MINI METRIC ROW -->' +
               '<div class="cc-mini-stats">' +
                 '<div class="cc-mini-stat">' +
-                  '<span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span>' +
-                  '<span class="cc-mini-stat-lbl">NFI</span>' +
+                  '<span class="cc-mini-val">' + Number(p.nfiCount || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl">NFI</span>' +
                 '</div>' +
                 '<div class="cc-mini-stat">' +
-                  '<span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span>' +
-                  '<span class="cc-mini-stat-lbl">ITR</span>' +
+                  '<span class="cc-mini-val">' + Number(p.itrCount || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl">ITR</span>' +
                 '</div>' +
-                '<div class="cc-mini-stat" style="' + (mrirCount > 0 ? 'background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);' : '') + '">' +
-                  '<span class="cc-mini-stat-val" style="' + (mrirCount > 0 ? 'color:#d97706;' : 'color:var(--ink-faint);') + '">' + mrirCount + '</span>' +
-                  '<span class="cc-mini-stat-lbl" style="' + (mrirCount > 0 ? 'color:#d97706;' : '') + '">MRIR</span>' +
+                '<div class="cc-mini-stat" style="background:rgba(217,119,6,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#d97706;">' + Number(mrirCount).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#b45309;">MRIR</span>' +
                 '</div>' +
-                '<div class="cc-mini-stat" style="' + (p.open > 0 ? 'background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.25);' : '') + '">' +
-                  '<span class="cc-mini-stat-val" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">' + p.open + '</span>' +
-                  '<span class="cc-mini-stat-lbl" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">Open</span>' +
+                '<div class="cc-mini-stat" style="background:rgba(239,68,68,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#dc2626;">' + Number(p.open || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#dc2626;">Open</span>' +
                 '</div>' +
-                '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-color:rgba(22,163,74,0.25);">' +
-                  '<span class="cc-mini-stat-val" style="color:#16a34a;">' + p.closed + '</span>' +
-                  '<span class="cc-mini-stat-lbl" style="color:#16a34a;">Closed</span>' +
+                '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#16a34a;">' + Number(p.closed || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#16a34a;">Closed</span>' +
                 '</div>' +
               '</div>' +
-              '<div style="margin-bottom:8px;">' +
-                '<div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; font-weight:600; margin-bottom:4px;">' +
-                  '<span style="color:var(--ink-muted); display:inline-flex; align-items:center; gap:4px; max-width:65%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="' + esc(p.pic || '—') + '">' +
-                    (p.pic ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ' + esc(p.pic) : '—') +
-                  '</span>' +
-                  '<span style="font-family:var(--font-mono); font-weight:700; color:#16a34a;">' + closedPct + '% Closed</span>' +
+
+              '<!-- PROGRESS BAR -->' +
+              '<div class="cc-progress-wrap">' +
+                '<div class="cc-progress-bar-bg">' +
+                  '<div class="cc-progress-bar-fill" style="width:' + pct + '%;"></div>' +
                 '</div>' +
-                '<div class="cc-progress">' +
-                  '<div class="cc-progress-fill" style="width:' + closedPct + '%;' + (p.health === 'red' ? 'background:linear-gradient(90deg, #dc2626, #ef4444);' : (p.health === 'yellow' ? 'background:linear-gradient(90deg, #d97706, #f59e0b);' : '')) + '"></div>' +
-                '</div>' +
+                '<span class="cc-progress-pct">' + pct + '%</span>' +
               '</div>' +
             '</div>' +
-            '<div style="display:flex; align-items:center; justify-content:space-between; padding-top:8px; border-top:1px dashed var(--border); margin-top:4px;">' +
-              (p.oldestOpenDays > 30 && p.open > 0 
-                ? '<span style="font-size:10.5px; font-weight:700; color:#dc2626; display:inline-flex; align-items:center; gap:4px;" title="Open terlama ' + p.oldestOpenDays + ' hari"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Open ' + p.oldestOpenDays + ' hari</span>'
+
+            '<!-- FOOTER PIC & AGING -->' +
+            '<div class="cc-card-footer">' +
+              '<div class="cc-pic-badge" title="Project In-Charge (PIC)">' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                '<span>' + esc(p.lead || 'PIC belum diatur') + '</span>' +
+              '</div>' +
+              (p.oldestOpenDays > 0 && p.open > 0
+                ? '<span style="font-size:10.5px; font-weight:700; color:' + (p.oldestOpenDays > 30 ? 'var(--rejected-text, #dc2626)' : 'var(--pending-text, #d97706)') + '; display:inline-flex; align-items:center; gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + p.oldestOpenDays + ' hari</span>'
                 : '<span style="font-size:10.5px; font-weight:600; color:var(--ink-faint); display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>On Schedule</span>') +
-              '<button onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)" style="background:none; border:none; color:var(--accent-dark, #2563eb); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px; display:inline-flex; align-items:center; gap:3px;">' +
+              '<button type="button" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)" style="background:none; border:none; color:var(--accent-dark, #2563eb); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px; display:inline-flex; align-items:center; gap:3px;">' +
                 '<span>Rincian</span>' +
                 '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
               '</button>' +
@@ -10854,7 +11081,7 @@ function fileLinksHtml(d) {
       if (svg) svg.innerHTML = (shown ? '<polyline points="18 15 12 9 6 15"/>' : '<polyline points="6 9 12 15 18 9"/>');
     }
 
-var _ccProjDetailState_ = null;
+    var _ccProjDetailState_ = null;
 
 function openProjectDetailCC_(code) {
   if (!ccCache_) return;

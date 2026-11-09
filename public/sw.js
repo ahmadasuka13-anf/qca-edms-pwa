@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v7.9';
+const CACHE_NAME = 'qccms-edms-v8.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -27,8 +27,9 @@ const STATIC_ASSETS = [
   '/welcome-bg.jpg'
 ];
 
-// 1. Install Event — Pre-cache static assets
+// 1. Install Event — Pre-cache static assets & force skip waiting
 self.addEventListener('install', function(event) {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       console.log('[SW] Precaching static assets for', CACHE_NAME);
