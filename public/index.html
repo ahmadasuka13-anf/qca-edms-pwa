@@ -1633,6 +1633,54 @@ body {
     .disc-cell strong { font-weight: 600; color: var(--ink-muted); }
     .disc-cell span { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
 
+    /* ═══ COMMAND CENTER — EXECUTIVE PRESENTATION CHARTS DECK ═══ */
+    .cc-charts-deck {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .cc-charts-deck {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cc-chart-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+    }
+    .cc-chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cc-chart-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cc-chart-canvas-wrap {
+      position: relative;
+      height: 240px;
+      width: 100%;
+    }
+    .btn-chart-active {
+      background: var(--primary, #163d78) !important;
+      color: #fff !important;
+      border-color: var(--primary, #163d78) !important;
+    }
+
     /* ═══ COMMAND CENTER — PROJECTS GRID (COMPACT 3-COLUMN) ═══ */
     .cc-projects-grid {
       display: grid;
@@ -5739,6 +5787,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>
                     <span>Sync Data</span>
                   </button>
+                  <button type="button" class="btn btn-secondary" id="btnToggleCCCharts" onclick="toggleCCPresentationCharts_()" title="Tampilkan atau sembunyikan grafik presentasi" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    <span>Grafik Presentasi</span>
+                  </button>
                   <button type="button" class="btn btn-secondary" onclick="exportToCSV()" title="Ekspor data ringkasan ke format CSV" style="display:inline-flex; align-items:center; gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     <span>CSV</span>
@@ -5773,6 +5825,35 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
               <!-- ═══ 1. TOP EXECUTIVE 3-COLUMN GLASS DECK ═══ -->
               <div id="ccStatsWrap" style="margin-bottom:20px;"></div>
+
+              <!-- ═══ SEKSI GRAFIK PRESENTASI EKSEKUTIF ═══ -->
+              <div id="ccPresentationChartsWrap" class="cc-charts-deck" style="margin-bottom:24px;">
+                <div class="cc-chart-card">
+                  <div class="cc-chart-head">
+                    <div class="cc-chart-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4"/><path d="M12 17V7"/><path d="M17 17v-8"/></svg>
+                      <span>Komparasi Status Dokumen per Proyek</span>
+                    </div>
+                    <span id="ccProjectsChartSubtitle" style="font-size:11px; font-weight:600; color:var(--ink-muted); font-variant-numeric:tabular-nums;">Semua Proyek</span>
+                  </div>
+                  <div class="cc-chart-canvas-wrap">
+                    <canvas id="ccProjectsChart"></canvas>
+                  </div>
+                </div>
+
+                <div class="cc-chart-card">
+                  <div class="cc-chart-head">
+                    <div class="cc-chart-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                      <span>Distribusi Disiplin Mutu (ITR &amp; MRIR)</span>
+                    </div>
+                    <span id="ccDisciplineChartSubtitle" style="font-size:11px; font-weight:600; color:var(--ink-muted); font-variant-numeric:tabular-nums;">Total Dokumen</span>
+                  </div>
+                  <div class="cc-chart-canvas-wrap">
+                    <canvas id="ccDisciplineChart"></canvas>
+                  </div>
+                </div>
+              </div>
 
               <!-- ═══ 2. PROJECT PORTFOLIO GRID ═══ -->
               <div id="ccProjectsWrap" style="margin-bottom:28px;"></div>
@@ -6061,6 +6142,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <div class="modal-overlay" id="docDetailModal" onclick="if(event.target===this) closeDocDetail()"><div class="modal-box" style="max-width:680px; position:relative;">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border);">
       <h3 class="card-title" id="docDetailTitle" style="margin:0; font-size:16px;">Detail Dokumen</h3>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button type="button" class="btn btn-secondary" onclick="scrollToAnalyticsFromModal_()" style="display:inline-flex; align-items:center; gap:5px; font-size:11.5px; padding:4px 10px; min-height:32px;" title="Lihat grafik aging &amp; tren analitik">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span>Grafik &amp; Analitik</span>
+        </button>
       <button type="button" onclick="closeDocDetail()" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; display:inline-flex; align-items:center; justify-content:center; font-size:18px; color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div id="docDetailContent"></div>
@@ -10688,6 +10774,7 @@ function fileLinksHtml(d) {
           populateCCDisciplineDropdown_(res.disciplines);
           renderCCStats_(res.totals);
           renderCCProjects_(res.projects);
+          renderCCPresentationCharts_(res);
           var lu = document.getElementById('ccLastUpdate');
           if (lu) lu.textContent = 'Update: ' + new Date(res.lastUpdate).toLocaleString('id-ID');
         })
@@ -10722,6 +10809,7 @@ function fileLinksHtml(d) {
       if (ccCache_) {
         renderCCStats_(ccCache_.totals || {});
         renderCCProjects_(ccCache_.projects || []);
+        renderCCPresentationCharts_(ccCache_);
       }
     }
 
@@ -10753,6 +10841,7 @@ function fileLinksHtml(d) {
       if (ccCache_) {
         renderCCStats_(ccCache_.totals || {});
         renderCCProjects_(ccCache_.projects || []);
+        renderCCPresentationCharts_(ccCache_);
       }
     }
 
@@ -10760,6 +10849,7 @@ function fileLinksHtml(d) {
       var input = document.getElementById('ccProjectSearchInput');
       ccProjectSearch_ = input ? input.value.trim().toLowerCase() : '';
       if (ccCache_) renderCCProjects_(ccCache_.projects || []);
+      renderCCPresentationCharts_(ccCache_);
     }
 
     function onCCProjectSortChange_() {
@@ -10895,6 +10985,234 @@ function fileLinksHtml(d) {
               : '<div style="padding:8px 12px; background:rgba(22,163,74,0.06); border-radius:8px; border:1px solid rgba(22,163,74,0.15); font-size:11px; font-weight:700; color:#16a34a; display:flex; align-items:center; gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg><span>Seluruh Proyek Berjalan Sesuai Jadwal</span></div>') +
           '</div>' +
         '</div>';
+    }
+
+    /* ═══ COMMAND CENTER — EXECUTIVE PRESENTATION CHARTS ═══ */
+    function renderCCPresentationCharts_(res) {
+      var wrap = document.getElementById('ccPresentationChartsWrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      if (!res || !res.projects || !res.projects.length) return;
+
+      var canvasP = document.getElementById('ccProjectsChart');
+      var canvasD = document.getElementById('ccDisciplineChart');
+      if (!canvasP || !canvasD) return;
+      if (typeof Chart === 'undefined') {
+        console.warn('[CC Charts] Chart.js belum selesai dimuat.');
+        return;
+      }
+
+      // 1. Chart Komparasi Status per Proyek (Grouped Bar Chart)
+      if (window.ccProjectsChartInstance) {
+        try { window.ccProjectsChartInstance.destroy(); } catch (e) {}
+        window.ccProjectsChartInstance = null;
+      }
+
+      var discFilter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
+      var query = (typeof ccProjectSearch_ !== 'undefined' ? ccProjectSearch_ : '') || '';
+
+      var filtered = res.projects.filter(function (p) {
+        if (query) {
+          var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
+          var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = (p.lead || '').toLowerCase().indexOf(query) !== -1;
+          if (!codeMatch && !nameMatch && !picMatch) return false;
+        }
+        if (discFilter) {
+          if (discFilter === 'MRIR') {
+            var hasMrir = (p.mrirCount && p.mrirCount > 0) || (p.types && p.types.indexOf('MRIR') !== -1);
+            if (!hasMrir) return false;
+          } else {
+            var inDisc = (p.disciplines && p.disciplines.indexOf(discFilter) !== -1);
+            var inItrDisc = (p.itrByDiscipline && p.itrByDiscipline[discFilter] > 0);
+            if (!inDisc && !inItrDisc) return false;
+          }
+        }
+        return true;
+      });
+
+      var displayProjects = filtered.slice(0, 14);
+      var pLabels = displayProjects.map(function (p) { return p.code || 'PRJ'; });
+      var pClosed = displayProjects.map(function (p) { return p.closed || 0; });
+      var pOpen = displayProjects.map(function (p) { return p.open || 0; });
+      var pMrir = displayProjects.map(function (p) { return p.mrirCount || 0; });
+
+      var subP = document.getElementById('ccProjectsChartSubtitle');
+      if (subP) {
+        subP.textContent = displayProjects.length + ' dari ' + res.projects.length + ' Proyek Aktif';
+      }
+
+      var ctxP = canvasP.getContext('2d');
+      window.ccProjectsChartInstance = new Chart(ctxP, {
+        type: 'bar',
+        data: {
+          labels: pLabels,
+          datasets: [
+            {
+              label: 'Closed',
+              data: pClosed,
+              backgroundColor: '#16a34a',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            },
+            {
+              label: 'Open',
+              data: pOpen,
+              backgroundColor: '#dc2626',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            },
+            {
+              label: 'MRIR',
+              data: pMrir,
+              backgroundColor: '#d97706',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            }
+          ]
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 10,
+                font: { family: 'Plus Jakarta Sans, sans-serif', size: 11, weight: 600 }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 8,
+              cornerRadius: 4,
+              titleFont: { family: 'monospace', size: 12, weight: 700 },
+              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'monospace', size: 11, weight: 600 } }
+            },
+            y: {
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: { font: { size: 10 } }
+            }
+          }
+        }
+      });
+
+      // 2. Chart Distribusi Disiplin Mutu (Doughnut Chart)
+      if (window.ccDisciplineChartInstance) {
+        try { window.ccDisciplineChartInstance.destroy(); } catch (e) {}
+        window.ccDisciplineChartInstance = null;
+      }
+
+      var discMap = (res.totals && res.totals.itrByDiscipline) ? Object.assign({}, res.totals.itrByDiscipline) : {};
+      var totalMrir = (res.totals && res.totals.totalMRIR) ? res.totals.totalMRIR : 0;
+      if (totalMrir > 0) {
+        discMap['MRIR'] = totalMrir;
+      }
+
+      var discLabels = Object.keys(discMap).sort(function (a, b) {
+        return (discMap[b] || 0) - (discMap[a] || 0);
+      });
+      var discValues = discLabels.map(function (k) { return discMap[k]; });
+      var totalAllDocs = discValues.reduce(function (a, b) { return a + b; }, 0);
+
+      var subD = document.getElementById('ccDisciplineChartSubtitle');
+      if (subD) {
+        subD.textContent = Number(totalAllDocs).toLocaleString('id-ID') + ' Total Dokumen';
+      }
+
+      var colorPalette = {
+        'Civil': '#2563eb',
+        'Mechanical': '#7c3aed',
+        'Electrical': '#0d9488',
+        'Fabrikasi': '#0284c7',
+        'E&I': '#ea580c',
+        'Structure': '#475569',
+        'Piping': '#0891b2',
+        'Instrument': '#4f46e5',
+        'MRIR': '#d97706'
+      };
+
+      var backgroundColors = discLabels.map(function (k) {
+        return colorPalette[k] || '#64748b';
+      });
+
+      var ctxD = canvasD.getContext('2d');
+      window.ccDisciplineChartInstance = new Chart(ctxD, {
+        type: 'doughnut',
+        data: {
+          labels: discLabels,
+          datasets: [{
+            data: discValues,
+            backgroundColor: backgroundColors,
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 8,
+                font: { family: 'Plus Jakarta Sans, sans-serif', size: 10.5, weight: 600 }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 8,
+              cornerRadius: 4,
+              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 }
+            }
+          },
+          cutout: '62%'
+        }
+      });
+    }
+
+    function toggleCCPresentationCharts_() {
+      var wrap = document.getElementById('ccPresentationChartsWrap');
+      var btn = document.getElementById('btnToggleCCCharts');
+      if (!wrap) return;
+      if (wrap.style.display === 'none') {
+        wrap.style.display = 'grid';
+        if (btn) btn.classList.add('btn-chart-active');
+        if (typeof ccCache_ !== 'undefined' && ccCache_) {
+          renderCCPresentationCharts_(ccCache_);
+        }
+      } else {
+        wrap.style.display = 'none';
+        if (btn) btn.classList.remove('btn-chart-active');
+      }
+    }
+
+    function scrollToAnalyticsFromModal_() {
+      closeDocDetail();
+      var banner = document.getElementById('analyticsProjectBanner');
+      var chartsWrap = document.getElementById('analyticsChartsWrapper');
+      if (banner) banner.style.display = 'block';
+      if (chartsWrap) chartsWrap.style.display = 'block';
+      setTimeout(function() {
+        if (banner) {
+          banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
 
     function renderCCProjects_(projects) {
