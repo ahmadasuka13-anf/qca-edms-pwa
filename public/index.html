@@ -1438,7 +1438,54 @@ body {
     .matrix-table tr.total-row:hover td {
       background: var(--bezel);
     }
-        /* ═══ COMMAND CENTER — CLEAN LOOK ═══ */
+            /* ═══ COMMAND CENTER — EXECUTIVE REDESIGN ═══ */
+    .cc-executive-banner {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) {
+      .cc-executive-banner { grid-template-columns: 1fr; }
+    }
+    .cc-exec-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .cc-kpi-pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+      cursor: default;
+    }
+    .cc-kpi-pill:hover {
+      background: var(--surface-card);
+      border-color: var(--accent);
+    }
+    .cc-kpi-pill strong {
+      color: var(--ink-muted);
+      font-weight: 600;
+    }
+    .cc-kpi-pill .badge-num {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
     .cc-project-card {
       background: var(--surface-card);
       border: 1px solid var(--border);
@@ -1478,33 +1525,57 @@ body {
       text-overflow: ellipsis;
     }
 
+    .cc-status-pill {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cc-status-pill.critical { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+    .cc-status-pill.warning { background: rgba(217, 119, 6, 0.1); color: #d97706; }
+    .cc-status-pill.good { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+
     .cc-mini-stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
       margin-bottom: 12px;
     }
     .cc-mini-stat {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      min-width: 0;
     }
     .cc-mini-stat-val {
       font-family: var(--font-mono);
       font-weight: 800;
-      font-size: 16px;
+      font-size: 14.5px;
       color: var(--ink);
-      line-height: 1;
+      line-height: 1.1;
     }
     .cc-mini-stat-val.open { color: var(--pending-text); }
     .cc-mini-stat-val.closed { color: var(--approved-text); }
     .cc-mini-stat-val.canceled { color: var(--ink-faint); }
     .cc-mini-stat-lbl {
-      font-size: 10px;
-      color: var(--ink-faint);
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--ink-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .cc-progress {
@@ -1542,23 +1613,27 @@ body {
     .cc-status-badge.ok { background: var(--approved-bg); color: var(--approved-text); }
 
     .cc-expand-btn {
-      background: none;
-      border: none;
-      color: var(--accent-dark);
+      width: 100%;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      border-radius: 8px;
+      color: var(--ink-muted);
       font-size: 11.5px;
       font-weight: 700;
-      padding: 6px 0;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 4px;
-      width: 100%;
       justify-content: center;
-      border-top: 1px dashed var(--border);
-      margin-top: 8px;
-      padding-top: 10px;
+      gap: 6px;
+      transition: all 0.15s ease;
+      margin-top: 10px;
     }
-    .cc-expand-btn:hover { color: var(--accent); }
+    .cc-expand-btn:hover {
+      background: var(--surface-card);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
 
     .cc-detail-section {
       display: none;
@@ -1612,7 +1687,10 @@ body {
     }
 
     @media (max-width: 560px) {
-      .cc-mini-stats { grid-template-columns: repeat(2, 1fr); }
+      .cc-mini-stats { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 4px !important; }
+      .cc-mini-stat { padding: 4px 2px !important; }
+      .cc-mini-stat-val { font-size: 12px !important; }
+      .cc-mini-stat-lbl { font-size: 8px !important; }
     }
     /* ═══════════════════════════════════════════════════════════════ */
 /* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
@@ -1842,7 +1920,10 @@ body {
 @media (max-width: 640px) {
   .project-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
   .cc-project-card { padding: 14px !important; }
-  .cc-mini-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+  .cc-mini-stats { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 4px !important; }
+  .cc-mini-stat { padding: 4px 2px !important; }
+  .cc-mini-stat-val { font-size: 12px !important; }
+  .cc-mini-stat-lbl { font-size: 8px !important; }
   .cc-mini-stat-val { font-size: 15px !important; }
   #analyticsProjectBanner > div {
     flex-direction: column !important;
@@ -10483,64 +10564,133 @@ function fileLinksHtml(d) {
       if (ccCache_) renderCCProjects_(ccCache_.projects);
     }
 
-    function renderCCStats_(t) {
+        function renderCCStats_(t) {
       var wrap = document.getElementById('ccStatsWrap');
       if (!wrap) return;
 
-      var progress = t.total > 0 ? Math.round((t.closed / t.total) * 100) : 0;
-      var checkSum = t.open + t.closed + (t.canceled || 0) + (t.other || 0);
+      var totalRecs = t.total || 0;
+      var closedPct = totalRecs > 0 ? (Math.round((t.closed / totalRecs) * 1000) / 10) : 0;
+      var openPct = totalRecs > 0 ? (Math.round((t.open / totalRecs) * 1000) / 10) : 0;
+      var otherCount = (t.canceled || 0) + (t.other || 0);
+      var otherPct = totalRecs > 0 ? (Math.round((otherCount / totalRecs) * 1000) / 10) : 0;
+      var progress = totalRecs > 0 ? Math.round((t.closed / totalRecs) * 100) : 0;
       var totalMRIR = (typeof t.totalMRIR === 'number') ? t.totalMRIR : 0;
 
       // Chip rincian ITR per Disiplin
-      var itrChipHtml = '';
+      var itrChipsHtml = '';
       var itrDiscKeys = Object.keys(t.itrByDiscipline || {}).sort(function (a, b) {
         return (t.itrByDiscipline[b] || 0) - (t.itrByDiscipline[a] || 0);
       });
       itrDiscKeys.forEach(function (k) {
-        itrChipHtml += '<span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:6px; background:var(--surface-card); border:1px solid var(--border); color:var(--ink); display:inline-flex; align-items:center; gap:4px;">' +
-          '<span>' + esc(k) + '</span><span style="font-family:var(--font-mono); font-weight:700; color:var(--primary);">' + t.itrByDiscipline[k] + '</span></span>';
+        var count = t.itrByDiscipline[k];
+        itrChipsHtml += '<span class="cc-kpi-pill">' +
+          '<strong>' + esc(k) + '</strong>' +
+          '<span class="badge-num">' + Number(count).toLocaleString('id-ID') + '</span>' +
+          '</span>';
       });
+      if (totalMRIR > 0) {
+        itrChipsHtml += '<span class="cc-kpi-pill" style="background:rgba(217,119,6,0.1); border-color:rgba(217,119,6,0.3); color:#d97706;">' +
+          '<strong style="color:#b45309;">MRIR</strong>' +
+          '<span class="badge-num" style="color:#d97706;">' + Number(totalMRIR).toLocaleString('id-ID') + '</span>' +
+          '</span>';
+      }
 
       wrap.innerHTML =
-        '<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:8px;">' +
-          '<div class="stat-card"><div class="stat-value">' + t.projects + '</div><div class="stat-label">Proyek Aktif</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalNFI || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalITR || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR Total</div></div>' +
-          '<div class="stat-card" style="border-color:rgba(217,119,6,0.3);"><div class="stat-value" style="color:#d97706;">' + totalMRIR + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;color:#d97706;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" fill="currentColor" fill-opacity="0.16"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>MRIR</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + t.total + '</div><div class="stat-label">Total Records</div></div>' +
-        '</div>' +
-        '<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:8px;">' +
-          '<div class="stat-card warn"><div class="stat-value">' + t.open + '</div><div class="stat-label">Open</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + t.closed + '</div><div class="stat-label">Closed</div></div>' +
-          '<div class="stat-card ' + ((t.canceled || 0) > 0 ? 'warn' : '') + '">' +
-            '<div class="stat-value" style="' + ((t.canceled || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.canceled || 0) + '</div>' +
-            '<div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Canceled</div>' +
+        '<div class="cc-executive-banner">' +
+          '<!-- CARD 1: REKAPITULASI DOKUMEN MUTU -->' +
+          '<div class="cc-exec-card">' +
+            '<div>' +
+              '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">' +
+                '<div style="display:flex; align-items:center; gap:10px;">' +
+                  '<div style="width:34px; height:34px; border-radius:9px; background:rgba(22,61,120,0.08); display:flex; align-items:center; justify-content:center; color:var(--primary);">' +
+                    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div style="font-size:14px; font-weight:800; color:var(--ink);">Rekapitulasi Dokumen Mutu</div>' +
+                    '<div style="font-size:11.5px; color:var(--ink-muted);">' + (t.projects || 0) + ' Proyek Aktif &middot; ' + Number(totalRecs).toLocaleString('id-ID') + ' Total Records</div>' +
+                  '</div>' +
+                '</div>' +
+                '<span style="font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:999px; background:rgba(22,61,120,0.08); color:var(--primary); font-family:var(--font-mono); letter-spacing:0.3px;">' +
+                  'QA/QC EDMS' +
+                '</span>' +
+              '</div>' +
+              '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:14px;">' +
+                '<div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 12px; border-left:3px solid #2563eb;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--ink-muted); letter-spacing:0.5px; margin-bottom:4px; display:flex; align-items:center; gap:4px;">' +
+                    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+                    'NFI Unik' +
+                  '</div>' +
+                  '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--ink);">' + Number(t.totalNFI || 0).toLocaleString('id-ID') + '</div>' +
+                '</div>' +
+                '<div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 12px; border-left:3px solid #7c3aed;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--ink-muted); letter-spacing:0.5px; margin-bottom:4px; display:flex; align-items:center; gap:4px;">' +
+                    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>' +
+                    'ITR Terverifikasi' +
+                  '</div>' +
+                  '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:var(--ink);">' + Number(t.totalITR || 0).toLocaleString('id-ID') + '</div>' +
+                '</div>' +
+                '<div style="background:rgba(217,119,6,0.05); border:1px solid rgba(217,119,6,0.25); border-radius:10px; padding:10px 12px; border-left:3px solid #d97706;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:#d97706; letter-spacing:0.5px; margin-bottom:4px; display:flex; align-items:center; gap:4px;">' +
+                    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>' +
+                    'MRIR Material' +
+                  '</div>' +
+                  '<div style="font-size:20px; font-weight:800; font-family:var(--font-mono); color:#d97706;">' + Number(totalMRIR).toLocaleString('id-ID') + '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div style="font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">' +
+                '<span>Klasifikasi ITR Berdasarkan Disiplin:</span>' +
+                (t.itrEmpty > 0 ? '<span style="font-size:10.5px; color:var(--rejected-text); font-weight:600;">' + t.itrEmpty + ' baris tanpa ITR</span>' : '') +
+              '</div>' +
+              '<div style="display:flex; flex-wrap:wrap; gap:6px;">' +
+                (itrChipsHtml || '<span class="hint" style="margin:0;">Tidak ada data ITR</span>') +
+              '</div>' +
+            '</div>' +
           '</div>' +
-          '<div class="stat-card ' + ((t.other || 0) > 0 ? 'warn' : '') + '">' +
-            '<div class="stat-value" style="' + ((t.other || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.other || 0) + '</div>' +
-            '<div class="stat-label">Status Lain</div>' +
+          '<!-- CARD 2: STATUS PELAKSANAAN & PROGRES -->' +
+          '<div class="cc-exec-card">' +
+            '<div>' +
+              '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">' +
+                '<div style="display:flex; align-items:center; gap:10px;">' +
+                  '<div style="width:34px; height:34px; border-radius:9px; background:rgba(22,163,74,0.08); display:flex; align-items:center; justify-content:center; color:#16a34a;">' +
+                    '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div style="font-size:14px; font-weight:800; color:var(--ink);">Status Pelaksanaan &amp; Progres</div>' +
+                    '<div style="font-size:11.5px; color:var(--ink-muted);">Tingkat Penyelesaian Global Seluruh Proyek</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div style="font-size:24px; font-weight:800; font-family:var(--font-mono); color:#16a34a;">' + progress + '%</div>' +
+              '</div>' +
+              '<div style="height:8px; background:var(--surface-subtle); border-radius:999px; overflow:hidden; display:flex; margin-bottom:14px; border:1px solid var(--border);">' +
+                '<div style="width:' + closedPct + '%; background:#16a34a;" title="Closed: ' + t.closed + '"></div>' +
+                '<div style="width:' + openPct + '%; background:#ef4444;" title="Open: ' + t.open + '"></div>' +
+                '<div style="width:' + otherPct + '%; background:#94a3b8;" title="Canceled/Lain: ' + otherCount + '"></div>' +
+              '</div>' +
+              '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:14px;">' +
+                '<div style="background:rgba(22,163,74,0.05); border:1px solid rgba(22,163,74,0.2); border-radius:10px; padding:10px 8px; text-align:center;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:#16a34a; letter-spacing:0.5px; margin-bottom:2px;">Closed</div>' +
+                  '<div style="font-size:18px; font-weight:800; font-family:var(--font-mono); color:#16a34a;">' + Number(t.closed || 0).toLocaleString('id-ID') + '</div>' +
+                  '<div style="font-size:10px; color:var(--ink-muted); margin-top:2px;">' + closedPct + '% Tuntas</div>' +
+                '</div>' +
+                '<div style="background:rgba(239,68,68,0.05); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:10px 8px; text-align:center;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:#dc2626; letter-spacing:0.5px; margin-bottom:2px;">Open Aktif</div>' +
+                  '<div style="font-size:18px; font-weight:800; font-family:var(--font-mono); color:#dc2626;">' + Number(t.open || 0).toLocaleString('id-ID') + '</div>' +
+                  '<div style="font-size:10px; color:var(--ink-muted); margin-top:2px;">' + openPct + '% Backlog</div>' +
+                '</div>' +
+                '<div style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:10px; padding:10px 8px; text-align:center;">' +
+                  '<div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--ink-muted); letter-spacing:0.5px; margin-bottom:2px;">Canceled / Lain</div>' +
+                  '<div style="font-size:18px; font-weight:800; font-family:var(--font-mono); color:var(--ink-muted);">' + Number(otherCount).toLocaleString('id-ID') + '</div>' +
+                  '<div style="font-size:10px; color:var(--ink-muted); margin-top:2px;">' + (t.canceled || 0) + ' Canceled &middot; ' + (t.other || 0) + ' Lain</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; padding-top:10px; border-top:1px dashed var(--border); font-size:11.5px; color:var(--ink-muted);">' +
+              '<span style="display:inline-flex; align-items:center; gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Verifikasi Konsisten: ' + Number(totalRecs).toLocaleString('id-ID') + ' Records</span>' +
+              '<span>Rasio Selesai: <strong>' + progress + '%</strong></span>' +
+            '</div>' +
           '</div>' +
-          '<div class="stat-card"><div class="stat-value">' + progress + '%</div><div class="stat-label">Progress</div></div>' +
-        '</div>' +
-        '<div style="margin-top:12px;padding:12px 16px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:10px;font-size:12.5px;color:var(--ink-muted);line-height:1.8;">' +
-          '<div style="font-weight:700;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Rincian Rekapitulasi Dokumen</span></div>' +
-          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
-            (checkSum === t.total 
-              ? '<span style="color:#16a34a;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="#16a34a" fill-opacity="0.15"/><path d="m9 12 2 2 4-4"/></svg></span>' 
-              : '<span style="color:#d97706;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>') +
-            '<span><b style="color:var(--ink);">' + t.total + '</b> records = ' +
-            '<b style="color:var(--ink);">' + t.open + '</b> Open + ' +
-            '<b style="color:var(--ink);">' + t.closed + '</b> Closed + ' +
-            '<b style="color:var(--ink);">' + (t.canceled || 0) + '</b> Canceled' +
-            ((t.other || 0) > 0 ? ' + <b style="color:var(--ink);">' + t.other + '</b> Lain' : '') +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg><span><b style="color:var(--ink);">' + t.totalNFI + '</b> NFI unik</span></div>' +
-          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg><span><b style="color:var(--ink);">' + t.totalITR + '</b> ITR unik tergolong:' +
-            (t.itrEmpty > 0 ? ' · <b style="color:var(--rejected-text);">' + t.itrEmpty + '</b> baris tanpa ITR' : '') +
-          '</span></div>' +
-          (itrChipHtml ? '<div style="margin:4px 0 8px 20px; display:flex; gap:6px; flex-wrap:wrap;">' + itrChipHtml + '</div>' : '') +
-          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#d97706;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" fill="currentColor" fill-opacity="0.16"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><span><b style="color:var(--ink);">' + totalMRIR + '</b> MRIR (Material Receiving Inspection Report)</span></div>' +
-          (t.projectsInactive > 0 ? '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg><span>' + t.projectsInactive + ' proyek nonaktif tidak dihitung</span></div>' : '') +
         '</div>';
     }
 
@@ -10552,7 +10702,7 @@ function fileLinksHtml(d) {
         return;
       }
 
-      var filter = ccDisciplineFilter_ || '';
+      var filter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
       var filtered = [];
 
       projects.forEach(function (p) {
@@ -10602,32 +10752,57 @@ function fileLinksHtml(d) {
         });
 
         var detailId = 'ccDetail_' + idx;
+        var mrirCount = p.totalMRIR || 0;
 
         html +=
           '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_(\'' + escapeJs_(p.code) + '\')">' +
-            '<div class="cc-card-head">' +
-              '<span style="font-size:14px;">' + healthIcon + '</span>' +
-              '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">' +
+              '<div style="display:flex; align-items:center; gap:8px;">' +
+                '<span style="font-size:12px;">' + healthIcon + '</span>' +
+                '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+              '</div>' +
+              '<span class="cc-status-pill ' + healthCls + '">' +
+                healthText +
+              '</span>' +
             '</div>' +
-            '<div class="cc-card-name">' + esc(p.name) + '</div>' +
+            '<div class="cc-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
             '<div class="cc-mini-stats">' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR</span></div>' +
-              ((p.totalMRIR || 0) > 0 ? '<div class="cc-mini-stat"><span class="cc-mini-stat-val" style="color:#d97706;">' + p.totalMRIR + '</span><span class="cc-mini-stat-lbl" style="color:#d97706;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:2px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" fill="currentColor" fill-opacity="0.16"/></svg>MRIR</span></div>' : '') +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val open">' + p.open + '</span><span class="cc-mini-stat-lbl">Open</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val closed">' + p.closed + '</span><span class="cc-mini-stat-lbl">Closed</span></div>' +
+              '<div class="cc-mini-stat">' +
+                '<span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span>' +
+                '<span class="cc-mini-stat-lbl">NFI</span>' +
+              '</div>' +
+              '<div class="cc-mini-stat">' +
+                '<span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span>' +
+                '<span class="cc-mini-stat-lbl">ITR</span>' +
+              '</div>' +
+              '<div class="cc-mini-stat" style="' + (mrirCount > 0 ? 'background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);' : '') + '">' +
+                '<span class="cc-mini-stat-val" style="' + (mrirCount > 0 ? 'color:#d97706;' : 'color:var(--ink-faint);') + '">' + mrirCount + '</span>' +
+                '<span class="cc-mini-stat-lbl" style="' + (mrirCount > 0 ? 'color:#d97706;' : '') + '">MRIR</span>' +
+              '</div>' +
+              '<div class="cc-mini-stat" style="' + (p.open > 0 ? 'background:rgba(239,68,68,0.06); border-color:rgba(239,68,68,0.25);' : '') + '">' +
+                '<span class="cc-mini-stat-val" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">' + p.open + '</span>' +
+                '<span class="cc-mini-stat-lbl" style="' + (p.open > 0 ? 'color:#dc2626;' : '') + '">Open</span>' +
+              '</div>' +
+              '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-color:rgba(22,163,74,0.25);">' +
+                '<span class="cc-mini-stat-val" style="color:#16a34a;">' + p.closed + '</span>' +
+                '<span class="cc-mini-stat-lbl" style="color:#16a34a;">Closed</span>' +
+              '</div>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; font-size:11px; margin-bottom:4px;">' +
+              '<span style="font-weight:600; color:var(--ink-muted); display:inline-flex; align-items:center; gap:4px;">' +
+                (p.pic ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ' + esc(p.pic) : '') +
+              '</span>' +
+              '<span style="font-family:var(--font-mono); font-weight:700; color:#16a34a;">' + closedPct + '% Closed</span>' +
             '</div>' +
             '<div class="cc-progress"><div class="cc-progress-fill" style="width:' + closedPct + '%;"></div></div>' +
-            '<div class="cc-progress-text">' + closedPct + '% closed</div>' +
-            '<div class="cc-status-badge ' + healthCls + '">' + healthIcon + ' ' + healthText + (p.pic ? ' · ' + esc(p.pic) : '') + '</div>' +
-            (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="font-size:11px;color:var(--rejected-text);font-weight:600;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg>Open terlama: ' + p.oldestOpenDays + ' hari</div>' : '') +
-            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)">▼ Lihat Detail ITR, MRIR & Disiplin</button>' +
+            (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="display:flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#dc2626; background:rgba(239,68,68,0.06); padding:4px 8px; border-radius:6px; margin:8px 0; border:1px solid rgba(239,68,68,0.15);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Open terlama: ' + p.oldestOpenDays + ' hari</span></div>' : '') +
+            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>Rincian Disiplin &amp; Tipe</span></button>' +
             '<div class="cc-detail-section" id="' + detailId + '">' +
               '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR per Disiplin & MRIR</div>' +
               '<div class="cc-chip-row">' + (itrChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
               '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin (' + discs.length + ')</div>' +
               '<div class="cc-chip-row">' + (discChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
-              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Tipe Inspeksi (' + types.length + ')</div>' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Tipe Inspeksi (' + types.length + ')</div>' +
               '<div class="cc-chip-row">' + (typeChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
             '</div>' +
           '</div>';
@@ -10641,7 +10816,9 @@ function fileLinksHtml(d) {
       var el = document.getElementById(id);
       if (!el) return;
       var shown = el.classList.toggle('show');
-      btn.innerHTML = (shown ? '▲ Sembunyikan Detail' : '▼ Lihat Detail ITR, MRIR & Disiplin');
+      btn.innerHTML = (shown 
+        ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg><span>Sembunyikan Rincian</span>' 
+        : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg><span>Rincian Disiplin &amp; Tipe</span>');
     }
 
 var _ccProjDetailState_ = null;
