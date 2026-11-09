@@ -1439,6 +1439,14 @@ body {
       background: var(--bezel);
     }
                     /* ═══ COMMAND CENTER — EXECUTIVE 3-COLUMN DECK (TOP) ═══ */
+    
+    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
+    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
+      font-variant-numeric: tabular-nums;
+      -webkit-font-feature-settings: "tnum";
+      font-feature-settings: "tnum";
+    }
+
     .cc-deck {
       display: grid;
       grid-template-columns: 1fr 1.25fr 1fr;
@@ -1446,10 +1454,26 @@ body {
       margin-bottom: 24px;
     }
     @media (max-width: 1024px) {
-      .cc-deck { grid-template-columns: 1fr 1fr; }
+      
+    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
+    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
+      font-variant-numeric: tabular-nums;
+      -webkit-font-feature-settings: "tnum";
+      font-feature-settings: "tnum";
+    }
+
+    .cc-deck { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
-      .cc-deck { grid-template-columns: 1fr; }
+      
+    /* ═══ UNSLOP: TABULAR NUMERICS (ISO/IEC Technical Ledger Standard) ═══ */
+    table, .stat-value, .cc-mini-stat-val, .doc-metric-val, .disc-cell span, .mono-val, .badge-num {
+      font-variant-numeric: tabular-nums;
+      -webkit-font-feature-settings: "tnum";
+      font-feature-settings: "tnum";
+    }
+
+    .cc-deck { grid-template-columns: 1fr; }
     }
     .deck-card {
       background: var(--surface-card);
@@ -2265,7 +2289,8 @@ body {
   border-radius: 50%;
   background: #22c55e;
   box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
-  animation: footerPulse 2s infinite;
+  /* unslop: calm steady indicator */
+  /* animation: footerPulse 2s infinite; */
 }
 
 @keyframes footerPulse {
@@ -2961,7 +2986,8 @@ canvas#disciplineChart {
   inset: -3px;
   border-radius: 50%;
   background: inherit;
-  animation: beaconPulse 1.8s infinite ease-out;
+  /* unslop: calm indicator */
+  display: none;
 }
 @keyframes beaconPulse {
   0% { transform: scale(0.8); opacity: 0.9; }
@@ -3938,7 +3964,7 @@ canvas#disciplineChart {
   inset: -4px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ed2e35, #3b82f6, #10b981);
-  animation: devAvatarSpin 8s linear infinite;
+  /* unslop: steady ring */
 }
 @keyframes devAvatarSpin {
   to { transform: rotate(360deg); }
@@ -4149,7 +4175,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       border-radius: 50%;
       background: #10b981;
       box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      animation: syncPulse 2s infinite ease-in-out;
+      /* unslop: steady indicator */
       flex-shrink: 0;
     }
     .sync-pulse-dot.offline {
@@ -5806,16 +5832,24 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()" style="padding:4px 10px; font-size:16px; border:none; cursor:pointer;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                   </div>
 
-                  <!-- ⚡ AI SMART SCANNER HERO BANNER -->
-                  <div style="background:linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%); border:1.5px dashed #6366f1; border-radius:10px; padding:12px 14px; margin-bottom:16px; text-align:center;">
-                    <div style="font-size:13px; font-weight:700; color:#4338ca; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision AI OCR)
+                  <!-- 📋 EKSTRAKSI DATA SERTIFIKAT (OCR) -->
+                  <div style="background:var(--surface-subtle); border:1px solid var(--border); border-left:3px solid var(--primary); border-radius:10px; padding:12px 14px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:34px; height:34px; border-radius:8px; background:rgba(22,61,120,0.08); display:flex; align-items:center; justify-content:center; color:var(--primary); flex-shrink:0;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="8" x2="12" y2="8"/><line x1="8" y1="16" x2="14" y2="16"/></svg>
+                      </div>
+                      <div>
+                        <div style="font-size:12.5px; font-weight:700; color:var(--ink); display:flex; align-items:center; gap:6px;">
+                          <span>Ekstraksi Data Sertifikat (OCR)</span>
+                          <span style="font-size:9.5px; font-family:var(--font-mono); font-weight:700; background:var(--surface-card); border:1px solid var(--border); padding:1px 6px; border-radius:4px; color:var(--ink-muted);">ISO/IEC 17025</span>
+                        </div>
+                        <div style="font-size:11px; color:var(--ink-muted); margin-top:2px;">
+                          Unggah foto / PDF sertifikat untuk mengisi form secara otomatis
+                        </div>
+                      </div>
                     </div>
-                    <div style="font-size:11px; color:#4b5563; margin-bottom:10px; line-height:1.4;">
-                      Upload foto sertifikat kalibrasi atau PDF, AI membaca & mengisikan seluruh kolom form otomatis.
-                    </div>
-                    <button type="button" class="btn btn-primary btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="background:#4f46e5; border-radius:6px; font-weight:600; font-size:12px; padding:7px 16px; box-shadow:0 2px 8px rgba(79,70,229,0.3); cursor:pointer;">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="13" r="4"/></svg>Upload / Foto Sertifikat
+                    <button type="button" class="btn btn-primary btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="white-space:nowrap; font-weight:600; font-size:11.5px; padding:7px 14px; cursor:pointer;">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Pilih Sertifikat
                     </button>
                     <input type="file" id="calCertFileInput" accept="image/*,application/pdf" capture="environment" style="display:none;" onchange="handleAiCertScan(this)">
                   </div>
@@ -6122,19 +6156,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <!-- Floating AI Copilot Launcher Button -->
-<button id="aiChatBtn" class="ai-launcher-btn" onclick="toggleAIChat()" aria-label="Buka Asisten AI QA/QC" title="Asisten AI QA/QC Copilot">
+<button id="aiChatBtn" class="ai-launcher-btn" onclick="toggleAIChat()" aria-label="Buka Asisten Riset Dokumen QA/QC" title="Asisten Riset Dokumen QA/QC">
   <div class="ai-launcher-icon-wrap">
-    <svg class="ai-launcher-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
-      <path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="url(#aiSparkleGrad)" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round"/>
-      <circle cx="19" cy="5" r="2.2" fill="#60a5fa"/>
-      <circle cx="5" cy="19" r="1.8" fill="#34d399"/>
-      <defs>
-        <linearGradient id="aiSparkleGrad" x1="3" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#ffffff"/>
-          <stop offset="0.5" stop-color="#93c5fd"/>
-          <stop offset="1" stop-color="#3b82f6"/>
-        </linearGradient>
-      </defs>
+    <svg class="ai-launcher-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <circle cx="11.5" cy="14.5" r="2.5"/>
+      <path d="m13.5 16.5 2 2"/>
     </svg>
   </div>
   <span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>
@@ -6147,15 +6175,17 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <div class="ai-chat-header">
     <div class="ai-header-info">
       <div class="ai-header-avatar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#60a5fa" stroke="#ffffff" stroke-width="1.2"/>
-          <circle cx="19" cy="5" r="2" fill="#38bdf8"/>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <circle cx="11.5" cy="14.5" r="2.5"/>
+          <path d="m13.5 16.5 2 2"/>
         </svg>
       </div>
       <div>
         <div class="ai-header-title-row">
-          <span class="ai-header-title">Asisten QA/QC Copilot</span>
-          <span class="ai-header-badge">AI COPILOT</span>
+          <span class="ai-header-title">Asisten Riset Dokumen</span>
+          <span class="ai-header-badge" style="background:rgba(255,255,255,0.18); font-family:var(--font-mono); font-size:10px; letter-spacing:0.5px;">EDMS INTEL</span>
         </div>
         <div class="ai-header-sub" id="aiChatContext">Fokus: Semua Proyek · PT Asuka Engineering Indonesia</div>
       </div>
@@ -6182,10 +6212,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       </div>
       <div class="ai-msg-bot">
         <div class="ai-bot-greeting">
-          <strong>Halo, Tim QA/QC!</strong>
+          <strong>Pusat Riset Dokumen Mutu</strong>
         </div>
         <p class="ai-bot-desc">
-          Saya <strong>Asisten QA/QC Copilot</strong> PT Asuka Engineering Indonesia. Tanyakan status dokumen, validasi inspeksi NFI/ITR, atau konsultasi standar teknik fabrikasi &amp; konstruksi.
+          Sistem intelijen dokumen QA/QC PT Asuka Engineering Indonesia. Masukkan nomor NFI, kode ITR, status kalibrasi, atau konsultasi spesifikasi teknis proyek.
         </p>
 
         <!-- Modern Suggestion Action Cards -->
@@ -6333,7 +6363,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   border-radius: 50%;
   border: 2px solid #ffffff;
   box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: beaconPulse 2s infinite;
+  /* unslop: steady notification dot */
 }
 
 /* AI Chat Card Frame */
