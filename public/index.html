@@ -1654,19 +1654,21 @@ body {
     .cc-project-card {
       background: var(--surface-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
+      border-radius: 10px;
       padding: 16px;
       cursor: pointer;
-      transition: box-shadow 0.15s ease, transform 0.1s ease;
-      border-left: 4px solid var(--ink-faint);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      border-left: 3px solid var(--ink-faint);
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     .cc-project-card:hover {
-      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
-      transform: translateY(-2px);
+      border-color: var(--primary, #163d78);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      transform: none;
     }
     .cc-project-card.health-red { border-left-color: var(--rejected-text); }
     .cc-project-card.health-yellow { border-left-color: var(--pending-text); }
@@ -1695,17 +1697,19 @@ body {
     }
 
     .cc-status-pill {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
+      padding: 2.5px 7px;
+      border-radius: 4px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
-    .cc-status-pill.critical { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
-    .cc-status-pill.warning { background: rgba(217, 119, 6, 0.1); color: #d97706; }
-    .cc-status-pill.good { background: rgba(22, 163, 74, 0.1); color: #16a34a; }
+    .cc-status-pill.critical { background: rgba(220, 38, 38, 0.08); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+    .cc-status-pill.warning { background: rgba(217, 119, 6, 0.08); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.2); }
+    .cc-status-pill.good { background: rgba(22, 163, 74, 0.08); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.2); }
 
     .cc-mini-stats {
       display: grid;
@@ -1713,10 +1717,13 @@ body {
       gap: 4px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 6px 2px;
       margin-bottom: 10px;
       text-align: center;
+      font-variant-numeric: tabular-nums;
+      -webkit-font-feature-settings: "tnum";
+      font-feature-settings: "tnum";
     }
     .cc-mini-stat {
       display: flex;
@@ -1746,14 +1753,14 @@ body {
     }
     .cc-progress-bar-bg {
       flex: 1;
-      height: 6px;
-      border-radius: 999px;
+      height: 5px;
+      border-radius: 2px;
       background: var(--surface-subtle);
       overflow: hidden;
     }
     .cc-progress-bar-fill {
       height: 100%;
-      border-radius: 999px;
+      border-radius: 2px;
       background: var(--approved-text, #16a34a);
       transition: width 0.3s ease;
     }
@@ -4416,7 +4423,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       background: #fee2e2;
       color: #dc2626;
       border: 1px solid #fca5a5;
-      animation: overduePulse 2s infinite ease-in-out;
+      /* unslop: calm */ opacity: 0.9;
     }
     @keyframes overduePulse {
       0%, 100% {
@@ -5721,10 +5728,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <option value="thisYear">Tahun Ini</option>
                   </select>
                   <select id="ccProjectSort" class="cc-select" onchange="onCCProjectSortChange_()" title="Urutkan kartu proyek">
-                    <option value="critical_first">⚡ Prioritas: Kritis Dulu</option>
-                    <option value="progress_asc">📉 Progres: Terendah Dulu</option>
-                    <option value="total_desc">📊 Volume: Terbanyak Dulu</option>
-                    <option value="code_asc">🔤 Kode: A - Z</option>
+                    <option value="critical_first">Prioritas: Kritis Dulu</option>
+                    <option value="progress_asc">Progres: Terendah Dulu</option>
+                    <option value="total_desc">Volume: Terbanyak Dulu</option>
+                    <option value="code_asc">Kode Proyek: A - Z</option>
                   </select>
                 </div>
                 <div class="cc-toolbar-right">
@@ -6437,27 +6444,30 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 58px;
-  height: 58px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--primary, #163d78);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
   cursor: pointer;
   z-index: 9998;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   touch-action: manipulation;
 }
 #aiChatBtn.ai-launcher-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 14px 38px rgba(37, 99, 235, 0.45);
+  background: #102e5c;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.22);
+  transform: none;
 }
 #aiChatBtn.ai-launcher-btn:active {
-  transform: scale(0.94);
+  background: #0c2448;
+  transform: scale(0.97);
 }
 .ai-launcher-icon-wrap {
   display: flex;
@@ -6954,7 +6964,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   background: #ef4444 !important;
   color: #ffffff !important;
   border-color: #ef4444 !important;
-  animation: aiPulse 1s infinite;
+  /* unslop: calm */
 }
 @keyframes aiPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
@@ -12240,7 +12250,7 @@ function toggleAIChat() {
   var isOpen = panel.style.display !== 'none';
   if (isOpen) {
     panel.style.display = 'none';
-    btn.innerHTML = '<div class="ai-launcher-icon-wrap"><svg class="ai-launcher-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="url(#aiSparkleGrad)" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round"/><circle cx="19" cy="5" r="2.2" fill="#60a5fa"/><circle cx="5" cy="19" r="1.8" fill="#34d399"/><defs><linearGradient id="aiSparkleGrad" x1="3" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#ffffff"/><stop offset="0.5" stop-color="#93c5fd"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs></svg></div><span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>';
+    btn.innerHTML = '<div class="ai-launcher-icon-wrap"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="rgba(255,255,255,0.12)"/><polyline points="14 2 14 8 20 8"/><circle cx="11" cy="14" r="3"/><line x1="13.2" y1="16.2" x2="16.5" y2="19.5"/></svg></div><span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>';
   } else {
     if (typeof toggleMobileFab === 'function') toggleMobileFab(false);
     panel.style.display = 'flex';
