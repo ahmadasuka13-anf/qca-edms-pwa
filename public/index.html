@@ -5876,6 +5876,37 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
               <!-- Aging & Trend Analysis Charts (Docked & Clean) -->
               <div id="analyticsChartsWrapper" style="display:none; margin-bottom:24px;">
+                <!-- Backlog & Completion Technical Card -->
+                <div id="backlogCard" style="display:none; background:var(--surface-card); border:1px solid var(--border); border-left:4px solid var(--primary); border-radius:12px; padding:16px 20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div>
+                      <div style="font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Tingkat Penyelesaian (Completion Rate)</div>
+                      <div style="display:flex; align-items:baseline; gap:10px; margin-top:2px;">
+                        <span id="backlogCompletion" style="font-size:26px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</span>
+                        <span id="backlogRateText" style="font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums;">-</span>
+                      </div>
+                      <div id="backlogDetail" style="font-size:12px; color:var(--ink-muted); margin-top:4px;">-</div>
+                    </div>
+                    <div style="display:flex; gap:16px; text-align:right;">
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Dokumen Selesai</div>
+                        <div id="backlogClosed" style="font-size:18px; font-weight:800; color:#16a34a; font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Total Dokumen</div>
+                        <div id="backlogAll" style="font-size:18px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Backlog Tertunda</div>
+                        <div id="backlogTotal" style="font-size:18px; font-weight:800; color:#dc2626; font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="background:var(--surface-subtle); border-radius:3px; height:6px; overflow:hidden; margin-top:12px;">
+                    <div id="backlogProgressBar" style="background:#16a34a; height:100%; width:0%; transition:width 0.4s ease;"></div>
+                  </div>
+                </div>
+                
                 <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                   <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open (Aging)</span></h3>
                   <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
@@ -5894,6 +5925,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(220,38,38,0.08); border-radius:8px; border:1px solid rgba(220,38,38,0.2); cursor:pointer;" onclick="drillDownAging('>90')">
                       <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="age90plus">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">&gt;90 hari (Kritis)</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,61,120,0.06); border-radius:8px; border:1px solid rgba(22,61,120,0.18);">
+                      <div style="font-size:20px; font-weight:800; color:var(--primary,#163d78); font-family:var(--font-mono);" id="avgAge">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Rata-rata (hari)</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(239,68,68,0.06); border-radius:8px; border:1px solid rgba(239,68,68,0.18);">
+                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="maxAge">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Maksimal (hari)</div>
                     </div>
                   </div>
                   <div style="position:relative; height:200px; width:100%;">
@@ -6307,6 +6346,22 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted,#94a3b8);margin-top:6px;">
       <span id="uploadProgressDetail">0 KB / 0 KB</span>
       <span id="uploadProgressAction" style="font-weight:600;"></span>
+    </div>
+  </div>
+
+  <!-- Modal Pencarian Global (Quick Palette Ctrl+K) -->
+  <div class="modal-overlay" id="globalSearchModal" style="display:none; align-items:flex-start; justify-content:center; padding-top:60px; z-index:9999999;" onclick="if(event.target===this) closeGlobalSearchModal()">
+    <div class="modal-box" style="max-width:560px; width:92%; padding:0; border-radius:12px; overflow:hidden; border:1px solid var(--border); box-shadow:0 12px 36px rgba(0,0,0,0.25);">
+      <div style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid var(--border); background:var(--surface);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted); flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalSearchInput" placeholder="Ketik nama modul, nomor dokumen, atau proyek... (Tekan Esc untuk tutup)" oninput="onGlobalSearchInput(this.value)" onkeydown="onGlobalSearchKeydown(event)" style="border:none; background:transparent; font-size:14px; width:100%; outline:none; color:var(--ink);" autocomplete="off">
+        <span style="font-size:10.5px; font-weight:700; color:var(--ink-muted); padding:3px 6px; background:var(--surface-subtle); border:1px solid var(--border); border-radius:4px; font-family:var(--font-mono);">ESC</span>
+      </div>
+      <div id="globalSearchResults" style="max-height:360px; overflow-y:auto; padding:8px 0; background:var(--surface-card);"></div>
+      <div style="padding:8px 16px; border-top:1px solid var(--border); background:var(--surface-subtle); font-size:11px; color:var(--ink-muted); display:flex; justify-content:space-between; align-items:center;">
+        <span>Navigasi: <b>&uarr;&darr;</b> pilih &middot; <b>Enter</b> buka &middot; <b>Esc</b> keluar</span>
+        <span style="font-variant-numeric:tabular-nums;">QC-CMS EDMS</span>
+      </div>
     </div>
   </div>
 
@@ -7915,6 +7970,9 @@ function saveCalibrationData(e) {
       if (name === 'dashboard') loadDashboard();
       if (name === 'calibration') loadCalibrationData();
       if (name === 'nfilog') loadNFILog();
+      if (name === 'list') { if (typeof loadDocumentList === 'function') loadDocumentList(); }
+      if (name === 'approval') { if (typeof loadApprovals === 'function') loadApprovals(); }
+      if (name === 'users') { if (typeof loadUserList === 'function') loadUserList(); }
       if (name === 'sitereport') { if (!siteReportInitialized) { siteReportInitialized = true; initSiteReportView(); } else loadSiteReportEntries(); }
 }                                          // ← ✅ TAMBAH BARIS INI
 
@@ -8360,8 +8418,15 @@ function fileLinksHtml(d) {
     }
 
     function renderUserList(users) {
-      usersCache = {}; users.forEach(u => usersCache[u.userId] = u);
       const c = document.getElementById('userListContent');
+      if (!Array.isArray(users)) {
+        if (users && Array.isArray(users.users)) users = users.users;
+        else {
+          if (c) c.innerHTML = '<div class="empty-state"><div class="msg">' + esc((users && users.message) || 'Format data pengguna tidak valid.') + '</div></div>';
+          return;
+        }
+      }
+      usersCache = {}; users.forEach(u => usersCache[u.userId] = u);
       if (!users.length) { c.innerHTML = '<div class="empty-state"><div class="msg">Belum ada user.</div></div>'; return; }
       let rows = '';
       users.forEach(function (u) {
@@ -8410,8 +8475,15 @@ function fileLinksHtml(d) {
       google.script.run.withSuccessHandler(renderApproverList).withFailureHandler(function (err) { c.innerHTML = '<div class="empty-state"><div class="msg">Gagal: ' + esc(err.message) + '</div></div>'; }).getUserList(sessionToken);
     }
     function renderApproverList(users) {
-      usersCache = {}; users.forEach(u => usersCache[u.userId] = u);
       const c = document.getElementById('approverListContent');
+      if (!Array.isArray(users)) {
+        if (users && Array.isArray(users.users)) users = users.users;
+        else {
+          if (c) c.innerHTML = '<div class="empty-state"><div class="msg">' + esc((users && users.message) || 'Format data pengguna tidak valid.') + '</div></div>';
+          return;
+        }
+      }
+      usersCache = {}; users.forEach(u => usersCache[u.userId] = u);
       const active = users.filter(u => u.status === 'Active');
       if (!active.length) { c.innerHTML = '<div class="empty-state"><div class="msg">Belum ada user aktif.</div></div>'; return; }
       let rows = '';
@@ -8427,9 +8499,9 @@ function fileLinksHtml(d) {
     }
     function setUserCanApprove(id, v) { google.script.run.withSuccessHandler(function (res) { showToast(res.message, res.success ? 'success' : 'error'); if (res.success) { loadApproverList(); populateRuleFormSelectors(); } }).updateUser(sessionToken, id, { canApprove: v }); }
     function populateRuleFormSelectors() {
-      const pi = [{ value: 'ALL', label: 'Semua Proyek (ALL)' }].concat((initData.projects || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name })));
+      const pi = [{ value: 'ALL', label: 'Semua Proyek (ALL)' }].concat(((initData && initData.projects) || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name })));
       populateSelect('ruleProjectSelect', pi);
-      const ti = [{ value: 'ALL', label: 'Semua Jenis (ALL)' }].concat((initData.documentTypes || []).map(t => ({ value: t, label: t })));
+      const ti = [{ value: 'ALL', label: 'Semua Jenis (ALL)' }].concat(((initData && initData.documentTypes) || []).map(t => ({ value: t, label: t })));
       populateSelect('ruleDocTypeSelect', ti);
       google.script.run.withSuccessHandler(function (list) {
         populateSelect('ruleApproverSelect', list.map(u => ({ value: u.email, label: u.fullName + ' (' + u.role + ')' })), 'Pilih approver...');
@@ -8471,7 +8543,7 @@ function fileLinksHtml(d) {
       const now = new Date(), yyyy = String(now.getFullYear());
       return String(t || '{PROJECT}-{TYPE}-{SEQ}').replace(/\{PROJECT\}/g, ctx.projectCode || '').replace(/\{TYPE\}/g, ctx.docType || '').replace(/\{DISC\}/g, ctx.discipline || '').replace(/\{SEQ\}/g, s).replace(/\{YYYY\}/g, yyyy).replace(/\{YY\}/g, yyyy.slice(-2)).replace(/\{MM\}/g, String(now.getMonth() + 1).padStart(2, '0'));
     }
-    function populateNumberingFormSelector() { const pi = [{ value: 'ALL', label: 'Semua Proyek (ALL)' }].concat((initData.projects || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name }))); populateSelect('numProjectSelect', pi); updateNumberingPreview(); }
+    function populateNumberingFormSelector() { const pi = [{ value: 'ALL', label: 'Semua Proyek (ALL)' }].concat(((initData && initData.projects) || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name }))); populateSelect('numProjectSelect', pi); updateNumberingPreview(); }
     function updateNumberingPreview() {
       const sel = document.getElementById('numProjectSelect').value;
       const pc = sel && sel !== 'ALL' ? sel : 'PROYEK';
@@ -9180,7 +9252,7 @@ function fileLinksHtml(d) {
     function openNfiImportModal() {
       document.getElementById('nfiImportModal').classList.add('show');
       backToNfiImportStep1();
-      populateSelect('nfiImportProject', (initData.projects || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name })), '— Pilih proyek —');
+      populateSelect('nfiImportProject', ((initData && initData.projects) || []).map(p => ({ value: p.code, label: p.code + ' — ' + p.name })), '— Pilih proyek —');
       const fp = (document.getElementById('nfiFilterProject') ? document.getElementById('nfiFilterProject').value : '') || globalProjectFilter || '';
       if (fp) document.getElementById('nfiImportProject').value = fp;
     }
@@ -11271,6 +11343,152 @@ function fileLinksHtml(d) {
       }, 100);
     }
 
+    // ═══════════════════════════════════════════════════════════════
+    // 📷 PEMINDAI QR & BARCODE KAMERA (STANDAR INDUSTRI ANTI-AI)
+    // ═══════════════════════════════════════════════════════════════
+    var qrScannerInstance_ = null;
+    var qrTargetInputId_ = null;
+    var qrCurrentFacingMode_ = 'environment';
+    var qrTorchOn_ = false;
+
+    window.openQrScanner = function(targetInputId, title) {
+      qrTargetInputId_ = targetInputId;
+      var modal = document.getElementById('qrScannerModal');
+      if (!modal) return;
+      var titleEl = document.getElementById('qrScannerTitle');
+      if (titleEl) titleEl.textContent = title || 'Scan QR / Barcode';
+      modal.style.display = 'flex';
+
+      var readerEl = document.getElementById('qrScannerReader');
+      if (!readerEl) return;
+      readerEl.innerHTML = '';
+
+      if (typeof Html5Qrcode === 'undefined') {
+        readerEl.innerHTML = '<div style="padding:28px 16px;color:var(--ink-muted);font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:10px;"><span class="spinner dark"></span><span>Menyiapkan modul scanner kamera...</span></div>';
+        var sc = document.createElement('script');
+        sc.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+        sc.onload = function() { startQrScanner_(); };
+        sc.onerror = function() {
+          readerEl.innerHTML = '<div style="padding:24px 16px;color:#dc2626;font-size:12.5px;">Gagal memuat modul kamera. Silakan masukkan nomor secara manual.<br><br><button type="button" class="btn btn-secondary" onclick="closeQrScanner()" style="font-size:12px;">Tutup</button></div>';
+        };
+        document.head.appendChild(sc);
+        return;
+      }
+      startQrScanner_();
+    };
+
+    function startQrScanner_() {
+      if (typeof Html5Qrcode === 'undefined') return;
+      if (qrScannerInstance_) {
+        try { qrScannerInstance_.stop().catch(function(){}); } catch(e){}
+        qrScannerInstance_ = null;
+      }
+      var readerEl = document.getElementById('qrScannerReader');
+      if (!readerEl) return;
+      readerEl.innerHTML = '';
+
+      var scannerId = 'qrScannerReader';
+      try {
+        qrScannerInstance_ = new Html5Qrcode(scannerId);
+        var config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
+
+        qrScannerInstance_.start(
+          { facingMode: qrCurrentFacingMode_ },
+          config,
+          function onScanSuccess(decodedText) {
+            if (qrTargetInputId_) {
+              var input = document.getElementById(qrTargetInputId_);
+              if (input) {
+                input.value = decodedText;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                if (qrTargetInputId_ === 'nfiSearch' && typeof loadNFILog === 'function') {
+                  loadNFILog();
+                } else if (qrTargetInputId_ === 'filterSearch' && typeof applyFilter === 'function') {
+                  applyFilter();
+                }
+              }
+            }
+            if (typeof showToast === 'function') {
+              showToast('Kode terdeteksi: ' + decodedText, 'success');
+            }
+            closeQrScanner();
+          },
+          function onScanFailure(error) {
+            // Abaikan kegagalan scan per frame
+          }
+        ).then(function() {
+          var torchBtn = document.getElementById('qrTorchBtn');
+          if (torchBtn) {
+            try {
+              var caps = qrScannerInstance_.getRunningTrackCapabilities();
+              if (caps && caps.torch) {
+                torchBtn.style.display = 'inline-block';
+              } else {
+                torchBtn.style.display = 'none';
+              }
+            } catch (e) {
+              torchBtn.style.display = 'none';
+            }
+          }
+        }).catch(function(err) {
+          console.warn('Kamera scanner tidak tersedia:', err);
+          var r = document.getElementById('qrScannerReader');
+          if (r) {
+            r.innerHTML = '<div style="padding:24px 16px;color:#dc2626;font-size:12.5px;">Tidak dapat mengakses stream kamera.<br>Pastikan izin kamera telah disetujui di browser.<br><br><button type="button" class="btn btn-secondary" onclick="closeQrScanner()" style="font-size:12px;">Tutup</button></div>';
+          }
+        });
+      } catch (err) {
+        console.error('Inisialisasi Html5Qrcode gagal:', err);
+      }
+    }
+
+    window.closeQrScanner = function() {
+      var modal = document.getElementById('qrScannerModal');
+      if (modal) modal.style.display = 'none';
+      if (qrScannerInstance_) {
+        try {
+          qrScannerInstance_.stop().then(function() {
+            try { qrScannerInstance_.clear(); } catch(e){}
+            qrScannerInstance_ = null;
+          }).catch(function(e) {
+            qrScannerInstance_ = null;
+          });
+        } catch(e) {
+          qrScannerInstance_ = null;
+        }
+      }
+    };
+
+    window.flipQrCamera = function() {
+      qrCurrentFacingMode_ = (qrCurrentFacingMode_ === 'environment') ? 'user' : 'environment';
+      if (qrScannerInstance_) {
+        qrScannerInstance_.stop().then(function() {
+          startQrScanner_();
+        }).catch(function() {
+          startQrScanner_();
+        });
+      }
+    };
+
+    window.toggleQrTorch = function() {
+      if (!qrScannerInstance_) return;
+      try {
+        qrTorchOn_ = !qrTorchOn_;
+        qrScannerInstance_.applyVideoConstraints({
+          advanced: [{ torch: qrTorchOn_ }]
+        }).then(function() {
+          var btn = document.getElementById('qrTorchBtn');
+          if (btn) btn.textContent = qrTorchOn_ ? 'Matikan Senter' : 'Senter';
+        }).catch(function(e) {
+          console.warn('Torch error:', e);
+        });
+      } catch(e) {
+        console.warn('Torch apply error:', e);
+      }
+    };
+
+
     function renderCCProjects_(projects) {
       var wrap = document.getElementById('ccProjectsWrap');
       if (!wrap) return;
@@ -12261,12 +12479,12 @@ function loadAnalytics(projectCode) {
   google.script.run
     .withSuccessHandler(function(res) {
       if (!res.success) { console.error("Aging error:", res.message); return; }
-      document.getElementById('age0_30').textContent = res.buckets['0-30'];
-      document.getElementById('age31_60').textContent = res.buckets['31-60'];
-      document.getElementById('age61_90').textContent = res.buckets['61-90'];
-      document.getElementById('age90plus').textContent = res.buckets['>90'];
-      document.getElementById('avgAge').textContent = res.avgAge;
-      document.getElementById('maxAge').textContent = res.maxAge;
+      var el0_30 = document.getElementById('age0_30'); if (el0_30) el0_30.textContent = (res.buckets && res.buckets['0-30']) || 0;
+      var el31_60 = document.getElementById('age31_60'); if (el31_60) el31_60.textContent = (res.buckets && res.buckets['31-60']) || 0;
+      var el61_90 = document.getElementById('age61_90'); if (el61_90) el61_90.textContent = (res.buckets && res.buckets['61-90']) || 0;
+      var el90plus = document.getElementById('age90plus'); if (el90plus) el90plus.textContent = (res.buckets && res.buckets['>90']) || 0;
+      var elAvg = document.getElementById('avgAge'); if (elAvg) elAvg.textContent = res.avgAge || '-';
+      var elMax = document.getElementById('maxAge'); if (elMax) elMax.textContent = res.maxAge || '-';
       window._agingData = res;
     })
     .withFailureHandler(function(err) { console.error("Aging gagal:", err); })
@@ -12435,7 +12653,41 @@ function showDrillDown(filters, title) {
   }).getDrillDownData(filters);
 }
 
-function closeDrillModal() { document.getElementById('drillModal').style.display = 'none'; }
+function closeDrillModal() {
+  var modal = document.getElementById('drillModal');
+  if (modal) modal.style.display = 'none';
+  var wrap = document.getElementById('drillDownTableWrapper');
+  if (wrap) wrap.style.display = 'none';
+}
+function closeDrillDown() {
+  closeDrillModal();
+}
+window.closeDrillDown = closeDrillDown;
+window.closeDrillModal = closeDrillModal;
+
+function previewProjectSpreadsheet_() {
+  if (typeof _ccProjDetailState_ === 'undefined' || !_ccProjDetailState_ || !_ccProjDetailState_.project) {
+    if (typeof showToast === 'function') showToast('Data proyek tidak ditemukan.', 'warning');
+    return;
+  }
+  var p = _ccProjDetailState_.project;
+  var sheetId = p.id || '';
+  if (!sheetId) {
+    if (typeof showToast === 'function') showToast('ID Spreadsheet master untuk proyek ' + (p.code || '') + ' belum dikonfigurasi.', 'warning');
+    return;
+  }
+  var sheetUrl = 'https://docs.google.com/spreadsheets/d/' + encodeURIComponent(sheetId) + '/edit';
+  if (typeof window.previewFile_ === 'function') {
+    window.previewFile_(sheetUrl, 'Master Spreadsheet ' + (p.code || '') + ' — ' + (p.name || ''));
+  } else {
+    window.open(sheetUrl, '_blank', 'noopener,noreferrer');
+  }
+}
+window.previewProjectSpreadsheet_ = previewProjectSpreadsheet_;
+
+window.exportAnalisisCSV = function() {
+  if (typeof exportAnalisisExcel_ === 'function') exportAnalisisExcel_();
+};
 
 function applyPeriodFilter() {
   var period = document.getElementById('filterPeriod').value;
@@ -12450,25 +12702,40 @@ function applyPeriodFilter() {
 }
 
 function exportToCSV() {
-  document.getElementById('drillModal').style.display = 'block';
-  document.getElementById('drillTitle').textContent = 'Semua Data - ' + currentProject;
-  document.getElementById('drillInfo').textContent = 'Menyiapkan...';
-  document.getElementById('drillBody').innerHTML = '';
+  if (typeof showToast === 'function') showToast('Menyiapkan berkas CSV...', 'info');
+  var drill = document.getElementById('drillModal');
+  if (drill) {
+    drill.style.display = 'block';
+    var dt = document.getElementById('drillTitle'); if (dt) dt.textContent = 'Semua Data - ' + (currentProject || 'Semua Proyek');
+    var di = document.getElementById('drillInfo'); if (di) di.textContent = 'Menyiapkan berkas CSV...';
+    var db = document.getElementById('drillBody'); if (db) db.innerHTML = '';
+  }
   google.script.run.withSuccessHandler(function(res) {
-    if (!res.success) return;
+    if (!res || !res.success) {
+      if (typeof showToast === 'function') showToast('Gagal: ' + ((res && res.message) || 'Data tidak ditemukan'), 'error');
+      if (drill) drill.style.display = 'none';
+      return;
+    }
     var csv = ['No. NFI,ITR No.,Subject,Disiplin,Tipe,PIC,Issued,Umur'];
-    res.items.forEach(function(it) {
+    (res.items || []).forEach(function(it) {
       var age = '-';
       if (it.issuedDate) { var d = new Date(it.issuedDate); if (!isNaN(d.getTime())) age = Math.floor((new Date() - d) / 86400000); }
-      csv.push(['"'+(it.noNFI||'')+'"','"'+it.itrNo+'"','"'+(it.subject||'').replace(/"/g,'""')+'"','"'+(it.discipline||'')+'"','"'+(it.typeInsp||'')+'"','"'+(it.pic||'')+'"','"'+(it.issuedDate||'')+'"',age].join(','));
+      csv.push(['"'+(it.noNFI||'')+'"','"'+(it.itrNo||'')+'"','"'+(it.subject||'').replace(/"/g,'""')+'"','"'+(it.discipline||'')+'"','"'+(it.typeInsp||'')+'"','"'+(it.pic||'')+'"','"'+(it.issuedDate||'')+'"',age].join(','));
     });
     var blob = new Blob([csv.join('\n')], { type: 'text/csv' });
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'QC-CMS-' + currentProject + '-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.download = 'QC-CMS-' + (currentProject || 'All') + '-' + new Date().toISOString().slice(0,10) + '.csv';
+    document.body.appendChild(a);
     a.click();
-    document.getElementById('drillInfo').textContent = 'Total: ' + res.count + ' dokumen · File ter-download!';
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+    if (typeof showToast === 'function') showToast('File CSV berhasil diunduh.', 'success');
+    if (drill) drill.style.display = 'none';
+  }).withFailureHandler(function(err) {
+    if (typeof showToast === 'function') showToast('Gagal unduh CSV: ' + err.message, 'error');
+    if (drill) drill.style.display = 'none';
   }).getDrillDownData({ project: currentProject });
 }
 
@@ -14566,14 +14833,13 @@ window.addEventListener('offline', updateFooterStatus);
       var results = [];
 
       var navItems = [
-        { title: 'NFI Register & Log', sub: 'Pusat data registrasi inspeksi lapangan', tab: 'nfilog', icon: '📋' },
-        { title: 'Daftar Dokumen Mutu', sub: 'Repositori dokumen & transmittal proyek', tab: 'list', icon: '📁' },
-        { title: 'Dashboard Mutu & Analytics', sub: 'Grafik KPI & monitoring proyek', tab: 'dashboard', icon: '📊' },
-        { title: 'Command Center Master Hub', sub: 'Monitoring komprehensif seluruh proyek aktif', tab: 'command', icon: '🎯' },
-        { title: 'Kalibrasi Alat QC', sub: 'Validitas sertifikasi alat inspeksi', tab: 'calibration', icon: '⚖️' },
-        { title: 'Kelola Proyek & Hub Sync', sub: 'Pengaturan sinkronisasi Master Hub', tab: 'projects', icon: '⚙️' },
-        { title: 'Laporan Lapangan (Site Report)', sub: 'Entri aktivitas harian site', tab: 'sitereport', icon: '📝' },
-        { title: 'Unggah Dokumen Baru', sub: 'Upload berkas QC/QA baru ke sistem', tab: 'upload', icon: '📤' }
+        { title: 'NFI Register & Log', sub: 'Pusat data registrasi inspeksi lapangan', tab: 'nfilog', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' },
+        { title: 'Daftar Dokumen Mutu', sub: 'Repositori dokumen & transmittal proyek', tab: 'list', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' },
+        { title: 'Dashboard Mutu & Analytics', sub: 'Grafik KPI & monitoring proyek', tab: 'dashboard', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>' },
+        { title: 'Command Center Master Hub', sub: 'Monitoring komprehensif seluruh proyek aktif', tab: 'command', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>' },
+        { title: 'Kalibrasi Alat QC', sub: 'Validitas sertifikasi alat inspeksi', tab: 'calibration', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>' },
+        { title: 'Kelola Proyek & Hub Sync', sub: 'Pengaturan sinkronisasi Master Hub', tab: 'projects', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>' },
+        { title: 'Laporan Lapangan (Site Report)', sub: 'Entri aktivitas harian site', tab: 'sitereport', iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>' }
       ];
 
       if (!q) {
@@ -14581,14 +14847,14 @@ window.addEventListener('offline', updateFooterStatus);
         window._navGsActions_ = navItems.map(function(item) {
           return function() { switchTab(item.tab); closeGlobalSearchModal(); };
         });
-        navItems.slice(0, 6).forEach(function(item, idx) {
+        navItems.forEach(function(item, idx) {
           html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._navGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
-            '<span style="font-size:18px;">' + item.icon + '</span>' +
+            '<span style="color:var(--primary); display:inline-flex; align-items:center;">' + item.iconSvg + '</span>' +
             '<div style="flex:1; min-width:0;">' +
               '<div style="font-size:13.5px; font-weight:600; color:var(--ink);">' + item.title + '</div>' +
               '<div style="font-size:11.5px; color:var(--ink-muted);">' + item.sub + '</div>' +
             '</div>' +
-            '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px;">Buka ↵</span>' +
+            '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px; font-variant-numeric:tabular-nums;">Buka &#8629;</span>' +
           '</div>';
         });
         container.innerHTML = html;
@@ -14602,7 +14868,7 @@ window.addEventListener('offline', updateFooterStatus);
             title: item.title,
             sub: item.sub,
             action: function() { switchTab(item.tab); closeGlobalSearchModal(); },
-            icon: item.icon
+            iconSvg: item.iconSvg
           });
         }
       });
@@ -14616,7 +14882,7 @@ window.addEventListener('offline', updateFooterStatus);
           if (str.indexOf(q) !== -1) {
             results.push({
               title: n.noNfi || 'NFI Entry',
-              sub: (n.subjectDescription || '') + (n.itrNo ? (' • ITR: ' + n.itrNo) : ''),
+              sub: (n.subjectDescription || '') + (n.itrNo ? (' &bull; ITR: ' + n.itrNo) : ''),
               status: n.status,
               action: function() {
                 if (n.attachmentUrl && typeof previewFile_ === 'function') {
@@ -14626,60 +14892,38 @@ window.addEventListener('offline', updateFooterStatus);
                 }
                 closeGlobalSearchModal();
               },
-              icon: '📄'
-            });
-          }
-        });
-      }
-
-      // Filter Dokumen
-      if (typeof documentsCache !== 'undefined' && documentsCache) {
-        Object.keys(documentsCache).forEach(function(k) {
-          var d = documentsCache[k];
-          if (!d || results.length >= 20) return;
-          var str = ((d.docNumber || '') + ' ' + (d.title || '') + ' ' + (d.project || '')).toLowerCase();
-          if (str.indexOf(q) !== -1) {
-            results.push({
-              title: d.docNumber || d.title || 'Dokumen Mutu',
-              sub: (d.title ? (d.title + ' • ') : '') + (d.project || ''),
-              status: d.status,
-              action: function() {
-                if (typeof openPreviewModal === 'function') {
-                  openPreviewModal(d.docId);
-                } else {
-                  switchTab('list');
-                }
-                closeGlobalSearchModal();
-              },
-              icon: '📑'
+              iconSvg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
             });
           }
         });
       }
 
       if (!results.length) {
-        container.innerHTML = '<div style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
-          '<div style="font-size:24px; margin-bottom:8px;">🔍</div>' +
-          '<div style="font-weight:600; font-size:13.5px; color:var(--ink);">Tidak ada hasil untuk "' + esc(query) + '"</div>' +
-          '<div style="font-size:12px; margin-top:4px;">Coba gunakan nomor NFI, ITR, nama proyek, atau menu lainnya.</div>' +
-        '</div>';
+        container.innerHTML = '<div style="padding:28px 16px; text-align:center; color:var(--ink-muted); font-size:13px;">Tidak ditemukan hasil yang cocok untuk "<b>' + esc(q) + '</b>"</div>';
         return;
       }
 
-      var html = '';
       window._activeGsActions_ = results.map(function(r) { return r.action; });
-      results.forEach(function(res, idx) {
-        html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._activeGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
-          '<span style="font-size:18px;">' + res.icon + '</span>' +
+      var rHtml = '';
+      results.forEach(function(r, idx) {
+        var statusBadge = '';
+        if (r.status) {
+          var stLower = String(r.status).toLowerCase();
+          var badgeClass = stLower === 'closed' ? 'good' : (stLower === 'open' ? 'critical' : 'warning');
+          statusBadge = '<span class="cc-status-pill ' + badgeClass + '" style="font-size:10px; padding:1px 6px;">' + esc(r.status) + '</span>';
+        }
+        rHtml += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._activeGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
+          '<span style="color:var(--primary); display:inline-flex; align-items:center;">' + r.iconSvg + '</span>' +
           '<div style="flex:1; min-width:0;">' +
-            '<div style="font-size:13.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.title) + '</div>' +
-            '<div style="font-size:11.5px; color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.sub) + '</div>' +
+            '<div style="font-size:13.5px; font-weight:600; color:var(--ink); display:flex; align-items:center; gap:8px;">' +
+              '<span>' + esc(r.title) + '</span>' + statusBadge +
+            '</div>' +
+            '<div style="font-size:11.5px; color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(r.sub) + '</div>' +
           '</div>' +
-          (res.status ? ('<span class="badge" style="font-size:10.5px;">' + esc(res.status) + '</span>') : '') +
-          '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px;">Buka ↵</span>' +
+          '<span style="font-size:11px; color:var(--ink-muted); padding:2px 6px; background:var(--surface-subtle); border-radius:4px; font-variant-numeric:tabular-nums;">Pilih &#8629;</span>' +
         '</div>';
       });
-      container.innerHTML = html;
+      container.innerHTML = rHtml;
     };
 
     window.copyDocLink_ = function(url, title) {
@@ -15011,5 +15255,38 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
   <!-- MODAL: PREVIEW DOKUMEN -->
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- 🔍 DRILL-DOWN MODAL OVERLAY (Anti-AI Standard)                 -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div id="drillModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.7); z-index:100010; overflow:auto; padding:20px;" onclick="if(event.target===this) closeDrillModal()">
+      <div style="background:var(--surface-card, #ffffff); max-width:1100px; margin:24px auto; border-radius:12px; border:1px solid var(--border); padding:24px; position:relative; box-shadow:0 20px 50px rgba(0,0,0,0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <div>
+            <h3 id="drillTitle" style="margin:0; font-size:16px; font-weight:700; color:var(--ink);">Rincian Dokumen</h3>
+            <p id="drillInfo" style="margin:4px 0 0; font-size:12px; color:var(--ink-muted); font-variant-numeric:tabular-nums;"></p>
+          </div>
+          <button type="button" class="btn btn-secondary" onclick="closeDrillModal()" style="padding:6px 12px; border-radius:6px; font-size:12px; font-weight:600;">✕ Tutup</button>
+        </div>
+        <div style="overflow-x:auto; max-height:65vh;">
+          <table class="table-modern" style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="background:var(--surface-subtle); text-align:left;">
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">No. NFI</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">ITR No.</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">Deskripsi</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">Disiplin</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">Tipe</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">PIC</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border);">Issued</th>
+                <th style="padding:8px 10px; border-bottom:1px solid var(--border); text-align:right;">Aging</th>
+              </tr>
+            </thead>
+            <tbody id="drillBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
 </body>
 </html>
