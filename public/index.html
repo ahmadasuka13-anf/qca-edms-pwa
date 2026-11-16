@@ -6223,12 +6223,54 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <div class="panel" id="panelCalibration">
               <h2 class="panel-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;color:var(--primary);"><path d="M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-4.6-4.6a1 1 0 0 1 0-1.4L15.3 2.7a1 1 0 0 1 1.4 0l4.6 4.6a1 1 0 0 1 0 1.4z" fill="currentColor" fill-opacity="0.16"/><line x1="14" y1="4" x2="16" y2="6"/><line x1="11" y1="7" x2="14" y2="10"/><line x1="8" y1="10" x2="10" y2="12"/><line x1="5" y1="13" x2="8" y2="16"/></svg>Kalibrasi & Alat Ukur</h2>
               <p class="hint" style="margin:-10px 0 16px;">Monitoring status kalibrasi alat ukur per disiplin.</p>
-              <div class="filter-row" style="margin-bottom:16px; display:flex; flex-wrap:wrap; gap:8px;">
-                <button class="btn btn-secondary" onclick="loadCalibrationData()">↻ Muat Ulang</button>
-                <button class="btn btn-primary" onclick="openCalibrationForm()">+ Update Kalibrasi</button>
-                <button class="btn btn-primary" onclick="openCalibrationAiScanner()" style="background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#fff; border:none; box-shadow:0 2px 8px rgba(79,70,229,0.35); font-weight:600;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision OCR)</button>
-                <button class="btn btn-secondary" onclick="openCalibrationForm(); setTimeout(function(){ openQrScanner('calToolId', 'Scan Label Alat'); }, 300);" title="Scan Barcode / QR Label Alat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Scan Label Alat</button>
+              <!-- KALIBRASI ACTION TOOLBAR (ANTI-AI INDUSTRIAL) -->
+              <div class="filter-row" style="margin-bottom:14px; display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px;">
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                  <button type="button" class="btn btn-primary" onclick="openCalibrationAddForm()" style="background:var(--primary, #163d78); color:#fff; font-weight:700; border-radius:6px; display:inline-flex; align-items:center; gap:6px; touch-action:manipulation;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span>Tambah Alat Baru</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="openCalibrationImportModal()" style="font-weight:600; border-radius:6px; display:inline-flex; align-items:center; gap:6px; touch-action:manipulation;" title="Impor data massal dari file spreadsheet atau salin-tempel baris Excel">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Impor Spreadsheet</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="openCalibrationAiScanner()" style="font-weight:600; border-radius:6px; display:inline-flex; align-items:center; gap:6px; touch-action:manipulation;" title="Pindai sertifikat kalibrasi via OCR">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="m13.5 16.5 2 2"/></svg>
+                    <span>AI Scan Sertifikat</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="openMasterSpreadsheetTab_()" style="font-weight:600; border-radius:6px; display:inline-flex; align-items:center; gap:6px; color:#16a34a; touch-action:manipulation;" title="Buka master spreadsheet kalibrasi di Google Sheets">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+                    <span>Buka Spreadsheet Master</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="loadCalibrationData()" style="font-weight:600; border-radius:6px; display:inline-flex; align-items:center; gap:5px; touch-action:manipulation;" title="Muat ulang data dari server">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                    <span>Muat Ulang</span>
+                  </button>
+                </div>
+                
+                <!-- Filter & Search Controls -->
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                  <div style="position:relative; width:200px;">
+                    <input type="text" id="calSearchInput" oninput="filterCalibrationTable_()" placeholder="Cari ID, Nama, PIC..." style="width:100%; padding:7px 10px 7px 28px; font-size:12px; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); outline:none;">
+                    <span style="position:absolute; left:8px; top:50%; transform:translateY(-50%); opacity:0.5; pointer-events:none;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                  </div>
+                  <select id="calFilterDiscipline" onchange="filterCalibrationTable_()" style="padding:7px 10px; font-size:12px; font-weight:600; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); outline:none;">
+                    <option value="">Semua Disiplin</option>
+                  </select>
+                  <select id="calFilterStatus" onchange="filterCalibrationTable_()" style="padding:7px 10px; font-size:12px; font-weight:600; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); outline:none;">
+                    <option value="">Semua Status</option>
+                    <option value="Valid">Valid</option>
+                    <option value="Overdue">Overdue</option>
+                    <option value="Dalam Proses">Dalam Proses</option>
+                  </select>
+                </div>
               </div>
+
+              <!-- Baris Info Jumlah Data -->
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--ink-muted); margin-bottom:8px; padding:0 2px;">
+                <span id="calTableCountInfo" style="font-variant-numeric:tabular-nums; font-weight:600;"></span>
+              </div>
+
               <div class="card-section" id="calKpiWrap">
                 <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>
               </div>
@@ -6238,12 +6280,12 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
               <div class="modal-overlay" id="calibrationModal">
                 <div class="modal-box" style="max-width:560px;">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h3 class="card-title" style="margin:0;">Update Data Kalibrasi</h3>
+                    <h3 class="card-title" id="calModalTitle" style="margin:0;">Update Data Kalibrasi</h3>
                     <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()" style="padding:4px 10px; font-size:16px; border:none; cursor:pointer;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                   </div>
 
                   <!-- ⚡ AI SMART SCANNER HERO BANNER -->
-                  <div style="background:linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%); border:1.5px dashed #6366f1; border-radius:10px; padding:12px 14px; margin-bottom:16px; text-align:center;">
+                  <div style="background:var(--surface-subtle); border:1.5px dashed var(--border); border-radius:6px; padding:12px 14px; margin-bottom:16px; text-align:center;">
                     <div style="font-size:13px; font-weight:700; color:#4338ca; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision AI OCR)
                     </div>
@@ -7941,6 +7983,377 @@ function enterApp(isFreshLogin) {
 // ═══════════════════════════════════════════════════════════
 // MODUL KALIBRASI — Fungsi Frontend (langsung di Index.html)
 // ═══════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════════════
+// KALIBRASI & ALAT UKUR — COMPLETE CRUD & SPREADSHEET SYNC SYSTEM
+// ════════════════════════════════════════════════════════════════════════
+window.allCalibrationTools = [];
+window.parsedImportTools = [];
+
+function openMasterSpreadsheetTab_() {
+  var url = 'https://docs.google.com/spreadsheets/d/1yxVKQiUbKZnj8nY5foo6MHy6vcZS0bmDNY2UdW7Qo4Q/edit#gid=0';
+  window.open(url, '_blank');
+}
+window.openMasterSpreadsheetTab_ = openMasterSpreadsheetTab_;
+
+function openCalibrationAddForm() {
+  var m = document.getElementById('calibrationModal');
+  if (!m) return;
+  var title = document.getElementById('calModalTitle');
+  if (title) title.textContent = 'Tambah Alat Ukur Baru';
+  var btn = document.getElementById('calSubmitBtn');
+  if (btn) btn.textContent = 'Simpan Alat Baru';
+  var f = document.getElementById('calibrationForm');
+  if (f) f.reset();
+  var idInp = document.getElementById('calToolId');
+  if (idInp) { idInp.readOnly = false; setTimeout(function() { idInp.focus(); }, 150); }
+  m.classList.add('show');
+}
+window.openCalibrationAddForm = openCalibrationAddForm;
+
+function editCalibrationTool(toolId) {
+  var m = document.getElementById('calibrationModal');
+  if (!m) return;
+  var title = document.getElementById('calModalTitle');
+  if (title) title.textContent = 'Edit Data Alat: ' + toolId;
+  var btn = document.getElementById('calSubmitBtn');
+  if (btn) btn.textContent = 'Perbarui Data Alat';
+  var f = document.getElementById('calibrationForm');
+  if (f) f.reset();
+
+  var data = window.allCalibrationTools || [];
+  var tool = null;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim() === String(toolId).trim()) {
+      tool = data[i];
+      break;
+    }
+  }
+
+  if (tool) {
+    var idInp = document.getElementById('calToolId');
+    if (idInp) { idInp.value = tool[0] || ''; idInp.readOnly = true; }
+    if (document.getElementById('calToolName')) document.getElementById('calToolName').value = tool[1] || '';
+    if (document.getElementById('calDiscipline')) document.getElementById('calDiscipline').value = tool[2] || '';
+    if (document.getElementById('calDate')) document.getElementById('calDate').value = tool[3] || '';
+    if (document.getElementById('calNextDate')) document.getElementById('calNextDate').value = tool[4] || '';
+    if (document.getElementById('calStatus')) document.getElementById('calStatus').value = tool[5] || 'Valid';
+    if (document.getElementById('calPic')) document.getElementById('calPic').value = tool[6] || '';
+  }
+  m.classList.add('show');
+}
+window.editCalibrationTool = editCalibrationTool;
+
+function deleteCalibrationToolUI(toolId, toolName) {
+  var promptMsg = 'Apakah Anda yakin ingin menghapus alat ' + toolId + (toolName ? (' (' + toolName + ')') : '') + ' dari sistem kalibrasi?';
+  if (!confirm(promptMsg)) return;
+
+  if (typeof showToast === 'function') showToast('Menghapus alat ' + toolId + '...', 'info');
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (res && res.success) {
+        if (typeof showToast === 'function') showToast(res.message || ('Alat ' + toolId + ' berhasil dihapus.'), 'success');
+        loadCalibrationData();
+      } else {
+        if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal menghapus alat.', 'error');
+      }
+    })
+    .withFailureHandler(function(err) {
+      if (typeof showToast === 'function') showToast('Error: ' + err.message, 'error');
+    })
+    .submitCalibration({ toolId: toolId, isDelete: true });
+}
+window.deleteCalibrationToolUI = deleteCalibrationToolUI;
+
+function openCalibrationImportModal() {
+  var m = document.getElementById('calImportModal');
+  if (!m) return;
+  window.parsedImportTools = [];
+  var previewArea = document.getElementById('calImportPreviewArea');
+  if (previewArea) previewArea.style.display = 'none';
+  var statusMsg = document.getElementById('calImportStatusMsg');
+  if (statusMsg) statusMsg.style.display = 'none';
+  var btn = document.getElementById('btnProcessCalImport');
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+  var pasteInp = document.getElementById('calPasteInput');
+  if (pasteInp) pasteInp.value = '';
+  switchCalImportTab_('paste');
+  m.style.display = 'flex';
+}
+window.openCalibrationImportModal = openCalibrationImportModal;
+
+function closeCalibrationImportModal() {
+  var m = document.getElementById('calImportModal');
+  if (m) m.style.display = 'none';
+}
+window.closeCalibrationImportModal = closeCalibrationImportModal;
+
+function switchCalImportTab_(mode) {
+  var secPaste = document.getElementById('calImportPasteSection');
+  var secFile = document.getElementById('calImportFileSection');
+  var tabPaste = document.getElementById('tabImportPaste');
+  var tabFile = document.getElementById('tabImportFile');
+
+  if (mode === 'paste') {
+    if (secPaste) secPaste.style.display = 'block';
+    if (secFile) secFile.style.display = 'none';
+    if (tabPaste) { tabPaste.style.background = 'var(--primary, #163d78)'; tabPaste.style.color = '#fff'; }
+    if (tabFile) { tabFile.style.background = 'var(--surface-card)'; tabFile.style.color = 'var(--ink)'; }
+  } else {
+    if (secPaste) secPaste.style.display = 'none';
+    if (secFile) secFile.style.display = 'block';
+    if (tabPaste) { tabPaste.style.background = 'var(--surface-card)'; tabPaste.style.color = 'var(--ink)'; }
+    if (tabFile) { tabFile.style.background = 'var(--primary, #163d78)'; tabFile.style.color = '#fff'; }
+  }
+}
+window.switchCalImportTab_ = switchCalImportTab_;
+
+function previewPastedSpreadsheetData_() {
+  var raw = document.getElementById('calPasteInput') ? document.getElementById('calPasteInput').value : '';
+  if (!raw || !raw.trim()) {
+    if (typeof showToast === 'function') showToast('Silakan tempel data spreadsheet terlebih dahulu.', 'warning');
+    return;
+  }
+
+  var lines = raw.trim().split(/\r?\n/);
+  var parsed = [];
+
+  lines.forEach(function(line) {
+    var cols = line.split('\t');
+    if (cols.length === 1 && line.indexOf(',') !== -1) {
+      cols = line.split(',');
+    }
+    cols = cols.map(function(c) { return c.trim(); });
+    var id = cols[0] || '';
+    if (!id || id.toLowerCase() === 'tool id' || id.toLowerCase() === 'no') return;
+
+    parsed.push({
+      toolId: id,
+      toolName: cols[1] || 'Alat Ukur',
+      discipline: cols[2] || 'Umum',
+      calDate: cols[3] || '',
+      nextCalDate: cols[4] || '',
+      status: cols[5] || 'Valid',
+      pic: cols[6] || '-'
+    });
+  });
+
+  renderImportPreview_(parsed);
+}
+window.previewPastedSpreadsheetData_ = previewPastedSpreadsheetData_;
+
+function handleExcelFileImport_(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var nameDisplay = document.getElementById('calFileNameDisplay');
+  if (nameDisplay) nameDisplay.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+
+  if (typeof XLSX === 'undefined') {
+    if (typeof showToast === 'function') showToast('Library SheetJS belum siap.', 'error');
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = new Uint8Array(e.target.result);
+      var workbook = XLSX.read(data, { type: 'array' });
+      var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      var rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+      if (!rows || rows.length < 2) {
+        if (typeof showToast === 'function') showToast('Berkas Excel kosong atau tidak memiliki data.', 'warning');
+        return;
+      }
+
+      var parsed = [];
+      for (var i = 1; i < rows.length; i++) {
+        var r = rows[i];
+        if (!r || !r[0]) continue;
+        parsed.push({
+          toolId: String(r[0]).trim(),
+          toolName: String(r[1] || 'Alat Ukur').trim(),
+          discipline: String(r[2] || 'Umum').trim(),
+          calDate: String(r[3] || '').trim(),
+          nextCalDate: String(r[4] || '').trim(),
+          status: String(r[5] || 'Valid').trim(),
+          pic: String(r[6] || '-').trim()
+        });
+      }
+
+      renderImportPreview_(parsed);
+    } catch (err) {
+      if (typeof showToast === 'function') showToast('Gagal membaca berkas Excel: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+window.handleExcelFileImport_ = handleExcelFileImport_;
+
+function renderImportPreview_(tools) {
+  window.parsedImportTools = tools;
+  var previewArea = document.getElementById('calImportPreviewArea');
+  var previewBody = document.getElementById('calImportPreviewBody');
+  var countText = document.getElementById('calPreviewCountText');
+  var btn = document.getElementById('btnProcessCalImport');
+
+  if (!tools.length) {
+    if (previewArea) previewArea.style.display = 'none';
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+    if (typeof showToast === 'function') showToast('Tidak ada data alat valid yang terdeteksi.', 'warning');
+    return;
+  }
+
+  if (countText) countText.textContent = tools.length + ' Alat Terdeteksi Siap Diimpor';
+  if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+
+  if (previewBody) {
+    var html = '';
+    tools.slice(0, 50).forEach(function(t) {
+      html += '<tr>' +
+        '<td style="padding:5px 8px; font-family:var(--font-mono); font-weight:700;">' + esc(t.toolId) + '</td>' +
+        '<td style="padding:5px 8px;">' + esc(t.toolName) + '</td>' +
+        '<td style="padding:5px 8px;">' + esc(t.discipline) + '</td>' +
+        '<td style="padding:5px 8px; font-family:var(--font-mono);">' + esc(t.calDate) + '</td>' +
+        '<td style="padding:5px 8px; font-family:var(--font-mono);">' + esc(t.nextCalDate) + '</td>' +
+        '<td style="padding:5px 8px;">' + esc(t.status) + '</td>' +
+        '<td style="padding:5px 8px;">' + esc(t.pic) + '</td>' +
+        '</tr>';
+    });
+    if (tools.length > 50) {
+      html += '<tr><td colspan="7" style="text-align:center; padding:6px; color:var(--ink-muted);">... dan ' + (tools.length - 50) + ' alat lainnya ...</td></tr>';
+    }
+    previewBody.innerHTML = html;
+  }
+
+  if (previewArea) previewArea.style.display = 'block';
+}
+window.renderImportPreview_ = renderImportPreview_;
+
+function processCalibrationImport_() {
+  var tools = window.parsedImportTools || [];
+  if (!tools.length) return;
+
+  var btn = document.getElementById('btnProcessCalImport');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner" style="margin-right:5px;"></span>Mengimpor ' + tools.length + ' alat...'; }
+  var statusMsg = document.getElementById('calImportStatusMsg');
+  if (statusMsg) {
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(22,61,120,0.1)';
+    statusMsg.style.color = '#163d78';
+    statusMsg.innerHTML = '<span class="spinner dark" style="margin-right:6px;"></span>Menyimpan ' + tools.length + ' data alat ke spreadsheet master...';
+  }
+
+  google.script.run
+    .withSuccessHandler(function(res) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Proses Impor ke Sistem'; }
+      if (res && res.success) {
+        if (statusMsg) {
+          statusMsg.style.background = 'rgba(22,163,74,0.12)';
+          statusMsg.style.color = '#15803d';
+          statusMsg.textContent = res.message || 'Impor data berhasil!';
+        }
+        if (typeof showToast === 'function') showToast(res.message || 'Impor data alat berhasil!', 'success');
+        setTimeout(function() {
+          closeCalibrationImportModal();
+          loadCalibrationData();
+        }, 1200);
+      } else {
+        if (statusMsg) {
+          statusMsg.style.background = 'rgba(220,38,38,0.12)';
+          statusMsg.style.color = '#b91c1c';
+          statusMsg.textContent = (res && (res.error || res.message)) || 'Gagal impor.';
+        }
+      }
+    })
+    .withFailureHandler(function(err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Proses Impor ke Sistem'; }
+      if (statusMsg) {
+        statusMsg.style.background = 'rgba(220,38,38,0.12)';
+        statusMsg.style.color = '#b91c1c';
+        statusMsg.textContent = 'Error: ' + err.message;
+      }
+    })
+    .importCalibrationTools(tools);
+}
+window.processCalibrationImport_ = processCalibrationImport_;
+
+function filterCalibrationTable_() {
+  var q = (document.getElementById('calSearchInput') ? document.getElementById('calSearchInput').value : '').toLowerCase().trim();
+  var discFilter = document.getElementById('calFilterDiscipline') ? document.getElementById('calFilterDiscipline').value : '';
+  var statusFilter = document.getElementById('calFilterStatus') ? document.getElementById('calFilterStatus').value : '';
+
+  var data = window.allCalibrationTools || [];
+  if (!data || data.length < 2) return;
+
+  var tbody = document.getElementById('calTableBody');
+  if (!tbody) return;
+
+  var visibleCount = 0;
+  var rowsHtml = '';
+
+  for (var i = 1; i < data.length; i++) {
+    var r = data[i];
+    if (!r[0] && !r[1]) continue;
+
+    var toolId = String(r[0] || '');
+    var name = String(r[1] || '');
+    var disc = String(r[2] || '');
+    var calDate = String(r[3] || '');
+    var nextDate = String(r[4] || '');
+    var status = String(r[5] || 'Valid');
+    var pic = String(r[6] || '');
+
+    if (q) {
+      var matchQ = toolId.toLowerCase().indexOf(q) !== -1 ||
+                   name.toLowerCase().indexOf(q) !== -1 ||
+                   disc.toLowerCase().indexOf(q) !== -1 ||
+                   pic.toLowerCase().indexOf(q) !== -1;
+      if (!matchQ) continue;
+    }
+
+    if (discFilter && disc.toLowerCase() !== discFilter.toLowerCase()) {
+      continue;
+    }
+
+    if (statusFilter && status.toLowerCase() !== statusFilter.toLowerCase()) {
+      continue;
+    }
+
+    visibleCount++;
+    var statusCls = status === 'Valid' ? 'badge-approved' : (status === 'Overdue' ? 'badge-rejected' : 'badge-pending');
+
+    rowsHtml += '<tr>' +
+      '<td class="doc-code" style="font-family:var(--font-mono); font-weight:700;">' + esc(toolId) + '</td>' +
+      '<td style="font-weight:600;">' + esc(name) + '</td>' +
+      '<td>' + esc(disc) + '</td>' +
+      '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums;">' + esc(calDate) + '</td>' +
+      '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:700; color:' + (status === 'Overdue' ? '#dc2626' : 'inherit') + ';">' + esc(nextDate) + '</td>' +
+      '<td><span class="badge ' + statusCls + '" style="border-radius:4px;">' + esc(status) + '</span></td>' +
+      '<td>' + esc(pic) + '</td>' +
+      '<td style="text-align:center; white-space:nowrap;">' +
+        '<button type="button" class="btn-small" onclick="editCalibrationTool(\'' + escAttr_(toolId) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Edit / Update Data Alat">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:2px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit' +
+        '</button>' +
+        '<button type="button" class="btn-small" onclick="deleteCalibrationToolUI(\'' + escAttr_(toolId) + '\', \'' + escAttr_(name) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid #fecaca; background:#fff1f2; color:#dc2626; cursor:pointer;" title="Hapus Alat dari Sistem">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:2px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Hapus' +
+        '</button>' +
+      '</td>' +
+      '</tr>';
+  }
+
+  if (visibleCount === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--ink-muted);">Tidak ada alat yang sesuai dengan filter atau kata kunci pencarian.</td></tr>';
+  } else {
+    tbody.innerHTML = rowsHtml;
+  }
+
+  var countEl = document.getElementById('calTableCountInfo');
+  if (countEl) countEl.textContent = 'Menampilkan ' + visibleCount + ' dari ' + (data.length - 1) + ' alat';
+}
+window.filterCalibrationTable_ = filterCalibrationTable_;
+
 function loadCalibrationData() {
   var kpiWrap = document.getElementById('calKpiWrap');
   if (kpiWrap) kpiWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat...</div>';
@@ -7962,33 +8375,43 @@ function loadCalibrationData() {
     .getCalibrationSummary();
 
   var tblWrap = document.getElementById('calTableContent');
-  if (tblWrap) tblWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat data...</div>';
+  if (tblWrap) tblWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat data alat...</div>';
 
   google.script.run
     .withSuccessHandler(function (res) {
       if (!tblWrap) return;
       if (!res.success) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">' + esc(res.error || 'Gagal') + '</div></div>'; return; }
       var data = res.data;
-      if (!data || data.length < 2) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Belum ada data alat. Tambah minimal 1 baris di sheet Calibration_Tools.</div></div>'; return; }
-      var rows = '';
-      for (var i = 1; i < data.length; i++) {
-        var r = data[i];
-        if (!r[0] && !r[1]) continue; // skip baris kosong
-        var statusCls = r[5] === 'Valid' ? 'badge-approved' : (r[5] === 'Overdue' ? 'badge-rejected' : 'badge-pending');
-        rows += '<tr>' +
-          '<td class="doc-code">' + esc(r[0] || '-') + '</td>' +
-          '<td>' + esc(r[1] || '-') + '</td>' +
-          '<td>' + esc(r[2] || '-') + '</td>' +
-          '<td>' + esc(r[3] || '-') + '</td>' +
-          '<td>' + esc(r[4] || '-') + '</td>' +
-          '<td><span class="badge ' + statusCls + '">' + esc(r[5] || '-') + '</span></td>' +
-          '<td>' + esc(r[6] || '-') + '</td>' +
-          '</tr>';
+      window.allCalibrationTools = data || [];
+      if (!data || data.length < 2) { 
+        tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Belum ada data alat kalibrasi. Klik tombol <b>+ Tambah Alat Baru</b> atau <b>Impor Spreadsheet</b> untuk memasukkan data.</div></div>'; 
+        return; 
       }
-      tblWrap.innerHTML = '<div class="table-scroll"><table><thead><tr>' +
-        '<th>Tool ID</th><th>Nama Alat</th><th>Disiplin</th>' +
-        '<th>Tgl Kalibrasi</th><th>Tgl Berikutnya</th><th>Status</th><th>PIC</th>' +
-        '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+      // Populate Discipline Filter Dropdown
+      var discSet = {};
+      for (var dIdx = 1; dIdx < data.length; dIdx++) {
+        var discVal = (data[dIdx][2] || '').trim();
+        if (discVal) discSet[discVal] = true;
+      }
+      var discSel = document.getElementById('calFilterDiscipline');
+      if (discSel) {
+        var curDisc = discSel.value;
+        var optHtml = '<option value="">Semua Disiplin</option>';
+        Object.keys(discSet).sort().forEach(function(dName) {
+          optHtml += '<option value="' + escAttr_(dName) + '">' + esc(dName) + '</option>';
+        });
+        discSel.innerHTML = optHtml;
+        if (curDisc && discSet[curDisc]) discSel.value = curDisc;
+      }
+
+      tblWrap.innerHTML = '<div class="table-scroll"><table style="width:100%; border-collapse:collapse;"><thead><tr>' +
+        '<th style="width:120px;">Tool ID</th><th>Nama Alat</th><th style="width:120px;">Disiplin</th>' +
+        '<th style="width:115px;">Tgl Kalibrasi</th><th style="width:120px;">Jatuh Tempo</th><th style="width:100px;">Status</th><th style="width:110px;">PIC</th>' +
+        '<th style="width:130px; text-align:center;">Aksi</th>' +
+        '</tr></thead><tbody id="calTableBody"></tbody></table></div>';
+
+      filterCalibrationTable_();
     })
     .withFailureHandler(function (err) {
       if (tblWrap) tblWrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#ef4444;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="currentColor" fill-opacity="0.14"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="msg">Tabel gagal: ' + esc(err && err.message ? err.message : String(err)) + '</div></div>';
@@ -15924,6 +16347,110 @@ window.addEventListener('offline', updateFooterStatus);
             Simpan Pengaturan
           </button>
         </div>
+      </div>
+
+    </div>
+  </div>
+  
+
+  <!-- MODAL IMPOR DATA KALIBRASI DARI SPREADSHEET (ANTI-AI INDUSTRIAL) -->
+  <div id="calImportModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:99999; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
+    <div style="background:var(--surface-card, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; width:92%; max-width:680px; box-shadow:0 12px 36px rgba(0,0,0,0.22); overflow:hidden; display:flex; flex-direction:column; max-height:90vh;">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border, #cbd5e1); background:var(--surface-subtle, #f8fafc);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary, #163d78)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span style="font-weight:700; font-size:14px; color:var(--ink, #0f172a);">Impor Data Alat Kalibrasi dari Spreadsheet</span>
+        </div>
+        <button type="button" onclick="closeCalibrationImportModal()" style="border:none; background:transparent; cursor:pointer; color:var(--ink-muted, #64748b); padding:4px; display:flex;" title="Tutup">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding:16px 18px; display:flex; flex-direction:column; gap:12px; font-size:12px; overflow-y:auto;">
+        
+        <!-- Tab Pemilihan Metode Impor -->
+        <div style="display:flex; gap:8px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+          <button type="button" id="tabImportPaste" onclick="switchCalImportTab_('paste')" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:var(--primary, #163d78); color:#fff; font-weight:700; cursor:pointer;">
+            Salin-Tempel (Copy-Paste)
+          </button>
+          <button type="button" id="tabImportFile" onclick="switchCalImportTab_('file')" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-weight:600; cursor:pointer;">
+            Unggah File Excel (.xlsx / .csv)
+          </button>
+          <button type="button" onclick="openMasterSpreadsheetTab_()" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:#16a34a; font-weight:700; cursor:pointer; margin-left:auto; display:inline-flex; align-items:center; gap:5px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+            Buka Spreadsheet Master
+          </button>
+        </div>
+
+        <!-- Section 1: Salin-Tempel (Copy-Paste) -->
+        <div id="calImportPasteSection">
+          <p style="margin:0 0 6px; color:var(--ink-muted); line-height:1.4;">
+            Salin (copy) baris tabel dari Excel atau Google Sheets Anda, lalu tempel (paste) ke kotak di bawah. Urutan kolom standar:<br>
+            <code style="font-family:var(--font-mono); font-weight:700; background:rgba(0,0,0,0.05); padding:2px 4px; border-radius:3px;">Tool ID [Tab] Nama Alat [Tab] Disiplin [Tab] Tgl Kalibrasi [Tab] Tgl Jatuh Tempo [Tab] Status [Tab] PIC</code>
+          </p>
+          <textarea id="calPasteInput" rows="6" placeholder="Contoh:&#10;CAL-004	Torque Wrench 50-250 Nm	Piping	2026-02-10	2027-02-10	Valid	Budi&#10;CAL-005	Digital Theodolite	Civil	2026-03-01	2027-03-01	Valid	Ahmad" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-family:var(--font-mono); font-size:11.5px; outline:none; resize:vertical;"></textarea>
+          <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+            <button type="button" onclick="previewPastedSpreadsheetData_()" class="btn-small" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--ink); font-weight:700; cursor:pointer;">
+              Pratinjau Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 2: Unggah Berkas Excel -->
+        <div id="calImportFileSection" style="display:none;">
+          <p style="margin:0 0 6px; color:var(--ink-muted); line-height:1.4;">
+            Pilih berkas spreadsheet Excel (<code>.xlsx</code>, <code>.xls</code>, atau <code>.csv</code>) dari komputer Anda. Sistem akan membaca baris otomatis:
+          </p>
+          <div style="border:1.5px dashed var(--border); border-radius:6px; padding:20px; text-align:center; background:var(--surface-subtle);">
+            <input type="file" id="calExcelFileInput" accept=".xlsx, .xls, .csv" onchange="handleExcelFileImport_(this)" style="display:none;">
+            <button type="button" onclick="document.getElementById('calExcelFileInput').click()" class="btn btn-secondary" style="font-weight:700; border-radius:6px;">
+              Pilih Berkas Excel / CSV
+            </button>
+            <div id="calFileNameDisplay" style="margin-top:8px; font-size:11.5px; color:var(--ink-muted);">Belum ada berkas dipilih</div>
+          </div>
+        </div>
+
+        <!-- Preview Table Area -->
+        <div id="calImportPreviewArea" style="display:none; margin-top:8px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span style="font-weight:700; color:var(--ink);" id="calPreviewCountText">Pratinjau Data Siap Impor</span>
+            <span style="font-size:11px; color:var(--ink-muted);">Pastikan data telah sesuai sebelum memproses</span>
+          </div>
+          <div style="max-height:180px; overflow-y:auto; border:1px solid var(--border); border-radius:6px;">
+            <table style="width:100%; border-collapse:collapse; font-size:11px; font-variant-numeric:tabular-nums;">
+              <thead style="background:var(--surface-subtle); position:sticky; top:0;">
+                <tr>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Tool ID</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Nama Alat</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Disiplin</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Tgl Kalibrasi</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Jatuh Tempo</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">Status</th>
+                  <th style="padding:6px 8px; border-bottom:1px solid var(--border); text-align:left;">PIC</th>
+                </tr>
+              </thead>
+              <tbody id="calImportPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="calImportStatusMsg" style="display:none; padding:8px 10px; border-radius:6px; font-size:11.5px; font-variant-numeric:tabular-nums;"></div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 18px; border-top:1px solid var(--border, #cbd5e1); background:var(--surface-subtle, #f8fafc);">
+        <button type="button" onclick="closeCalibrationImportModal()" style="padding:7px 12px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink-muted, #64748b); font-weight:600; font-size:11.5px; cursor:pointer;">
+          Batal
+        </button>
+        <button type="button" id="btnProcessCalImport" onclick="processCalibrationImport_()" disabled style="padding:7px 16px; border-radius:6px; border:none; background:var(--primary, #163d78); color:#ffffff; font-weight:700; font-size:12px; cursor:pointer; opacity:0.5;">
+          Proses Impor ke Sistem
+        </button>
       </div>
 
     </div>
