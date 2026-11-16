@@ -34,9 +34,9 @@
     (function () {
       try {
         var saved = localStorage.getItem('qccms_theme');
-        // Default to Industrial Dark Slate Theme (Anti-AI standard)
-        document.documentElement.setAttribute('data-theme', saved || 'dark');
-      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+        var systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', saved || (systemDark ? 'dark' : 'light'));
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
     })();
   </script>
   <style>
@@ -4836,299 +4836,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       background: var(--surface-hover) !important;
     }
 
-/* ═══════════════════════════════════════════════════════════════ */
-/* 🏭 ASUKA INDUSTRIAL DARK SLATE THEME (OVERVIEW & LAYOUT)       */
-/* ═══════════════════════════════════════════════════════════════ */
-:root[data-theme="dark"] {
-  --surface: #070d18 !important;
-  --surface-card: #0f172a !important;
-  --surface-subtle: #1e293b !important;
-  --surface-hover: #1e293b !important;
-  --border: #1e293b !important;
-  --ink: #f8fafc !important;
-  --ink-muted: #94a3b8 !important;
-  --ink-faint: #64748b !important;
-  --bezel: #0d2347 !important;
-  --bezel-text: #ffffff !important;
-  --bezel-text-muted: #94a3b8 !important;
-  --sidebar-bg: #0a0f1d !important;
-  --sidebar-active: #163d78 !important;
-  --sidebar-active-text: #ffffff !important;
-}
 
-[data-theme="dark"] body, 
-[data-theme="dark"] html {
-  background-color: #070d18 !important;
-  color: #f8fafc !important;
-}
-
-[data-theme="dark"] .app-header {
-  background: #0d2347 !important;
-  border-bottom: 1px solid #1b3a6b !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-}
-
-[data-theme="dark"] .app-sidebar {
-  background: #0a0f1d !important;
-  border-right: 1px solid #1e293b !important;
-}
-
-[data-theme="dark"] .sidebar-focus {
-  background: #070b14 !important;
-  border-bottom: 1px solid #1e293b !important;
-}
-
-[data-theme="dark"] #globalProjectFilter {
-  background: #0f172a !important;
-  border-color: #1e293b !important;
-  color: #e2e8f0 !important;
-}
-
-[data-theme="dark"] .sidebar-accordion-header {
-  color: #94a3b8 !important;
-}
-
-[data-theme="dark"] .sidebar-item {
-  color: #cbd5e1 !important;
-  border-radius: 6px !important;
-}
-
-[data-theme="dark"] .sidebar-item:hover {
-  background: #1e293b !important;
-  color: #ffffff !important;
-}
-
-[data-theme="dark"] .sidebar-item.active {
-  background: #163d78 !important;
-  color: #ffffff !important;
-  border: 1px solid #163d78 !important;
-  font-weight: 600 !important;
-}
-
-[data-theme="dark"] .sidebar-item.active .si-icon,
-[data-theme="dark"] .sidebar-item.active .si-label {
-  color: #ffffff !important;
-}
-
-[data-theme="dark"] .main-content {
-  background: #070d18 !important;
-}
-
-[data-theme="dark"] .panel {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-[data-theme="dark"] .card,
-[data-theme="dark"] .dash-card,
-[data-theme="dark"] .box,
-[data-theme="dark"] .table-wrap,
-[data-theme="dark"] .filter-card,
-[data-theme="dark"] .filter-row-modern {
-  background: #0f172a !important;
-  border-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-[data-theme="dark"] .doc-table {
-  background: #0f172a !important;
-  border-color: #1e293b !important;
-}
-
-[data-theme="dark"] .doc-table th {
-  background: #091830 !important;
-  color: #94a3b8 !important;
-  border-color: #1e293b !important;
-}
-
-[data-theme="dark"] .doc-table td {
-  border-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-[data-theme="dark"] .doc-table tr:hover td {
-  background: rgba(30, 41, 59, 0.6) !important;
-}
-
-/* OVERVIEW DASHBOARD MUTU QA/QC */
-.overview-dashboard-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-}
-.overview-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0 0 4px 0;
-  letter-spacing: -0.01em;
-  font-family: var(--font-sans);
-}
-.overview-subtitle {
-  font-size: 13px;
-  color: var(--ink-muted);
-  margin: 0;
-  font-family: var(--font-sans);
-}
-.overview-kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 16px;
-}
-.overview-kpi-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 16px 18px;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.overview-kpi-card:hover {
-  border-color: #334155;
-  background: var(--surface-hover);
-}
-.overview-kpi-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-.overview-kpi-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink-muted);
-}
-.overview-kpi-val {
-  font-family: var(--font-mono);
-  font-size: 28px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-  line-height: 1.1;
-  margin-bottom: 6px;
-}
-.overview-kpi-sub {
-  font-size: 11.5px;
-  color: var(--ink-muted);
-  margin: 0;
-}
-.overview-two-col {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-}
-@media (max-width: 992px) {
-  .overview-two-col {
-    grid-template-columns: 1fr;
-  }
-}
-.overview-box {
-  background: var(--surface-card);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.overview-box-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.overview-box-title {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: var(--ink);
-  margin: 0;
-  letter-spacing: 0.02em;
-  font-family: var(--font-sans);
-}
-.overview-box-action {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  color: #38bdf8;
-  text-transform: uppercase;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  transition: color 0.15s ease;
-}
-.overview-box-action:hover {
-  color: #7dd3fc;
-  text-decoration: underline;
-}
-.overview-doc-item {
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-.overview-doc-item:last-child {
-  border-bottom: none;
-}
-.overview-doc-item:hover {
-  background: var(--surface-hover);
-}
-.overview-discipline-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 11px 14px;
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-.overview-discipline-name {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink);
-}
-.overview-discipline-count {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--ink-muted);
-  margin-top: 2px;
-}
-.overview-standards-box {
-  padding: 14px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--surface-subtle);
-}
-.overview-standards-title {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ink-muted);
-  margin-bottom: 6px;
-}
-.overview-standards-desc {
-  font-size: 11.5px;
-  color: var(--ink-muted);
-  line-height: 1.5;
-  margin: 0;
-}
-
-
-@media (min-width: 768px) {
-  .header-search-bar { display: inline-flex !important; }
-}
 
 </style>
 
@@ -5217,63 +4925,38 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     <div class="app-header">
       <div class="brand">
         <button class="hamburger-btn" onclick="toggleNavMenu()" aria-label="Buka Menu" title="Menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-        <img class="qc-seal" src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="32" alt="ASUKA Logo" style="height:32px;max-height:32px;width:auto;object-fit:contain;flex-shrink:0;">
-        <div style="height:28px; width:1px; background:#244785; margin:0 4px;" class="brand-divider"></div>
+        <img class="qc-seal" src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="36" alt="ASUKA Logo" style="height:36px;max-height:36px;width:auto;max-width:160px;object-fit:contain;flex-shrink:0;">
         <div class="brand-text">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span class="company" style="font-weight:700; font-size:12px; letter-spacing:0.04em; color:#ffffff; text-transform:uppercase;">PT ASUKA ENGINEERING INDONESIA</span>
-            <span style="font-family:var(--font-mono); font-size:10px; font-weight:700; background:#163d78; color:#38bdf8; border:1px solid #255bb5; padding:1px 5px; border-radius:3px;">EDMS v3.0</span>
-          </div>
-          <span class="system-name" style="font-size:11px; color:#94a3b8; letter-spacing:-0.01em;">Quality Control &amp; Quality Assurance EDMS System</span>
+          <span class="company" id="companyName">PT Asuka Engineering Indonesia</span>
+          <span class="system-name" id="headerGreeting">QA/QC EDMS</span>
         </div>
       </div>
 
-      <!-- 🔍 GLOBAL SEARCH BAR (CENTER) -->
-      <div class="header-search-bar" onclick="openGlobalSearchModal()" style="display:none; align-items:center; gap:8px; background:#091830; border:1px solid #244785; border-radius:6px; padding:6px 14px; min-width:300px; max-width:440px; cursor:pointer; flex:1; margin:0 14px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span style="font-size:12px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Cari cepat dokumen, ITP, kalibrasi, atau proyek...</span>
-        <kbd style="font-family:var(--font-mono); font-size:10px; padding:1px 6px; border-radius:3px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#94a3b8; margin-left:auto;">Ctrl K</kbd>
-      </div>
-      <div class="user-box">
-        <!-- 🟢 ONLINE LIVE CLOCK INDICATOR -->
-        <div class="header-online-status" style="display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px; color:#4ade80; background:#091830; border:1px solid #244785; padding:4px 10px; border-radius:4px; font-variant-numeric:tabular-nums;">
-          <span style="width:7px; height:7px; border-radius:50%; background:#22c55e; display:inline-block; box-shadow:0 0 6px #22c55e;"></span>
-          <span style="font-weight:700;">ONLINE</span>
-          <span id="headerLiveClock" style="color:#cbd5e1;">--.--.-- WIB</span>
-        </div>
-        <div class="header-clock" style="display:none;">
-          <span class="clock-time" id="headerClockTime">--:--:--</span>
-          <span class="clock-date" id="headerClockDate">-</span>
-        </div>
-
-        <!-- 🟢 HEADER LIVE SYNC STATUS WIDGET (FASE 2) -->
-        <div class="header-sync-wrap" style="position:relative;" id="headerSyncWrap">
-          <button type="button" class="header-sync-pill" id="headerSyncPill" onclick="toggleSyncStatusPopover(event)" title="Status Sinkronisasi Real-Time (Klik untuk detail)">
-            <span class="sync-pulse-dot" id="headerSyncDot"></span>
-            <span class="sync-text" id="headerSyncText">Tersinkronisasi</span>
-            <svg class="sync-refresh-icon" id="headerSyncRefreshIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+      <div class="header-right" style="display:flex;align-items:center;gap:12px;">
+        <!-- 🔄 STATUS SINKRONISASI -->
+        <div class="sync-status-wrap" style="position:relative;">
+          <button type="button" class="sync-status-pill" id="syncStatusBtn" onclick="toggleSyncPopover(event)" title="Status Sinkronisasi Cloud">
+            <span class="sync-dot online" id="syncDot"></span>
+            <span class="sync-label" id="syncStatusLabel">Tersinkronisasi</span>
+            <svg class="sync-refresh-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
           </button>
-          
-          <div id="syncStatusPopover" class="sync-popover" style="display:none;" onclick="event.stopPropagation()">
-            <div class="sync-popover-header">
-              <div class="sph-title">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                <span>Status Sinkronisasi Sistem</span>
-              </div>
-              <span class="sph-status-tag" id="syncPopoverBadge">Online</span>
+          <div id="syncPopover" class="sync-popover" style="display:none;">
+            <div class="sync-popover-head">
+              <div class="sph-title">Status Sinkronisasi Cloud</div>
+              <div class="sph-subtitle" id="syncPopoverSub">Terhubung ke Google Drive &amp; Sheets</div>
             </div>
             <div class="sync-popover-body">
-              <div class="sync-info-row">
-                <span class="sir-label">Terakhir Sinkron:</span>
-                <span class="sir-val" id="syncPopoverLastTime">Baru saja</span>
+              <div class="sync-stat-row">
+                <span class="ssr-lbl">Status Koneksi</span>
+                <span class="ssr-val" id="syncStatConn">Online (Terhubung)</span>
               </div>
-              <div class="sync-info-row">
-                <span class="sir-label">Pusat Data Master:</span>
-                <span class="sir-val" id="syncPopoverHubStatus">Google Sheets &amp; Drive</span>
+              <div class="sync-stat-row">
+                <span class="ssr-lbl">Terakhir Sinkron</span>
+                <span class="ssr-val font-mono" id="syncStatLast">-</span>
               </div>
-              <div class="sync-info-row">
-                <span class="sir-label">PWA Offline Mode:</span>
-                <span class="sir-val" id="syncPopoverPwaStatus">Aktif (v6.0 Ready)</span>
+              <div class="sync-stat-row">
+                <span class="ssr-lbl">Item Pending Offline</span>
+                <span class="ssr-val font-mono" id="syncStatPending">0 item</span>
               </div>
             </div>
             <div class="sync-popover-footer">
@@ -5376,9 +5059,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="sidebar-accordion-content">
-            <button class="sidebar-item active" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Overview Dashboard</span></button>
-            <button class="sidebar-item" id="tabBtnCommand" onclick="switchTab('command')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg></span><span class="si-label">Command Center</span></button>
-            <button class="sidebar-item" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor" fill-opacity="0.16"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Daftar Dokumen</span></button>
+            <button class="sidebar-item active" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor" fill-opacity="0.16"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Daftar Dokumen</span></button>
             <button class="sidebar-item" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v9m-3-6 3-3 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Unggah Dokumen</span></button>
             <button class="sidebar-item" id="tabBtnTransmittals" onclick="switchTab('transmittals')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 19 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Transmittal</span></button>
             <button class="sidebar-item" id="tabBtnArchive" onclick="switchTab('archive')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="4" rx="1" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Arsip &amp; Retensi</span></button>
@@ -5402,19 +5083,19 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         </div>
 
         <!-- 📊 GRUP 3: MONITORING & REVIEW (ACCORDION) -->
-        <div class="sidebar-accordion-group" id="groupMonitoring">
+        <div class="sidebar-accordion-group open" id="groupMonitoring">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupMonitoring')">
             <span class="sag-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               Monitoring &amp; Laporan
             </span>
             <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="sidebar-accordion-content">
-            <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Dashboard</span></button>
-            <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 9l-5 5-4-4-5 5" fill="currentColor" fill-opacity="0.16"/><path d="M18 9l-5 5-4-4-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="9" r="2" fill="currentColor"/></svg></span><span class="si-label">Analisis Dokumen</span></button>
-            <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="7" r="1" fill="currentColor"/><circle cx="12" cy="7" r="1" fill="currentColor"/><circle cx="16" cy="7" r="1" fill="currentColor"/></svg></span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:auto;font-family:var(--font-mono);"></span></span></button>
-            <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Approval</span></button>
+            <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Dashboard</span></button>
+            <button class="sidebar-item" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="18" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="6" x2="16" y2="22" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Ringkasan Proyek</span></button>
+            <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 9l-5 5-4-4-5 5" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="9" r="2" fill="currentColor"/></svg></span><span class="si-label">Analisis Dokumen</span></button>
+            <button class="sidebar-item" id="tabBtnCommand" onclick="switchTab('command')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg></span><span class="si-label">Command Center</span></button>
           </div>
         </div>
 
@@ -5606,8 +5287,8 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   <h2 class="panel-title" style="margin:0;">Daftar Dokumen Mutu</h2>
                   <p class="hint" style="margin:4px 0 0;">Semua dokumen proyek yang terdaftar dan riwayat approval.</p>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="switchTab('upload')" style="display:flex; align-items:center; gap:8px; padding:10px 18px; font-weight:700; box-shadow:0 4px 14px rgba(237,46,53,0.35);">
-                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);margin-bottom:6px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-6 3-3 3 3"/></svg>
+                <button type="button" class="btn btn-primary" onclick="switchTab('upload')" style="display:flex; align-items:center; gap:8px; padding:10px 18px; font-weight:700; border-radius:6px; box-shadow:0 4px 14px rgba(237,46,53,0.35);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9m-3-6 3-3 3 3"/></svg>
                   <span>Unggah Dokumen Baru</span>
                 </button>
               </div>
@@ -5622,7 +5303,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   <option value="Rejected">Rejected</option>
                   <option value="Superseded">Superseded</option>
                 </select>
-                <button class="btn btn-secondary" onclick="loadDocumentList()">↻ Muat Ulang</button>
+                <button class="btn btn-secondary" onclick="loadDocumentList()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>Muat Ulang</button>
                 <button class="btn btn-secondary" id="exportListExcelBtn" onclick="exportDocumentListExcel_()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#16a34a;"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fill-opacity="0.16"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Ekspor Excel</button>
               </div>
               <div class="filter-row" id="reportExportRow" style="display:none;">
@@ -5985,102 +5666,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             </div>
 
             <!-- PANEL: OVERVIEW -->
-            <!-- PANEL: OVERVIEW DASHBOARD MUTU QA/QC -->
-            <div class="panel" id="panelOverview" style="background:transparent; border:none; padding:0; box-shadow:none;">
-              <div class="overview-dashboard-wrap">
-                <!-- Header -->
-                <div class="overview-header" style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-                  <div>
-                    <h1 class="overview-title">OVERVIEW DASHBOARD MUTU QA/QC</h1>
-                    <p class="overview-subtitle">Monitoring eksekutif dokumen kontrol, kepatuhan kalibrasi &amp; temuan lapangan</p>
-                  </div>
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <button type="button" class="btn btn-secondary btn-small" onclick="loadOverviewData(true)" style="background:var(--surface-card); border:1px solid var(--border); color:var(--ink-muted); font-family:var(--font-mono); font-size:11px; display:inline-flex; align-items:center; gap:6px; border-radius:6px; padding:6px 12px;">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                      Muat Ulang
-                    </button>
-                  </div>
-                </div>
-
-                <!-- 4 KPI Cards Grid -->
-                <div class="overview-kpi-grid">
-                  <!-- Card 1: Total Dokumen EDMS -->
-                  <div class="overview-kpi-card" onclick="switchTab('list')">
-                    <div class="overview-kpi-top">
-                      <span class="overview-kpi-label">TOTAL DOKUMEN EDMS</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    </div>
-                    <div class="overview-kpi-val" id="ovStatTotalDocs">50</div>
-                    <p class="overview-kpi-sub">ITP, MS, MTR &amp; Laporan</p>
-                  </div>
-
-                  <!-- Card 2: Menunggu Approval -->
-                  <div class="overview-kpi-card" onclick="switchTab('approval')">
-                    <div class="overview-kpi-top">
-                      <span class="overview-kpi-label" style="color:#38bdf8;">MENUNGGU APPROVAL</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    </div>
-                    <div class="overview-kpi-val" id="ovStatPending" style="color:#38bdf8;">0</div>
-                    <p class="overview-kpi-sub">Perlu review QA/QC Manager</p>
-                  </div>
-
-                  <!-- Card 3: Dokumen Disetujui -->
-                  <div class="overview-kpi-card" onclick="switchTab('list')">
-                    <div class="overview-kpi-top">
-                      <span class="overview-kpi-label" style="color:#4ade80;">DOKUMEN DISETUJUI</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                    </div>
-                    <div class="overview-kpi-val" id="ovStatApproved" style="color:#4ade80;">49</div>
-                    <p class="overview-kpi-sub" id="ovStatApprovedSub">Status Approved / Valid</p>
-                  </div>
-
-                  <!-- Card 4: Alat Perlu Kalibrasi -->
-                  <div class="overview-kpi-card" onclick="switchTab('calibration')">
-                    <div class="overview-kpi-top">
-                      <span class="overview-kpi-label" style="color:#facc15;">ALAT PERLU KALIBRASI</span>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="1.8"><path d="M21.3 15.3l-9-9a2.12 2.12 0 0 0-3 0l-7 7a2.12 2.12 0 0 0 0 3l9 9a2.12 2.12 0 0 0 3 0l7-7a2.12 2.12 0 0 0 0-3z"/><line x1="14.5" y1="8.5" x2="16.5" y2="10.5"/><line x1="11.5" y1="11.5" x2="13.5" y2="13.5"/><line x1="8.5" y1="14.5" x2="10.5" y2="16.5"/></svg>
-                    </div>
-                    <div class="overview-kpi-val" id="ovStatCalibration" style="color:#facc15;">0</div>
-                    <p class="overview-kpi-sub" id="ovStatCalibrationSub">0 expired, 0 expiring</p>
-                  </div>
-                </div>
-
-                <!-- Two-Column Section -->
-                <div class="overview-two-col">
-                  <!-- Col 1: DOKUMEN QA/QC TERBARU -->
-                  <div class="overview-box">
-                    <div class="overview-box-header">
-                      <h2 class="overview-box-title">DOKUMEN QA/QC TERBARU</h2>
-                      <button type="button" class="overview-box-action" onclick="switchTab('list')">
-                        LIHAT SEMUA &rarr;
-                      </button>
-                    </div>
-                    <div id="overviewRecentDocsList">
-                      <div style="padding:24px; text-align:center; color:var(--ink-muted); font-size:12.5px;">
-                        Memuat dokumen terbaru...
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Col 2: STATUS DISIPLIN PROYEK -->
-                  <div class="overview-box">
-                    <div class="overview-box-header">
-                      <h2 class="overview-box-title">STATUS DISIPLIN PROYEK</h2>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.8"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-                    </div>
-                    <div style="padding:16px;" id="overviewDisciplineList">
-                      <!-- Dynamic Discipline List -->
-                    </div>
-                    <div class="overview-standards-box">
-                      <div class="overview-standards-title">ATURAN STANDAR MUTU</div>
-                      <p class="overview-standards-desc">
-                        Semua ITP, MTR, dan Kalibrasi diverifikasi bertingkat sesuai ISO 9001:2015 &amp; Project Quality Plan (PQP).
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <!-- PANEL: OVERVIEW -->
+            <div class="panel" id="panelOverview">
+              <h2 class="panel-title">Ringkasan Proyek</h2>
+              <div id="overviewContent"><div class="loading-row"><span class="spinner dark"></span>Memuat...</div></div>
             </div>
             <!-- PANEL: ANALISIS DOKUMEN -->
             <div class="panel" id="panelAnalisis">
@@ -8057,10 +7646,8 @@ function enterApp(isFreshLogin) {
       updateNotifBadge(data.unreadNotificationCount || 0);
 
       // Default landing page adalah DAFTAR DOKUMEN (bukan form kosong)
-      const defaultTab = 'overview';
+      const defaultTab = 'list';
       switchTab(defaultTab);
-      if (typeof initHeaderLiveClock_ === 'function') initHeaderLiveClock_();
-      if (typeof renderOverviewDashboard === 'function') renderOverviewDashboard();
       loadDocumentList();
       loadDashboard();
       if (data.canApprove) loadApprovals();
@@ -8634,8 +8221,7 @@ function restoreSidebarState() {
  
     function renderDocumentList(docs) {
       documentsCache = {}; docs.forEach(d => documentsCache[d.docId] = d);
-      window.allDocumentsCache = docs;
-      if (typeof renderOverviewDashboard === 'function') renderOverviewDashboard();
+      
       const content = document.getElementById('listContent');
       if (!docs.length) {
         content.innerHTML = '<div class="rich-empty-state"><div class="res-icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Tidak Ada Dokumen yang Ditemukan</h3><p>Belum ada dokumen yang sesuai dengan filter atau kata kunci pencarian saat ini.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById(\'filterSearch\').value=\'\';document.getElementById(\'filterStatus\').value=\'\';document.getElementById(\'filterDocType\').value=\'\';loadDocumentList();">🔄 Reset Filter</button><button type="button" class="btn btn-primary btn-small" onclick="switchTab(\'upload\')">📤 Unggah Dokumen Baru</button></div></div>';
@@ -9050,182 +8636,7 @@ function fileLinksHtml(d) {
       loadNFIAnalytics();
     }
     
-    // ═══════════════════════════════════════════════════════════════
-    // 🏭 OVERVIEW DASHBOARD MUTU QA/QC ENGINE (ANTI-AI INDUSTRIAL)
-    // ═══════════════════════════════════════════════════════════════
-    window.allDocumentsCache = window.allDocumentsCache || [];
-    window.calibrationSummaryCache = window.calibrationSummaryCache || { total: 0, valid: 0, overdue: 0, expiring: 0 };
-    window.dashboardStatsCache = window.dashboardStatsCache || null;
-
-    function initHeaderLiveClock_() {
-      function tick() {
-        var el = document.getElementById('headerLiveClock');
-        if (!el) return;
-        var now = new Date();
-        var h = String(now.getHours()).padStart(2, '0');
-        var m = String(now.getMinutes()).padStart(2, '0');
-        var s = String(now.getSeconds()).padStart(2, '0');
-        el.textContent = h + '.' + m + '.' + s + ' WIB';
-      }
-      tick();
-      if (!window._headerLiveClockTimer) {
-        window._headerLiveClockTimer = setInterval(tick, 1000);
-      }
-    }
-
-    function loadOverviewData(forceRefresh) {
-      if (forceRefresh) {
-        loadDocumentList();
-        loadDashboard();
-        if (typeof loadCalibrationData === 'function') loadCalibrationData();
-      }
-      renderOverviewDashboard();
-    }
-
-    function renderOverviewDashboard() {
-      var docs = window.allDocumentsCache || [];
-      var stats = window.dashboardStatsCache;
-      var cal = window.calibrationSummaryCache;
-
-      // 1. Calculate KPI Metrics
-      var totalDocs = docs.length || (stats && stats.totalDocuments ? stats.totalDocuments : 50);
-      var approvedDocs = docs.filter(function(d) { return (d.status || '').toUpperCase() === 'APPROVED'; }).length;
-      if (!approvedDocs && stats && stats.totalApproved) approvedDocs = stats.totalApproved;
-      if (!approvedDocs && !docs.length) approvedDocs = 49;
-
-      var pendingDocs = docs.filter(function(d) {
-        var s = (d.status || '').toUpperCase();
-        return s === 'PENDING' || s === 'SUBMITTED' || s === 'IN REVIEW' || s === 'IN_REVIEW';
-      }).length;
-      if (!pendingDocs && stats && stats.totalPending) pendingDocs = stats.totalPending;
-
-      var rejectedDocs = docs.filter(function(d) { return (d.status || '').toUpperCase() === 'REJECTED'; }).length;
-      if (!rejectedDocs && stats && stats.totalRejected) rejectedDocs = stats.totalRejected;
-
-      var calExpiring = (cal && cal.expiring) || 0;
-      var calExpired = (cal && (cal.overdue || cal.expired)) || 0;
-      var totalCalIssues = calExpiring + calExpired;
-
-      // Update KPI DOM
-      var elTotal = document.getElementById('ovStatTotalDocs');
-      if (elTotal) elTotal.textContent = totalDocs;
-
-      var elPending = document.getElementById('ovStatPending');
-      if (elPending) elPending.textContent = pendingDocs;
-
-      var elApproved = document.getElementById('ovStatApproved');
-      if (elApproved) elApproved.textContent = approvedDocs;
-
-      var elApprovedSub = document.getElementById('ovStatApprovedSub');
-      if (elApprovedSub) {
-        elApprovedSub.textContent = (rejectedDocs > 0 ? (rejectedDocs + ' Ditolak · ') : '') + 'Status Approved / Valid';
-      }
-
-      var elCal = document.getElementById('ovStatCalibration');
-      if (elCal) elCal.textContent = totalCalIssues;
-
-      var elCalSub = document.getElementById('ovStatCalibrationSub');
-      if (elCalSub) {
-        elCalSub.textContent = calExpired + ' expired, ' + calExpiring + ' expiring';
-      }
-
-      // 2. Render Dokumen QA/QC Terbaru (Recent 5 Docs)
-      var recentContainer = document.getElementById('overviewRecentDocsList');
-      if (recentContainer) {
-        var recentList = docs.slice(0, 5);
-        if (!recentList.length) {
-          recentList = [
-            { docId: 'doc-1', documentCode: '1 0', revision: 0, title: 'sfosufa', projectName: 'Refinig Plant Phase 2', discipline: 'Arsitektur', status: 'APPROVED', timestamp: '13/11/2026' },
-            { docId: 'doc-2', documentCode: '8 0', revision: 0, title: 'Material Inspection Steel Plate for Steel Structure', projectName: 'New Warehouse Building PLTU 2 Cirebon', discipline: 'Mekanikal', status: 'APPROVED', timestamp: '26/08/2026' },
-            { docId: 'doc-3', documentCode: '7 0', revision: 0, title: 'Material Inspection Spun Pile (4 Agustus 2026)', projectName: 'New Warehouse Building PLTU 2 Cirebon', discipline: 'Sipil', status: 'APPROVED', timestamp: '25/08/2026' },
-            { docId: 'doc-4', documentCode: '6 0', revision: 0, title: 'Daily Report Civil Work', projectName: 'Refinig Plant Phase 2', discipline: 'Sipil', status: 'APPROVED', timestamp: '22/08/2026' },
-            { docId: 'doc-5', documentCode: '5 0', revision: 0, title: 'Concrete Pouring Inspection ITR', projectName: 'JO-CVL-2610-0140 New Genset Room', discipline: 'Sipil', status: 'APPROVED', timestamp: '20/08/2026' }
-          ];
-        }
-
-        var html = '';
-        recentList.forEach(function(d) {
-          var st = (d.status || 'DRAFT').toUpperCase();
-          var badgeStyle = 'background:rgba(148,163,184,0.16); color:#cbd5e1; border:1px solid rgba(148,163,184,0.3);';
-          if (st === 'APPROVED') {
-            badgeStyle = 'background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35);';
-          } else if (st === 'PENDING' || st === 'SUBMITTED' || st === 'IN REVIEW') {
-            badgeStyle = 'background:rgba(56,189,248,0.16); color:#38bdf8; border:1px solid rgba(56,189,248,0.35);';
-          } else if (st === 'REJECTED') {
-            badgeStyle = 'background:rgba(239,68,68,0.16); color:#f87171; border:1px solid rgba(239,68,68,0.35);';
-          }
-
-          var dateStr = d.timestamp ? (typeof formatDate === 'function' ? formatDate(d.timestamp) : String(d.timestamp).substring(0, 10)) : '-';
-          var codeStr = d.documentCode || d.documentNumber || 'DOC';
-          var revStr = (d.revision !== undefined && d.revision !== null) ? d.revision : 0;
-
-          html += '<div class="overview-doc-item" onclick="if(typeof openDocDetail===\'function\') openDocDetail(\'' + esc(d.docId) + '\'); else switchTab(\'list\');">' +
-            '<div style="min-width:0; flex:1;">' +
-              '<div style="display:flex; align-items:center; gap:8px; margin-bottom:3px;">' +
-                '<span style="font-family:var(--font-mono); font-size:12px; font-weight:700; color:#38bdf8; letter-spacing:0.02em;">' + esc(codeStr) + '</span>' +
-                '<span style="font-family:var(--font-mono); font-size:10px; color:#94a3b8; background:#1e293b; padding:1px 6px; border-radius:2px; border:1px solid rgba(255,255,255,0.08);">Rev ' + revStr + '</span>' +
-              '</div>' +
-              '<div style="font-size:12.5px; font-weight:600; color:#f8fafc; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px;">' + esc(d.title || 'Untitled Document') + '</div>' +
-              '<div style="font-family:var(--font-mono); font-size:11px; color:#94a3b8;">' + esc(d.projectName || 'Semua Proyek') + ' · ' + esc(d.discipline || 'QA/QC') + '</div>' +
-            '</div>' +
-            '<div style="text-align:right; flex-shrink:0;">' +
-              '<div style="margin-bottom:4px;"><span style="display:inline-block; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 7px; border-radius:3px; font-variant-numeric:tabular-nums; ' + badgeStyle + '">' + st + '</span></div>' +
-              '<div style="font-family:var(--font-mono); font-size:11px; color:#94a3b8; font-variant-numeric:tabular-nums;">' + dateStr + '</div>' +
-            '</div>' +
-          '</div>';
-        });
-        recentContainer.innerHTML = html;
-      }
-
-      // 3. Render Status Disiplin Proyek
-      var discContainer = document.getElementById('overviewDisciplineList');
-      if (discContainer) {
-        var disciplines = [
-          { name: 'Civil & Architectural', count: 18, status: 'NORMAL' },
-          { name: 'Mechanical & Piping', count: 17, status: 'NORMAL' },
-          { name: 'Electrical & Instrument', count: 9, status: 'ATTENTION' },
-          { name: 'Health, Safety & Env', count: 6, status: 'NORMAL' }
-        ];
-
-        // If docs exist, compute dynamic counts
-        if (docs.length) {
-          var counts = { civil: 0, mech: 0, elec: 0, hse: 0 };
-          docs.forEach(function(d) {
-            var disc = (d.discipline || '').toLowerCase();
-            if (disc.includes('civil') || disc.includes('arsitektur') || disc.includes('sipil')) counts.civil++;
-            else if (disc.includes('mech') || disc.includes('piping') || disc.includes('mekanikal')) counts.mech++;
-            else if (disc.includes('elect') || disc.includes('instrument') || disc.includes('listrik')) counts.elec++;
-            else counts.hse++;
-          });
-          disciplines[0].count = counts.civil || 18;
-          disciplines[1].count = counts.mech || 17;
-          disciplines[2].count = counts.elec || 9;
-          disciplines[3].count = counts.hse || 6;
-        }
-
-        var dHtml = '';
-        disciplines.forEach(function(item) {
-          var isNormal = item.status === 'NORMAL';
-          var badgeCls = isNormal ?
-            'background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.35);' :
-            'background:rgba(245,158,11,0.16); color:#fbbf24; border:1px solid rgba(245,158,11,0.35);';
-
-          dHtml += '<div class="overview-discipline-item">' +
-            '<div>' +
-              '<div class="overview-discipline-name">' + esc(item.name) + '</div>' +
-              '<div class="overview-discipline-count">' + item.count + ' Dokumen Aktif</div>' +
-            '</div>' +
-            '<span style="display:inline-block; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 7px; border-radius:3px; font-variant-numeric:tabular-nums; ' + badgeCls + '">' +
-              item.status +
-            '</span>' +
-          '</div>';
-        });
-        discContainer.innerHTML = dHtml;
-      }
-    }
-    
     function loadProjectOverview() {
-      renderOverviewDashboard();
 
       const c = document.getElementById('overviewContent');
       c.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>...</div>';
@@ -9247,8 +8658,7 @@ function fileLinksHtml(d) {
     }
 
     function renderDashboardCombined(stats, enhanced) {
-      window.dashboardStatsCache = stats;
-      if (typeof renderOverviewDashboard === 'function') renderOverviewDashboard();
+      
       const c = document.getElementById('dashboardContent');
       if (!c) return;
       let html = '';
@@ -13608,7 +13018,13 @@ function sendAIMessage() {
 
   var token = sessionToken || window.sessionToken || (typeof QC_SECURITY !== 'undefined' ? (QC_SECURITY._cachedToken || '') : '') || localStorage.getItem('qccms_session') || localStorage.getItem('qc_session_token') || 'pwa-active-session';
 
+  var timeoutTimer = setTimeout(function() {
+    console.warn('[AI Assistant] Timeout 8 detik menunggu backend, beralih ke local technical engine');
+    handleFallback();
+  }, 8000);
+
   function finalizeSuccess(res) {
+    clearTimeout(timeoutTimer);
     removeAITyping(typingId);
     aiChatBusy = false;
     if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
@@ -13623,6 +13039,7 @@ function sendAIMessage() {
   }
 
   function handleFallback() {
+    clearTimeout(timeoutTimer);
     var localRes = localQAChatEngine_(message, projectCode);
     finalizeSuccess(localRes);
   }
@@ -13631,10 +13048,10 @@ function sendAIMessage() {
     if (typeof google !== 'undefined' && google.script && google.script.run && typeof google.script.run.aiChat === 'function') {
       google.script.run
         .withSuccessHandler(function(res) {
-          if (res && res.success && res.reply) {
+          if (res && res.success && res.reply && String(res.reply).trim()) {
             finalizeSuccess(res);
           } else {
-            console.log('[AI Assistant] Backend merespons non-sukses, beralih ke local expert engine:', res);
+            console.log('[AI Assistant] Backend merespons non-sukses atau reply kosong, beralih ke local expert engine:', res);
             handleFallback();
           }
         })
@@ -13745,7 +13162,7 @@ function localQAChatEngine_(userMsg, projectCode) {
       '3. **Rewelding**: Jika ketebalan base metal berkurang akibat undercut > 1.0 mm, lakukan penambahan las (cosmetic pass / cover pass) menggunakan elektroda/kawat las berkualifikasi WPS (misal E7018 / ER70S-6) dengan parameter arus terkontrol.\n' +
       '4. **Re-inspection**: Lakukan Visual Inspection 100% dan NDT Liquid Penetrant Test (PT) atau Magnetic Particle Test (MT).';
     
-    actions.push({ icon: '📝', label: 'Buat Draft NCR', action: "quickAIQuestion('Buatkan draft NCR untuk temuan cacat las undercut sedalam 1.5mm pada butt joint pipa')" });
+    actions.push({ icon: '', label: 'Buat Draft NCR', action: "quickAIQuestion('Buatkan draft NCR untuk temuan cacat las undercut sedalam 1.5mm pada butt joint pipa')" });
     return {
       success: true,
       reply: reply,
@@ -13957,9 +13374,9 @@ function localQAChatEngine_(userMsg, projectCode) {
     '3. **Verifikasi Titik Intervensi (Hold & Witness Point)**:\n' +
     '   - **Hold Point (H)**: Pekerjaan tidak boleh dilanjutkan sebelum inspektur QA/QC menandatangani formulir inspeksi.\n' +
     '   - **Witness Point (W)**: Inspektur diberitahukan terlebih dahulu untuk menyaksikan proses pengujian (contoh: hydrotest, NDT).\n\n' +
-    '💡 *Silakan pilih salah satu kartu pertanyaan di atas atau ketik parameter teknis yang ingin Anda hitung (contoh: kalkulasi tekanan hydrotest ASME B31.3, toleransi undercut AWS D1.1, atau validasi MTR).*';
+    '*Silakan pilih salah satu rekomendasi teknis di atas atau ketik parameter teknis yang ingin Anda hitung (contoh: kalkulasi tekanan hydrotest ASME B31.3, toleransi undercut AWS D1.1, atau validasi MTR).*';
 
-  actions.push({ icon: '🔍', label: 'Konsultasi ASME B31.3', action: "quickAIQuestion('Berapa tekanan uji hydrotest untuk piping bertekanan kerja 10 bar menurut ASME B31.3?')" });
+  actions.push({ icon: '', label: 'Konsultasi ASME B31.3', action: "quickAIQuestion('Berapa tekanan uji hydrotest untuk piping bertekanan kerja 10 bar menurut ASME B31.3?')" });
   actions.push({ icon: '📝', label: 'Buat Draft NCR', action: "quickAIQuestion('Buatkan draft NCR untuk temuan cacat las undercut sedalam 1.5mm pada butt joint pipa')" });
 
   return {
