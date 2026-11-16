@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v10.9-ncr-drive-docs';
+const CACHE_NAME = 'qccms-edms-v11.0-exact-sheet-status';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

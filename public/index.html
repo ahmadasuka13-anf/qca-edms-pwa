@@ -6260,9 +6260,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   </select>
                   <select id="calFilterStatus" onchange="filterCalibrationTable_()" style="padding:7px 10px; font-size:12px; font-weight:600; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); outline:none;">
                     <option value="">Semua Status</option>
-                    <option value="Valid">Valid</option>
-                    <option value="Overdue">Overdue</option>
-                    <option value="Dalam Proses">Dalam Proses</option>
+                    <option value="VALID">VALID</option>
+                    <option value="NOT VALID">NOT VALID</option>
+                    <option value="NOT VERIFIED">NOT VERIFIED</option>
+                    <option value="NOT REQUIRED">NOT REQUIRED</option>
                   </select>
                 </div>
               </div>
@@ -6338,9 +6339,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                       <div class="form-group"><label>Disiplin *</label><input type="text" id="calDiscipline" required></div>
                       <div class="form-group"><label>Status *</label>
                         <select id="calStatus" required>
-                          <option value="Valid">Valid</option>
-                          <option value="Overdue">Overdue</option>
-                          <option value="Dalam Proses">Dalam Proses</option>
+                          <option value="VALID">VALID</option>
+                          <option value="NOT VALID">NOT VALID</option>
+                          <option value="NOT VERIFIED">NOT VERIFIED</option>
+                          <option value="NOT REQUIRED">NOT REQUIRED</option>
                         </select>
                       </div>
                     </div>
@@ -8831,7 +8833,8 @@ function filterCalibrationTable_() {
     var disc = String(r[2] || '');
     var calDate = String(r[3] || '');
     var nextDate = String(r[4] || '');
-    var status = String(r[5] || 'Valid');
+    var status = String(r[5] || 'VALID');
+    var statusUpper = status.toUpperCase().trim();
     var pic = String(r[6] || '');
 
     if (q) {
@@ -8846,12 +8849,36 @@ function filterCalibrationTable_() {
       continue;
     }
 
-    if (statusFilter && status.toLowerCase() !== statusFilter.toLowerCase()) {
-      continue;
+    if (statusFilter) {
+      var sfUpper = statusFilter.toUpperCase().trim();
+      if (sfUpper === 'VALID' && statusUpper !== 'VALID') continue;
+      if (sfUpper === 'NOT VALID' && statusUpper !== 'NOT VALID' && statusUpper !== 'OVERDUE') continue;
+      if (sfUpper === 'NOT VERIFIED' && statusUpper !== 'NOT VERIFIED' && statusUpper !== 'DALAM PROSES') continue;
+      if (sfUpper === 'NOT REQUIRED' && statusUpper !== 'NOT REQUIRED') continue;
     }
 
     visibleCount++;
-    var statusCls = status === 'Valid' ? 'badge-approved' : (status === 'Overdue' ? 'badge-rejected' : 'badge-pending');
+    var badgeBg = 'rgba(22, 163, 74, 0.12)';
+    var badgeColor = '#15803d';
+    var displayStatus = 'VALID';
+
+    if (statusUpper.indexOf('NOT VALID') !== -1 || statusUpper.indexOf('OVERDUE') !== -1 || statusUpper.indexOf('EXPIRED') !== -1) {
+      badgeBg = 'rgba(220, 38, 38, 0.12)';
+      badgeColor = '#b91c1c';
+      displayStatus = 'NOT VALID';
+    } else if (statusUpper.indexOf('NOT VERIFIED') !== -1 || statusUpper.indexOf('DALAM PROSES') !== -1) {
+      badgeBg = 'rgba(217, 119, 6, 0.12)';
+      badgeColor = '#b45309';
+      displayStatus = 'NOT VERIFIED';
+    } else if (statusUpper.indexOf('NOT REQUIRED') !== -1) {
+      badgeBg = 'rgba(100, 116, 139, 0.12)';
+      badgeColor = '#475569';
+      displayStatus = 'NOT REQUIRED';
+    } else {
+      badgeBg = 'rgba(22, 163, 74, 0.12)';
+      badgeColor = '#15803d';
+      displayStatus = 'VALID';
+    }
 
     var certLink = String(r[7] || '').trim();
     var certBtnHtml = '';
@@ -8870,8 +8897,8 @@ function filterCalibrationTable_() {
       '<td style="font-weight:600;">' + esc(name) + '</td>' +
       '<td>' + esc(disc) + '</td>' +
       '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums;">' + esc(calDate) + '</td>' +
-      '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:700; color:' + (status === 'Overdue' ? '#dc2626' : 'inherit') + ';">' + esc(nextDate) + '</td>' +
-      '<td><span class="badge ' + statusCls + '" style="border-radius:4px;">' + esc(status) + '</span></td>' +
+      '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:700; color:' + (displayStatus === 'NOT VALID' ? '#dc2626' : 'inherit') + ';">' + esc(nextDate) + '</td>' +
+      '<td><span class="badge" style="background:' + badgeBg + '; color:' + badgeColor + '; border-radius:3px; padding:3px 8px; font-weight:700; font-size:11px; font-family:var(--font-mono);">' + esc(displayStatus) + '</span></td>' +
       '<td>' + esc(pic) + '</td>' +
       '<td style="text-align:center;">' + certBtnHtml + '</td>' +
       '<td style="text-align:center; white-space:nowrap;">' +
@@ -8929,14 +8956,14 @@ function renderCalibrationCharts_(summaryRes) {
 
     var legendEl = document.getElementById('calStatusLegendSummary');
     if (legendEl) {
-      legendEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">' + validCount + ' Valid</span> · <span style="color:#dc2626; font-weight:700;">' + overdueCount + ' Overdue</span>';
+      legendEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">' + validCount + ' VALID</span> · <span style="color:#dc2626; font-weight:700;">' + overdueCount + ' NOT VALID</span> · <span style="color:#d97706; font-weight:700;">' + prosesCount + ' NOT VERIFIED</span>';
     }
 
     var ctxD = canvasDoughnut.getContext('2d');
     window.calStatusChartInstance = new Chart(ctxD, {
       type: 'doughnut',
       data: {
-        labels: ['Valid', 'Overdue', 'Dalam Proses', 'Not Required'],
+        labels: ['VALID', 'NOT VALID', 'NOT VERIFIED', 'NOT REQUIRED'],
         datasets: [{
           data: [validCount, overdueCount, prosesCount, notReqCount],
           backgroundColor: ['#16a34a', '#dc2626', '#d97706', '#94a3b8'],
@@ -9028,7 +9055,7 @@ function renderCalibrationCharts_(summaryRes) {
         labels: canonicalDiscs,
         datasets: [
           {
-            label: 'Valid',
+            label: 'VALID',
             data: validData,
             backgroundColor: '#16a34a',
             borderRadius: 3,
@@ -9036,7 +9063,7 @@ function renderCalibrationCharts_(summaryRes) {
             categoryPercentage: 0.7
           },
           {
-            label: 'Overdue',
+            label: 'NOT VALID',
             data: overdueData,
             backgroundColor: '#dc2626',
             borderRadius: 3,
@@ -9044,7 +9071,7 @@ function renderCalibrationCharts_(summaryRes) {
             categoryPercentage: 0.7
           },
           {
-            label: 'Proses',
+            label: 'NOT VERIFIED',
             data: prosesData,
             backgroundColor: '#d97706',
             borderRadius: 3,
@@ -9273,9 +9300,9 @@ function loadCalibrationData() {
       kpiWrap.innerHTML =
         '<div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:0;">' +
           '<div class="stat-card" style="border-left:4px solid var(--primary, #163d78);"><div class="stat-value" style="font-variant-numeric:tabular-nums;">' + esc(totalCount) + '</div><div class="stat-label">Total Alat Ukur</div></div>' +
-          '<div class="stat-card" style="border-left:4px solid #16a34a;"><div class="stat-value" style="color:#16a34a; font-variant-numeric:tabular-nums;">' + esc(validCount) + '</div><div class="stat-label">Valid & Terkalibrasi</div></div>' +
-          '<div class="stat-card warn" style="border-left:4px solid #dc2626;"><div class="stat-value" style="color:#dc2626; font-variant-numeric:tabular-nums;">' + esc(overdueCount) + '</div><div class="stat-label">Jatuh Tempo (Overdue)</div></div>' +
-          '<div class="stat-card" style="border-left:4px solid #d97706;"><div class="stat-value" style="color:#d97706; font-variant-numeric:tabular-nums;">' + esc(prosesCount) + '</div><div class="stat-label">Verifikasi / Proses</div></div>' +
+          '<div class="stat-card" style="border-left:4px solid #16a34a;"><div class="stat-value" style="color:#16a34a; font-variant-numeric:tabular-nums;">' + esc(validCount) + '</div><div class="stat-label">VALID</div></div>' +
+          '<div class="stat-card warn" style="border-left:4px solid #dc2626;"><div class="stat-value" style="color:#dc2626; font-variant-numeric:tabular-nums;">' + esc(overdueCount) + '</div><div class="stat-label">NOT VALID</div></div>' +
+          '<div class="stat-card" style="border-left:4px solid #d97706;"><div class="stat-value" style="color:#d97706; font-variant-numeric:tabular-nums;">' + esc(prosesCount) + '</div><div class="stat-label">NOT VERIFIED</div></div>' +
         '</div>';
 
       renderCalibrationCharts_(res);
@@ -9433,9 +9460,9 @@ function handleAiCertScan(input) {
           if (d.nextCalDate && document.getElementById('calNextDate')) document.getElementById('calNextDate').value = d.nextCalDate;
           if (d.status && document.getElementById('calStatus')) document.getElementById('calStatus').value = d.status;
           if (d.pic && document.getElementById('calPic')) document.getElementById('calPic').value = d.pic;
-          if (typeof showToast === 'function') showToast('✅ Data sertifikat berhasil diisi otomatis oleh AI!', 'success');
+          if (typeof showToast === 'function') showToast('Data sertifikat berhasil diisi otomatis oleh AI!', 'success');
         } else {
-          if (typeof showToast === 'function') showToast('⚠️ ' + ((res && res.message) || 'Gagal membaca sertifikat'), 'warning');
+          if (typeof showToast === 'function') showToast('' + ((res && res.message) || 'Gagal membaca sertifikat'), 'warning');
         }
       })
       .withFailureHandler(function (err) {
@@ -15200,7 +15227,7 @@ function _execAIAction_(actionStr) {
   var args = parsed.args;
   if (typeof window[fnName] !== 'function') {
     console.error('❌ Fungsi tidak ditemukan:', fnName);
-    if (typeof showToast === 'function') showToast('⚠️ Fungsi ' + fnName + ' tidak tersedia', 'error');
+    if (typeof showToast === 'function') showToast('Fungsi ' + fnName + ' tidak tersedia', 'error');
     return;
   }
   try { window[fnName].apply(null, args); }
@@ -15317,7 +15344,7 @@ function doExportAIChat(format) {
       if (loadEl) loadEl.remove();
       if (res && res.success) {
         downloadBase64File(res.base64, res.fileName, res.mimeType);
-        showToast('✅ File berhasil di-download!', 'success');
+        showToast('File berhasil di-download!', 'success');
       } else {
         showToast('❌ Gagal export: ' + ((res && res.message) || 'Unknown'), 'error');
       }
@@ -15341,7 +15368,7 @@ function startVoiceInput() {
   if (isVoiceRecording) { stopVoiceInput(); return; }
   var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    showToast('⚠️ Browser tidak mendukung voice input. Gunakan Chrome terbaru.', 'error');
+    showToast('Browser tidak mendukung voice input. Gunakan Chrome terbaru.', 'error');
     return;
   }
   try {
