@@ -6315,13 +6315,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
                   <!-- ⚡ AI SMART SCANNER HERO BANNER -->
                   <div style="background:var(--surface-subtle); border:1.5px dashed var(--border); border-radius:6px; padding:12px 14px; margin-bottom:16px; text-align:center;">
-                    <div style="font-size:13px; font-weight:700; color:#4338ca; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    <div style="font-size:13px; font-weight:700; color:#163d78; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision AI OCR)
                     </div>
                     <div style="font-size:11px; color:#4b5563; margin-bottom:10px; line-height:1.4;">
                       Upload foto sertifikat kalibrasi atau PDF, AI membaca & mengisikan seluruh kolom form otomatis.
                     </div>
-                    <button type="button" class="btn btn-primary btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="background:#4f46e5; border-radius:6px; font-weight:600; font-size:12px; padding:7px 16px; box-shadow:0 2px 8px rgba(79,70,229,0.3); cursor:pointer;">
+                    <button type="button" class="btn btn-primary btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="background:#163d78; border-color:#163d78; border-radius:6px; font-weight:600; font-size:12px; padding:7px 16px; cursor:pointer;">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="13" r="4"/></svg>Upload / Foto Sertifikat
                     </button>
                     <input type="file" id="calCertFileInput" accept="image/*,application/pdf" capture="environment" style="display:none;" onchange="handleAiCertScan(this)">
@@ -6349,6 +6349,22 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <div class="form-row single">
                       <div class="form-group"><label>PIC *</label><input type="text" id="calPic" required></div>
                     </div>
+                    <!-- 📁 Berkas Sertifikat Kalibrasi Resmi -->
+                    <div style="background:var(--surface-subtle, #f8fafc); border:1px solid var(--border, #cbd5e1); border-radius:6px; padding:10px 12px; margin-bottom:12px;">
+                      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="font-size:12px; font-weight:700; color:var(--ink, #0f172a); margin:0;">Berkas Sertifikat Kalibrasi (PDF / Scan)</label>
+                        <span id="calCertModalStatusBadge" class="badge" style="background:rgba(15,23,42,0.06); color:var(--ink-secondary, #64748b); font-size:10px; border-radius:3px; padding:2px 6px;">Belum Ada Berkas</span>
+                      </div>
+                      <div style="display:flex; gap:6px; align-items:center;">
+                        <input type="text" id="calCertLink" readonly placeholder="Tautan Google Drive (Otomatis saat unggah)..." style="flex:1; font-size:11px; background:var(--surface, #ffffff); color:var(--ink); border:1px solid var(--border); border-radius:4px; padding:6px 8px; font-family:'JetBrains Mono', monospace;">
+                        <button type="button" class="btn btn-secondary btn-small" id="btnCalCertQuickPreview" onclick="previewCertificateModal_(document.getElementById('calToolId').value)" style="display:none; padding:5px 9px; font-size:11px; font-weight:600; white-space:nowrap;">Lihat PDF</button>
+                        <button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById('calCertFormUploadInput').click()" style="padding:5px 9px; font-size:11px; font-weight:600; white-space:nowrap;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Unggah PDF
+                        </button>
+                        <input type="file" id="calCertFormUploadInput" accept="application/pdf,image/*" style="display:none;" onchange="handleFormCertUpload_(this)">
+                      </div>
+                      <div style="font-size:10px; color:var(--ink-muted, #94a3b8); margin-top:4px;">Disimpan terorganisir di Google Drive <code>qca edms v3</code> / Sertifikat Kalibrasi</div>
+                    </div>
                     <div class="modal-actions">
                       <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()">Batal</button>
                       <button type="submit" class="btn btn-primary" id="calSubmitBtn">Simpan</button>
@@ -6356,6 +6372,69 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   </form>
                 </div>
               </div>
+
+              <!-- 📑 MODAL PREVIEW & UPLOAD SERTIFIKAT KALIBRASI -->
+              <div class="modal-overlay" id="calCertPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+                <div class="modal-box" style="max-width:920px; width:100%; max-height:92vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden; padding:0;">
+                  <!-- Header Modal -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc);">
+                    <div>
+                      <h3 id="calCertModalTitle" style="margin:0; font-size:15px; font-weight:700; color:var(--ink, #0f172a); display:flex; align-items:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Sertifikat Kalibrasi
+                      </h3>
+                      <div id="calCertModalSub" style="font-size:12px; color:var(--ink-secondary, #64748b); margin-top:3px; font-variant-numeric:tabular-nums;">-</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <a id="btnCalCertOpenNewTab" href="#" target="_blank" class="btn btn-secondary btn-small" style="display:none; padding:5px 12px; font-size:11px; font-weight:600; text-decoration:none; border-radius:4px;" title="Buka berkas di Google Drive">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka di Tab Baru
+                      </a>
+                      <button type="button" class="btn btn-secondary btn-small" onclick="closeCalibrationCertModal()" style="padding:5px 10px; font-size:14px; border:none; cursor:pointer;" title="Tutup">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Body Modal: Iframe Preview atau Fallback Upload -->
+                  <div style="flex:1; min-height:480px; position:relative; background:#1e293b; display:flex; flex-direction:column; overflow:hidden;">
+                    <!-- Iframe PDF Preview -->
+                    <iframe id="calCertIframe" src="" style="width:100%; height:540px; border:none; display:none; background:#334155;"></iframe>
+
+                    <!-- Fallback / Upload Card -->
+                    <div id="calCertFallbackView" style="display:none; padding:32px 24px; text-align:center; background:var(--surface, #ffffff); flex:1;">
+                      <div style="width:56px; height:56px; margin:0 auto 16px; border-radius:8px; background:rgba(22,61,120,0.08); display:flex; align-items:center; justify-content:center; color:#163d78;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="m13.5 16.5 2 2"/></svg>
+                      </div>
+                      <div id="calCertFallbackName" style="font-size:15px; font-weight:700; color:var(--ink, #0f172a); margin-bottom:6px;">Arsip Sertifikat Kalibrasi</div>
+                      <div id="calCertFallbackDesc" style="font-size:12.5px; color:var(--ink-secondary, #64748b); max-width:540px; margin:0 auto 20px; line-height:1.5;">-</div>
+                      
+                      <div style="border:1.5px dashed var(--border, #cbd5e1); border-radius:6px; padding:24px; max-width:540px; margin:0 auto; background:var(--surface-subtle, #f8fafc);">
+                        <div style="font-size:12.5px; font-weight:600; color:var(--ink, #0f172a); margin-bottom:4px;">Unggah Salinan Sertifikat Resmi (PDF / Scan)</div>
+                        <div style="font-size:11px; color:var(--ink-muted, #94a3b8); margin-bottom:14px;">Berkas otomatis disimpan ke Drive <code>qca edms v3</code> / Sertifikat Kalibrasi</div>
+                        <input type="file" id="calCertDirectUploadInput" accept="application/pdf,image/*" style="display:none;" onchange="handleCertDirectUploadSelected_(this)">
+                        <button type="button" class="btn btn-primary" onclick="triggerCertUploadFromPreview_()" id="btnUploadCertFromPreview" style="background:#163d78; border-color:#163d78; font-size:12.5px; font-weight:600; padding:9px 22px; border-radius:6px; cursor:pointer;">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Pilih & Unggah Berkas PDF Sekarang
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Footer Modal -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 18px; border-top:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc); font-size:11px; color:var(--ink-secondary, #64748b);">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                      Google Drive: <code>qca edms v3</code> / Sertifikat Kalibrasi
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                      <button type="button" class="btn btn-secondary btn-small" onclick="triggerCertUploadFromPreview_()" style="font-size:11px; font-weight:600; padding:4px 10px; border-radius:4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ganti Berkas
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-small" onclick="closeCalibrationCertModal()" style="font-size:11px; font-weight:600; padding:4px 12px; border-radius:4px;">Tutup</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -8065,6 +8144,60 @@ function openCalibrationAddForm() {
 }
 window.openCalibrationAddForm = openCalibrationAddForm;
 
+function handleFormCertUpload_(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var toolId = (document.getElementById('calToolId') ? document.getElementById('calToolId').value : '').trim() || 'NEW_TOOL';
+  var toolName = (document.getElementById('calToolName') ? document.getElementById('calToolName').value : '').trim() || 'Alat';
+  var disc = (document.getElementById('calDiscipline') ? document.getElementById('calDiscipline').value : '').trim() || 'General';
+
+  if (typeof showToast === 'function') showToast('Mengunggah sertifikat ke Google Drive qca edms v3...', 'info');
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result;
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res && res.success) {
+          if (typeof showToast === 'function') showToast(res.message || 'Sertifikat berhasil diunggah ke Google Drive!', 'success');
+          var url = res.fileUrl || res.previewUrl;
+          if (document.getElementById('calCertLink')) document.getElementById('calCertLink').value = url;
+          var badge = document.getElementById('calCertModalStatusBadge');
+          if (badge) {
+            badge.textContent = 'Tersimpan di Google Drive';
+            badge.style.background = 'rgba(22, 163, 74, 0.12)';
+            badge.style.color = '#15803d';
+          }
+          var btnPrev = document.getElementById('btnCalCertQuickPreview');
+          if (btnPrev) btnPrev.style.display = 'inline-flex';
+          if (window.allCalibrationTools) {
+            for (var k = 1; k < window.allCalibrationTools.length; k++) {
+              if (String(window.allCalibrationTools[k][0]).trim() === toolId) {
+                window.allCalibrationTools[k][7] = url;
+                break;
+              }
+            }
+          }
+        } else {
+          if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal mengunggah berkas', 'error');
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (typeof showToast === 'function') showToast('Gagal: ' + (err.message || 'Koneksi error'), 'error');
+      })
+      .uploadCalibrationCertificate({
+        toolId: toolId,
+        toolName: toolName,
+        discipline: disc,
+        fileName: file.name,
+        fileBase64: base64,
+        mimeType: file.type || 'application/pdf'
+      });
+  };
+  reader.readAsDataURL(file);
+}
+window.handleFormCertUpload_ = handleFormCertUpload_;
+
 function editCalibrationTool(toolId) {
   var m = document.getElementById('calibrationModal');
   if (!m) return;
@@ -8093,6 +8226,30 @@ function editCalibrationTool(toolId) {
     if (document.getElementById('calNextDate')) document.getElementById('calNextDate').value = tool[4] || '';
     if (document.getElementById('calStatus')) document.getElementById('calStatus').value = tool[5] || 'Valid';
     if (document.getElementById('calPic')) document.getElementById('calPic').value = tool[6] || '';
+
+    var certLink = tool[7] || '';
+    var certInput = document.getElementById('calCertLink');
+    var badge = document.getElementById('calCertModalStatusBadge');
+    var btnPrev = document.getElementById('btnCalCertQuickPreview');
+    if (certInput) certInput.value = certLink;
+    if (badge) {
+      if (certLink.indexOf('drive.google.com') !== -1 || certLink.indexOf('/file/d/') !== -1) {
+        badge.textContent = 'Tersimpan di Google Drive';
+        badge.style.background = 'rgba(22, 163, 74, 0.12)';
+        badge.style.color = '#15803d';
+        if (btnPrev) btnPrev.style.display = 'inline-flex';
+      } else if (certLink) {
+        badge.textContent = 'Path Lokal di Spreadsheet';
+        badge.style.background = 'rgba(217, 119, 6, 0.12)';
+        badge.style.color = '#b45309';
+        if (btnPrev) btnPrev.style.display = 'inline-flex';
+      } else {
+        badge.textContent = 'Belum Ada Berkas';
+        badge.style.background = 'rgba(15,23,42,0.06)';
+        badge.style.color = 'var(--ink-secondary)';
+        if (btnPrev) btnPrev.style.display = 'none';
+      }
+    }
   }
   m.classList.add('show');
 }
@@ -8440,7 +8597,7 @@ function renderCalibrationCharts_(summaryRes) {
     return;
   }
 
-  // 1. Doughnut Chart: Status Kalibrasi Global
+  // 1. Doughnut Chart: Distribusi Status Kalibrasi
   var canvasDoughnut = document.getElementById('calStatusDoughnutChart');
   if (canvasDoughnut) {
     if (window.calStatusChartInstance) {
@@ -8501,25 +8658,46 @@ function renderCalibrationCharts_(summaryRes) {
     });
   }
 
-  // 2. Bar Chart: Distribusi Disiplin (Valid vs Overdue)
+  // 2. Bar Chart: Alat per Disiplin & Kategori (4 Pilar Utama PT Asuka)
   var canvasBar = document.getElementById('calDisciplineBarChart');
   if (canvasBar) {
     if (window.calDisciplineChartInstance) {
       window.calDisciplineChartInstance.destroy();
     }
 
-    var byDisc = summaryRes.byDiscipline || {};
-    var discLabels = Object.keys(byDisc);
-    if (!discLabels.length) {
-      discLabels = ['Electrical', 'Mechanical & Piping', 'Coating & Painting'];
-    }
+    // Normalisasi disiplin ke 4 pilar utama AEI agar grafik rapi dan terbaca sempurna
+    var canonicalDiscs = ['Electrical', 'Mechanical & Piping', 'Civil & Architecture', 'Coating & Painting'];
+    var aggregated = {
+      'Electrical': { valid: 0, overdue: 0, proses: 0 },
+      'Mechanical & Piping': { valid: 0, overdue: 0, proses: 0 },
+      'Civil & Architecture': { valid: 0, overdue: 0, proses: 0 },
+      'Coating & Painting': { valid: 0, overdue: 0, proses: 0 }
+    };
+
+    var rawByDisc = summaryRes.byDiscipline || {};
+    Object.keys(rawByDisc).forEach(function(k) {
+      var item = rawByDisc[k] || {};
+      var norm = 'Electrical';
+      if (/electric|avometer|megger|multimeter|insulation|clamp|earth|sensor|phase|signal|decade|power supply/i.test(k)) {
+        norm = 'Electrical';
+      } else if (/mechanical|piping|torque|pressure|gauge|hi-lo|weld|dial|anemometer|caliper|micrometer|taper|recorder|laser|yoke|valve|manometer|oven/i.test(k)) {
+        norm = 'Mechanical & Piping';
+      } else if (/civil|architecture|total station|auto level|hammer|theodolite|prisma|waterpass|rambu|tripod|proving ring/i.test(k)) {
+        norm = 'Civil & Architecture';
+      } else if (/coating|painting|film|dew|blasting/i.test(k)) {
+        norm = 'Coating & Painting';
+      }
+      aggregated[norm].valid += (item.valid || 0);
+      aggregated[norm].overdue += (item.overdue || 0);
+      aggregated[norm].proses += (item.proses || 0);
+    });
 
     var validData = [];
     var overdueData = [];
     var prosesData = [];
 
-    discLabels.forEach(function(dName) {
-      var item = byDisc[dName] || { valid: 0, overdue: 0, proses: 0 };
+    canonicalDiscs.forEach(function(dName) {
+      var item = aggregated[dName];
       validData.push(item.valid || 0);
       overdueData.push(item.overdue || 0);
       prosesData.push(item.proses || 0);
@@ -8529,31 +8707,31 @@ function renderCalibrationCharts_(summaryRes) {
     window.calDisciplineChartInstance = new Chart(ctxB, {
       type: 'bar',
       data: {
-        labels: discLabels,
+        labels: canonicalDiscs,
         datasets: [
           {
             label: 'Valid',
             data: validData,
             backgroundColor: '#16a34a',
             borderRadius: 3,
-            barPercentage: 0.7,
-            categoryPercentage: 0.8
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
           },
           {
             label: 'Overdue',
             data: overdueData,
             backgroundColor: '#dc2626',
             borderRadius: 3,
-            barPercentage: 0.7,
-            categoryPercentage: 0.8
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
           },
           {
             label: 'Proses',
             data: prosesData,
             backgroundColor: '#d97706',
             borderRadius: 3,
-            barPercentage: 0.7,
-            categoryPercentage: 0.8
+            barPercentage: 0.6,
+            categoryPercentage: 0.7
           }
         ]
       },
@@ -8568,20 +8746,32 @@ function renderCalibrationCharts_(summaryRes) {
             labels: {
               boxWidth: 8,
               boxHeight: 8,
-              font: { size: 10, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
+              font: { size: 10.5, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
               color: '#0f172a'
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                return ' ' + ctx.dataset.label + ': ' + ctx.raw + ' alat';
+              }
             }
           }
         },
         scales: {
           x: {
             grid: { display: false },
-            ticks: { font: { size: 10, family: 'Plus Jakarta Sans, sans-serif' } }
+            ticks: {
+              font: { size: 10.5, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
+              color: '#334155',
+              maxRotation: 0,
+              minRotation: 0
+            }
           },
           y: {
             beginAtZero: true,
             grid: { color: 'rgba(0,0,0,0.05)' },
-            ticks: { font: { size: 10 } }
+            ticks: { font: { size: 10, family: 'JetBrains Mono, monospace' } }
           }
         }
       }
@@ -8658,12 +8848,12 @@ function previewCertificateModal_(toolId) {
       btnNewTab.style.display = 'inline-flex';
     }
   } else {
-    // Berkas lokal tercatat di spreadsheet (seperti: Calibration Certificate/2026/...)
+    // Berkas lokal tercatat di spreadsheet (seperti: Calibration Certificate\2026\...)
     if (fallbackView) {
       fallbackView.style.display = 'block';
       if (document.getElementById('calCertFallbackName')) document.getElementById('calCertFallbackName').textContent = 'Berkas Terdaftar di Arsip Spreadsheet';
       if (fallbackDesc) {
-        fallbackDesc.innerHTML = 'Path berkas: <code style="background:rgba(0,0,0,0.06); padding:2px 6px; border-radius:3px;">' + esc(certLink) + '</code><br><br>Unggah salinan berkas PDF resmi ke Google Drive agar dapat dibuka langsung di aplikasi kapan saja.';
+        fallbackDesc.innerHTML = 'Tercatat di spreadsheet: <code style="background:rgba(0,0,0,0.06); padding:2px 6px; border-radius:3px; font-family:JetBrains Mono,monospace;">' + esc(certLink) + '</code><br><br>Berkas PDF ini belum ada di Google Drive (<code>qca edms v3</code>). Silakan pilih berkas PDF dari komputer/HP Anda untuk mengunggah dan menampilkannya sekarang.';
       }
     }
   }
@@ -8695,7 +8885,7 @@ function handleCertDirectUploadSelected_(input) {
   var discipline = tool[2];
   var certNo = tool[8] || '';
 
-  if (typeof showToast === 'function') showToast('Mengunggah sertifikat ' + toolId + ' ke Google Drive...', 'info');
+  if (typeof showToast === 'function') showToast('Mengunggah sertifikat ' + toolId + ' ke Google Drive qca edms v3...', 'info');
 
   var reader = new FileReader();
   reader.onload = function(e) {
@@ -8704,16 +8894,24 @@ function handleCertDirectUploadSelected_(input) {
       .withSuccessHandler(function(res) {
         if (res && res.success) {
           if (typeof showToast === 'function') showToast(res.message || 'Sertifikat berhasil diunggah ke Google Drive!', 'success');
-          // Update data lokal
-          tool[7] = res.fileUrl || res.previewUrl;
+          var finalUrl = res.fileUrl || res.previewUrl;
+          tool[7] = finalUrl;
+          if (window.allCalibrationTools) {
+            for (var k = 1; k < window.allCalibrationTools.length; k++) {
+              if (String(window.allCalibrationTools[k][0]).trim() === String(toolId).trim()) {
+                window.allCalibrationTools[k][7] = finalUrl;
+                break;
+              }
+            }
+          }
           previewCertificateModal_(toolId);
           loadCalibrationData();
         } else {
-          if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal mengunggah sertifikat.', 'error');
+          if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal mengunggah sertifikat', 'error');
         }
       })
       .withFailureHandler(function(err) {
-        if (typeof showToast === 'function') showToast('Error: ' + err.message, 'error');
+        if (typeof showToast === 'function') showToast('Gagal upload: ' + (err.message || 'Koneksi error'), 'error');
       })
       .uploadCalibrationCertificate({
         toolId: toolId,
@@ -8721,8 +8919,8 @@ function handleCertDirectUploadSelected_(input) {
         discipline: discipline,
         certNo: certNo,
         fileName: file.name,
-        mimeType: file.type || 'application/pdf',
-        fileBase64: base64
+        fileBase64: base64,
+        mimeType: file.type || 'application/pdf'
       });
   };
   reader.readAsDataURL(file);
@@ -8943,7 +9141,8 @@ function saveCalibrationData(e) {
     calDate:     document.getElementById('calDate').value,
     nextCalDate: document.getElementById('calNextDate').value,
     status:      document.getElementById('calStatus').value,
-    pic:         document.getElementById('calPic').value.trim()
+    pic:         document.getElementById('calPic').value.trim(),
+    certLink:    (document.getElementById('calCertLink') ? document.getElementById('calCertLink').value.trim() : '')
   };
   google.script.run.withSuccessHandler(function (res) {
     if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; }
