@@ -6587,10 +6587,16 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <span class="ai-header-title">Asisten QA/QC Copilot</span>
           <span class="ai-header-badge">AI COPILOT</span>
         </div>
-        <div class="ai-header-sub" id="aiChatContext">Fokus: Semua Proyek · PT Asuka Engineering Indonesia</div>
+        <div class="ai-header-sub" id="aiChatContext">Fokus: Semua Proyek · <span id="aiActiveEngineBadge" style="font-family:var(--font-mono); font-weight:700; color:#93c5fd;">Intel Core v4.0</span></div>
       </div>
     </div>
     <div class="ai-header-actions">
+      <button type="button" class="ai-hdr-btn" onclick="openAISettingsModal()" title="Pengaturan Engine & Kunci API AI (Google Gemini / Groq)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
       <button type="button" class="ai-hdr-btn" onclick="exportAIChatMenu()" title="Export percakapan">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </button>
@@ -6615,11 +6621,37 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <strong>Halo, Tim QA/QC!</strong>
         </div>
         <p class="ai-bot-desc">
-          Saya <strong>Asisten QA/QC Copilot</strong> PT Asuka Engineering Indonesia. Tanyakan status dokumen, validasi inspeksi NFI/ITR, atau konsultasi standar teknik fabrikasi &amp; konstruksi.
+          Saya <strong>Asisten QA/QC Copilot Terpadu</strong> PT Asuka Engineering Indonesia. Tanyakan status dokumen proyek, standar teknik fabrikasi &amp; konstruksi, rumus Excel, draft surat resmi, atau pertanyaan umum di luar aplikasi.
         </p>
 
         <!-- Modern Suggestion Action Cards -->
         <div class="ai-suggest-grid">
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Bagaimana rumus INDEX MATCH dan XLOOKUP di Excel untuk mencari data NFI/ITR?')">
+            <div class="asc-left">
+              <span class="asc-icon green" style="border-radius:4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Rumus Excel INDEX MATCH &amp; XLOOKUP</span>
+                <span class="asc-hint">Formula pencarian data &amp; rekapitulasi cepat</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Buatkan draft surat resmi permohonan reschedule witness inspection ke Owner')">
+            <div class="asc-left">
+              <span class="asc-icon orange" style="border-radius:4px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <div class="asc-text">
+                <span class="asc-title">Draft Surat &amp; Korespondensi Resmi</span>
+                <span class="asc-hint">Format formal permohonan, memo teknis &amp; RFI</span>
+              </div>
+            </div>
+            <svg class="asc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
           <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Buatkan executive morning briefing status dokumen dan kalibrasi hari ini')">
             <div class="asc-left">
               <span class="asc-icon orange">
@@ -6692,7 +6724,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   <!-- Modern Floating Input Bar -->
   <div class="ai-chat-footer">
     <div class="ai-input-wrapper">
-      <textarea id="aiChatInput" placeholder="Tanyakan standar teknis, dokumen, atau NCR..." rows="1" onkeydown="handleAIKeydown(event)" oninput="autoResizeAIInput(this)"></textarea>
+      <textarea id="aiChatInput" placeholder="Tanyakan standar teknis, dokumen, rumus Excel, draft surat, atau pertanyaan umum..." rows="1" onkeydown="handleAIKeydown(event)" oninput="autoResizeAIInput(this)"></textarea>
       <div class="ai-input-controls">
         <button type="button" onclick="startVoiceInput()" id="aiVoiceBtn" class="ai-voice-btn" title="Voice Input (Bicara)">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
@@ -13233,6 +13265,233 @@ function handleAIKeydown(e) {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════════
+// AI COPILOT CLIENT CONTROLLER & UNIVERSAL INTELLIGENCE ENGINE (v4.0)
+// ════════════════════════════════════════════════════════════════════════
+
+function openAISettingsModal() {
+  var modal = document.getElementById('aiSettingsModal');
+  if (!modal) return;
+  var provider = localStorage.getItem('qc_ai_provider') || 'gemini';
+  var key = localStorage.getItem('qc_ai_key') || '';
+  var model = localStorage.getItem('qc_ai_model') || (provider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-2.0-flash');
+
+  var selProv = document.getElementById('aiCfgProvider');
+  var inpKey = document.getElementById('aiCfgApiKey');
+  var inpMod = document.getElementById('aiCfgModel');
+
+  if (selProv) selProv.value = provider;
+  if (inpKey) inpKey.value = key;
+  if (inpMod) inpMod.value = model;
+
+  onAISettingsProviderChange();
+  modal.style.display = 'flex';
+}
+window.openAISettingsModal = openAISettingsModal;
+
+function closeAISettingsModal() {
+  var modal = document.getElementById('aiSettingsModal');
+  if (modal) modal.style.display = 'none';
+}
+window.closeAISettingsModal = closeAISettingsModal;
+
+function onAISettingsProviderChange() {
+  var selProv = document.getElementById('aiCfgProvider');
+  var keyGroup = document.getElementById('aiCfgKeyGroup');
+  var modGroup = document.getElementById('aiCfgModelGroup');
+  var helpLink = document.getElementById('aiCfgHelpLink');
+  var inpMod = document.getElementById('aiCfgModel');
+
+  if (!selProv) return;
+  var val = selProv.value;
+
+  if (val === 'default') {
+    if (keyGroup) keyGroup.style.display = 'none';
+    if (modGroup) modGroup.style.display = 'none';
+  } else {
+    if (keyGroup) keyGroup.style.display = 'block';
+    if (modGroup) modGroup.style.display = 'block';
+    if (val === 'groq') {
+      if (helpLink) {
+        helpLink.href = 'https://console.groq.com/keys';
+        helpLink.innerHTML = 'Dapatkan API Key di Groq Console &rarr;';
+      }
+      if (inpMod && (!inpMod.value || inpMod.value.indexOf('gemini') !== -1)) {
+        inpMod.value = 'llama-3.3-70b-versatile';
+      }
+    } else {
+      if (helpLink) {
+        helpLink.href = 'https://aistudio.google.com/app/apikey';
+        helpLink.innerHTML = 'Dapatkan Kunci API Gratis di Google AI Studio &rarr;';
+      }
+      if (inpMod && (!inpMod.value || inpMod.value.indexOf('llama') !== -1)) {
+        inpMod.value = 'gemini-2.0-flash';
+      }
+    }
+  }
+}
+window.onAISettingsProviderChange = onAISettingsProviderChange;
+
+function toggleAISettingsKeyVisibility() {
+  var inp = document.getElementById('aiCfgApiKey');
+  if (!inp) return;
+  inp.type = (inp.type === 'password') ? 'text' : 'password';
+}
+window.toggleAISettingsKeyVisibility = toggleAISettingsKeyVisibility;
+
+function saveAISettings() {
+  var selProv = document.getElementById('aiCfgProvider');
+  var inpKey = document.getElementById('aiCfgApiKey');
+  var inpMod = document.getElementById('aiCfgModel');
+
+  var provider = selProv ? selProv.value : 'gemini';
+  var key = inpKey ? inpKey.value.trim() : '';
+  var model = inpMod ? inpMod.value.trim() : '';
+
+  localStorage.setItem('qc_ai_provider', provider);
+  localStorage.setItem('qc_ai_key', key);
+  localStorage.setItem('qc_ai_model', model);
+
+  updateActiveEngineBadge();
+  closeAISettingsModal();
+  if (typeof showToast === 'function') {
+    showToast('Pengaturan engine AI Copilot berhasil disimpan!', 'success');
+  }
+}
+window.saveAISettings = saveAISettings;
+
+function resetAISettingsDefault() {
+  localStorage.removeItem('qc_ai_provider');
+  localStorage.removeItem('qc_ai_key');
+  localStorage.removeItem('qc_ai_model');
+  openAISettingsModal();
+  updateActiveEngineBadge();
+  if (typeof showToast === 'function') {
+    showToast('Engine AI dikembalikan ke default.', 'info');
+  }
+}
+window.resetAISettingsDefault = resetAISettingsDefault;
+
+function updateActiveEngineBadge() {
+  var badge = document.getElementById('aiActiveEngineBadge');
+  if (!badge) return;
+  var prov = localStorage.getItem('qc_ai_provider') || 'default';
+  var key = localStorage.getItem('qc_ai_key') || '';
+  if (prov === 'gemini' && key) {
+    badge.textContent = 'Gemini 2.0 Flash (Online)';
+    badge.style.color = '#38bdf8';
+  } else if (prov === 'groq' && key) {
+    badge.textContent = 'Groq Llama 3.3 (Online)';
+    badge.style.color = '#4ade80';
+  } else {
+    badge.textContent = 'Intel Core v4.0';
+    badge.style.color = '#93c5fd';
+  }
+}
+window.updateActiveEngineBadge = updateActiveEngineBadge;
+
+async function testAISettingsConnection() {
+  var selProv = document.getElementById('aiCfgProvider');
+  var inpKey = document.getElementById('aiCfgApiKey');
+  var inpMod = document.getElementById('aiCfgModel');
+  var statusEl = document.getElementById('aiCfgTestStatus');
+  var btnTest = document.getElementById('btnTestAIConn');
+
+  var provider = selProv ? selProv.value : 'gemini';
+  var key = inpKey ? inpKey.value.trim() : '';
+  var model = inpMod ? inpMod.value.trim() : '';
+
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.style.background = 'rgba(217,119,6,0.1)';
+    statusEl.style.color = '#b45309';
+    statusEl.innerHTML = '<span class="spinner dark" style="margin-right:6px;"></span>Menguji koneksi ke engine ' + provider.toUpperCase() + '...';
+  }
+  if (btnTest) btnTest.disabled = true;
+
+  try {
+    if (provider === 'gemini') {
+      if (!key) throw new Error('API Key Gemini wajib diisi.');
+      var mod = model || 'gemini-2.0-flash';
+      var res = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + mod + ':generateContent?key=' + key, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: 'Ping. Jawab 1 kalimat: Engine AI aktif.' }] }],
+          generationConfig: { maxOutputTokens: 30 }
+        })
+      });
+      var data = await res.json();
+      if (!res.ok) throw new Error((data && data.error && data.error.message) || 'HTTP ' + res.status);
+      var reply = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text;
+      if (!reply) throw new Error('Tidak ada respon teks dari Gemini.');
+      if (statusEl) {
+        statusEl.style.background = 'rgba(22,163,74,0.12)';
+        statusEl.style.color = '#15803d';
+        statusEl.innerHTML = 'Koneksi Berhasil! Respon: "' + escapeAIHtml(reply.trim()) + '"';
+      }
+    } else if (provider === 'groq') {
+      if (!key) throw new Error('API Key Groq wajib diisi.');
+      var modG = model || 'llama-3.3-70b-versatile';
+      var resG = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + key
+        },
+        body: JSON.stringify({
+          model: modG,
+          messages: [{ role: 'user', content: 'Ping. Jawab 1 kalimat: Engine AI aktif.' }],
+          max_tokens: 30
+        })
+      });
+      var dataG = await resG.json();
+      if (!resG.ok) throw new Error((dataG && dataG.error && dataG.error.message) || 'HTTP ' + resG.status);
+      var replyG = dataG.choices && dataG.choices[0] && dataG.choices[0].message && dataG.choices[0].message.content;
+      if (statusEl) {
+        statusEl.style.background = 'rgba(22,163,74,0.12)';
+        statusEl.style.color = '#15803d';
+        statusEl.innerHTML = 'Koneksi Berhasil! Respon: "' + escapeAIHtml(replyG.trim()) + '"';
+      }
+    } else {
+      if (statusEl) {
+        statusEl.style.background = 'rgba(22,163,74,0.12)';
+        statusEl.style.color = '#15803d';
+        statusEl.innerHTML = 'Standar Intel Engine v4.0 siap digunakan.';
+      }
+    }
+  } catch (err) {
+    if (statusEl) {
+      statusEl.style.background = 'rgba(220,38,38,0.12)';
+      statusEl.style.color = '#b91c1c';
+      statusEl.innerHTML = 'Gagal Uji Koneksi: ' + escapeAIHtml(err.message);
+    }
+  } finally {
+    if (btnTest) btnTest.disabled = false;
+  }
+}
+window.testAISettingsConnection = testAISettingsConnection;
+
+function buildClientUniversalPrompt() {
+  var projInfo = (typeof globalProjectFilter !== 'undefined' && globalProjectFilter) ? ('Fokus Proyek Saat Ini: ' + globalProjectFilter) : 'Semua Proyek';
+  return 'Kamu adalah Asisten AI Senior & Konsultan Teknik Terpadu QC-CMS PT Asuka Engineering Indonesia.\n' +
+    'Kamu cerdas, berwawasan luas, analitis, solutif, dan ramah.\n' +
+    'KONTEKS SISTEM: QC-CMS EDMS (' + projInfo + ').\n\n' +
+    'PANDUAN MENJAWAB TANPA BATAS:\n' +
+    '1. Kamu berwenang dan bertugas PENUH untuk menjawab SELURUH pertanyaan dari pengguna tanpa batasan ruang lingkup:\n' +
+    '   - Pertanyaan sistem QC-CMS, monitoring dokumen, approval, dan kalibrasi alat.\n' +
+    '   - Pertanyaan standar rekayasa & konstruksi: ASME B31.3/B16.5, AWS D1.1, API, ISO 9001/14001/45001, ASTM, SSPC, PUIL, SNI, dsb.\n' +
+    '   - PERTANYAAN DI LUAR APLIKASI:\n' +
+    '     * Rumus Excel, Google Sheets, formula kalkulasi (VLOOKUP, XLOOKUP, INDEX MATCH, SUMIFS, IF), macros, dan data cleaning.\n' +
+    '     * Pembuatan draft surat resmi permohonan inspeksi, memo teknis, RFI klarifikasi gambar AFC, berita acara, dan email bisnis formal (Bahasa Indonesia & English).\n' +
+    '     * Matematika terapan, fisika, kimia, konversi satuan, berat nominal pipa, tekanan, dan kalkulasi rekayasa.\n' +
+    '     * Manajemen proyek (Kurva S, Critical Path, EVM), HSE/K3 (JSA, Permit to Work, HIRADC).\n' +
+    '     * Ilmu pengetahuan umum dunia, sains, teknologi, bahasa, logika, dan konsultasi bebas.\n' +
+    '2. JANGAN PERNAH menolak pertanyaan atau membatasi diri hanya pada sistem EDMS. Berikan jawaban yang cerdas, solutif, dan aplikatif.\n' +
+    '3. Gunakan format Markdown yang terstruktur: judul tebal, poin-poin jelas, dan blok kode untuk rumus/draft.';
+}
+
+
 function sendAIMessage() {
   if (aiChatBusy) return;
   var input = document.getElementById('aiChatInput');
@@ -15588,5 +15847,87 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
   <!-- MODAL: PREVIEW DOKUMEN -->
+
+  <!-- MODAL PENGATURAN ENGINE AI COPILOT (ANTI-AI INDUSTRIAL DIALOG) -->
+  <div id="aiSettingsModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); z-index:99999; align-items:center; justify-content:center; backdrop-filter:blur(3px);">
+    <div style="background:var(--surface-card, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; width:92%; max-width:520px; box-shadow:0 12px 36px rgba(0,0,0,0.22); overflow:hidden; display:flex; flex-direction:column;">
+      
+      <!-- Modal Header -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--border, #cbd5e1); background:var(--surface-subtle, #f8fafc);">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary, #163d78)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span style="font-weight:700; font-size:14px; color:var(--ink, #0f172a);">Pengaturan Kecerdasan Engine AI</span>
+        </div>
+        <button type="button" onclick="closeAISettingsModal()" style="border:none; background:transparent; cursor:pointer; color:var(--ink-muted, #64748b); padding:4px; display:flex;" title="Tutup">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div style="padding:16px 18px; display:flex; flex-direction:column; gap:12px; font-size:12.5px;">
+        
+        <!-- Info Banner -->
+        <div style="background:rgba(22,61,120,0.06); border:1px solid rgba(22,61,120,0.18); border-radius:6px; padding:10px 12px; color:var(--ink, #0f172a); font-size:11.5px; line-height:1.5;">
+          <strong>Kecerdasan Tanpa Batas</strong>: Hubungkan API Key Google Gemini (gratis permanen via Google AI Studio) atau Groq Cloud agar AI dapat menjawab <strong>seluruh pertanyaan di luar aplikasi</strong> (ilmu pengetahuan dunia, sains, coding, rumus Excel kompleks, terjemahan, dan draft korespondensi) dengan kecepatan tinggi.
+        </div>
+
+        <!-- Provider Select -->
+        <div>
+          <label style="font-weight:700; display:block; margin-bottom:5px; color:var(--ink, #0f172a);">Pilih Engine AI</label>
+          <select id="aiCfgProvider" onchange="onAISettingsProviderChange()" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-weight:600; outline:none;">
+            <option value="gemini">Google Gemini (Disarankan — Cerdas &amp; Gratis Permanen)</option>
+            <option value="groq">Groq Cloud (Llama 3.3 70B — Ultra Cepat)</option>
+            <option value="default">Standar Server / Offline Intel Engine v4.0</option>
+          </select>
+        </div>
+
+        <!-- API Key Input -->
+        <div id="aiCfgKeyGroup">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <label style="font-weight:700; color:var(--ink, #0f172a);">API Key</label>
+            <a id="aiCfgHelpLink" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" style="font-size:11px; color:var(--primary, #163d78); text-decoration:underline;">Dapatkan Kunci API Gratis di Google AI Studio &rarr;</a>
+          </div>
+          <div style="position:relative;">
+            <input type="password" id="aiCfgApiKey" placeholder="Contoh: AIzaSy..." style="width:100%; padding:8px 36px 8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-family:var(--font-mono, monospace); font-size:12px; outline:none;">
+            <button type="button" onclick="toggleAISettingsKeyVisibility()" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:transparent; cursor:pointer; color:var(--ink-muted, #64748b); padding:4px;" title="Lihat / Sembunyikan Kunci">
+              <svg id="aiCfgEyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Model Name Input -->
+        <div id="aiCfgModelGroup">
+          <label style="font-weight:700; display:block; margin-bottom:5px; color:var(--ink, #0f172a);">Model yang Digunakan</label>
+          <input type="text" id="aiCfgModel" value="gemini-2.0-flash" placeholder="gemini-2.0-flash / gemini-1.5-flash / llama-3.3-70b-versatile" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-family:var(--font-mono, monospace); font-size:12px; outline:none;">
+        </div>
+
+        <!-- Connection Test Status -->
+        <div id="aiCfgTestStatus" style="display:none; padding:8px 10px; border-radius:6px; font-size:11.5px; font-variant-numeric:tabular-nums;"></div>
+
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 18px; border-top:1px solid var(--border, #cbd5e1); background:var(--surface-subtle, #f8fafc);">
+        <button type="button" onclick="testAISettingsConnection()" id="btnTestAIConn" class="btn-small" style="padding:7px 12px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-weight:600; font-size:11.5px; cursor:pointer; display:inline-flex; align-items:center; gap:5px;" title="Kirim prompt uji coba untuk mengecek validitas API Key">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          <span>Uji Koneksi AI</span>
+        </button>
+
+        <div style="display:flex; gap:8px;">
+          <button type="button" onclick="resetAISettingsDefault()" style="padding:7px 12px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink-muted, #64748b); font-weight:600; font-size:11.5px; cursor:pointer;">
+            Reset
+          </button>
+          <button type="button" onclick="saveAISettings()" class="btn-primary" style="padding:7px 14px; border-radius:6px; border:none; background:var(--primary, #163d78); color:#ffffff; font-weight:700; font-size:12px; cursor:pointer;">
+            Simpan Pengaturan
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
 </body>
 </html>
