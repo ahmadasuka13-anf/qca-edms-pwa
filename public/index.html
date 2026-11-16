@@ -6527,6 +6527,16 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                       </div>
                     </div>
 
+                    <div class="form-row single">
+                      <div class="form-group">
+                        <label>Lampiran Berkas NCR Resmi (PDF / Scan) — Disimpan di Drive <code>qca edms v3</code></label>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                          <input type="file" id="ncrFormFileInput" accept=".pdf,image/*" style="font-size:12px; flex:1;">
+                          <span id="ncrFormFileStatus" style="font-size:11px; color:var(--ink-secondary); font-variant-numeric:tabular-nums;"></span>
+                        </div>
+                      </div>
+                    </div>
+
                     <div class="modal-actions" style="margin-top:16px; display:flex; justify-content:flex-end; gap:8px;">
                       <button type="button" class="btn btn-secondary" onclick="closeNcrForm()">Batal</button>
                       <button type="submit" class="btn btn-primary" id="ncrSubmitBtn" style="background:#163d78; border-color:#163d78; font-weight:700;">Simpan Data NCR</button>
@@ -6564,6 +6574,69 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
               </div></div>
 
             </div>
+
+              <!-- 📑 MODAL PREVIEW & UPLOAD DOKUMEN NCR -->
+              <div class="modal-overlay" id="ncrDocPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
+                <div class="modal-box" style="max-width:920px; width:100%; max-height:92vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden; padding:0;">
+                  <!-- Header Modal -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc);">
+                    <div>
+                      <h3 id="ncrDocModalTitle" style="margin:0; font-size:15px; font-weight:700; color:var(--ink, #0f172a); display:flex; align-items:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        Pratinjau Dokumen NCR
+                      </h3>
+                      <div id="ncrDocModalSub" style="font-size:12px; color:var(--ink-secondary, #64748b); margin-top:3px; font-variant-numeric:tabular-nums;">-</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <a id="btnNcrDocOpenNewTab" href="#" target="_blank" class="btn btn-secondary btn-small" style="display:none; padding:5px 12px; font-size:11px; font-weight:600; text-decoration:none; border-radius:4px;" title="Buka berkas di Google Drive">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka di Tab Baru
+                      </a>
+                      <button type="button" class="btn btn-secondary btn-small" onclick="closeNcrDocModal()" style="padding:5px 10px; font-size:14px; border:none; cursor:pointer;" title="Tutup">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Body Modal: Iframe Preview atau Fallback Upload -->
+                  <div style="flex:1; min-height:480px; position:relative; background:#1e293b; display:flex; flex-direction:column; overflow:hidden;">
+                    <!-- Iframe PDF Preview -->
+                    <iframe id="ncrDocIframe" src="" style="width:100%; height:540px; border:none; display:none; background:#334155;"></iframe>
+
+                    <!-- Fallback / Upload Card -->
+                    <div id="ncrDocFallbackView" style="display:none; padding:32px 24px; text-align:center; background:var(--surface, #ffffff); flex:1;">
+                      <div style="width:56px; height:56px; margin:0 auto 16px; border-radius:8px; background:rgba(22,61,120,0.08); display:flex; align-items:center; justify-content:center; color:#163d78;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="m13.5 16.5 2 2"/></svg>
+                      </div>
+                      <div id="ncrDocFallbackName" style="font-size:15px; font-weight:700; color:var(--ink, #0f172a); margin-bottom:6px;">Dokumen NCR Belum Tersedia</div>
+                      <div id="ncrDocFallbackDesc" style="font-size:12.5px; color:var(--ink-secondary, #64748b); max-width:540px; margin:0 auto 20px; line-height:1.5;">-</div>
+                      
+                      <div style="border:1.5px dashed var(--border, #cbd5e1); border-radius:6px; padding:24px; max-width:540px; margin:0 auto; background:var(--surface-subtle, #f8fafc);">
+                        <div style="font-size:12.5px; font-weight:600; color:var(--ink, #0f172a); margin-bottom:4px;">Unggah Salinan Dokumen NCR Resmi (PDF / Scan)</div>
+                        <div style="font-size:11px; color:var(--ink-muted, #94a3b8); margin-bottom:14px;">Berkas otomatis disimpan ke Drive <code>qca edms v3</code> / Dokumen NCR / [Proyek]</div>
+                        <input type="file" id="ncrDocDirectUploadInput" accept="application/pdf,image/*" style="display:none;" onchange="handleNcrDocDirectUploadSelected_(this)">
+                        <button type="button" class="btn btn-primary" onclick="triggerNcrDocUploadFromPreview_()" id="btnUploadNcrDocFromPreview" style="background:#163d78; border-color:#163d78; font-size:12.5px; font-weight:600; padding:9px 22px; border-radius:6px; cursor:pointer;">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Pilih &amp; Unggah Berkas PDF Sekarang
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Footer Modal -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 18px; border-top:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc); font-size:11px; color:var(--ink-secondary, #64748b);">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                      Google Drive: <code>qca edms v3</code> / Dokumen NCR
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                      <button type="button" class="btn btn-secondary btn-small" onclick="triggerNcrDocUploadFromPreview_()" style="font-size:11px; font-weight:600; padding:4px 10px; border-radius:4px;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Ganti Berkas
+                      </button>
+                      <button type="button" class="btn btn-secondary btn-small" onclick="closeNcrDocModal()" style="font-size:11px; font-weight:600; padding:4px 12px; border-radius:4px;">Tutup</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
 
             <!-- ═══════════════════════════════════════════════════════════════ -->
             <!-- 📋 PANEL MONITORING NCR (FR-IMS-QCA-007)                         -->
@@ -17328,10 +17401,43 @@ window.addEventListener('offline', updateFooterStatus);
  * MODUL MONITORING NON-CONFORMANCE RECORD (NCR)
  * PT Asuka Engineering Indonesia — FR-IMS-QCA-007
  */
-var INITIAL_NCR_DATA = [["No","NCR No","NCR Project","Discipline","Project","Area","Description","Issued Date","Responsible Person","Due Date","Closed Date","Status","Days Remaining","Remarks","Register AEI NCR","Row Index"],["1","NCR-QCA-AEI-0001","NCR-2505-AEI-CVL-0001","Civil/Architecture","PLTU Barru","","Not Performed Job Mix Design & Job Mix Formula as per ITP","31 Jul 2025","Ahmad Nur Fatony","7 Agu 2025","28 Agu 2025","CLOSED","0","NCR-2505-AEI-QCA-0001","NCR-2505-XXXX-AEI-CVL-0001",42],["2","NCR-QCA-AEI-0002","NCR-2512-AEI-CVL-0001\nAEI-QC-0154-NCR-0001","Civil/Architecture","Indo Copper Project","Copper Rrefining \nPlant Phase 1","Not Performed Suboptimal concrete pouring methods, such as the uneven use of vibrators, result in non-homogeneous concrete in the final outcome, as per ITP.","25 Feb 2026","Muh Mundhir Mamduh","4 Mar 2026","26 Feb 2026","CLOSED","0","AEI-QC-0154-NCR-0001","NCR-2512-0154-AEI-CVL-0002",43],["3","NCR-QCA-AEI-0003","AEI-QC-0154-NCR-0002","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS)","There are no bolt holes available on the rafter steel structure part number 260090101020015, so it can't be assembled as per erection drawing.","24 Apr 2026","Muh Mundhir Mamduh","30 Apr 2026","25 Apr 2026","CLOSED","0","AEI-QC-0154-NCR-0002","NCR-2512-0154-AEI-CVL-0003",44],["4","NCR-QCA-AEI-0004","AEI-QC-0154-NCR-0003","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020042 has no holes that connect to plate 01270043 at Line 4 Grid A-D","25 Apr 2026","Muh Mundhir Mamduh","2 Mei 2026","28 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0003","NCR-2512-0154-AEI-CVL-0004",45],["5","NCR-QCA-AEI-0005","AEI-QC-0154-NCR-0004","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 010100332 has no holes that connect to plate 01270051 at Line 4 Grid A","7 Mei 2026","Muh Mundhir Mamduh","14 Mei 2026","14 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0004","NCR-2512-0154-AEI-CVL-0005",46],["6","NCR-QCA-AEI-0006","AEI-QC-0154-NCR-0005","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01060011 Excess Length 300mm,\nQty 2 Pcs, At Line 1 Grid I-J & Line 8 Grid I-J","9 Mei 2026","Muh Mundhir Mamduh","16 Mei 2026","11 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0005","NCR-2512-0154-AEI-CVL-0006",47],["7","NCR-QCA-AEI-0007","AEI-QC-0154-NCR-0006","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01050025 Deficiency Length 198mm,\nQty 4 Pcs, At Line 1 Grid G-H, Line 8 Grid G-H","10 Mei 2026","Muh Mundhir Mamduh","17 Mei 2026","12 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0006","NCR-2512-0154-AEI-CVL-0007",48],["8","NCR-QCA-AEI-0008","AEI-QC-0154-NCR-0007","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01010054 has no holes that connect to canopy 01130014 at Line 1 Grid J.","12 Mei 2026","Muh Mundhir Mamduh","18 Mei 2026","12 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0007","NCR-2512-0154-AEI-CVL-0008",49],["9","NCR-QCA-AEI-0009","AEI-QC-0154-NCR-0008","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01010051 holes not match to support Purlin 01270030 at Line 2 Grid G.","13 Mei 2026","Muh Mundhir Mamduh","20 Mei 2026","21 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0008","NCR-2512-0154-AEI-CVL-0009",50],["10","NCR-QCA-AEI-0010","AEI-QC-0154-NCR-0009","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01120003 has no holes that connect to Support Purlin 01270044 at Line 2 Grid H-I.","14 Mei 2026","Muh Mundhir Mamduh","21 Mei 2026","16 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0009","NCR-2512-0154-AEI-CVL-0010",51],["11","NCR-QCA-AEI-0011","AEI-QC-0154-NCR-0010","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01120002 has no holes that connect to Support Purlin 01270044 at Line 2 Grid H-I.","15 Mei 2026","Muh Mundhir Mamduh","21 Mei 2026","16 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0010","NCR-2512-0154-AEI-CVL-0011",52],["12","NCR-QCA-AEI-0012","AEI-QC-0154-NCR-0011","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure (column) ATAD part number 01010020 (column J7) has no bolt holes to connect tie beam between column J7 and J8.","28 Mei 2026","Shaido Yayan Toro","4 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0011","NCR-2512-0154-AEI-CVL-0012",53],["13","NCR-QCA-AEI-0013","AEI-QC-0154-NCR-0012","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure (rafter) ATAD part number 01020019 bolt holes position to connect tie beam between rafter J7 and J8 is not correct","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0012","NCR-2512-0154-AEI-CVL-0013",54],["14","NCR-QCA-AEI-0014","AEI-QC-0154-NCR-0013","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure ATAD part number monitor frame (01120003) angle of bolt holes to connect between frame monitor and plate support for purlin (01270044) is not correct.","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","11 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0013","NCR-2512-0154-AEI-CVL-0014",55],["15","NCR-QCA-AEI-0015","AEI-QC-0154-NCR-0014","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure end plate monitor frame ATAD part number (01120007) has no bolt holes to connect to other monitor frame (01120008)","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","11 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0014","NCR-2512-0154-AEI-CVL-0015",56],["16","NCR-QCA-AEI-0016","AEI-QC-0154-NCR-0015","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure rafter 7D, ATAD part number (01020014) has no holes to bolt purlin main roof (01430076) to rafter.","6 Jun 2026","Shaido Yayan Toro","14 Jun 2026","12 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0015","NCR-2512-0154-AEI-CVL-0016",57],["17","NCR-QCA-AEI-0017","AEI-QC-0154-NCR-0016","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","The angle degree of steel structure, rafter 8 G & 8 J, ATAD part number (01020008) and (01020009) didn't same with fabrication drawing and so the length of rafter's span is insufficient to connect the 8 G and 8 J column.","6 Jun 2026","Muh Mundhir Mamduh","14 Jun 2026","12 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0016","NCR-2512-0154-AEI-CVL-0017",58],["18","NCR-QCA-AEI-0018","AEI-QC-0154-NCR-0017","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Miss on base plate orientation at ATAD part number (01020045) for install gusset plate to connect tie beam on GL 4 and 5, found the position of hole is reversed.","7 Jun 2026","Muh Mundhir Mamduh","14 Jun 2026","8 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0017","NCR-2512-0154-AEI-CVL-0018",59],["19","NCR-QCA-AEI-0019","AEI-QC-0154-NCR-0018","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020045 has no holes that connect to Plat 01270047 at Line 4 Grid D-G","8 Jun 2026","Muh Mundhir Mamduh","15 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0018","NCR-2512-0154-AEI-CVL-0019",60],["20","NCR-QCA-AEI-0020","AEI-QC-0154-NCR-0019","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020048 has no holes that connect to Plat 01270043 at Line 4 Grid G-J","8 Jun 2026","Muh Mundhir Mamduh","15 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0019","NCR-2512-0154-AEI-CVL-0020",61],["21","NCR-QCA-AEI-0021","AEI-QC-0154-NCR-0020","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020015 has no holes that connect to Plat 01270047 at Line 7 Grid D-G","9 Jun 2026","Muh Mundhir Mamduh","16 Jun 2026","10 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0020","NCR-2512-0154-AEI-CVL-0021",62],["22","NCR-QCA-AEI-0022","NCR-2512-0132-AEI-0022","Mechanical/Piping","Coats Rejo","","","1 Jul 2026","Abiyyuda Putra","8 Jul 2026","31 Jul 2026","CLOSED","0","NCR-2512-0132-AEI-0022","NCR-2606-xxxx-AEI-xxx-0022",63],["23","NCR-QCA-AEI-0023","NCR-2512-0132-AEI-0023","Mechanical/Piping","Coats Rejo","","","1 Jul 2026","Abiyyuda Putra","8 Jul 2026","31 Jul 2026","CLOSED","0","NCR-2512-0132-AEI-0023","",64],["24","NCR-QCA-AEI-0024","NCR-2605-0093-AEI-0024","Fabrication/Logistic","PT Cirebon Energy Prasarana","Workshop KIG","Linear indication on web of all WF 588 members : \n- Linear indications found on the web of all WF 588 members after \n  sandblasting, and more clearly visible after primer coating.\n- Indications were NOT detectable at receiving inspection due to the \n  surface was still covered by mill scale / manufacture coating.","28 Sep 2026","David Setyo P","5 Okt 2026","31 Okt 2026","CLOSED","0","NCR-2605-0093-AEI-0024","",65],["25","NCR-QCA-AEI-0025","AEI-FBK-2512-0156-0001","Mechanical/Piping","PT Petro Jordan Abadi","Workshop KIG","Cross Weld Joint Shell & Cone Bottom","8 Okt 2026","Muh Mundhir Mamduh","15 Okt 2026","9 Nov 2026","CLOSED","0","AEI-FBK-NCR-2512-0156-001","",66],["26","NCR-QCA-AEI-0026","NCR-2609-0128-AEI-0001","Civil/Architecture","Coats Rejo","","Pengecoran Pilecap & Kolom Powerhouse Tanpa Slump Test","27 Okt 2026","Ahmad Nur Fatony","10 Nov 2026","","OVERDUE","-6","","",67],["27","NCR-QCA-AEI-0027","NCR-122065-AEI-0001","Fabrication/Logistic","PT Petro Jordan Abadi","Workshop KIG","the following non-conformances were found during site inspection at PJA (laydown & fabrication area) : QC Plan to be use for the works","11 Nov 2026","Andi Reza D","25 Nov 2026","","OPEN","9","","",68]];
+
+// Data inisial register NCR (Maksimal s/d baris ke-28, baris kosong 29-50 dieliminasi)
+var INITIAL_NCR_DATA = [
+  ["No","NCR No","NCR Project","Discipline","Project","Area","Description","Issued Date","Responsible Person","Due Date","Closed Date","Status","Days Remaining","Remarks","Register AEI NCR","Row Index","Doc Link"],
+  ["1","NCR-QCA-AEI-0001","NCR-2505-AEI-CVL-0001","Civil/Architecture","PLTU Barru","","Not Performed Job Mix Design & Job Mix Formula as per ITP","31 Jul 2025","Ahmad Nur Fatony","7 Agu 2025","28 Agu 2025","CLOSED","0","NCR-2505-AEI-QCA-0001","NCR-2505-XXXX-AEI-CVL-0001",42,""],
+  ["2","NCR-QCA-AEI-0002","NCR-2512-AEI-CVL-0001\nAEI-QC-0154-NCR-0001","Civil/Architecture","Indo Copper Project","Copper Rrefining \nPlant Phase 1","Not Performed Suboptimal concrete pouring methods, such as the uneven use of vibrators, result in non-homogeneous concrete in the final outcome, as per ITP.","25 Feb 2026","Muh Mundhir Mamduh","4 Mar 2026","26 Feb 2026","CLOSED","0","AEI-QC-0154-NCR-0001","NCR-2512-0154-AEI-CVL-0002",43,""],
+  ["3","NCR-QCA-AEI-0003","AEI-QC-0154-NCR-0002","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS)","There are no bolt holes available on the rafter steel structure part number 260090101020015, so it can't be assembled as per erection drawing.","24 Apr 2026","Muh Mundhir Mamduh","30 Apr 2026","25 Apr 2026","CLOSED","0","AEI-QC-0154-NCR-0002","NCR-2512-0154-AEI-CVL-0003",44,""],
+  ["4","NCR-QCA-AEI-0004","AEI-QC-0154-NCR-0003","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020042 has no holes that connect to plate 01270043 at Line 4 Grid A-D","25 Apr 2026","Muh Mundhir Mamduh","2 Mei 2026","28 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0003","NCR-2512-0154-AEI-CVL-0004",45,""],
+  ["5","NCR-QCA-AEI-0005","AEI-QC-0154-NCR-0004","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 010100332 has no holes that connect to plate 01270051 at Line 4 Grid A","7 Mei 2026","Muh Mundhir Mamduh","14 Mei 2026","14 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0004","NCR-2512-0154-AEI-CVL-0005",46,""],
+  ["6","NCR-QCA-AEI-0006","AEI-QC-0154-NCR-0005","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01060011 Excess Length 300mm,\nQty 2 Pcs, At Line 1 Grid I-J & Line 8 Grid I-J","9 Mei 2026","Muh Mundhir Mamduh","16 Mei 2026","11 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0005","NCR-2512-0154-AEI-CVL-0006",47,""],
+  ["7","NCR-QCA-AEI-0007","AEI-QC-0154-NCR-0006","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01050025 Deficiency Length 198mm,\nQty 4 Pcs, At Line 1 Grid G-H, Line 8 Grid G-H","10 Mei 2026","Muh Mundhir Mamduh","17 Mei 2026","12 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0006","NCR-2512-0154-AEI-CVL-0007",48,""],
+  ["8","NCR-QCA-AEI-0008","AEI-QC-0154-NCR-0007","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01010054 has no holes that connect to canopy 01130014 at Line 1 Grid J.","12 Mei 2026","Muh Mundhir Mamduh","18 Mei 2026","12 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0007","NCR-2512-0154-AEI-CVL-0008",49,""],
+  ["9","NCR-QCA-AEI-0009","AEI-QC-0154-NCR-0008","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01010051 holes not match to support Purlin 01270030 at Line 2 Grid G.","13 Mei 2026","Muh Mundhir Mamduh","20 Mei 2026","21 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0008","NCR-2512-0154-AEI-CVL-0009",50,""],
+  ["10","NCR-QCA-AEI-0010","AEI-QC-0154-NCR-0009","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01120003 has no holes that connect to Support Purlin 01270044 at Line 2 Grid H-I.","14 Mei 2026","Muh Mundhir Mamduh","21 Mei 2026","16 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0009","NCR-2512-0154-AEI-CVL-0010",51,""],
+  ["11","NCR-QCA-AEI-0011","AEI-QC-0154-NCR-0010","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01120002 has no holes that connect to Support Purlin 01270044 at Line 2 Grid H-I.","15 Mei 2026","Muh Mundhir Mamduh","21 Mei 2026","16 Mei 2026","CLOSED","0","AEI-QC-0154-NCR-0010","NCR-2512-0154-AEI-CVL-0011",52,""],
+  ["12","NCR-QCA-AEI-0012","AEI-QC-0154-NCR-0011","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure (column) ATAD part number 01010020 (column J7) has no bolt holes to connect tie beam between column J7 and J8.","28 Mei 2026","Shaido Yayan Toro","4 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0011","NCR-2512-0154-AEI-CVL-0012",53,""],
+  ["13","NCR-QCA-AEI-0013","AEI-QC-0154-NCR-0012","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure (rafter) ATAD part number 01020019 bolt holes position to connect tie beam between rafter J7 and J8 is not correct","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0012","NCR-2512-0154-AEI-CVL-0013",54,""],
+  ["14","NCR-QCA-AEI-0014","AEI-QC-0154-NCR-0013","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure ATAD part number monitor frame (01120003) angle of bolt holes to connect between frame monitor and plate support for purlin (01270044) is not correct.","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","11 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0013","NCR-2512-0154-AEI-CVL-0014",55,""],
+  ["15","NCR-QCA-AEI-0015","AEI-QC-0154-NCR-0014","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure end plate monitor frame ATAD part number (01120007) has no bolt holes to connect to other monitor frame (01120008)","4 Jun 2026","Shaido Yayan Toro","11 Jun 2026","11 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0014","NCR-2512-0154-AEI-CVL-0015",56,""],
+  ["16","NCR-QCA-AEI-0016","AEI-QC-0154-NCR-0015","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel structure rafter 7D, ATAD part number (01020014) has no holes to bolt purlin main roof (01430076) to rafter.","6 Jun 2026","Shaido Yayan Toro","14 Jun 2026","12 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0015","NCR-2512-0154-AEI-CVL-0016",57,""],
+  ["17","NCR-QCA-AEI-0017","AEI-QC-0154-NCR-0016","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","The angle degree of steel structure, rafter 8 G & 8 J, ATAD part number (01020008) and (01020009) didn't same with fabrication drawing and so the length of rafter's span is insufficient to connect the 8 G and 8 J column.","6 Jun 2026","Muh Mundhir Mamduh","14 Jun 2026","12 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0016","NCR-2512-0154-AEI-CVL-0017",58,""],
+  ["18","NCR-QCA-AEI-0018","AEI-QC-0154-NCR-0017","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Miss on base plate orientation at ATAD part number (01020045) for install gusset plate to connect tie beam on GL 4 and 5, found the position of hole is reversed.","7 Jun 2026","Muh Mundhir Mamduh","14 Jun 2026","8 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0017","NCR-2512-0154-AEI-CVL-0018",59,""],
+  ["19","NCR-QCA-AEI-0019","AEI-QC-0154-NCR-0018","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020045 has no holes that connect to Plat 01270047 at Line 4 Grid D-G","8 Jun 2026","Muh Mundhir Mamduh","15 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0018","NCR-2512-0154-AEI-CVL-0019",60,""],
+  ["20","NCR-QCA-AEI-0020","AEI-QC-0154-NCR-0019","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020048 has no holes that connect to Plat 01270043 at Line 4 Grid G-J","8 Jun 2026","Muh Mundhir Mamduh","15 Jun 2026","9 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0019","NCR-2512-0154-AEI-CVL-0020",61,""],
+  ["21","NCR-QCA-AEI-0021","AEI-QC-0154-NCR-0020","Mechanical/Piping","Indo Copper Project","Copper Rrefining \nPlant Phase 1  (SS - Factory Area)","Steel Structure ATAD Part Number 01020015 has no holes that connect to Plat 01270047 at Line 7 Grid D-G","9 Jun 2026","Muh Mundhir Mamduh","16 Jun 2026","10 Jun 2026","CLOSED","0","AEI-QC-0154-NCR-0020","NCR-2512-0154-AEI-CVL-0021",62,""],
+  ["22","NCR-QCA-AEI-0022","NCR-2512-0132-AEI-0022","Mechanical/Piping","Coats Rejo","","","1 Jul 2026","Abiyyuda Putra","8 Jul 2026","31 Jul 2026","CLOSED","0","NCR-2512-0132-AEI-0022","NCR-2606-xxxx-AEI-xxx-0022",63,""],
+  ["23","NCR-QCA-AEI-0023","NCR-2512-0132-AEI-0023","Mechanical/Piping","Coats Rejo","","","1 Jul 2026","Abiyyuda Putra","8 Jul 2026","31 Jul 2026","CLOSED","0","NCR-2512-0132-AEI-0023","",64,""],
+  ["24","NCR-QCA-AEI-0024","NCR-2605-0093-AEI-0024","Fabrication/Logistic","PT Cirebon Energy Prasarana","Workshop KIG","Linear indication on web of all WF 588 members : \n- Linear indications found on the web of all WF 588 members after \n  sandblasting, and more clearly visible after primer coating.\n- Indications were NOT detectable at receiving inspection due to the \n  surface was still covered by mill scale / manufacture coating.","28 Sep 2026","David Setyo P","5 Okt 2026","31 Okt 2026","CLOSED","0","NCR-2605-0093-AEI-0024","",65,""],
+  ["25","NCR-QCA-AEI-0025","AEI-FBK-2512-0156-0001","Mechanical/Piping","PT Petro Jordan Abadi","Workshop KIG","Cross Weld Joint Shell & Cone Bottom","8 Okt 2026","Muh Mundhir Mamduh","15 Okt 2026","9 Nov 2026","CLOSED","0","AEI-FBK-NCR-2512-0156-001","",66,""],
+  ["26","NCR-QCA-AEI-0026","NCR-2609-0128-AEI-0001","Civil/Architecture","Coats Rejo","","Pengecoran Pilecap & Kolom Powerhouse Tanpa Slump Test","27 Okt 2026","Ahmad Nur Fatony","10 Nov 2026","","OVERDUE","-6","","",67,""],
+  ["27","NCR-QCA-AEI-0027","NCR-122065-AEI-0001","Fabrication/Logistic","PT Petro Jordan Abadi","Workshop KIG","the following non-conformances were found during site inspection at PJA (laydown & fabrication area) : QC Plan to be use for the works","11 Nov 2026","Andi Reza D","25 Nov 2026","","OPEN","9","","",68,""],
+  ["28","NCR-QCA-AEI-0028","AEI-2609-0128-AEI-0002","Civil/Architecture","Coats Rejo","Powerhouse","Verifikasi deviasi penulangan dan kelengkapan dokumen pendukung teknis.","12 Nov 2026","Ahmad Nur Fatony","26 Nov 2026","","OPEN","10","Dokumen dalam verifikasi","",69,""]
+];
 
 window.allNcrData = INITIAL_NCR_DATA;
 window.selectedNcrRecord = null;
+window.activeUploadNcrNo = null;
 window.ncrStatusChartInstance = null;
 window.ncrDisciplineChartInstance = null;
 
@@ -17629,6 +17735,12 @@ function filterNcrTable_() {
     var status = (row[11] || 'OPEN').toUpperCase();
     var daysRem = row[12] || '';
     var remarks = row[13] || '';
+    var docUrl = row[16] || '';
+
+    // Cari link berkas jika belum ada di index 16 tapi tersimpan di remarks
+    if (!docUrl && remarks && /https?:\/\//i.test(remarks)) {
+      docUrl = remarks;
+    }
 
     if (fProj && proj !== fProj) continue;
     if (fDisc && disc !== fDisc) continue;
@@ -17652,7 +17764,17 @@ function filterNcrTable_() {
     }
 
     var cleanDesc = esc(desc);
-    var shortDesc = cleanDesc.length > 85 ? (cleanDesc.substring(0, 85) + '...') : cleanDesc;
+    var shortDesc = cleanDesc.length > 80 ? (cleanDesc.substring(0, 80) + '...') : (cleanDesc || '-');
+
+    // Kolom Tombol Dokumen (Lihat PDF / Upload)
+    var docBtnHtml = '';
+    if (docUrl) {
+      docBtnHtml = '<button type="button" class="btn-small" onclick="viewNcrDocModal(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid rgba(22,163,74,0.3); background:rgba(22,163,74,0.08); color:#15803d; cursor:pointer;" title="Lihat pratinjau dokumen PDF di Google Drive">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lihat PDF</button>';
+    } else {
+      docBtnHtml = '<button type="button" class="btn-small" onclick="openNcrDocUploadModal(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px dashed var(--border, #cbd5e1); background:var(--surface-subtle, #f8fafc); color:var(--ink-secondary, #64748b); cursor:pointer;" title="Unggah dokumen PDF ke Drive qca edms v3">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:3px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Upload</button>';
+    }
 
     rowsHtml += '<tr style="border-bottom:1px solid var(--border); transition:background 0.15s ease;">' +
       '<td style="padding:10px 12px; font-variant-numeric:tabular-nums; font-size:12px; color:var(--ink-secondary); text-align:center;">' + esc(noVal) + '</td>' +
@@ -17665,7 +17787,7 @@ function filterNcrTable_() {
         (area ? ('<div style="font-size:11px; color:var(--ink-secondary);">' + esc(area) + '</div>') : '') +
       '</td>' +
       '<td style="padding:10px 12px; font-size:11.5px; color:var(--ink-secondary); white-space:nowrap;">' + esc(disc) + '</td>' +
-      '<td style="padding:10px 12px; font-size:12px; color:var(--ink); max-width:320px; line-height:1.4;">' +
+      '<td style="padding:10px 12px; font-size:12px; color:var(--ink); max-width:300px; line-height:1.4;">' +
         '<div style="cursor:pointer;" onclick="viewNcrDetail(\'' + escAttr_(ncrNo) + '\')" title="Klik untuk lihat deskripsi lengkap">' + shortDesc + '</div>' +
       '</td>' +
       '<td style="padding:10px 12px; font-size:11.5px; font-variant-numeric:tabular-nums; white-space:nowrap;">' +
@@ -17676,6 +17798,7 @@ function filterNcrTable_() {
         '<span class="badge" style="background:' + badgeBg + '; color:' + badgeColor + '; font-size:11px; font-weight:700; border-radius:3px; padding:3px 8px; text-transform:uppercase;">' + esc(status) + '</span>' +
       '</td>' +
       '<td style="padding:10px 12px; font-size:12px; color:var(--ink); white-space:nowrap;">' + esc(pic || '-') + '</td>' +
+      '<td style="padding:10px 12px; text-align:center; white-space:nowrap;">' + docBtnHtml + '</td>' +
       '<td style="padding:10px 12px; text-align:right; white-space:nowrap;">' +
         '<button type="button" class="btn-small" onclick="viewNcrDetail(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Lihat detail teknis NCR">Detail</button>' +
         '<button type="button" class="btn-small" onclick="openNcrForm(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Edit data NCR">Edit</button>' +
@@ -17706,6 +17829,7 @@ function filterNcrTable_() {
           '<th style="padding:10px 12px;">Jadwal</th>' +
           '<th style="padding:10px 12px; text-align:center;">Status</th>' +
           '<th style="padding:10px 12px;">PIC</th>' +
+          '<th style="padding:10px 12px; text-align:center;">Dokumen</th>' +
           '<th style="padding:10px 12px; text-align:right;">Aksi</th>' +
         '</tr>' +
       '</thead>' +
@@ -17717,12 +17841,20 @@ function filterNcrTable_() {
 }
 window.filterNcrTable_ = filterNcrTable_;
 
+// ==========================================
+// FORM ADD / EDIT NCR
+// ==========================================
 function openNcrForm(ncrNo) {
   var m = document.getElementById('ncrModal');
   if (!m) return;
   var title = document.getElementById('ncrModalTitle');
   var f = document.getElementById('ncrForm');
   if (f) f.reset();
+
+  var fileInput = document.getElementById('ncrFormFileInput');
+  if (fileInput) fileInput.value = '';
+  var fileStatus = document.getElementById('ncrFormFileStatus');
+  if (fileStatus) fileStatus.textContent = '';
 
   var isEdit = Boolean(ncrNo);
   if (title) title.textContent = isEdit ? ('Edit Data NCR: ' + ncrNo) : 'Tambah Data NCR Baru';
@@ -17753,6 +17885,7 @@ function openNcrForm(ncrNo) {
       if (document.getElementById('ncrFormClosedDate')) document.getElementById('ncrFormClosedDate').value = record[10] || '';
       if (document.getElementById('ncrFormStatus')) document.getElementById('ncrFormStatus').value = (record[11] || 'OPEN').toUpperCase();
       if (document.getElementById('ncrFormRemarks')) document.getElementById('ncrFormRemarks').value = record[13] || '';
+      if (fileStatus && record[16]) fileStatus.innerHTML = '<span style="color:#15803d; font-weight:600;">Dokumen terlampir</span>';
     }
   } else {
     if (noInput) {
@@ -17798,6 +17931,28 @@ function saveNcrData(e) {
     remarks:      document.getElementById('ncrFormRemarks').value.trim()
   };
 
+  var fileInput = document.getElementById('ncrFormFileInput');
+  if (fileInput && fileInput.files && fileInput.files[0]) {
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    reader.onload = function(evt) {
+      payload.fileBase64 = evt.target.result;
+      payload.fileName = file.name;
+      payload.mimeType = file.type || 'application/pdf';
+      executeSubmitNcr_(payload, btn, oldText);
+    };
+    reader.onerror = function() {
+      if (typeof showToast === 'function') showToast('Gagal membaca berkas file.', 'error');
+      executeSubmitNcr_(payload, btn, oldText);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    executeSubmitNcr_(payload, btn, oldText);
+  }
+}
+window.saveNcrData = saveNcrData;
+
+function executeSubmitNcr_(payload, btn, oldText) {
   google.script.run
     .withSuccessHandler(function(res) {
       if (btn) { btn.disabled = false; btn.textContent = oldText; }
@@ -17815,7 +17970,6 @@ function saveNcrData(e) {
     })
     .submitNcr(payload);
 }
-window.saveNcrData = saveNcrData;
 
 function deleteNcrUI(ncrNo) {
   if (!confirm('Apakah Anda yakin ingin menghapus ' + ncrNo + ' dari register NCR spreadsheet?')) return;
@@ -17837,6 +17991,9 @@ function deleteNcrUI(ncrNo) {
 }
 window.deleteNcrUI = deleteNcrUI;
 
+// ==========================================
+// MODAL DETAIL TEKNIS NCR
+// ==========================================
 function viewNcrDetail(ncrNo) {
   var data = window.allNcrData || [];
   var record = null;
@@ -17862,6 +18019,7 @@ function viewNcrDetail(ncrNo) {
 
   var status = (record[11] || 'OPEN').toUpperCase();
   var badgeBg = status === 'CLOSED' ? '#16a34a' : (status === 'OVERDUE' ? '#dc2626' : '#d97706');
+  var docUrl = record[16] || '';
 
   if (titleNo) titleNo.textContent = record[1];
   if (badgeEl) {
@@ -17873,31 +18031,61 @@ function viewNcrDetail(ncrNo) {
     subEl.textContent = 'Proyek: ' + (record[4] || '-') + (record[5] ? (' (' + record[5] + ')') : '') + ' | Disiplin: ' + (record[3] || '-');
   }
 
+  // Card info dokumen PDF
+  var docCardHtml = '';
+  if (docUrl) {
+    docCardHtml = '<div style="background:rgba(22,61,120,0.06); border:1px solid rgba(22,61,120,0.2); border-radius:6px; padding:12px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">' +
+      '<div>' +
+        '<div style="font-size:11px; font-weight:700; color:#163d78; text-transform:uppercase;">Dokumen Bukti NCR (Google Drive)</div>' +
+        '<div style="font-size:12px; color:var(--ink); margin-top:2px;">Tersimpan di folder: <code>qca edms v3 / Dokumen NCR</code></div>' +
+      '</div>' +
+      '<div style="display:flex; gap:6px;">' +
+        '<button type="button" class="btn btn-primary btn-small" onclick="viewNcrDocModal(\'' + escAttr_(record[1]) + '\')" style="background:#163d78; border-color:#163d78; font-size:11px; font-weight:600; padding:5px 12px; border-radius:4px; cursor:pointer;">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:4px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Lihat Dokumen' +
+        '</button>' +
+        '<button type="button" class="btn btn-secondary btn-small" onclick="openNcrDocUploadModal(\'' + escAttr_(record[1]) + '\')" style="font-size:11px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer;" title="Ganti berkas dokumen">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+  } else {
+    docCardHtml = '<div style="background:var(--surface-subtle); border:1px dashed var(--border); border-radius:6px; padding:12px 14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">' +
+      '<div>' +
+        '<div style="font-size:11px; font-weight:700; color:var(--ink-secondary); text-transform:uppercase;">Berkas Dokumen NCR</div>' +
+        '<div style="font-size:12px; color:var(--ink-muted);">Belum ada dokumen PDF dilampirkan</div>' +
+      '</div>' +
+      '<button type="button" class="btn btn-secondary btn-small" onclick="openNcrDocUploadModal(\'' + escAttr_(record[1]) + '\')" style="font-size:11px; font-weight:600; padding:5px 12px; border-radius:4px; cursor:pointer;">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>+ Unggah PDF ke Drive' +
+      '</button>' +
+    '</div>';
+  }
+
   if (contentEl) {
-    contentEl.innerHTML = '<div style="margin-bottom:14px; background:var(--surface-subtle); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">' +
-      '<div style="font-size:11px; font-weight:700; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px;">Deskripsi Ketidaksesuaian Mutu</div>' +
-      '<div style="font-size:13.5px; color:var(--ink); line-height:1.6;">' + esc(record[6] || '-') + '</div>' +
-    '</div>' +
-    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">' +
-      '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
-        '<div style="font-size:11px; color:var(--ink-muted);">Kode NCR Proyek:</div>' +
-        '<div style="font-weight:600; font-family:JetBrains Mono, monospace; font-size:12px; color:var(--ink);">' + esc(record[2] || '-') + '</div>' +
+    contentEl.innerHTML = docCardHtml +
+      '<div style="margin-bottom:14px; background:var(--surface-subtle); padding:12px 14px; border-radius:6px; border:1px solid var(--border);">' +
+        '<div style="font-size:11px; font-weight:700; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:4px;">Deskripsi Ketidaksesuaian Mutu</div>' +
+        '<div style="font-size:13.5px; color:var(--ink); line-height:1.6;">' + esc(record[6] || '-') + '</div>' +
       '</div>' +
-      '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
-        '<div style="font-size:11px; color:var(--ink-muted);">PIC Penanggung Jawab:</div>' +
-        '<div style="font-weight:600; font-size:12.5px; color:var(--ink);">' + esc(record[8] || '-') + '</div>' +
+      '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">' +
+        '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
+          '<div style="font-size:11px; color:var(--ink-muted);">Kode NCR Proyek:</div>' +
+          '<div style="font-weight:600; font-family:JetBrains Mono, monospace; font-size:12px; color:var(--ink);">' + esc(record[2] || '-') + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
+          '<div style="font-size:11px; color:var(--ink-muted);">PIC Penanggung Jawab:</div>' +
+          '<div style="font-weight:600; font-size:12.5px; color:var(--ink);">' + esc(record[8] || '-') + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
+          '<div style="font-size:11px; color:var(--ink-muted);">Issued Date:</div>' +
+          '<div style="font-weight:600; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums;">' + esc(record[7] || '-') + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
+          '<div style="font-size:11px; color:var(--ink-muted);">Due Date / Target:</div>' +
+          '<div style="font-weight:600; font-size:12px; font-variant-numeric:tabular-nums;' + (status === 'OVERDUE' ? 'color:#dc2626;' : 'color:var(--ink);') + '">' + esc(record[9] || '-') + '</div>' +
+        '</div>' +
       '</div>' +
-      '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
-        '<div style="font-size:11px; color:var(--ink-muted);">Issued Date:</div>' +
-        '<div style="font-weight:600; font-size:12px; color:var(--ink); font-variant-numeric:tabular-nums;">' + esc(record[7] || '-') + '</div>' +
-      '</div>' +
-      '<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border);">' +
-        '<div style="font-size:11px; color:var(--ink-muted);">Due Date / Target:</div>' +
-        '<div style="font-weight:600; font-size:12px; font-variant-numeric:tabular-nums;' + (status === 'OVERDUE' ? 'color:#dc2626;' : 'color:var(--ink);') + '">' + esc(record[9] || '-') + '</div>' +
-      '</div>' +
-    '</div>' +
-    (record[10] ? ('<div style="background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#15803d;"><b>Closed Date:</b> ' + esc(record[10]) + '</div>') : '') +
-    (record[13] ? ('<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border); font-size:12px;"><b>Remarks:</b> ' + esc(record[13]) + '</div>') : '');
+      (record[10] ? ('<div style="background:rgba(22,163,74,0.08); border:1px solid rgba(22,163,74,0.25); border-radius:6px; padding:8px 12px; margin-bottom:12px; font-size:12px; color:#15803d;"><b>Closed Date:</b> ' + esc(record[10]) + '</div>') : '') +
+      (record[13] ? ('<div style="background:var(--surface-subtle); padding:10px 12px; border-radius:6px; border:1px solid var(--border); font-size:12px;"><b>Remarks:</b> ' + esc(record[13]) + '</div>') : '');
   }
 
   if (metaEl) {
@@ -17921,7 +18109,179 @@ function closeNcrDetailModal() {
 }
 window.closeNcrDetailModal = closeNcrDetailModal;
 
+// ==========================================
+// MODAL PREVIEW & UPLOAD DOKUMEN NCR (DRIVE)
+// ==========================================
+function viewNcrDocModal(ncrNo) {
+  var data = window.allNcrData || [];
+  var record = null;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][1]).trim() === String(ncrNo).trim()) {
+      record = data[i];
+      break;
+    }
+  }
 
+  window.activeUploadNcrNo = ncrNo;
+
+  var m = document.getElementById('ncrDocPreviewModal');
+  var titleEl = document.getElementById('ncrDocModalTitle');
+  var subEl = document.getElementById('ncrDocModalSub');
+  var iframe = document.getElementById('ncrDocIframe');
+  var fallbackView = document.getElementById('ncrDocFallbackView');
+  var fallbackName = document.getElementById('ncrDocFallbackName');
+  var fallbackDesc = document.getElementById('ncrDocFallbackDesc');
+  var newTabBtn = document.getElementById('btnNcrDocOpenNewTab');
+
+  if (titleEl) titleEl.textContent = 'Dokumen NCR: ' + ncrNo;
+  var projName = (record && record[4]) ? record[4] : 'Proyek';
+  var discName = (record && record[3]) ? record[3] : 'General';
+  if (subEl) subEl.textContent = 'Proyek: ' + projName + ' | Disiplin: ' + discName + ' | Folder: qca edms v3 / Dokumen NCR';
+
+  var docUrl = record ? (record[16] || '') : '';
+  if (!docUrl && record && record[13] && /https?:\/\//i.test(record[13])) {
+    docUrl = record[13];
+  }
+
+  if (docUrl) {
+    var previewUrl = docUrl;
+    var driveMatch = docUrl.match(/[-\w]{25,}/);
+    if (driveMatch && (docUrl.indexOf('drive.google.com') !== -1 || docUrl.indexOf('docs.google.com') !== -1)) {
+      previewUrl = 'https://drive.google.com/file/d/' + driveMatch[0] + '/preview';
+    }
+
+    if (iframe) {
+      iframe.src = previewUrl;
+      iframe.style.display = 'block';
+    }
+    if (fallbackView) fallbackView.style.display = 'none';
+    if (newTabBtn) {
+      newTabBtn.href = docUrl;
+      newTabBtn.style.display = 'inline-flex';
+    }
+  } else {
+    if (iframe) {
+      iframe.src = '';
+      iframe.style.display = 'none';
+    }
+    if (fallbackView) fallbackView.style.display = 'block';
+    if (fallbackName) fallbackName.textContent = 'Belum Ada Dokumen untuk ' + ncrNo;
+    if (fallbackDesc) fallbackDesc.textContent = 'Silakan pilih berkas laporan NCR resmi (format PDF / scan) untuk diunggah langsung ke Google Drive root folder qca edms v3.';
+    if (newTabBtn) newTabBtn.style.display = 'none';
+  }
+
+  if (m) m.style.display = 'flex';
+}
+window.viewNcrDocModal = viewNcrDocModal;
+
+function openNcrDocUploadModal(ncrNo) {
+  viewNcrDocModal(ncrNo);
+  // Langsung tampilkan mode upload fallback
+  var iframe = document.getElementById('ncrDocIframe');
+  var fallbackView = document.getElementById('ncrDocFallbackView');
+  if (iframe) { iframe.src = ''; iframe.style.display = 'none'; }
+  if (fallbackView) fallbackView.style.display = 'block';
+}
+window.openNcrDocUploadModal = openNcrDocUploadModal;
+
+function closeNcrDocModal() {
+  var m = document.getElementById('ncrDocPreviewModal');
+  if (m) m.style.display = 'none';
+  var iframe = document.getElementById('ncrDocIframe');
+  if (iframe) iframe.src = '';
+  window.activeUploadNcrNo = null;
+}
+window.closeNcrDocModal = closeNcrDocModal;
+
+function triggerNcrDocUploadFromPreview_() {
+  var fileInput = document.getElementById('ncrDocDirectUploadInput');
+  if (fileInput) {
+    fileInput.value = '';
+    fileInput.click();
+  }
+}
+window.triggerNcrDocUploadFromPreview_ = triggerNcrDocUploadFromPreview_;
+
+function handleNcrDocDirectUploadSelected_(input) {
+  if (!input || !input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var ncrNo = window.activeUploadNcrNo;
+  if (!ncrNo) {
+    if (typeof showToast === 'function') showToast('Nomor NCR tidak teridentifikasi.', 'error');
+    return;
+  }
+
+  var data = window.allNcrData || [];
+  var record = null;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][1]).trim() === String(ncrNo).trim()) {
+      record = data[i];
+      break;
+    }
+  }
+
+  var proj = record ? (record[4] || 'Umum') : 'Umum';
+  var disc = record ? (record[3] || 'General') : 'General';
+
+  var btn = document.getElementById('btnUploadNcrDocFromPreview');
+  var oldBtnHtml = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner dark" style="vertical-align:-2px; margin-right:6px;"></span>Mengunggah ke Drive...';
+  }
+  if (typeof showToast === 'function') showToast('Mengunggah berkas ' + file.name + ' ke Drive qca edms v3...', 'info');
+
+  var reader = new FileReader();
+  reader.onload = function(evt) {
+    var payload = {
+      ncrNo: ncrNo,
+      project: proj,
+      discipline: disc,
+      fileName: file.name,
+      fileBase64: evt.target.result,
+      mimeType: file.type || 'application/pdf'
+    };
+
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      setTimeout(function() {
+        if (btn) { btn.disabled = false; btn.innerHTML = oldBtnHtml; }
+        if (typeof showToast === 'function') showToast('[Preview Mode] Berkas berhasil diunggah secara simulasi.', 'success');
+        if (record) record[16] = 'https://drive.google.com/file/d/simulated_' + Date.now() + '/preview';
+        viewNcrDocModal(ncrNo);
+        renderNcrTable_(window.allNcrData);
+      }, 900);
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (btn) { btn.disabled = false; btn.innerHTML = oldBtnHtml; }
+        if (res && res.success) {
+          if (typeof showToast === 'function') showToast(res.message || 'Dokumen NCR berhasil diunggah ke Google Drive!', 'success');
+          if (record) record[16] = res.fileUrl;
+          viewNcrDocModal(ncrNo);
+          loadNcrData();
+        } else {
+          if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal mengunggah dokumen.', 'error');
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (btn) { btn.disabled = false; btn.innerHTML = oldBtnHtml; }
+        if (typeof showToast === 'function') showToast('Error upload: ' + (err.message || 'Koneksi gagal'), 'error');
+      })
+      .uploadNcrDocument(payload);
+  };
+  reader.onerror = function() {
+    if (btn) { btn.disabled = false; btn.innerHTML = oldBtnHtml; }
+    if (typeof showToast === 'function') showToast('Gagal membaca berkas file lokal.', 'error');
+  };
+  reader.readAsDataURL(file);
+}
+window.handleNcrDocDirectUploadSelected_ = handleNcrDocDirectUploadSelected_;
+
+// ==========================================
+// HITUNG STATISTIK SUMMARY MOCK
+// ==========================================
 function calculateNcrSummaryMock_(data) {
   var total = 0, closed = 0, open = 0, overdue = 0;
   var byDiscipline = {};

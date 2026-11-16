@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v10.8-ncr-monitoring';
+const CACHE_NAME = 'qccms-edms-v10.9-ncr-drive-docs';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -15,6 +15,7 @@ const STATIC_ASSETS = [
   '/auth.js',
   '/api.js',
   '/calibration.js',
+  '/ncr.js',
   '/gas-adapter.js',
   '/security.js',
   '/offline-queue.js',
