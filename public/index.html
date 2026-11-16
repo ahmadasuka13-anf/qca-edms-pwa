@@ -8345,6 +8345,18 @@ function filterCalibrationTable_() {
     visibleCount++;
     var statusCls = status === 'Valid' ? 'badge-approved' : (status === 'Overdue' ? 'badge-rejected' : 'badge-pending');
 
+    var certLink = String(r[7] || '').trim();
+    var certBtnHtml = '';
+    if (certLink && certLink !== '-' && certLink.toLowerCase() !== 'n/a') {
+      certBtnHtml = '<button type="button" class="btn-small" onclick="previewCertificateModal_(\'' + escAttr_(toolId) + '\')" style="padding:3px 8px; font-size:11px; font-weight:700; border-radius:4px; border:1px solid #bbf7d0; background:#f0fdf4; color:#15803d; cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Lihat Pratinjau Sertifikat Kalibrasi">' +
+        '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Lihat PDF' +
+        '</button>';
+    } else {
+      certBtnHtml = '<button type="button" class="btn-small" onclick="previewCertificateModal_(\'' + escAttr_(toolId) + '\')" style="padding:3px 7px; font-size:10.5px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--ink-muted); cursor:pointer; display:inline-flex; align-items:center; gap:3px;" title="Unggah Berkas Sertifikat">' +
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Upload' +
+        '</button>';
+    }
+
     rowsHtml += '<tr>' +
       '<td class="doc-code" style="font-family:var(--font-mono); font-weight:700;">' + esc(toolId) + '</td>' +
       '<td style="font-weight:600;">' + esc(name) + '</td>' +
@@ -8353,6 +8365,7 @@ function filterCalibrationTable_() {
       '<td style="font-family:var(--font-mono); font-variant-numeric:tabular-nums; font-weight:700; color:' + (status === 'Overdue' ? '#dc2626' : 'inherit') + ';">' + esc(nextDate) + '</td>' +
       '<td><span class="badge ' + statusCls + '" style="border-radius:4px;">' + esc(status) + '</span></td>' +
       '<td>' + esc(pic) + '</td>' +
+      '<td style="text-align:center;">' + certBtnHtml + '</td>' +
       '<td style="text-align:center; white-space:nowrap;">' +
         '<button type="button" class="btn-small" onclick="editCalibrationTool(\'' + escAttr_(toolId) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Edit / Update Data Alat">' +
           '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px; margin-right:2px;"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Edit' +
@@ -8375,6 +8388,326 @@ function filterCalibrationTable_() {
 }
 window.filterCalibrationTable_ = filterCalibrationTable_;
 
+
+// ════════════════════════════════════════════════════════════════════════
+// KALIBRASI — CHARTS, CERTIFICATE PREVIEW & GOOGLE DRIVE FOLDER SYNC
+// ════════════════════════════════════════════════════════════════════════
+window.calStatusChartInstance = null;
+window.calDisciplineChartInstance = null;
+window.selectedCertTool = null;
+window.calSelectedCertFile = null;
+
+function renderCalibrationCharts_(summaryRes) {
+  var container = document.getElementById('calChartsContainer');
+  if (!container) return;
+  container.style.display = 'grid';
+
+  if (typeof Chart === 'undefined') {
+    console.warn('Chart.js library belum siap untuk render grafik kalibrasi.');
+    return;
+  }
+
+  // 1. Doughnut Chart: Status Kalibrasi Global
+  var canvasDoughnut = document.getElementById('calStatusDoughnutChart');
+  if (canvasDoughnut) {
+    if (window.calStatusChartInstance) {
+      window.calStatusChartInstance.destroy();
+    }
+
+    var validCount = summaryRes.valid || 0;
+    var overdueCount = summaryRes.overdue || 0;
+    var prosesCount = summaryRes.dalamProses || 0;
+    var notReqCount = summaryRes.notRequired || 0;
+
+    var legendEl = document.getElementById('calStatusLegendSummary');
+    if (legendEl) {
+      legendEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">' + validCount + ' Valid</span> · <span style="color:#dc2626; font-weight:700;">' + overdueCount + ' Overdue</span>';
+    }
+
+    var ctxD = canvasDoughnut.getContext('2d');
+    window.calStatusChartInstance = new Chart(ctxD, {
+      type: 'doughnut',
+      data: {
+        labels: ['Valid', 'Overdue', 'Dalam Proses', 'Not Required'],
+        datasets: [{
+          data: [validCount, overdueCount, prosesCount, notReqCount],
+          backgroundColor: ['#16a34a', '#dc2626', '#d97706', '#94a3b8'],
+          borderWidth: 2,
+          borderColor: '#ffffff',
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              boxWidth: 10,
+              boxHeight: 10,
+              padding: 6,
+              font: { family: 'Plus Jakarta Sans, sans-serif', size: 10.5, weight: 600 },
+              color: '#334155'
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var val = ctx.raw || 0;
+                var total = (summaryRes.total || 1);
+                var pct = Math.round((val / total) * 100);
+                return ' ' + ctx.label + ': ' + val + ' alat (' + pct + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // 2. Bar Chart: Distribusi Disiplin (Valid vs Overdue)
+  var canvasBar = document.getElementById('calDisciplineBarChart');
+  if (canvasBar) {
+    if (window.calDisciplineChartInstance) {
+      window.calDisciplineChartInstance.destroy();
+    }
+
+    var byDisc = summaryRes.byDiscipline || {};
+    var discLabels = Object.keys(byDisc);
+    if (!discLabels.length) {
+      discLabels = ['Electrical', 'Mechanical & Piping', 'Coating & Painting'];
+    }
+
+    var validData = [];
+    var overdueData = [];
+    var prosesData = [];
+
+    discLabels.forEach(function(dName) {
+      var item = byDisc[dName] || { valid: 0, overdue: 0, proses: 0 };
+      validData.push(item.valid || 0);
+      overdueData.push(item.overdue || 0);
+      prosesData.push(item.proses || 0);
+    });
+
+    var ctxB = canvasBar.getContext('2d');
+    window.calDisciplineChartInstance = new Chart(ctxB, {
+      type: 'bar',
+      data: {
+        labels: discLabels,
+        datasets: [
+          {
+            label: 'Valid',
+            data: validData,
+            backgroundColor: '#16a34a',
+            borderRadius: 3,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: 'Overdue',
+            data: overdueData,
+            backgroundColor: '#dc2626',
+            borderRadius: 3,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          },
+          {
+            label: 'Proses',
+            data: prosesData,
+            backgroundColor: '#d97706',
+            borderRadius: 3,
+            barPercentage: 0.7,
+            categoryPercentage: 0.8
+          }
+        ]
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            align: 'end',
+            labels: {
+              boxWidth: 8,
+              boxHeight: 8,
+              font: { size: 10, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
+              color: '#0f172a'
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 10, family: 'Plus Jakarta Sans, sans-serif' } }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            ticks: { font: { size: 10 } }
+          }
+        }
+      }
+    });
+  }
+}
+window.renderCalibrationCharts_ = renderCalibrationCharts_;
+
+function previewCertificateModal_(toolId) {
+  var data = window.allCalibrationTools || [];
+  var tool = null;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim() === String(toolId).trim()) {
+      tool = data[i];
+      break;
+    }
+  }
+
+  if (!tool) {
+    if (typeof showToast === 'function') showToast('Data alat tidak ditemukan.', 'error');
+    return;
+  }
+
+  window.selectedCertTool = tool;
+
+  var m = document.getElementById('calCertPreviewModal');
+  var titleEl = document.getElementById('calCertModalTitle');
+  var subEl = document.getElementById('calCertModalSub');
+  var iframe = document.getElementById('calCertIframe');
+  var fallbackView = document.getElementById('calCertFallbackView');
+  var fallbackDesc = document.getElementById('calCertFallbackDesc');
+  var btnNewTab = document.getElementById('btnCalCertOpenNewTab');
+
+  if (titleEl) titleEl.textContent = 'Sertifikat Kalibrasi: ' + tool[0] + ' - ' + tool[1];
+  if (subEl) subEl.textContent = 'Disiplin: ' + tool[2] + ' | Jatuh Tempo: ' + (tool[4] || '-') + ' | Status: ' + tool[5];
+
+  var certLink = String(tool[7] || '').trim();
+
+  // Reset tampilan
+  if (iframe) { iframe.style.display = 'none'; iframe.src = ''; }
+  if (fallbackView) fallbackView.style.display = 'none';
+  if (btnNewTab) btnNewTab.style.display = 'none';
+
+  if (!certLink || certLink === '-' || certLink.toLowerCase() === 'n/a') {
+    // Belum ada sertifikat sama sekali
+    if (fallbackView) {
+      fallbackView.style.display = 'block';
+      if (document.getElementById('calCertFallbackName')) document.getElementById('calCertFallbackName').textContent = 'Belum Ada Berkas Sertifikat';
+      if (fallbackDesc) fallbackDesc.textContent = 'Alat ini belum memiliki arsip sertifikat kalibrasi resmi di Google Drive. Klik tombol di bawah untuk mengunggah berkas PDF sertifikat.';
+    }
+  } else if (certLink.indexOf('drive.google.com') !== -1 || certLink.indexOf('/file/d/') !== -1) {
+    // Tautan Google Drive Valid
+    var previewUrl = certLink;
+    var fileIdMatch = certLink.match(/\/d\/([a-zA-Z0-9_-]+)/) || certLink.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (fileIdMatch && fileIdMatch[1]) {
+      previewUrl = 'https://drive.google.com/file/d/' + fileIdMatch[1] + '/preview';
+    }
+    if (iframe) {
+      iframe.src = previewUrl;
+      iframe.style.display = 'block';
+    }
+    if (btnNewTab) {
+      btnNewTab.href = certLink;
+      btnNewTab.style.display = 'inline-flex';
+    }
+  } else if (/^https?:/i.test(certLink)) {
+    // Tautan web umum
+    if (iframe) {
+      iframe.src = certLink;
+      iframe.style.display = 'block';
+    }
+    if (btnNewTab) {
+      btnNewTab.href = certLink;
+      btnNewTab.style.display = 'inline-flex';
+    }
+  } else {
+    // Berkas lokal tercatat di spreadsheet (seperti: Calibration Certificate/2026/...)
+    if (fallbackView) {
+      fallbackView.style.display = 'block';
+      if (document.getElementById('calCertFallbackName')) document.getElementById('calCertFallbackName').textContent = 'Berkas Terdaftar di Arsip Spreadsheet';
+      if (fallbackDesc) {
+        fallbackDesc.innerHTML = 'Path berkas: <code style="background:rgba(0,0,0,0.06); padding:2px 6px; border-radius:3px;">' + esc(certLink) + '</code><br><br>Unggah salinan berkas PDF resmi ke Google Drive agar dapat dibuka langsung di aplikasi kapan saja.';
+      }
+    }
+  }
+
+  if (m) m.style.display = 'flex';
+}
+window.previewCertificateModal_ = previewCertificateModal_;
+
+function closeCalibrationCertModal() {
+  var m = document.getElementById('calCertPreviewModal');
+  if (m) m.style.display = 'none';
+  var iframe = document.getElementById('calCertIframe');
+  if (iframe) iframe.src = '';
+}
+window.closeCalibrationCertModal = closeCalibrationCertModal;
+
+function triggerCertUploadFromPreview_() {
+  var inp = document.getElementById('calCertDirectUploadInput');
+  if (inp) inp.click();
+}
+window.triggerCertUploadFromPreview_ = triggerCertUploadFromPreview_;
+
+function handleCertDirectUploadSelected_(input) {
+  if (!input.files || !input.files[0] || !window.selectedCertTool) return;
+  var file = input.files[0];
+  var tool = window.selectedCertTool;
+  var toolId = tool[0];
+  var toolName = tool[1];
+  var discipline = tool[2];
+  var certNo = tool[8] || '';
+
+  if (typeof showToast === 'function') showToast('Mengunggah sertifikat ' + toolId + ' ke Google Drive...', 'info');
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var base64 = e.target.result;
+    google.script.run
+      .withSuccessHandler(function(res) {
+        if (res && res.success) {
+          if (typeof showToast === 'function') showToast(res.message || 'Sertifikat berhasil diunggah ke Google Drive!', 'success');
+          // Update data lokal
+          tool[7] = res.fileUrl || res.previewUrl;
+          previewCertificateModal_(toolId);
+          loadCalibrationData();
+        } else {
+          if (typeof showToast === 'function') showToast((res && (res.error || res.message)) || 'Gagal mengunggah sertifikat.', 'error');
+        }
+      })
+      .withFailureHandler(function(err) {
+        if (typeof showToast === 'function') showToast('Error: ' + err.message, 'error');
+      })
+      .uploadCalibrationCertificate({
+        toolId: toolId,
+        toolName: toolName,
+        discipline: discipline,
+        certNo: certNo,
+        fileName: file.name,
+        mimeType: file.type || 'application/pdf',
+        fileBase64: base64
+      });
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+window.handleCertDirectUploadSelected_ = handleCertDirectUploadSelected_;
+
+function handleCertFormFileSelected_(input) {
+  if (!input.files || !input.files[0]) return;
+  window.calSelectedCertFile = input.files[0];
+  var statusEl = document.getElementById('calCertFormUploadStatus');
+  if (statusEl) {
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">✓ Berkas terpilih:</span> ' + esc(input.files[0].name) + ' (' + Math.round(input.files[0].size / 1024) + ' KB) — akan diunggah ke Google Drive saat disimpan.';
+  }
+}
+window.handleCertFormFileSelected_ = handleCertFormFileSelected_;
+
 function loadCalibrationData() {
   var kpiWrap = document.getElementById('calKpiWrap');
   if (kpiWrap) kpiWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat...</div>';
@@ -8383,12 +8716,20 @@ function loadCalibrationData() {
     .withSuccessHandler(function (res) {
       if (!kpiWrap) return;
       if (!res.success) { kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">' + esc(res.error || 'Gagal') + '</div></div>'; return; }
+      var totalCount = res.total || 0;
+      var validCount = res.valid || 0;
+      var overdueCount = res.overdue || 0;
+      var prosesCount = res.dalamProses || 0;
+
       kpiWrap.innerHTML =
-        '<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">' +
-          '<div class="stat-card"><div class="stat-value">' + esc(res.total)   + '</div><div class="stat-label">Total Alat</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + esc(res.valid)   + '</div><div class="stat-label">Valid</div></div>' +
-          '<div class="stat-card warn"><div class="stat-value">' + esc(res.overdue) + '</div><div class="stat-label">Jatuh Tempo</div></div>' +
+        '<div class="stats-grid" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:0;">' +
+          '<div class="stat-card" style="border-left:4px solid var(--primary, #163d78);"><div class="stat-value" style="font-variant-numeric:tabular-nums;">' + esc(totalCount) + '</div><div class="stat-label">Total Alat Ukur</div></div>' +
+          '<div class="stat-card" style="border-left:4px solid #16a34a;"><div class="stat-value" style="color:#16a34a; font-variant-numeric:tabular-nums;">' + esc(validCount) + '</div><div class="stat-label">Valid & Terkalibrasi</div></div>' +
+          '<div class="stat-card warn" style="border-left:4px solid #dc2626;"><div class="stat-value" style="color:#dc2626; font-variant-numeric:tabular-nums;">' + esc(overdueCount) + '</div><div class="stat-label">Jatuh Tempo (Overdue)</div></div>' +
+          '<div class="stat-card" style="border-left:4px solid #d97706;"><div class="stat-value" style="color:#d97706; font-variant-numeric:tabular-nums;">' + esc(prosesCount) + '</div><div class="stat-label">Verifikasi / Proses</div></div>' +
         '</div>';
+
+      renderCalibrationCharts_(res);
     })
     .withFailureHandler(function (err) {
       if (kpiWrap) kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">KPI gagal: ' + esc(err && err.message ? err.message : String(err)) + '</div></div>';
@@ -8429,6 +8770,7 @@ function loadCalibrationData() {
       tblWrap.innerHTML = '<div class="table-scroll"><table style="width:100%; border-collapse:collapse;"><thead><tr>' +
         '<th style="width:120px;">Tool ID</th><th>Nama Alat</th><th style="width:120px;">Disiplin</th>' +
         '<th style="width:115px;">Tgl Kalibrasi</th><th style="width:120px;">Jatuh Tempo</th><th style="width:100px;">Status</th><th style="width:110px;">PIC</th>' +
+        '<th style="width:100px; text-align:center;">Sertifikat</th>' +
         '<th style="width:130px; text-align:center;">Aksi</th>' +
         '</tr></thead><tbody id="calTableBody"></tbody></table></div>';
 
