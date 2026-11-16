@@ -534,7 +534,7 @@ body {
       text-align: left; padding: 10px 12px;
       background: transparent; color: var(--ink);
       border: none; border-left: 3px solid transparent;
-      border-radius: 9px; cursor: pointer; margin-bottom: 2px;
+      border-radius: 6px; cursor: pointer; margin-bottom: 2px;
     }
     .sidebar-item:hover { background: var(--surface-hover); }
     .sidebar-item.active { background: var(--sidebar-active); color: var(--sidebar-active-text); font-weight: 700; border-left-color: var(--accent); }
@@ -1615,7 +1615,461 @@ body {
       .cc-mini-stats { grid-template-columns: repeat(2, 1fr); }
     }
     /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
+/* ═══ COMMAND CENTER — EXECUTIVE 2-ZONE TOOLBAR ═══ */
+    .cc-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .cc-toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 300px;
+    }
+    .cc-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cc-search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 190px;
+      max-width: 320px;
+    }
+    .cc-search-icon {
+      position: absolute;
+      left: 11px;
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+    .cc-search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cc-search-input:focus {
+      border-color: var(--accent, #2563eb);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    .cc-select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .cc-select:focus {
+      border-color: var(--accent, #2563eb);
+    }
+    .cc-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .cc-dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 6px;
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      min-width: 210px;
+      z-index: 200;
+      padding: 6px 0;
+    }
+    .cc-dropdown-menu.show {
+      display: block;
+    }
+    .cc-dropdown-item {
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+    .cc-dropdown-item:hover {
+      background: var(--surface-subtle);
+      color: var(--accent, #2563eb);
+    }
+
+    /* ═══ COMMAND CENTER — EXECUTIVE 3-COLUMN DECK (TOP) ═══ */
+    .cc-deck {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) {
+      .cc-deck { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .cc-deck { grid-template-columns: 1fr; }
+    }
+    .deck-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .doc-metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface-subtle);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .doc-metric-lbl {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .doc-metric-val {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .grid-disciplines {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .disc-cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--surface-subtle);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 11.5px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .disc-cell:hover {
+      background: var(--surface-card);
+      border-color: var(--accent, #2563eb);
+    }
+    .disc-cell.active-disc {
+      border-color: var(--primary, #163d78) !important;
+      background: rgba(22, 61, 120, 0.12) !important;
+      box-shadow: 0 0 0 1.5px var(--primary, #163d78);
+      transform: translateY(-1px);
+    }
+    .disc-cell strong { font-weight: 600; color: var(--ink-muted); }
+    .disc-cell span { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
+
+    /* ═══ COMMAND CENTER — EXECUTIVE PRESENTATION CHARTS DECK ═══ */
+    .cc-charts-deck {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 900px) {
+      .cc-charts-deck {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cc-chart-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+    }
+    .cc-chart-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cc-chart-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cc-chart-canvas-wrap {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+    .btn-chart-active {
+      background: var(--primary, #163d78) !important;
+      color: #fff !important;
+      border-color: var(--primary, #163d78) !important;
+    }
+
+    /* ═══ COMMAND CENTER — PROJECTS GRID (COMPACT 3-COLUMN) ═══ */
+    .cc-projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    @media (max-width: 1100px) {
+      .cc-projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 700px) {
+      .cc-projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cc-project-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      border-left: 3px solid var(--ink-faint);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .cc-project-card:hover {
+      border-color: var(--primary, #163d78);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      transform: none;
+    }
+    .cc-project-card.health-red { border-left-color: var(--rejected-text); }
+    .cc-project-card.health-yellow { border-left-color: var(--pending-text); }
+    .cc-project-card.health-green { border-left-color: var(--approved-text); }
+
+    .cc-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .cc-card-code {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--ink);
+    }
+    .cc-card-name {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+
+    .cc-status-pill {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2.5px 7px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .cc-status-pill.critical { background: rgba(220, 38, 38, 0.08); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+    .cc-status-pill.warning { background: rgba(217, 119, 6, 0.08); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.2); }
+    .cc-status-pill.good { background: rgba(22, 163, 74, 0.08); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.2); }
+
+    .cc-mini-stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 2px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      -webkit-font-feature-settings: "tnum";
+      font-feature-settings: "tnum";
+    }
+    .cc-mini-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cc-mini-val {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .cc-mini-lbl {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .cc-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .cc-progress-bar-bg {
+      flex: 1;
+      height: 5px;
+      border-radius: 2px;
+      background: var(--surface-subtle);
+      overflow: hidden;
+    }
+    .cc-progress-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--approved-text, #16a34a);
+      transition: width 0.3s ease;
+    }
+    .cc-progress-pct {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .cc-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+      margin-top: auto;
+    }
+    .cc-pic-badge {
+      font-size: 11px;
+      color: var(--ink-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+    }
+
+    .cc-detail-section {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      display: none;
+    }
+    .cc-detail-section.show {
+      display: block;
+    }
+    .cc-section-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
+    }
+    .cc-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .cc-chip-disc {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      font-family: var(--font-mono);
+    }
+    .cc-chip-disc.mrir {
+      background: rgba(217,119,6,0.08);
+      border-color: rgba(217,119,6,0.25);
+      color: #b45309;
+    }
+    .cc-chip-disc.civil {
+      background: rgba(37,99,235,0.08);
+      border-color: rgba(37,99,235,0.25);
+      color: #2563eb;
+    }
+    .cc-chip-disc.mech {
+      background: rgba(124,58,237,0.08);
+      border-color: rgba(124,58,237,0.25);
+      color: #7c3aed;
+    }
+    .cc-chip-disc.elec {
+      background: rgba(13,148,136,0.08);
+      border-color: rgba(13,148,136,0.25);
+      color: #0d9488;
+    }
+
+    /* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ─── 1. ANTI-ZOOM: Cegah iOS auto-zoom saat tap input ─────────── */
@@ -4058,7 +4512,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       border-radius: 50%;
       background: #10b981;
       box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      animation: syncPulse 2s infinite ease-in-out;
+      /* Calm solid indicator (Anti-AI Pass 8) */ width: 7px; height: 7px;
       flex-shrink: 0;
     }
     .sync-pulse-dot.offline {
@@ -4773,7 +5227,27 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         </div>
 
         <!-- 📂 GRUP 1: DOKUMEN MUTU (ACCORDION) -->
-        <div class="sidebar-accordion-group open" id="groupDokumen">
+        <div class="sidebar-accordion-group open" id="groupMonitoring">
+          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupMonitoring')">
+            <span class="sag-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+              Monitoring &amp; Laporan
+            </span>
+            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-accordion-content">
+            <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Dashboard</span></button>
+            <button class="sidebar-item" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Ringkasan Proyek</span></button>
+            <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 9l-5 5-4-4-5 5" fill="currentColor" fill-opacity="0.16"/><path d="M18 9l-5 5-4-4-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="9" r="2" fill="currentColor"/></svg></span><span class="si-label">Analisis Dokumen</span></button>
+            <button class="sidebar-item active" id="tabBtnCommand" onclick="switchTab('command')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span class="si-label">Command Center</span></button>
+            <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="7" r="1" fill="currentColor"/><circle cx="12" cy="7" r="1" fill="currentColor"/><circle cx="16" cy="7" r="1" fill="currentColor"/></svg></span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:auto;font-family:var(--font-mono);font-variant-numeric:tabular-nums;"></span></span></button>
+            <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Approval</span></button>
+          </div>
+        </div>
+
+        <!-- ⚙️ GRUP 4: ADMINISTRASI SISTEM (ACCORDION) -->
+
+        <div class="sidebar-accordion-group" id="groupDokumen">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupDokumen')">
             <span class="sag-title">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -4806,25 +5280,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
         </div>
 
         <!-- 📊 GRUP 3: MONITORING & REVIEW (ACCORDION) -->
-        <div class="sidebar-accordion-group" id="groupMonitoring">
-          <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupMonitoring')">
-            <span class="sag-title">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-              Monitoring &amp; Laporan
-            </span>
-            <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="sidebar-accordion-content">
-            <button class="sidebar-item" id="tabBtnDashboard" onclick="switchTab('dashboard')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Dashboard</span></button>
-            <button class="sidebar-item" id="tabBtnOverview" onclick="switchTab('overview')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="3" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="16" width="7" height="5" rx="1.5" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Ringkasan Proyek</span></button>
-            <button class="sidebar-item" id="tabBtnAnalisis" onclick="switchTab('analisis')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18 9l-5 5-4-4-5 5" fill="currentColor" fill-opacity="0.16"/><path d="M18 9l-5 5-4-4-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="9" r="2" fill="currentColor"/></svg></span><span class="si-label">Analisis Dokumen</span></button>
-            <button class="sidebar-item" id="tabBtnCommand" onclick="switchTab('command')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="1.8"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="1.8"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="1.8"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="si-label">Command Center</span></button>
-            <button class="sidebar-item" id="tabBtnMytasks" onclick="switchTab('mytasks')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="7" r="1" fill="currentColor"/><circle cx="12" cy="7" r="1" fill="currentColor"/><circle cx="16" cy="7" r="1" fill="currentColor"/></svg></span><span class="si-label">Tugas Saya <span id="mytasksBadge" style="display:none;background:#dc2626;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:999px;margin-left:auto;font-family:var(--font-mono);"></span></span></button>
-            <button class="sidebar-item" id="tabBtnApproval" onclick="switchTab('approval')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Approval</span></button>
-          </div>
-        </div>
-
-        <!-- ⚙️ GRUP 4: ADMINISTRASI SISTEM (ACCORDION) -->
         <div class="sidebar-accordion-group" id="groupAdmin">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupAdmin')">
             <span class="sag-title">
@@ -5006,7 +5461,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             </div>
 
             <!-- PANEL: LIST (DEFAULT SETELAH LOGIN) -->
-            <div class="panel active" id="panelList">
+            <div class="panel" id="panelList">
               <div class="panel-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
                 <div>
                   <h2 class="panel-title" style="margin:0;">Daftar Dokumen Mutu</h2>
@@ -5472,165 +5927,238 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             </div>
 
               <!-- PANEL: COMMAND CENTER -->
-            <div class="panel" id="panelCommand">
-              <h2 class="panel-title" style="display:flex;align-items:center;gap:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;background:rgba(225,29,72,0.12);color:var(--accent,#e11d48);flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="currentColor"/><line x1="12" y1="2" x2="12" y2="5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="2" y1="12" x2="5" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><line x1="19" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>QA/QC Command Center</span></h2>
-              <p class="hint" style="margin:-10px 0 16px;">Monitor semua proyek dalam 1 halaman — update otomatis dari Master Hub.</p>
+            <div class="panel active" id="panelCommand">
+              <h2 class="panel-title" style="display:flex;align-items:center;gap:10px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:rgba(237,46,53,0.1);color:var(--accent,#ed2e35);flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg></span><span>QA/QC Command Center</span></h2>
+              <p class="hint" style="margin:-10px 0 16px;">Monitor seluruh portofolio proyek dalam 1 layar — terhubung langsung ke Master Hub & ITR.</p>
 
-<div class="filter-row" style="margin-bottom:16px;">
-  <button class="btn btn-secondary" onclick="loadCommandCenter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>Refresh</button>
-  <button class="btn btn-secondary" onclick="runSyncFromUI_()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>Sync Semua Proyek</button>
-  <button class="btn btn-secondary" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_()" title="Atur sinkronisasi otomatis tiap 1 jam di background"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Cek Auto-Sync</button>
-  <button class="btn btn-secondary" onclick="cleanDuplicatesFromUI_()" title="Bersihkan baris dokumen duplikat yang menumpuk di Master Hub ALL_DOCUMENTS"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Bersihkan Duplikat</button>
-  <label style="font-size:12.5px;font-weight:600;color:var(--ink-muted);margin-left:10px;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin:</label>
-  <select id="ccDisciplineFilter" onchange="onCCDisciplineChange_()" style="min-width:180px;">
-    <option value="">Semua Disiplin</option>
-  </select>
-  <!-- Tambahkan setelah dropdown Disiplin -->
-<label style="margin-left:12px;font-weight:600;display:inline-flex;align-items:center;font-size:12.5px;color:var(--ink-muted);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px;color:var(--ink-muted);"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="currentColor" fill-opacity="0.16"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Periode:</label>
-<select id="filterPeriod" onchange="applyPeriodFilter()" style="padding:6px 10px; border-radius:6px;">
-  <option value="all">Semua Waktu</option>
-  <option value="thisMonth">Bulan Ini</option>
-  <option value="last3">3 Bulan Terakhir</option>
-  <option value="last6">6 Bulan Terakhir</option>
-  <option value="thisYear">Tahun Ini</option>
-</select>
-
-<button onclick="exportToCSV()" style="padding:8px 14px; margin-left:8px; background:#166534; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:6px; box-shadow:0 2px 6px rgba(22,101,52,0.25);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
-  <button class="btn-small" onclick="resetCCDisciplineFilter_()">Reset</button>
-  <span class="hint" style="margin-left:auto;" id="ccLastUpdate">—</span>
-</div>
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- SECTION: ANALYTICS (Aging, Trend, Breakdown) -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div style="margin-top:24px;">
-
-  <!-- 🆕 INDIKATOR PROYEK AKTIF -->
-  <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
-        <div>
-          <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek</div>
-          <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
-        </div>
-      </div>
-      <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.5); padding:10px 18px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer; min-height:48px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-flex; align-items:center; gap:8px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tutup Analisis
-      </button>
-    </div>
-  </div>
-
-  <!-- KOSONG STATE - Muncul kalau belum ada proyek terpilih -->
-  <div id="analyticsEmptyState" style="padding:40px 20px; background:var(--surface-subtle,#f8fafc); border:2px dashed var(--border,#e2e8f0); border-radius:14px; text-align:center; color:var(--ink-muted,#64748b);"><div style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:rgba(22,61,120,0.08);color:var(--primary,#163d78);margin-bottom:12px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.15"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div style="font-size:14px; font-weight:700; color:var(--ink,#1e293b);">Pilih Proyek untuk Melihat Analisis</div><div style="font-size:12.5px; margin-top:6px; opacity:0.85;">Klik salah satu kartu proyek di daftar "Status per Proyek" di bawah</div></div>
-
-  <!-- Aging Analysis -->
-  <div id="analyticsChartsWrapper" style="display:none;">
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open</span></h3>
-      <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:120px; padding:12px; background:#fff3e0; border-radius:8px; cursor:pointer;" onclick="drillDownAging('0-30')">
-          <div style="font-size:22px; font-weight:bold; color:#e65100;" id="age0_30">-</div>
-          <div style="font-size:12px; color:#666;">0-30 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffe0b2; border-radius:8px; cursor:pointer;" onclick="drillDownAging('31-60')">
-          <div style="font-size:22px; font-weight:bold; color:#ef6c00;" id="age31_60">-</div>
-          <div style="font-size:12px; color:#666;">31-60 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffcc80; border-radius:8px; cursor:pointer;" onclick="drillDownAging('61-90')">
-          <div style="font-size:22px; font-weight:bold; color:#e65100;" id="age61_90">-</div>
-          <div style="font-size:12px; color:#666;">61-90 hari</div>
-        </div>
-        <div style="flex:1; min-width:120px; padding:12px; background:#ffab91; border-radius:8px; cursor:pointer;" onclick="drillDownAging('&gt;90')">
-          <div style="font-size:22px; font-weight:bold; color:#bf360c;" id="age90plus">-</div>
-          <div style="font-size:12px; color:#666;">&gt; 90 hari</div>
-        </div>
-      </div>
-      <div style="font-size:13px; color:#555;">
-        Rata-rata umur: <b id="avgAge">-</b> hari · Terlama: <b id="maxAge">-</b> hari
-        <span style="margin-left:12px; font-size:11px; color:#999;">(klik kotak untuk lihat detail)</span>
-      </div>
-      <!-- 🆕 BACKLOG CARD -->
-<div id="backlogCard" style="margin-top:16px; padding:16px 20px; background:linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%); border-left:5px solid #dc2626; border-radius:10px;">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-    <div style="display:flex; align-items:center; gap:14px;">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:rgba(220,38,38,0.12);color:#dc2626;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(220,38,38,0.2);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2" fill="currentColor" fill-opacity="0.2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
-      <div>
-        <div style="font-size:11.5px; color:#991b1b; text-transform:uppercase; letter-spacing:0.5px; font-weight:700;">Backlog — Belum Selesai</div>
-        <div style="font-size:32px; font-weight:800; color:#dc2626; font-family:'Nunito', monospace; line-height:1.1;" id="backlogTotal">—</div>
-        <div style="font-size:11.5px; color:#7f1d1d; margin-top:2px;">
-          <span id="backlogDetail">—</span>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:right;">
-      <div style="font-size:11px; color:#7f1d1d; font-weight:600; text-transform:uppercase;">Completion Rate</div>
-      <div style="font-size:26px; font-weight:800; color:#15803d; font-family:monospace;" id="backlogCompletion">—</div>
-      <div style="font-size:11px; color:#7f1d1d; margin-top:4px;" id="backlogRateText">—</div>
-    </div>
-  </div>
-  <div style="margin-top:14px;">
-    <div style="height:8px; background:#fecaca; border-radius:4px; overflow:hidden;">
-      <div id="backlogProgressBar" style="height:100%; width:0%; background:linear-gradient(90deg, #16a34a, #22c55e); border-radius:4px; transition:width 0.5s ease;"></div>
-    </div>
-    <div style="display:flex; justify-content:space-between; font-size:10.5px; color:#7f1d1d; margin-top:6px; font-weight:600;">
-      <span>Selesai: <b id="backlogClosed">—</b></span>
-      <span>Total: <b id="backlogAll">—</b></span>
-    </div>
-  </div>
-</div>
-    </div>
-
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>Tren Bulanan (6 Bulan Terakhir)</span></h3>
-      <div style="position:relative; height:320px; width:100%;">
-        <canvas id="trendChart"></canvas>
-      </div>
-    </div>
-
-    <div style="background:#fff; border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-      <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary,#163d78);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Breakdown per Disiplin</span> <span style="font-size:12px; color:var(--ink-muted); font-weight:normal;">(klik bar untuk detail)</span></h3>
-      <div style="position:relative; height:320px; width:100%;">
-        <canvas id="disciplineChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- MODAL: Drill-down Detail -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div id="drillModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100000 !important; overflow:auto; padding:16px;" onclick="if(event.target===this) closeDrillModal()">
-  <div style="background:var(--surface-card,#fff); max-width:1100px; margin:20px auto; border-radius:14px; padding:24px; position:relative; box-shadow:0 12px 40px rgba(0,0,0,0.35);">
-    <button type="button" onclick="closeDrillModal()" style="position:absolute; right:16px; top:16px; background:#c62828; color:#fff; border:none; border-radius:50%; width:44px; height:44px; min-width:44px; min-height:44px; cursor:pointer; font-size:20px; display:inline-flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent; box-shadow:0 3px 12px rgba(0,0,0,0.35); z-index:100010;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <h3 id="drillTitle" style="margin-top:0;">Detail</h3>
-    <div style="margin-bottom:12px; font-size:13px; color:#666;" id="drillInfo"></div>
-    <div style="overflow-x:auto; max-height:60vh;">
-      <table id="drillTable" style="width:100%; border-collapse:collapse; font-size:13px;">
-        <thead>
-          <tr style="background:#163d78; color:#fff; position:sticky; top:0;">
-            <th style="padding:8px; text-align:left;">No. NFI</th>
-            <th style="padding:8px; text-align:left;">ITR No.</th>
-            <th style="padding:8px; text-align:left;">Subject</th>
-            <th style="padding:8px; text-align:left;">Disiplin</th>
-            <th style="padding:8px; text-align:left;">Tipe</th>
-            <th style="padding:8px; text-align:left;">PIC</th>
-            <th style="padding:8px; text-align:left;">Issued</th>
-            <th style="padding:8px; text-align:right;">Umur</th>
-          </tr>
-        </thead>
-        <tbody id="drillBody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-              <div id="ccStatsWrap" class="card-section">
-                <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>
+              <!-- ═══ EXECUTIVE 2-ZONE TOOLBAR ═══ -->
+              <div class="cc-toolbar">
+                <div class="cc-toolbar-left">
+                  <div class="cc-search-box">
+                    <svg class="cc-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="ccProjectSearchInput" class="cc-search-input" placeholder="Cari proyek, kode, atau PIC..." oninput="onCCProjectSearchChange_()" autocomplete="off">
+                  </div>
+                  <select id="ccDisciplineFilter" class="cc-select" onchange="onCCDisciplineChange_()" title="Filter berdasarkan disiplin teknis">
+                    <option value="">Semua Disiplin</option>
+                  </select>
+                  <select id="filterPeriod" class="cc-select" onchange="applyPeriodFilter()" title="Filter periode waktu pembuatan dokumen">
+                    <option value="all">Semua Waktu</option>
+                    <option value="thisMonth">Bulan Ini</option>
+                    <option value="last3">3 Bulan Terakhir</option>
+                    <option value="last6">6 Bulan Terakhir</option>
+                    <option value="thisYear">Tahun Ini</option>
+                  </select>
+                  <select id="ccProjectSort" class="cc-select" onchange="onCCProjectSortChange_()" title="Urutkan kartu proyek">
+                    <option value="critical_first">Prioritas: Kritis Dulu</option>
+                    <option value="progress_asc">Progres: Terendah Dulu</option>
+                    <option value="total_desc">Volume: Terbanyak Dulu</option>
+                    <option value="code_asc">Kode Proyek: A - Z</option>
+                  </select>
+                </div>
+                <div class="cc-toolbar-right">
+                  <button type="button" class="btn btn-primary" onclick="runSyncFromUI_()" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>
+                    <span>Sync Data</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="btnToggleCCCharts" onclick="toggleCCPresentationCharts_()" title="Tampilkan atau sembunyikan grafik presentasi" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    <span>Grafik Presentasi</span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" onclick="exportToCSV()" title="Ekspor data ringkasan ke format CSV" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>CSV</span>
+                  </button>
+                  <div class="cc-dropdown" id="ccTechDropdownWrap">
+                    <button type="button" class="btn btn-secondary" onclick="toggleCCTechMenu_(event)" style="display:inline-flex; align-items:center; gap:5px;" title="Opsi teknis pemeliharaan & sinkronisasi">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                      <span>Opsi Teknis ▾</span>
+                    </button>
+                    <div id="ccTechMenu" class="cc-dropdown-menu">
+                      <button type="button" class="cc-dropdown-item" onclick="loadCommandCenter();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                        <span>Refresh Data</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Cek Auto-Sync</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="cleanDuplicatesFromUI_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        <span>Bersihkan Duplikat</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="resetCCDisciplineFilter_();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                        <span>Reset Semua Filter</span>
+                      </button>
+                    </div>
+                  </div>
+                  <span class="hint" id="ccLastUpdate" style="font-size:11.5px; white-space:nowrap; margin-left:4px;">—</span>
+                </div>
               </div>
 
-              <div id="ccProjectsWrap">
-                <div class="loading-row"><span class="spinner dark"></span>Memuat proyek...</div>
+              <!-- ═══ 1. TOP EXECUTIVE 3-COLUMN GLASS DECK ═══ -->
+              <div id="ccStatsWrap" style="margin-bottom:20px;"></div>
+
+              <!-- ═══ SEKSI GRAFIK PRESENTASI EKSEKUTIF ═══ -->
+              <div id="ccPresentationChartsWrap" class="cc-charts-deck" style="margin-bottom:24px;">
+                <div class="cc-chart-card">
+                  <div class="cc-chart-head">
+                    <div class="cc-chart-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17v-4"/><path d="M12 17V7"/><path d="M17 17v-8"/></svg>
+                      <span>Komparasi Status Dokumen per Proyek</span>
+                    </div>
+                    <span id="ccProjectsChartSubtitle" style="font-size:11px; font-weight:600; color:var(--ink-muted); font-variant-numeric:tabular-nums;">Semua Proyek</span>
+                  </div>
+                  <div class="cc-chart-canvas-wrap">
+                    <canvas id="ccProjectsChart"></canvas>
+                  </div>
+                </div>
+
+                <div class="cc-chart-card">
+                  <div class="cc-chart-head">
+                    <div class="cc-chart-title">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                      <span>Distribusi Disiplin Mutu (ITR &amp; MRIR)</span>
+                    </div>
+                    <span id="ccDisciplineChartSubtitle" style="font-size:11px; font-weight:600; color:var(--ink-muted); font-variant-numeric:tabular-nums;">Total Dokumen</span>
+                  </div>
+                  <div class="cc-chart-canvas-wrap">
+                    <canvas id="ccDisciplineChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ═══ 2. PROJECT PORTFOLIO GRID ═══ -->
+              <div id="ccProjectsWrap" style="margin-bottom:28px;"></div>
+
+              <!-- ═══ 3. DOCKED DEEP ANALYTICS CONTAINER ═══ -->
+              <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
+                    <div>
+                      <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek Mendalam</div>
+                      <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.5); padding:8px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; min-height:40px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-flex; align-items:center; gap:8px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Tutup Analisis
+                  </button>
+                </div>
+              </div>
+
+              <!-- Aging & Trend Analysis Charts (Docked & Clean) -->
+              <div id="analyticsChartsWrapper" style="display:none; margin-bottom:24px;">
+                <!-- Backlog & Completion Technical Card -->
+                <div id="backlogCard" style="display:none; background:var(--surface-card); border:1px solid var(--border); border-left:4px solid var(--primary); border-radius:12px; padding:16px 20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div>
+                      <div style="font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Tingkat Penyelesaian (Completion Rate)</div>
+                      <div style="display:flex; align-items:baseline; gap:10px; margin-top:2px;">
+                        <span id="backlogCompletion" style="font-size:26px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</span>
+                        <span id="backlogRateText" style="font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums;">-</span>
+                      </div>
+                      <div id="backlogDetail" style="font-size:12px; color:var(--ink-muted); margin-top:4px;">-</div>
+                    </div>
+                    <div style="display:flex; gap:16px; text-align:right;">
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Dokumen Selesai</div>
+                        <div id="backlogClosed" style="font-size:18px; font-weight:800; color:#16a34a; font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Total Dokumen</div>
+                        <div id="backlogAll" style="font-size:18px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                      <div>
+                        <div style="font-size:11px; color:var(--ink-muted);">Backlog Tertunda</div>
+                        <div id="backlogTotal" style="font-size:18px; font-weight:800; color:#dc2626; font-variant-numeric:tabular-nums;">-</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="background:var(--surface-subtle); border-radius:3px; height:6px; overflow:hidden; margin-top:12px;">
+                    <div id="backlogProgressBar" style="background:#16a34a; height:100%; width:0%; transition:width 0.4s ease;"></div>
+                  </div>
+                </div>
+                
+                <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open (Aging)</span></h3>
+                  <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,163,74,0.08); border-radius:8px; border:1px solid rgba(22,163,74,0.2); cursor:pointer;" onclick="drillDownAging('0-30')">
+                      <div style="font-size:20px; font-weight:800; color:#16a34a; font-family:var(--font-mono);" id="age0_30">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">0-30 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(217,119,6,0.08); border-radius:8px; border:1px solid rgba(217,119,6,0.2); cursor:pointer;" onclick="drillDownAging('31-60')">
+                      <div style="font-size:20px; font-weight:800; color:#d97706; font-family:var(--font-mono);" id="age31_60">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">31-60 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(234,88,12,0.08); border-radius:8px; border:1px solid rgba(234,88,12,0.2); cursor:pointer;" onclick="drillDownAging('61-90')">
+                      <div style="font-size:20px; font-weight:800; color:#ea580c; font-family:var(--font-mono);" id="age61_90">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">61-90 hari</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(220,38,38,0.08); border-radius:8px; border:1px solid rgba(220,38,38,0.2); cursor:pointer;" onclick="drillDownAging('>90')">
+                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="age90plus">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">&gt;90 hari (Kritis)</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,61,120,0.06); border-radius:8px; border:1px solid rgba(22,61,120,0.18);">
+                      <div style="font-size:20px; font-weight:800; color:var(--primary,#163d78); font-family:var(--font-mono);" id="avgAge">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Rata-rata (hari)</div>
+                    </div>
+                    <div style="flex:1; min-width:110px; padding:12px; background:rgba(239,68,68,0.06); border-radius:8px; border:1px solid rgba(239,68,68,0.18);">
+                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="maxAge">-</div>
+                      <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Maksimal (hari)</div>
+                    </div>
+                  </div>
+                  <div style="position:relative; height:200px; width:100%;">
+                    <canvas id="agingChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Monthly Trend Chart -->
+                <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Trend Bulanan Dokumen</span></h3>
+                  <div style="position:relative; height:220px; width:100%;">
+                    <canvas id="trendChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Discipline & Type Breakdown Charts -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
+                  <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#7c3aed;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
+                    <div style="position:relative; height:200px; width:100%;">
+                      <canvas id="disciplineChart"></canvas>
+                    </div>
+                  </div>
+                  <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#2563eb;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span>Komposisi Tipe Dokumen</span></h3>
+                    <div style="position:relative; height:200px; width:100%;">
+                      <canvas id="typeChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Drill-down Table (Hidden by Default) -->
+                <div id="drillDownTableWrapper" style="display:none; background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <h3 id="drillDownTitle" style="margin:0;font-size:15px;font-weight:800;color:var(--ink);">Daftar Dokumen</h3>
+                    <button class="btn-small" onclick="closeDrillDown()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-1px;margin-right:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Tutup Tabel</button>
+                  </div>
+                  <div style="overflow-x:auto;">
+                    <table class="table-modern" style="width:100%; border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>Nomor NFI</th>
+                          <th>Nomor ITR</th>
+                          <th>Deskripsi</th>
+                          <th>Disiplin</th>
+                          <th>Status</th>
+                          <th>Aging</th>
+                        </tr>
+                      </thead>
+                      <tbody id="drillDownTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -6336,8 +6864,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   border: 1px solid rgba(255, 255, 255, 0.18);
   width: 32px;
   height: 32px;
-  border-radius: 9px;
-  cursor: pointer;
+  border-radius: 6px; cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7269,8 +7796,9 @@ function enterApp(isFreshLogin) {
       updateNotifBadge(data.unreadNotificationCount || 0);
 
       // Default landing page adalah DAFTAR DOKUMEN (bukan form kosong)
-      const defaultTab = 'list';
+      const defaultTab = 'command';
       switchTab(defaultTab);
+      loadCommandCenter();
       loadDocumentList();
       loadDashboard();
       if (data.canApprove) loadApprovals();
@@ -10291,11 +10819,160 @@ function fileLinksHtml(d) {
       showToast('Analisis diekspor ke CSV.', 'success');
     }
 
+    // HELPER PENGGOLONGAN DOKUMEN: ITR (CIVIL, DLL) & MRIR
     // ============================================================================
-    // COMMAND CENTER
+    function classifyCCDoc_(it) {
+      if (!it) return { isMRIR: false, isITR: false, hasNFI: false, discipline: 'Umum', categoryKey: 'NFI_ONLY', categoryLabel: 'NFI Saja', fullLabel: 'NFI' };
+      var noNfi = String(it.noNFI || it.noNfi || '').trim();
+      var itrNo = String(it.itrNo || '').trim();
+      var subject = String(it.subject || it.subjectDescription || '').trim();
+      var typeInsp = String(it.typeInsp || it.type || '').trim();
+      var discipline = String(it.discipline || '').trim();
+
+      // 1. Normalisasi disiplin teknis
+      var normDisc = 'Umum';
+      if (discipline) {
+        var dLower = discipline.toLowerCase();
+        if (dLower.indexOf('civil') !== -1 || dLower.indexOf('cvl') !== -1) normDisc = 'Civil';
+        else if (dLower.indexOf('struct') !== -1 || dLower.indexOf('str') !== -1) normDisc = 'Structure';
+        else if (dLower.indexOf('mech') !== -1 || dLower.indexOf('mec') !== -1) normDisc = 'Mechanical';
+        else if (dLower.indexOf('elec') !== -1 || dLower.indexOf('elc') !== -1) normDisc = 'Electrical';
+        else if (dLower.indexOf('pip') !== -1) normDisc = 'Piping';
+        else if (dLower.indexOf('e&i') !== -1 || dLower.indexOf('inst') !== -1) normDisc = 'E&I';
+        else if (dLower.indexOf('fab') !== -1) normDisc = 'Fabrikasi';
+        else if (dLower.indexOf('arch') !== -1) normDisc = 'Architecture';
+        else if (dLower.indexOf('paint') !== -1) normDisc = 'Painting';
+        else if (dLower.indexOf('material receiving') !== -1) normDisc = 'Material Receiving';
+        else normDisc = discipline.charAt(0).toUpperCase() + discipline.slice(1).toLowerCase();
+      }
+
+      // 2. Deteksi MRIR (Material Receiving Inspection Report)
+      var isMRIR = false;
+      var tUp = typeInsp.toUpperCase();
+      var sUp = subject.toUpperCase();
+      var iUp = itrNo.toUpperCase();
+
+      if (tUp.indexOf('MRIR') !== -1 || tUp.indexOf('MATERIAL RECEIVING') !== -1 || tUp.indexOf('MATERIAL INSPECTION') !== -1) {
+        isMRIR = true;
+      } else if (iUp.indexOf('MRIR') !== -1) {
+        isMRIR = true;
+      } else if (sUp.indexOf('MRIR') !== -1 || sUp.indexOf('MATERIAL RECEIVING INSPECTION') !== -1) {
+        isMRIR = true;
+      }
+
+      var isITR = Boolean(itrNo);
+      var hasNFI = Boolean(noNfi);
+      var catKey = '';
+      var catLabel = '';
+
+      if (isMRIR) {
+        catKey = 'MRIR';
+        catLabel = 'MRIR';
+      } else if (isITR) {
+        catKey = 'ITR_' + normDisc;
+        catLabel = 'ITR ' + normDisc;
+      } else {
+        catKey = 'NFI_ONLY';
+        catLabel = 'NFI Saja';
+      }
+
+      return {
+        isMRIR: isMRIR,
+        isITR: isITR,
+        hasNFI: hasNFI,
+        discipline: normDisc,
+        categoryKey: catKey,
+        categoryLabel: catLabel,
+        fullLabel: isMRIR ? ('MRIR (' + normDisc + ')') : catLabel
+      };
+    }
+
     // ============================================================================
-    var ccCache_ = null;
-    var ccDisciplineFilter_ = '';
+    // 📊 ENRICH DATA COMMAND CENTER: REKAPITULASI ITR PER DISIPLIN & MRIR
+    // ============================================================================
+    function enrichCCData_(res) {
+      if (!res || !res.projects) return;
+      var totals = res.totals || {};
+      var totalMRIR = 0;
+      var aggItrByDisc = {};
+
+      res.projects.forEach(function (p) {
+        // 1. Normalisasi nama alias data proyek (Server: totalNFI, totalITR, totalMRIR, pic)
+        var nfi = (typeof p.totalNFI === 'number') ? p.totalNFI : (typeof p.nfiCount === 'number' ? p.nfiCount : (p.nfi || 0));
+        var itr = (typeof p.totalITR === 'number') ? p.totalITR : (typeof p.itrCount === 'number' ? p.itrCount : (p.itr || 0));
+        var mrir = (typeof p.totalMRIR === 'number') ? p.totalMRIR : (typeof p.mrirCount === 'number' ? p.mrirCount : (p.mrir || 0));
+        var pic = p.pic || p.lead || '';
+
+        p.nfiCount = nfi;
+        p.totalNFI = nfi;
+        p.itrCount = itr;
+        p.totalITR = itr;
+        p.mrirCount = mrir;
+        p.totalMRIR = mrir;
+        p.lead = pic;
+        p.pic = pic;
+
+        // 2. Hitung MRIR per proyek jika belum ada dari server
+        if (typeof p.totalMRIR !== 'number' || p.totalMRIR === 0) {
+          var mCount = 0;
+          Object.keys(p.byType || {}).forEach(function (t) {
+            var tUp = String(t).toUpperCase();
+            if (tUp.indexOf('MRIR') !== -1 || tUp.indexOf('MATERIAL RECEIVING') !== -1 || tUp.indexOf('MATERIAL INSPECTION') !== -1) {
+              mCount += (p.byType[t] || 0);
+            }
+          });
+          if (mCount > 0) {
+            p.totalMRIR = mCount;
+            p.mrirCount = mCount;
+          }
+        }
+
+        // 3. Hitung ITR per disiplin jika belum ada dari server
+        if (!p.itrByDiscipline || !Object.keys(p.itrByDiscipline).length) {
+          var pItrDisc = {};
+          Object.keys(p.byDiscipline || {}).forEach(function (d) {
+            var dLower = String(d).toLowerCase();
+            var normD = 'Umum';
+            if (dLower.indexOf('civil') !== -1 || dLower.indexOf('cvl') !== -1) normD = 'Civil';
+            else if (dLower.indexOf('struct') !== -1 || dLower.indexOf('str') !== -1) normD = 'Structure';
+            else if (dLower.indexOf('mech') !== -1 || dLower.indexOf('mec') !== -1) normD = 'Mechanical';
+            else if (dLower.indexOf('elec') !== -1 || dLower.indexOf('elc') !== -1) normD = 'Electrical';
+            else if (dLower.indexOf('pip') !== -1) normD = 'Piping';
+            else if (dLower.indexOf('e&i') !== -1 || dLower.indexOf('inst') !== -1) normD = 'E&I';
+            else if (dLower.indexOf('fab') !== -1) normD = 'Fabrikasi';
+            else if (dLower.indexOf('arch') !== -1) normD = 'Architecture';
+            else if (dLower.indexOf('paint') !== -1) normD = 'Painting';
+            else normD = d.charAt(0).toUpperCase() + d.slice(1).toLowerCase();
+
+            var catName = 'ITR ' + normD;
+            pItrDisc[catName] = (pItrDisc[catName] || 0) + p.byDiscipline[d];
+          });
+          p.itrByDiscipline = pItrDisc;
+        }
+
+        // 4. Jika totalITR masih 0 tapi ada data di itrByDiscipline
+        if (p.itrCount === 0 && p.itrByDiscipline) {
+          var sumItr = 0;
+          Object.keys(p.itrByDiscipline).forEach(function (k) { sumItr += (p.itrByDiscipline[k] || 0); });
+          if (sumItr > 0) {
+            p.itrCount = sumItr;
+            p.totalITR = sumItr;
+          }
+        }
+
+        totalMRIR += (p.totalMRIR || 0);
+        Object.keys(p.itrByDiscipline || {}).forEach(function (k) {
+          aggItrByDisc[k] = (aggItrByDisc[k] || 0) + p.itrByDiscipline[k];
+        });
+      });
+
+      if (typeof totals.totalMRIR !== 'number' || totals.totalMRIR === 0) {
+        totals.totalMRIR = totalMRIR;
+      }
+      if (!totals.itrByDiscipline || !Object.keys(totals.itrByDiscipline).length) {
+        totals.itrByDiscipline = aggItrByDisc;
+      }
+    }
 
     function loadCommandCenter() {
       checkAutoSyncTriggerStatus_();
@@ -10314,9 +10991,11 @@ function fileLinksHtml(d) {
             return;
           }
           ccCache_ = res;
+          enrichCCData_(res);
           populateCCDisciplineDropdown_(res.disciplines);
           renderCCStats_(res.totals);
           renderCCProjects_(res.projects);
+          renderCCPresentationCharts_(res);
           var lu = document.getElementById('ccLastUpdate');
           if (lu) lu.textContent = 'Update: ' + new Date(res.lastUpdate).toLocaleString('id-ID');
         })
@@ -10341,665 +11020,451 @@ function fileLinksHtml(d) {
       sel.value = current || ccDisciplineFilter_ || '';
     }
 
+        var ccDisciplineFilter_ = '';
+    var ccProjectSearch_ = '';
+    var ccProjectSort_ = 'critical_first';
+
     function onCCDisciplineChange_() {
       var sel = document.getElementById('ccDisciplineFilter');
       ccDisciplineFilter_ = sel ? sel.value : '';
-      if (ccCache_) renderCCProjects_(ccCache_.projects);
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+        renderCCPresentationCharts_(ccCache_);
+      }
+    }
+
+    function setCCDisciplineFilter_(disc) {
+      var sel = document.getElementById('ccDisciplineFilter');
+      if (ccDisciplineFilter_ === disc) {
+        ccDisciplineFilter_ = '';
+        if (sel) sel.value = '';
+      } else {
+        ccDisciplineFilter_ = disc;
+        if (sel) sel.value = disc;
+      }
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+      }
     }
 
     function resetCCDisciplineFilter_() {
       var sel = document.getElementById('ccDisciplineFilter');
       if (sel) sel.value = '';
       ccDisciplineFilter_ = '';
-      if (ccCache_) renderCCProjects_(ccCache_.projects);
+      var searchInput = document.getElementById('ccProjectSearchInput');
+      if (searchInput) searchInput.value = '';
+      ccProjectSearch_ = '';
+      var sortSel = document.getElementById('ccProjectSort');
+      if (sortSel) sortSel.value = 'critical_first';
+      ccProjectSort_ = 'critical_first';
+      if (ccCache_) {
+        renderCCStats_(ccCache_.totals || {});
+        renderCCProjects_(ccCache_.projects || []);
+        renderCCPresentationCharts_(ccCache_);
+      }
     }
+
+    function onCCProjectSearchChange_() {
+      var input = document.getElementById('ccProjectSearchInput');
+      ccProjectSearch_ = input ? input.value.trim().toLowerCase() : '';
+      if (ccCache_) renderCCProjects_(ccCache_.projects || []);
+      renderCCPresentationCharts_(ccCache_);
+    }
+
+    function onCCProjectSortChange_() {
+      var sel = document.getElementById('ccProjectSort');
+      ccProjectSort_ = sel ? sel.value : 'critical_first';
+      if (ccCache_) renderCCProjects_(ccCache_.projects || []);
+    }
+
+    function toggleCCTechMenu_(e) {
+      if (e) e.stopPropagation();
+      var menu = document.getElementById('ccTechMenu');
+      if (menu) menu.classList.toggle('show');
+    }
+
+    function closeCCTechMenu_() {
+      var menu = document.getElementById('ccTechMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    document.addEventListener('click', function(e) {
+      var wrap = document.getElementById('ccTechDropdownWrap');
+      if (wrap && !wrap.contains(e.target)) {
+        closeCCTechMenu_();
+      }
+    });
 
     function renderCCStats_(t) {
       var wrap = document.getElementById('ccStatsWrap');
       if (!wrap) return;
 
       var progress = t.total > 0 ? Math.round((t.closed / t.total) * 100) : 0;
-      var checkSum = t.open + t.closed + (t.canceled || 0) + (t.other || 0);
+      var totalMRIR = (typeof t.totalMRIR === 'number') ? t.totalMRIR : 0;
+      var otherCount = (t.canceled || 0) + (t.other || 0);
 
-      wrap.innerHTML =
-        '<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:8px;">' +
-          '<div class="stat-card"><div class="stat-value">' + t.projects + '</div><div class="stat-label">Proyek Aktif</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalNFI || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + (t.totalITR || 0) + '</div><div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + t.total + '</div><div class="stat-label">Total Records</div></div>' +
-        '</div>' +
-        '<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:8px;">' +
-          '<div class="stat-card warn"><div class="stat-value">' + t.open + '</div><div class="stat-label">Open</div></div>' +
-          '<div class="stat-card"><div class="stat-value">' + t.closed + '</div><div class="stat-label">Closed</div></div>' +
-          '<div class="stat-card ' + ((t.canceled || 0) > 0 ? 'warn' : '') + '">' +
-            '<div class="stat-value" style="' + ((t.canceled || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.canceled || 0) + '</div>' +
-            '<div class="stat-label" style="display:inline-flex;align-items:center;justify-content:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Canceled</div>' +
-          '</div>' +
-          '<div class="stat-card ' + ((t.other || 0) > 0 ? 'warn' : '') + '">' +
-            '<div class="stat-value" style="' + ((t.other || 0) > 0 ? '' : 'color:var(--ink-faint);') + '">' + (t.other || 0) + '</div>' +
-            '<div class="stat-label">Status Lain</div>' +
-          '</div>' +
-          '<div class="stat-card"><div class="stat-value">' + progress + '%</div><div class="stat-label">Progress</div></div>' +
-        '</div>' +
-        '<div style="margin-top:12px;padding:12px 16px;background:var(--surface-subtle);border:1px solid var(--border);border-radius:10px;font-size:12.5px;color:var(--ink-muted);line-height:1.8;">' +
-          '<div style="font-weight:700;color:var(--ink);margin-bottom:6px;display:flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Rincian Rekapitulasi</span></div>' +
-          '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
-            (checkSum === t.total 
-              ? '<span style="color:#16a34a;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="#16a34a" fill-opacity="0.15"/><path d="m9 12 2 2 4-4"/></svg></span>' 
-              : '<span style="color:#d97706;display:inline-flex;align-items:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>') +
-            '<span><b style="color:var(--ink);">' + t.total + '</b> records = ' +
-            '<b style="color:var(--ink);">' + t.open + '</b> Open + ' +
-            '<b style="color:var(--ink);">' + t.closed + '</b> Closed + ' +
-            '<b style="color:var(--ink);">' + (t.canceled || 0) + '</b> Canceled' +
-            ((t.other || 0) > 0 ? ' + <b style="color:var(--ink);">' + t.other + '</b> Lain' : '') +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg><span><b style="color:var(--ink);">' + t.totalNFI + '</b> NFI unik</span></div>' +
-          '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span><b style="color:var(--ink);">' + t.totalITR + '</b> ITR unik' +
-            (t.itrEmpty > 0 ? ' · <b style="color:var(--rejected-text);">' + t.itrEmpty + '</b> baris tanpa ITR' : '') +
-          '</div>' +
-          (t.projectsInactive > 0 ? '<div style="display:flex;align-items:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg><span>' + t.projectsInactive + ' proyek nonaktif tidak dihitung</span></div>' : '') +
-        '</div>';
-    }
-
-    function renderCCProjects_(projects) {
-      var wrap = document.getElementById('ccProjectsWrap');
-      if (!wrap) return;
-      if (!projects || !projects.length) {
-        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada proyek.</div></div>';
-        return;
+      // Cari aging terlama global
+      var maxAging = 0;
+      var maxAgingProj = '';
+      if (typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.projects) {
+        ccCache_.projects.forEach(function (p) {
+          if (p.oldestOpenDays > maxAging && p.open > 0) {
+            maxAging = p.oldestOpenDays;
+            maxAgingProj = p.code;
+          }
+        });
       }
 
-      var filter = ccDisciplineFilter_ || '';
-      var filtered = [];
-
-      projects.forEach(function (p) {
-        if (!filter) {
-          filtered.push(p);
-          return;
-        }
-        var count = p.byDiscipline && p.byDiscipline[filter] ? p.byDiscipline[filter] : 0;
-        if (count > 0) {
-          var clone = JSON.parse(JSON.stringify(p));
-          clone.filteredDiscipline = filter;
-          clone.filteredCount = count;
-          filtered.push(clone);
-        }
+      // Grid Disiplin ITR (2 Kolom)
+      var discHtml = '';
+      var itrDiscKeys = Object.keys(t.itrByDiscipline || {}).sort(function (a, b) {
+        return (t.itrByDiscipline[b] || 0) - (t.itrByDiscipline[a] || 0);
       });
-
-      var html = '';
-      if (filter) {
-        html += '<div class="hint" style="margin-bottom:12px;">Filter aktif: <b>' + esc(filter) + '</b> · ' + filtered.length + ' proyek terkait</div>';
-      }
-
-      if (!filtered.length) {
-        html += '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="msg">Tidak ada proyek dengan disiplin "' + esc(filter) + '".</div></div>';
-        wrap.innerHTML = html;
-        return;
-      }
-
-      html += '<div class="section-heading" style="margin-top:24px;display:flex;align-items:center;gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><rect x="3" y="3" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.2"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5" fill="currentColor" fill-opacity="0.2"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Status per Proyek</span></div>';
-      html += '<div class="project-grid" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;">';
-
-      filtered.forEach(function (p, idx) {
-        var closedPct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
-        var healthCls = p.health === 'red' ? 'kritis' : (p.health === 'yellow' ? 'warning' : 'ok');
-        var healthIcon = p.health === 'red' 
-          ? '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,0.6);margin-right:4px;"></span>'
-          : (p.health === 'yellow'
-              ? '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,0.6);margin-right:4px;"></span>'
-              : '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#10b981;box-shadow:0 0 8px rgba(16,185,129,0.6);margin-right:4px;"></span>');
-        var healthText = p.health === 'red' ? 'Kritis' : (p.health === 'yellow' ? 'Perlu Perhatian' : 'On-track');
-
-        var discChips = '';
-        var discs = Object.keys(p.byDiscipline || {}).sort(function (a, b) {
-          return (p.byDiscipline[b] || 0) - (p.byDiscipline[a] || 0);
-        });
-        discs.slice(0, 8).forEach(function (d) {
-          var isActive = (filter === d);
-          discChips += '<span class="cc-chip' + (isActive ? ' active' : '') + '">' + esc(d) + ' <span class="cc-chip-count">' + p.byDiscipline[d] + '</span></span>';
-        });
-
-        var typeChips = '';
-        var types = Object.keys(p.byType || {}).sort(function (a, b) {
-          return (p.byType[b] || 0) - (p.byType[a] || 0);
-        });
-        types.slice(0, 8).forEach(function (t) {
-          typeChips += '<span class="cc-chip">' + esc(t) + ' <span class="cc-chip-count">' + p.byType[t] + '</span></span>';
-        });
-
-        var detailId = 'ccDetail_' + idx;
-
-        html +=
-          '<div class="cc-project-card health-' + p.health + '" onclick="openProjectDetailCC_(\'' + escapeJs_(p.code) + '\')">' +
-            '<div class="cc-card-head">' +
-              '<span style="font-size:14px;">' + healthIcon + '</span>' +
-              '<span class="cc-card-code">' + esc(p.code) + '</span>' +
-            '</div>' +
-            '<div class="cc-card-name">' + esc(p.name) + '</div>' +
-            '<div class="cc-mini-stats">' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalNFI || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/></svg>NFI</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val">' + (p.totalITR || 0) + '</span><span class="cc-mini-stat-lbl"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-right:3px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>ITR</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val open">' + p.open + '</span><span class="cc-mini-stat-lbl">Open</span></div>' +
-              '<div class="cc-mini-stat"><span class="cc-mini-stat-val closed">' + p.closed + '</span><span class="cc-mini-stat-lbl">Closed</span></div>' +
-            '</div>' +
-            '<div class="cc-progress"><div class="cc-progress-fill" style="width:' + closedPct + '%;"></div></div>' +
-            '<div class="cc-progress-text">' + closedPct + '% closed</div>' +
-            '<div class="cc-status-badge ' + healthCls + '">' + healthIcon + ' ' + healthText + (p.pic ? ' · ' + esc(p.pic) : '') + '</div>' +
-            (p.oldestOpenDays > 30 && p.open > 0 ? '<div style="font-size:11px;color:var(--rejected-text);font-weight:600;margin-bottom:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg>Open terlama: ' + p.oldestOpenDays + ' hari</div>' : '') +
-            '<button class="cc-expand-btn" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)">▼ Lihat Detail Disiplin & Tipe</button>' +
-            '<div class="cc-detail-section" id="' + detailId + '">' +
-              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin (' + discs.length + ')</div>' +
-              '<div class="cc-chip-row">' + (discChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
-              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Tipe (' + types.length + ')</div>' +
-              '<div class="cc-chip-row">' + (typeChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
-            '</div>' +
+      itrDiscKeys.forEach(function (k) {
+        var isActive = (ccDisciplineFilter_ === k);
+        discHtml += '<div class="disc-cell' + (isActive ? ' active-disc' : '') + '" onclick="setCCDisciplineFilter_(\'' + esc(k) + '\')" title="Klik untuk filter proyek disiplin ' + esc(k) + '">' +
+          '<strong>' + esc(k) + '</strong>' +
+          '<span>' + Number(t.itrByDiscipline[k]).toLocaleString('id-ID') + '</span>' +
           '</div>';
       });
 
-      html += '</div>';
-      wrap.innerHTML = html;
+      // Baris MRIR di dalam grid disiplin (span 2 kolom)
+      var isMrirActive = (ccDisciplineFilter_ === 'MRIR');
+      discHtml += '<div class="disc-cell' + (isMrirActive ? ' active-disc' : '') + '" onclick="setCCDisciplineFilter_(\'MRIR\')" title="Klik untuk filter proyek dengan dokumen MRIR" style="grid-column:span 2; background:rgba(217,119,6,0.06); border-color:rgba(217,119,6,0.25);">' +
+        '<strong style="color:#b45309; display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>MRIR (Material Receiving)</strong>' +
+        '<span style="color:#d97706;">' + Number(totalMRIR).toLocaleString('id-ID') + '</span>' +
+        '</div>';
+
+      wrap.innerHTML =
+        '<div class="cc-deck">' +
+          '<!-- KOLOM 1: VOLUME DOKUMEN MUTU -->' +
+          '<div class="deck-card">' +
+            '<div>' +
+              '<div class="card-title">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.12"/><polyline points="14 2 14 8 20 8"/></svg>' +
+                '<span>Volume Dokumen Mutu</span>' +
+              '</div>' +
+              '<div class="doc-metric-row" style="border-left:3px solid #2563eb;">' +
+                '<span class="doc-metric-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>NFI Unik</span>' +
+                '<span class="doc-metric-val">' + Number(t.totalNFI || 0).toLocaleString('id-ID') + '</span>' +
+              '</div>' +
+              '<div class="doc-metric-row" style="border-left:3px solid #7c3aed;">' +
+                '<span class="doc-metric-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>ITR Terverifikasi</span>' +
+                '<span class="doc-metric-val">' + Number(t.totalITR || 0).toLocaleString('id-ID') + '</span>' +
+              '</div>' +
+              '<div class="doc-metric-row" style="border-left:3px solid #d97706; background:rgba(217,119,6,0.05);">' +
+                '<span class="doc-metric-lbl" style="color:#b45309;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>MRIR Material</span>' +
+                '<span class="doc-metric-val" style="color:#d97706;">' + Number(totalMRIR).toLocaleString('id-ID') + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div style="font-size:11.5px; color:var(--ink-muted); font-weight:600; padding-top:10px; border-top:1px dashed var(--border); display:flex; justify-content:space-between;">' +
+              '<span>Total: <strong style="color:var(--ink);">' + Number(t.total).toLocaleString('id-ID') + '</strong> records</span>' +
+              '<span><strong>' + (t.projectCount || 0) + '</strong> Proyek Aktif</span>' +
+            '</div>' +
+          '</div>' +
+
+          '<!-- KOLOM 2: KLASIFIKASI DISIPLIN (ITR & MRIR) -->' +
+          '<div class="deck-card">' +
+            '<div>' +
+              '<div class="card-title">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+                '<span>Klasifikasi Disiplin (ITR &amp; MRIR)</span>' +
+              '</div>' +
+              '<div class="grid-disciplines">' +
+                discHtml +
+              '</div>' +
+            '</div>' +
+            '<div style="font-size:11px; color:var(--ink-muted); margin-top:8px;">' +
+              (t.itrEmpty > 0 ? '<span style="color:var(--rejected-text); font-weight:600;">' + t.itrEmpty + ' baris terdeteksi tanpa penomoran ITR</span>' : 'Seluruh data ITR terklasifikasi rapi — klik badge untuk filter.') +
+            '</div>' +
+          '</div>' +
+
+          '<!-- KOLOM 3: STATUS PELAKSANAAN GLOBAL -->' +
+          '<div class="deck-card">' +
+            '<div>' +
+              '<div class="card-title">' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>' +
+                '<span>Status Pelaksanaan Global</span>' +
+              '</div>' +
+              '<div style="display:flex; align-items:center; gap:16px; margin:10px 0 14px 0;">' +
+                '<div style="width:72px; height:72px; min-width:72px; border-radius:50%; background:conic-gradient(#16a34a 0% ' + progress + '%, var(--surface-subtle) ' + progress + '% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.06);">' +
+                  '<div style="width:54px; height:54px; border-radius:50%; background:var(--surface-card); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:#16a34a;">' +
+                    progress + '%' +
+                  '</div>' +
+                '</div>' +
+                '<div>' +
+                  '<div style="font-size:17px; font-weight:800; color:#16a34a; font-family:var(--font-mono); line-height:1.2;">' + Number(t.closed || 0).toLocaleString('id-ID') + ' Closed</div>' +
+                  '<div style="font-size:13px; font-weight:700; color:#dc2626; font-family:var(--font-mono); margin-top:2px;">' + Number(t.open || 0).toLocaleString('id-ID') + ' Open Aktif</div>' +
+                  '<div style="font-size:11px; color:var(--ink-muted); margin-top:2px;">' + Number(otherCount).toLocaleString('id-ID') + ' Canceled / Lain</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+            (maxAging > 30 
+              ? '<div style="padding:8px 12px; background:rgba(239,68,68,0.06); border-radius:8px; border:1px solid rgba(239,68,68,0.15); font-size:11px; font-weight:700; color:#dc2626; display:flex; align-items:center; gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Aging Terlama: ' + maxAging + ' hari (Proyek ' + esc(maxAgingProj) + ')</span></div>'
+              : '<div style="padding:8px 12px; background:rgba(22,163,74,0.06); border-radius:8px; border:1px solid rgba(22,163,74,0.15); font-size:11px; font-weight:700; color:#16a34a; display:flex; align-items:center; gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg><span>Seluruh Proyek Berjalan Sesuai Jadwal</span></div>') +
+          '</div>' +
+        '</div>';
     }
 
-    function toggleCCDetail_(id, btn) {
-      var el = document.getElementById(id);
-      if (!el) return;
-      var shown = el.classList.toggle('show');
-      btn.innerHTML = (shown ? '▲ Sembunyikan Detail' : '▼ Lihat Detail Disiplin & Tipe');
-    }
+    /* ═══ COMMAND CENTER — EXECUTIVE PRESENTATION CHARTS ═══ */
+    function renderCCPresentationCharts_(res) {
+      var wrap = document.getElementById('ccPresentationChartsWrap');
+      if (!wrap || wrap.style.display === 'none') return;
+      if (!res || !res.projects || !res.projects.length) return;
 
-var _ccProjDetailState_ = null;
-
-function openProjectDetailCC_(code) {
-  if (!ccCache_) return;
-  var p = ccCache_.projects.filter(function (x) { return x.code === code; })[0];
-  if (!p) return;
-
-  // ✨ Panggil analitik (Aging, Trend, Breakdown)
-  loadAnalytics(code);
-
-  // Perlebar modal-box agar nyaman melihat tabel 7 kolom
-  var modalEl = document.getElementById('docDetailModal');
-  if (modalEl) {
-    var box = modalEl.querySelector('.modal-box');
-    if (box) { box.style.maxWidth = '1040px'; box.style.width = '95vw'; }
-    modalEl.classList.add('show');
-  }
-  document.getElementById('docDetailTitle').textContent = p.code + ' — ' + p.name;
-  document.getElementById('docDetailContent').innerHTML =
-    '<div class="loading-row"><span class="spinner dark"></span>Memuat detail proyek...</div>';
-
-  // ✅ Panggil fungsi server SEKALI SAJA
-  google.script.run
-    .withSuccessHandler(function (res) {
-      if (!res || !res.success) {
-        document.getElementById('docDetailContent').innerHTML = 
-          '<div class="empty-state"><div class="msg">' + esc((res && res.message) || 'Gagal memuat data') + '</div></div>';
-        return;
-      }
-      var items = res.items || [];
-      if (!items.length) {
-        document.getElementById('docDetailContent').innerHTML = 
-          '<div class="empty-state"><div class="msg">Tidak ada dokumen untuk proyek ini.</div></div>';
+      var canvasP = document.getElementById('ccProjectsChart');
+      var canvasD = document.getElementById('ccDisciplineChart');
+      if (!canvasP || !canvasD) return;
+      if (typeof Chart === 'undefined') {
+        console.warn('[CC Charts] Chart.js belum selesai dimuat.');
         return;
       }
 
-      // Pisahkan list Open dan Closed
-      var openItems = [];
-      var closedItems = [];
-      var otherItems = [];
+      // 1. Chart Komparasi Status per Proyek (Grouped Bar Chart)
+      if (window.ccProjectsChartInstance) {
+        try { window.ccProjectsChartInstance.destroy(); } catch (e) {}
+        window.ccProjectsChartInstance = null;
+      }
 
-      items.forEach(function (it) {
-        var sc = String(it.status || '').trim().toLowerCase();
-        if (sc === 'closed' || sc === 'close') {
-          closedItems.push(it);
-        } else if (sc === 'open') {
-          openItems.push(it);
-        } else if (sc === 'canceled' || sc === 'cancelled' || sc === 'cancel') {
-          otherItems.push(it);
-        } else {
-          openItems.push(it);
+      var discFilter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
+      var query = (typeof ccProjectSearch_ !== 'undefined' ? ccProjectSearch_ : '') || '';
+
+      var filtered = res.projects.filter(function (p) {
+        if (query) {
+          var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
+          var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = ((p.pic || p.lead) || '').toLowerCase().indexOf(query) !== -1;
+          if (!codeMatch && !nameMatch && !picMatch) return false;
+        }
+        if (discFilter) {
+          if (discFilter === 'MRIR') {
+            var hasMrir = (p.mrirCount && p.mrirCount > 0) || (p.types && p.types.indexOf('MRIR') !== -1);
+            if (!hasMrir) return false;
+          } else {
+            var inDisc = (p.disciplines && p.disciplines.indexOf(discFilter) !== -1);
+            var inItrDisc = (p.itrByDiscipline && p.itrByDiscipline[discFilter] > 0);
+            if (!inDisc && !inItrDisc) return false;
+          }
+        }
+        return true;
+      });
+
+      var displayProjects = filtered.slice(0, 14);
+      var pLabels = displayProjects.map(function (p) { return p.code || 'PRJ'; });
+      var pClosed = displayProjects.map(function (p) { return p.closed || 0; });
+      var pOpen = displayProjects.map(function (p) { return p.open || 0; });
+      var pMrir = displayProjects.map(function (p) { return (typeof p.totalMRIR === 'number') ? p.totalMRIR : (p.mrirCount || 0); });
+
+      var subP = document.getElementById('ccProjectsChartSubtitle');
+      if (subP) {
+        subP.textContent = displayProjects.length + ' dari ' + res.projects.length + ' Proyek Aktif';
+      }
+
+      var ctxP = canvasP.getContext('2d');
+      window.ccProjectsChartInstance = new Chart(ctxP, {
+        type: 'bar',
+        data: {
+          labels: pLabels,
+          datasets: [
+            {
+              label: 'Closed',
+              data: pClosed,
+              backgroundColor: '#16a34a',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            },
+            {
+              label: 'Open',
+              data: pOpen,
+              backgroundColor: '#dc2626',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            },
+            {
+              label: 'MRIR',
+              data: pMrir,
+              backgroundColor: '#d97706',
+              borderRadius: 3,
+              barPercentage: 0.75,
+              categoryPercentage: 0.8
+            }
+          ]
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 10,
+                font: { family: 'Plus Jakarta Sans, sans-serif', size: 11, weight: 600 }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 8,
+              cornerRadius: 4,
+              titleFont: { family: 'monospace', size: 12, weight: 700 },
+              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'monospace', size: 11, weight: 600 } }
+            },
+            y: {
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: { font: { size: 10 } }
+            }
+          }
         }
       });
 
-      // Default tab: prioritas ke Open jika ada dokumen open, jika tidak ada baru Closed / Semua
-      var defaultTab = openItems.length > 0 ? 'open' : (closedItems.length > 0 ? 'closed' : 'all');
+      // 2. Chart Distribusi Disiplin Mutu (Doughnut Chart)
+      if (window.ccDisciplineChartInstance) {
+        try { window.ccDisciplineChartInstance.destroy(); } catch (e) {}
+        window.ccDisciplineChartInstance = null;
+      }
 
-      var projectObj = Object.assign({}, p, res.project || {});
+      var discMap = (res.totals && res.totals.itrByDiscipline) ? Object.assign({}, res.totals.itrByDiscipline) : {};
+      var totalMrir = (res.totals && res.totals.totalMRIR) ? res.totals.totalMRIR : 0;
+      if (totalMrir > 0) {
+        discMap['MRIR'] = totalMrir;
+      }
 
-      _ccProjDetailState_ = {
-        code: code,
-        project: projectObj,
-        allItems: items,
-        openItems: openItems,
-        closedItems: closedItems,
-        otherItems: otherItems,
-        activeTab: defaultTab,
-        searchQuery: ''
-      };
+      var discLabels = Object.keys(discMap).sort(function (a, b) {
+        return (discMap[b] || 0) - (discMap[a] || 0);
+      });
+      var discValues = discLabels.map(function (k) { return discMap[k]; });
+      var totalAllDocs = discValues.reduce(function (a, b) { return a + b; }, 0);
 
-      renderCCDetailUI_();
-    })
-    .withFailureHandler(function (err) {
-      document.getElementById('docDetailContent').innerHTML = 
-        '<div class="empty-state"><div class="msg">Gagal: ' + esc(err.message) + '</div></div>';
-    })
-    .getProjectDetailFromMaster(code);
-}
+      var subD = document.getElementById('ccDisciplineChartSubtitle');
+      if (subD) {
+        subD.textContent = Number(totalAllDocs).toLocaleString('id-ID') + ' Total Dokumen';
+      }
 
-function renderCCDetailUI_() {
-  if (!_ccProjDetailState_) return;
-  var st = _ccProjDetailState_;
+      // Palet Warna Industri Presisi (Standar Anti-AI Asuka Engineering)
+      var distinctEngineeringColors = [
+        '#1d4ed8', '#4338ca', '#0d9488', '#0284c7', '#d97706',
+        '#ea580c', '#475569', '#dc2626', '#16a34a', '#b45309',
+        '#65a30d', '#7e22ce', '#0891b2', '#be123c', '#854d0e', '#334155'
+      ];
 
-  var openCount = st.openItems.length;
-  var closedCount = st.closedItems.length;
-  var totalCount = st.allItems.length;
+      function getDisciplineColor_(key, index) {
+        var k = String(key || '').toLowerCase().trim();
+        k = k.replace(/^itr\s+/i, '').replace(/[\s\-_]+/g, ' ').trim();
+        if (k.indexOf('civil') !== -1) return '#1d4ed8'; // Asuka Steel Blue
+        if (k.indexOf('mech') !== -1) return '#4338ca'; // Deep Indigo
+        if (k.indexOf('elect') !== -1) return '#0d9488'; // Industrial Teal
+        if (k.indexOf('fabri') !== -1) return '#0284c7'; // Marine Cyan
+        if (k === 'mrir' || k.indexOf('material receiv') !== -1) {
+          if (k === 'mrir') return '#d97706'; // Safety Amber for MRIR
+          return '#b45309'; // Warm Bronze for ITR Material receiving
+        }
+        if (k.indexOf('e&i') !== -1 || k.indexOf('e & i') !== -1) return '#ea580c'; // Rust Orange
+        if (k.indexOf('struct') !== -1) return '#475569'; // Charcoal Slate
+        if (k.indexOf('piping') !== -1 || k.indexOf('pipe') !== -1) return '#dc2626'; // Industrial Red
+        if (k.indexOf('arch') !== -1) return '#16a34a'; // Forest Green
+        if (k.indexOf('paint') !== -1) return '#65a30d'; // Olive Moss
+        if (k.indexOf('inst') !== -1) return '#7e22ce'; // Slate Purple
+        if (k.indexOf('insul') !== -1) return '#854d0e'; // Warm Ochre
+        if (k.indexOf('hvac') !== -1) return '#0891b2'; // Cyan Steel
+        if (k.indexOf('ndt') !== -1) return '#be123c'; // Rose Dark
+        return distinctEngineeringColors[index % distinctEngineeringColors.length];
+      }
 
-  var html = '' +
-    '<div class="cc-detail-container" style="display:flex; flex-direction:column; gap:12px;">' +
-      '<!-- BARIS FILTER: TAB STATUS + PENCARIAN + UNDUH -->' +
-      '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:12px;">' +
-        '<!-- TAB BUTTONS: PISAHKAN OPEN DAN CLOSED -->' +
-        '<div style="display:flex; gap:8px; flex-wrap:wrap;" role="tablist">' +
-          '<button type="button" id="ccTabOpen" class="cc-detail-tab' + (st.activeTab === 'open' ? ' active-open' : '') + '" onclick="switchCCDetailTab_(\'open\')" title="Tampilkan hanya dokumen Open">' +
-            '<span class="cc-tab-dot dot-open"></span>' +
-            '<span>Open</span>' +
-            '<span class="cc-tab-count badge-open">' + openCount + '</span>' +
-          '</button>' +
-          '<button type="button" id="ccTabClosed" class="cc-detail-tab' + (st.activeTab === 'closed' ? ' active-closed' : '') + '" onclick="switchCCDetailTab_(\'closed\')" title="Tampilkan hanya dokumen Closed">' +
-            '<span class="cc-tab-dot dot-closed"></span>' +
-            '<span>Closed</span>' +
-            '<span class="cc-tab-count badge-closed">' + closedCount + '</span>' +
-          '</button>' +
-          '<button type="button" id="ccTabAll" class="cc-detail-tab' + (st.activeTab === 'all' ? ' active-all' : '') + '" onclick="switchCCDetailTab_(\'all\')" title="Tampilkan semua dokumen">' +
-            '<span>Semua</span>' +
-            '<span class="cc-tab-count badge-all">' + totalCount + '</span>' +
-          '</button>' +
-        '</div>' +
+      var backgroundColors = discLabels.map(function (k, idx) {
+        return getDisciplineColor_(k, idx);
+      });
 
-        '<!-- SEARCH & EXPORT ACTION -->' +
-        '<div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; min-width:240px; flex-wrap:wrap;">' +
-          '<div style="position:relative; width:100%; max-width:260px;">' +
-            '<input type="text" id="ccDetailSearchInput" value="' + esc(st.searchQuery) + '" placeholder="Cari No. NFI, Subject, Disiplin..." oninput="filterCCDetailList_()" style="width:100%; padding:7px 10px 7px 30px; border-radius:8px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-size:12.5px; outline:none;">' +
-            '<span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); display:flex; align-items:center; opacity:0.6; pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>' +
-          '</div>' +
-          '<button type="button" class="btn-small" onclick="previewProjectSpreadsheet_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Buka pratinjau spreadsheet master proyek">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#16a34a;"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fill-opacity="0.16"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Pratinjau Sheet' +
-          '</button>' +
-          '<button type="button" class="btn-small" onclick="exportCCDetailCSV_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Unduh daftar yang sedang tampil ke file CSV">' +
-            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Unduh CSV' +
-          '</button>' +
-        '</div>' +
-      '</div>' +
-
-      '<!-- INFO BARIS HASIL -->' +
-      '<div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--ink-muted); padding:0 2px;">' +
-        '<div id="ccDetailInfoText"></div>' +
-      '</div>' +
-
-      '<!-- TABEL DAFTAR DOKUMEN -->' +
-      '<div class="table-scroll" style="max-height:60vh; overflow-y:auto; border-radius:10px; border:1px solid var(--border);">' +
-        '<table style="min-width:100%; width:100%; border-collapse:collapse;">' +
-          '<thead style="position:sticky; top:0; z-index:2; background:var(--surface-subtle);">' +
-            '<tr>' +
-              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">No. NFI</th>' +
-              '<th style="padding:10px 12px; font-size:12px;">Subject</th>' +
-              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Disiplin</th>' +
-              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Type</th>' +
-              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Location</th>' +
-              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Status</th>' +
-              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Dokumen / Aksi</th>' +
-            '</tr>' +
-          '</thead>' +
-          '<tbody id="ccDetailTableBody">' +
-          '</tbody>' +
-        '</table>' +
-      '</div>' +
-    '</div>';
-
-  document.getElementById('docDetailContent').innerHTML = html;
-  renderCCDetailRows_();
-}
-
-function switchCCDetailTab_(tab) {
-  if (!_ccProjDetailState_) return;
-  _ccProjDetailState_.activeTab = tab;
-
-  // Update class tombol tab
-  var btnOpen = document.getElementById('ccTabOpen');
-  var btnClosed = document.getElementById('ccTabClosed');
-  var btnAll = document.getElementById('ccTabAll');
-
-  if (btnOpen) {
-    btnOpen.className = 'cc-detail-tab' + (tab === 'open' ? ' active-open' : '');
-  }
-  if (btnClosed) {
-    btnClosed.className = 'cc-detail-tab' + (tab === 'closed' ? ' active-closed' : '');
-  }
-  if (btnAll) {
-    btnAll.className = 'cc-detail-tab' + (tab === 'all' ? ' active-all' : '');
-  }
-
-  renderCCDetailRows_();
-}
-
-function filterCCDetailList_() {
-  if (!_ccProjDetailState_) return;
-  var input = document.getElementById('ccDetailSearchInput');
-  _ccProjDetailState_.searchQuery = input ? input.value.trim() : '';
-  renderCCDetailRows_();
-}
-
-function renderCCDetailRows_() {
-  if (!_ccProjDetailState_) return;
-  var st = _ccProjDetailState_;
-  var sourceList = [];
-
-  if (st.activeTab === 'open') {
-    sourceList = st.openItems;
-  } else if (st.activeTab === 'closed') {
-    sourceList = st.closedItems;
-  } else {
-    // Tab "Semua": tampilkan Open di atas agar yang masih pending terlihat jelas lebih dulu
-    sourceList = st.openItems.concat(st.closedItems, st.otherItems || []);
-  }
-
-  // Filter pencarian
-  var q = (st.searchQuery || '').toLowerCase();
-  var filtered = sourceList;
-  if (q) {
-    filtered = sourceList.filter(function (it) {
-      return (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.status || '').toLowerCase().indexOf(q) !== -1);
-    });
-  }
-
-  // Update info text
-  var infoEl = document.getElementById('ccDetailInfoText');
-  if (infoEl) {
-    var tabLabel = st.activeTab === 'open' ? 'Open' : (st.activeTab === 'closed' ? 'Closed' : 'Semua');
-    if (q) {
-      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dari ' + sourceList.length + ' dokumen ' + tabLabel + ' (filter: "<em>' + esc(q) + '</em>")';
-    } else {
-      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dokumen ' + tabLabel;
-    }
-  }
-
-  var tbody = document.getElementById('ccDetailTableBody');
-  if (!tbody) return;
-
-  if (!filtered.length) {
-    var emptyMsg = '';
-    if (q) {
-      emptyMsg = 'Tidak ada dokumen yang cocok dengan pencarian "<b>' + esc(q) + '</b>".';
-    } else if (st.activeTab === 'open') {
-      emptyMsg = '<b>Luar biasa!</b> Semua pekerjaan telah Closed.';
-    } else if (st.activeTab === 'closed') {
-      emptyMsg = 'Belum ada dokumen yang berstatus Closed.';
-    } else {
-      emptyMsg = 'Tidak ada dokumen yang tersedia.';
-    }
-
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
-      '<div style="margin-bottom:8px;">' + (st.activeTab === 'open' && !q ? '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#16a34a;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="16 10 11 15 8 12"/></svg>' : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>') + '</div>' +
-      '<div>' + emptyMsg + '</div>' +
-      '</td></tr>';
-    return;
-  }
-
-  var rowsHtml = filtered.map(function (it) {
-    var sc = String(it.status || '').trim().toLowerCase();
-    var badge = sc === 'closed' || sc === 'close'
-      ? '<span class="badge badge-approved">Closed</span>'
-      : (sc === 'open' 
-          ? (function() {
-              var sHtml = '<span class="badge badge-pending">Open</span>';
-              var dStr = it.inspDate || it.issuedDate || it.reportSub;
-              if (dStr) {
-                var d = new Date(dStr);
-                if (!isNaN(d.getTime())) {
-                  var days = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)));
-                  if (days >= 14) sHtml += ' <span class="sla-badge sla-overdue" title="Tertunda ' + days + ' hari">🚨 Overdue ' + days + 'h</span>';
-                  else if (days >= 7) sHtml += ' <span class="sla-badge sla-warning" title="Tertunda ' + days + ' hari">⚠️ ' + days + 'h</span>';
+      var ctxD = canvasD.getContext('2d');
+      window.ccDisciplineChartInstance = new Chart(ctxD, {
+        type: 'doughnut',
+        data: {
+          labels: discLabels,
+          datasets: [{
+            data: discValues,
+            backgroundColor: backgroundColors,
+            borderWidth: 2,
+            borderColor: '#ffffff',
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          animation: false,
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                boxWidth: 10,
+                boxHeight: 10,
+                padding: 5,
+                font: { family: 'Plus Jakarta Sans, sans-serif', size: 10, weight: 600 },
+                color: '#334155'
+              }
+            },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              padding: 10,
+              cornerRadius: 4,
+              titleFont: { family: 'Plus Jakarta Sans, sans-serif', size: 12, weight: 700 },
+              bodyFont: { family: 'Plus Jakarta Sans, sans-serif', size: 11 },
+              callbacks: {
+                label: function (context) {
+                  var val = context.raw || 0;
+                  var pct = totalAllDocs > 0 ? ((val / totalAllDocs) * 100).toFixed(1) : 0;
+                  return ' ' + context.label + ': ' + Number(val).toLocaleString('id-ID') + ' dok (' + pct + '%)';
                 }
               }
-              return sHtml;
-            })() 
-          : '<span class="badge">' + esc(it.status || '-') + '</span>');
+            }
+          },
+          cutout: '62%'
+        }
+      });
+    }
 
-    // Evaluasi & Normalisasi Link Dokumen
-    var rawLink = String(it.link || '').trim();
-    var cleanLink = '';
-    if (rawLink) {
-      if (/^https?:\/\//i.test(rawLink)) {
-        cleanLink = rawLink;
-      } else if (/^(?:drive|docs)\.google\.com\//i.test(rawLink)) {
-        cleanLink = 'https://' + rawLink;
+    function toggleCCPresentationCharts_() {
+      var wrap = document.getElementById('ccPresentationChartsWrap');
+      var btn = document.getElementById('btnToggleCCCharts');
+      if (!wrap) return;
+      if (wrap.style.display === 'none') {
+        wrap.style.display = 'grid';
+        if (btn) btn.classList.add('btn-chart-active');
+        if (typeof ccCache_ !== 'undefined' && ccCache_) {
+          renderCCPresentationCharts_(ccCache_);
+        }
       } else {
-        var matchUrl = rawLink.match(/https?:\/\/[^\s"'<>\)]+/i);
-        if (matchUrl) cleanLink = matchUrl[0];
+        wrap.style.display = 'none';
+        if (btn) btn.classList.remove('btn-chart-active');
       }
     }
 
-    var nfiHtml = '';
-    var docActionHtml = '';
-    var docLabel = esc(it.noNFI || it.subject || 'Dokumen');
-
-    var isClosed = sc === 'closed' || sc === 'close';
-    var hasValidDoc = cleanLink && isClosed;
-
-    if (hasValidDoc) {
-      // Dokumen CLOSED dengan Link Valid: Tampilkan tombol Preview aktif
-      nfiHtml = '<a href="javascript:void(0)" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="color:var(--link, #2563eb); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Klik untuk pratinjau dokumen di modal">' +
-        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>' + esc(it.noNFI || 'Buka') + '</span></a>';
-
-      docActionHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
-        '<button type="button" class="btn-preview-action" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Buka pratinjau dokumen langsung di modal">' +
-          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="3"/></svg><span>Preview</span>' +
-        '</button>' +
-        '<button type="button" class="btn-action-icon" onclick="copyDocLink_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Salin tautan dokumen ke clipboard">' +
-          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-        '</button>' +
-        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Buka berkas di tab baru Google Drive">↗</a>' +
-      '</div>';
-    } else if (isClosed) {
-      // Dokumen CLOSED tapi link belum diinput di sheet
-      nfiHtml = esc(it.noNFI || '-');
-      docActionHtml = '<span style="font-size:11px; color:var(--ink-muted); opacity:0.65; font-style:italic;">Belum ada link</span>';
-    } else {
-      // Dokumen OPEN / In Progress: belum ada berkas closed, cegah link salah pasang
-      nfiHtml = '<span style="font-weight:600; color:var(--ink);">' + esc(it.noNFI || '-') + '</span>';
-      docActionHtml = '<span style="font-size:10.5px; font-weight:600; color:var(--pending-text); background:var(--pending-bg); padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;" title="Inspeksi masih berlangsung (berkas PDF baru tersedia setelah Closed)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Menunggu Closed</span>';
+    function scrollToAnalyticsFromModal_() {
+      closeDocDetail();
+      var banner = document.getElementById('analyticsProjectBanner');
+      var chartsWrap = document.getElementById('analyticsChartsWrapper');
+      if (banner) banner.style.display = 'block';
+      if (chartsWrap) chartsWrap.style.display = 'block';
+      setTimeout(function() {
+        if (banner) {
+          banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
 
-    return '<tr>' +
-      '<td class="doc-code" style="font-size:11.5px; font-weight:600; white-space:nowrap;">' + nfiHtml + '</td>' +
-      '<td style="font-size:12px; max-width:260px; line-height:1.4;">' + esc(it.subject || '-') + '</td>' +
-      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.discipline || '-') + '</td>' +
-      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.typeInsp || '-') + '</td>' +
-      '<td style="font-size:11.5px; white-space:nowrap;">' + esc(it.location || '-') + '</td>' +
-      '<td style="text-align:center; white-space:nowrap;">' + badge + '</td>' +
-      '<td style="text-align:center; white-space:nowrap;">' + docActionHtml + '</td>' +
-      '</tr>';
-  }).join('');
-
-  tbody.innerHTML = rowsHtml;
-
-  // Panggil autoLabelTables_ agar card view di mobile bekerja
-  if (typeof autoLabelTables_ === 'function') {
-    autoLabelTables_();
-  }
-}
-
-function escAttr_(s) {
-  if (!s) return '';
-  return String(s)
-    .replace(/\\/g, '\\\\')
-    .replace(/'/g, "\\'")
-    .replace(/"/g, '&quot;');
-}
-
-window.previewDocFromCC_ = function (fileUrl, title) {
-  if (!fileUrl) {
-    if (typeof showToast === 'function') showToast('Link dokumen tidak tersedia', 'warning');
-    return;
-  }
-  if (typeof window.previewFile_ === 'function') {
-    window.previewFile_(fileUrl, title || 'Preview Dokumen');
-  } else {
-    window.open(fileUrl, '_blank', 'noopener,noreferrer');
-  }
-};
-
-window.previewProjectSpreadsheet_ = function () {
-  if (!_ccProjDetailState_ || !_ccProjDetailState_.project) {
-    if (typeof showToast === 'function') showToast('Data proyek belum dimuat', 'warning');
-    return;
-  }
-  var p = _ccProjDetailState_.project;
-  var ssId = p.id || '';
-  if (!ssId && typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.projects) {
-    var cp = ccCache_.projects.filter(function (x) { return x.code === p.code; })[0];
-    if (cp && cp.id) ssId = cp.id;
-  }
-
-  if (!ssId) {
-    if (typeof showToast === 'function') showToast('ID spreadsheet untuk proyek ini tidak ditemukan di master.', 'warning');
-    return;
-  }
-
-  var fullUrl = 'https://docs.google.com/spreadsheets/d/' + ssId + '/edit';
-  var title = 'Spreadsheet — ' + (p.code ? p.code + ' ' : '') + (p.name || 'Proyek');
-
-  if (typeof window.previewFile_ === 'function') {
-    window.previewFile_(fullUrl, title);
-  } else {
-    window.open(fullUrl, '_blank', 'noopener,noreferrer');
-  }
-};
-
-function exportCCDetailCSV_() {
-  if (!_ccProjDetailState_) return;
-  var st = _ccProjDetailState_;
-  var sourceList = st.activeTab === 'open' ? st.openItems : (st.activeTab === 'closed' ? st.closedItems : st.allItems);
-  
-  var q = (st.searchQuery || '').toLowerCase();
-  if (q) {
-    sourceList = sourceList.filter(function (it) {
-      return (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
-             (String(it.status || '').toLowerCase().indexOf(q) !== -1);
-    });
-  }
-
-  if (!sourceList.length) {
-    showToast('Tidak ada data untuk diekspor.', 'error');
-    return;
-  }
-
-  var csv = ['"No. NFI","Subject","Disiplin","Type","Location","Status","Link"'];
-  sourceList.forEach(function (it) {
-    csv.push([
-      '"' + (it.noNFI || '').replace(/"/g, '""') + '"',
-      '"' + (it.subject || '').replace(/"/g, '""') + '"',
-      '"' + (it.discipline || '').replace(/"/g, '""') + '"',
-      '"' + (it.typeInsp || '').replace(/"/g, '""') + '"',
-      '"' + (it.location || '').replace(/"/g, '""') + '"',
-      '"' + (it.status || '').replace(/"/g, '""') + '"',
-      '"' + (it.link || '').replace(/"/g, '""') + '"'
-    ].join(','));
-  });
-
-  var blob = new Blob([csv.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url;
-  var safeCode = (st.code || 'PROYEK').replace(/[^a-zA-Z0-9_-]/g, '_');
-  a.download = 'Detail-' + safeCode + '-' + st.activeTab + '-' + new Date().toISOString().slice(0, 10) + '.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('CSV berhasil diunduh (' + sourceList.length + ' dokumen)', 'success');
-}
-    function runSyncFromUI_() {
-      if (!confirm('Sync semua proyek dari spreadsheet? Proses 30-60 detik.')) return;
-      showToast('Sync sedang berjalan...', 'success');
-      google.script.run
-        .withSuccessHandler(function (res) {
-          showToast('Sync selesai. Refresh dashboard...', 'success');
-          loadCommandCenter();
-        })
-        .withFailureHandler(function (err) {
-          showToast('Gagal: ' + err.message, 'error');
-        })
-        .runSyncAll();
-    }
-
-    function cleanDuplicatesFromUI_() {
-      if (!confirm('Peringatan: Fungsi ini akan memeriksa seluruh baris di Master Hub (ALL_DOCUMENTS), menghapus data duplikat dokumen Open/Closed yang menumpuk, dan menyisakan data dokumen unik terakurat.\\n\\nLanjutkan pembersihan duplikat?')) return;
-      showToast('Sedang membersihkan duplikat di Master Hub...', 'success');
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (res && res.success) {
-            showToast(res.message || 'Pembersihan duplikat berhasil!', 'success');
-            loadCommandCenter();
-          } else {
-            showToast('Gagal: ' + ((res && res.message) || 'Error'), 'error');
-          }
-        })
-        .withFailureHandler(function (err) {
-          showToast('Gagal: ' + err.message, 'error');
-        })
-        .cleanupDuplicateDocumentsInMaster();
-    }
-
-    function checkAutoSyncTriggerStatus_() {
-      var btn = document.getElementById('btnToggleAutoSync');
-      if (!btn) return;
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (!btn) return;
-          if (res && res.active) {
-            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Auto-Sync: <b style="color:#10b981;">Aktif (1 Jam)</b>';
-            btn.title = 'Trigger aktif! Data dari semua spreadsheet proyek otomatis di-sync setiap 1 jam.';
-          } else {
-            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.16"/><polyline points="12 6 12 12 16 14"/></svg>Aktifkan Auto-Sync 1 Jam';
-            btn.title = 'Klik untuk mengaktifkan trigger sinkronisasi otomatis tiap 1 jam di background.';
-          }
-        })
-        .withFailureHandler(function () {})
-        .getSyncTriggerStatus();
-    }
-
-    function toggleAutoSyncTrigger_() {
-      var btn = document.getElementById('btnToggleAutoSync');
-      if (!confirm('Aktifkan trigger Auto-Sync tiap 1 jam di background Google Apps Script?\n\n(Data dari seluruh spreadsheet proyek akan otomatis ditarik dan diperbarui ke Master Hub secara periodik)')) return;
-      if (btn) btn.innerHTML = '⏳ Menyiapkan trigger...';
-      google.script.run
-        .withSuccessHandler(function (res) {
-          if (res && res.success) {
-            showToast(res.message || 'Trigger auto-sync berhasil diaktifkan!', 'success');
-            checkAutoSyncTriggerStatus_();
-          } else {
-            showToast('Gagal: ' + ((res && res.message) || 'Error'), 'error');
-            checkAutoSyncTriggerStatus_();
-          }
-        })
-        .withFailureHandler(function (err) {
-          showToast('Gagal: ' + err.message, 'error');
-          checkAutoSyncTriggerStatus_();
-        })
-        .setupHourlyTrigger();
-    }
-
-        // ============================================================================
+    // ============================================================================
     // KELOLA PROYEK — UI
     // ============================================================================
     var projectsCache_ = {};
