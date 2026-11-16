@@ -7694,7 +7694,7 @@ function enterApp(isFreshLogin) {
     window.__currentUser = currentUser;
     document.getElementById('uploaderNameDisplay').value = currentUser.fullName;
     const fn = (currentUser.fullName || '').split(' ')[0];
-    document.getElementById('headerGreeting').textContent = greetingWord_() + ', ' + fn + ' \u{1F44B}';
+    document.getElementById('headerGreeting').textContent = greetingWord_() + ', ' + fn;
     try { localStorage.setItem('qccms_user_name', currentUser.fullName); } catch (e) {}
     try { localStorage.setItem('qccms_user_role', currentUser.role); } catch (e) {}
   }
@@ -10975,7 +10975,7 @@ function fileLinksHtml(d) {
     }
 
     function loadCommandCenter() {
-      checkAutoSyncTriggerStatus_();
+      try { checkAutoSyncTriggerStatus_(); } catch (e) { console.warn('Trigger check status notice:', e); }
       var statsWrap = document.getElementById('ccStatsWrap');
       var prjWrap = document.getElementById('ccProjectsWrap');
       if (!statsWrap) return;
@@ -11004,6 +11004,107 @@ function fileLinksHtml(d) {
           prjWrap.innerHTML = '';
         })
         .getExecutiveDashboard();
+    }
+
+    
+    // ════════════════════════════════════════════════════════════════════════
+    // COMMAND CENTER & MASTER HUB SYNC HELPERS (ANTI-AI ROBUST RUNTIME)
+    // ════════════════════════════════════════════════════════════════════════
+    function closeDrillDown() {
+      var wrap = document.getElementById('drillDownTableWrapper');
+      if (wrap) wrap.style.display = 'none';
+      var m = document.getElementById('drillModal');
+      if (m) m.style.display = 'none';
+    }
+
+    function closeDrillModal() {
+      var m = document.getElementById('drillModal');
+      if (m) m.style.display = 'none';
+      closeDrillDown();
+    }
+
+    function checkAutoSyncTriggerStatus_() {
+      var btn = document.getElementById('btnToggleAutoSync');
+      if (!btn) return;
+      if (!window.google || !google.script || !google.script.run) return;
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (!btn) return;
+          if (res && res.active) {
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Auto-Sync: <b style="color:#10b981;">Aktif (1 Jam)</b>';
+            btn.title = 'Trigger aktif! Data dari semua spreadsheet proyek otomatis di-sync setiap 1 jam.';
+          } else {
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;vertical-align:-2px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Aktifkan Auto-Sync 1 Jam';
+            btn.title = 'Klik untuk mengaktifkan trigger sinkronisasi otomatis tiap 1 jam di background.';
+          }
+        })
+        .withFailureHandler(function () {})
+        .getSyncTriggerStatus(window.sessionToken || '');
+    }
+
+    function toggleAutoSyncTrigger_() {
+      var btn = document.getElementById('btnToggleAutoSync');
+      if (!confirm('Aktifkan trigger Auto-Sync tiap 1 jam di background Google Apps Script?\n\n(Data dari seluruh spreadsheet proyek akan otomatis ditarik dan diperbarui ke Master Hub secara periodik)')) return;
+      if (btn) btn.innerHTML = '<span class="spinner dark" style="width:12px;height:12px;display:inline-block;vertical-align:-2px;margin-right:5px;"></span> Menyiapkan trigger...';
+      if (!window.google || !google.script || !google.script.run) {
+        showToast('Runtime Google Apps Script tidak terdeteksi', 'error');
+        return;
+      }
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || 'Trigger auto-sync berhasil diaktifkan!', 'success');
+            checkAutoSyncTriggerStatus_();
+          } else {
+            showToast('Gagal: ' + ((res && res.message) || 'Error'), 'error');
+            checkAutoSyncTriggerStatus_();
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal: ' + err.message, 'error');
+          checkAutoSyncTriggerStatus_();
+        })
+        .setupHourlyTrigger(window.sessionToken || '');
+    }
+
+    function runSyncFromUI_() {
+      if (!confirm('Sync semua proyek dari spreadsheet? Proses membutuhkan waktu 30-60 detik.')) return;
+      showToast('Sinkronisasi data sedang berjalan di background...', 'success');
+      if (!window.google || !google.script || !google.script.run) {
+        showToast('Runtime Google Apps Script tidak terdeteksi', 'error');
+        return;
+      }
+      google.script.run
+        .withSuccessHandler(function (res) {
+          showToast('Sinkronisasi selesai. Memuat ulang data...', 'success');
+          loadCommandCenter();
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal sinkron: ' + err.message, 'error');
+        })
+        .runSyncAll(window.sessionToken || '');
+    }
+
+    function cleanDuplicatesFromUI_() {
+      if (!confirm('Peringatan: Fungsi ini akan memeriksa seluruh baris di Master Hub (ALL_DOCUMENTS), menghapus data duplikat dokumen Open/Closed yang menumpuk, dan menyisakan data dokumen unik terakurat.\n\nLanjutkan pembersihan duplikat?')) return;
+      showToast('Sedang membersihkan duplikat di Master Hub...', 'success');
+      if (!window.google || !google.script || !google.script.run) {
+        showToast('Runtime Google Apps Script tidak terdeteksi', 'error');
+        return;
+      }
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || 'Pembersihan duplikat berhasil!', 'success');
+            loadCommandCenter();
+          } else {
+            showToast('Gagal: ' + ((res && res.message) || 'Error'), 'error');
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal: ' + err.message, 'error');
+        })
+        .cleanupDuplicateDocumentsInMaster(window.sessionToken || '');
     }
 
     function populateCCDisciplineDropdown_(list) {
@@ -13623,7 +13724,38 @@ window.addEventListener('offline', updateFooterStatus);
   </button>
 
   <!-- Security & OfflineQueue loaded in head -->
-  <script>
+  
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- MODAL: Drill-down Detail & Export CSV (Anti-AI Standard) -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="drillModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter:blur(2px); z-index:100000 !important; overflow:auto; padding:16px;" onclick="if(event.target===this) closeDrillModal()">
+    <div style="background:var(--surface-card,#fff); max-width:1100px; margin:24px auto; border-radius:10px; border:1px solid var(--border); padding:24px; position:relative; box-shadow:0 12px 40px rgba(0,0,0,0.25);">
+      <button type="button" onclick="closeDrillModal()" style="position:absolute; right:16px; top:16px; background:rgba(237,46,53,0.1); color:#ed2e35; border:1px solid rgba(237,46,53,0.25); border-radius:6px; width:34px; height:34px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;" title="Tutup">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <h3 id="drillTitle" style="margin-top:0;font-size:16px;font-weight:700;color:var(--ink);">Detail Dokumen</h3>
+      <div style="margin-bottom:12px; font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums;" id="drillInfo"></div>
+      <div style="overflow-x:auto; max-height:60vh; border:1px solid var(--border); border-radius:6px;">
+        <table id="drillTable" style="width:100%; border-collapse:collapse; font-size:12.5px;">
+          <thead>
+            <tr style="background:#163d78; color:#fff; position:sticky; top:0;">
+              <th style="padding:8px; text-align:left;">No. NFI</th>
+              <th style="padding:8px; text-align:left;">ITR No.</th>
+              <th style="padding:8px; text-align:left;">Subject</th>
+              <th style="padding:8px; text-align:left;">Disiplin</th>
+              <th style="padding:8px; text-align:left;">Tipe</th>
+              <th style="padding:8px; text-align:left;">PIC</th>
+              <th style="padding:8px; text-align:left;">Issued</th>
+              <th style="padding:8px; text-align:right;">Umur</th>
+            </tr>
+          </thead>
+          <tbody id="drillBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
     // 🎨 KONTROLER KUSTOMISASI WARNA HEADER & TAMPILAN
     window.openHeaderColorModal = function() {
       var modal = document.getElementById('headerColorModal');
