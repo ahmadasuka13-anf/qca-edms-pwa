@@ -11413,12 +11413,70 @@ function renderCCDetailUI_() {
           '<button type="button" class="btn-small" onclick="previewProjectSpreadsheet_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Buka pratinjau spreadsheet master proyek">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#16a34a;"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fill-opacity="0.16"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Pratinjau Sheet' +
           '</button>' +
+          '<button type="button" class="btn-small" id="btnToggleProjectChart" onclick="toggleProjectDetailCharts_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-subtle); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Tampilkan / sembunyikan analisa grafik proyek">' +
+            '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;color:var(--primary, #163d78);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Grafik Analisis</span>' +
+          '</button>' +
           '<button type="button" class="btn-small" onclick="exportCCDetailCSV_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Unduh daftar yang sedang tampil ke file CSV">' +
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Unduh CSV' +
           '</button>' +
         '</div>' +
       '</div>' +
 
+      '<!-- ANALISIS GRAFIK PER PROYEK (ANTI-AI INDUSTRIAL DECK) -->' +
+      '<div id="projectDetailChartsDeck" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; background:var(--surface-subtle); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:12px;">' +
+        '<!-- KARTU 1: STATUS DOKUMEN PROYEK (DONUT) -->' +
+        '<div style="background:var(--surface-card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; box-shadow:0 1px 2px rgba(0,0,0,0.03);">' +
+          '<div style="width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">' +
+            '<span style="font-size:12px; font-weight:700; color:var(--ink); display:inline-flex; align-items:center; gap:5px;">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>' +
+              'Status Dokumen Proyek' +
+            '</span>' +
+            '<span style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:#16a34a;">' + Math.round((closedCount / Math.max(1, totalCount)) * 100) + '% Closed</span>' +
+          '</div>' +
+          '<div style="position:relative; width:135px; height:135px; margin:4px 0;">' +
+            '<canvas id="projStatusDonutChart"></canvas>' +
+            '<div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">' +
+              '<span id="projDonutPct" style="font-size:18px; font-weight:800; color:var(--ink); font-family:var(--font-mono); font-variant-numeric:tabular-nums;">' + Math.round((closedCount / Math.max(1, totalCount)) * 100) + '%</span>' +
+              '<span style="font-size:9.5px; font-weight:600; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Selesai</span>' +
+            '</div>' +
+          '</div>' +
+          '<div style="width:100%; display:flex; justify-content:space-around; font-size:11px; font-variant-numeric:tabular-nums; border-top:1px solid var(--border); padding-top:6px; margin-top:4px;">' +
+            '<span style="color:#16a34a; font-weight:700;">' + closedCount + ' Closed</span>' +
+            '<span style="color:var(--border);">|</span>' +
+            '<span style="color:#dc2626; font-weight:700;">' + openCount + ' Open</span>' +
+            '<span style="color:var(--border);">|</span>' +
+            '<span style="color:var(--ink-muted); font-weight:600;">' + totalCount + ' Total</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- KARTU 2: SEBARAN DISIPLIN (GROUPED BAR) -->' +
+        '<div style="background:var(--surface-card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; box-shadow:0 1px 2px rgba(0,0,0,0.03);">' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">' +
+            '<span style="font-size:12px; font-weight:700; color:var(--ink); display:inline-flex; align-items:center; gap:5px;">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>' +
+              'Progres per Disiplin' +
+            '</span>' +
+            '<span id="projDiscChartSubtitle" style="font-size:10.5px; font-weight:600; color:var(--ink-muted); font-variant-numeric:tabular-nums;"></span>' +
+          '</div>' +
+          '<div style="position:relative; width:100%; height:150px;">' +
+            '<canvas id="projDisciplineBarChart"></canvas>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- KARTU 3: AGING DOKUMEN OPEN (TECHNICAL GAUGE) -->' +
+        '<div style="background:var(--surface-card); border:1px solid var(--border); border-radius:6px; padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 1px 2px rgba(0,0,0,0.03);">' +
+          '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">' +
+            '<span style="font-size:12px; font-weight:700; color:var(--ink); display:inline-flex; align-items:center; gap:5px;">' +
+              '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' +
+              'Aging Dokumen Open' +
+            '</span>' +
+            '<span style="font-size:11px; font-weight:700; font-family:var(--font-mono); color:' + (openCount > 0 ? '#dc2626' : '#16a34a') + ';">' + openCount + ' Pending</span>' +
+          '</div>' +
+          '<div id="projectAgingBarsWrap" style="display:flex; flex-direction:column; gap:6px; font-size:11px; font-variant-numeric:tabular-nums; flex:1; justify-content:center;">' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      
       '<!-- INFO BARIS HASIL -->' +
       '<div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--ink-muted); padding:0 2px;">' +
         '<div id="ccDetailInfoText"></div>' +
@@ -11450,6 +11508,11 @@ function renderCCDetailUI_() {
     if (tfSel) tfSel.value = st.typeFilter;
   }
   renderCCDetailRows_();
+  setTimeout(function() {
+    if (typeof renderProjectDetailCharts_ === 'function') {
+      renderProjectDetailCharts_();
+    }
+  }, 60);
 }
 
 function switchCCDetailTab_(tab) {
@@ -11757,6 +11820,249 @@ function exportCCDetailCSV_() {
   showToast('CSV berhasil diunduh (' + sourceList.length + ' dokumen)', 'success');
 }
     
+
+    
+    // ════════════════════════════════════════════════════════════════════════
+    // ANALISIS GRAFIK PER PROYEK (COMMAND CENTER PROJECT DETAIL CHARTS)
+    // ════════════════════════════════════════════════════════════════════════
+    window.projStatusDonutInstance = null;
+    window.projDisciplineBarInstance = null;
+
+    function toggleProjectDetailCharts_() {
+      var deck = document.getElementById('projectDetailChartsDeck');
+      var btn = document.getElementById('btnToggleProjectChart');
+      if (!deck) return;
+      if (deck.style.display === 'none') {
+        deck.style.display = 'grid';
+        if (btn) {
+          btn.style.background = 'var(--surface-subtle)';
+          btn.style.borderColor = 'var(--primary, #163d78)';
+        }
+        renderProjectDetailCharts_();
+      } else {
+        deck.style.display = 'none';
+        if (btn) {
+          btn.style.background = 'var(--surface-card)';
+          btn.style.borderColor = 'var(--border)';
+        }
+      }
+    }
+    window.toggleProjectDetailCharts_ = toggleProjectDetailCharts_;
+
+    function renderProjectDetailCharts_() {
+      if (typeof _ccProjDetailState_ === 'undefined' || !_ccProjDetailState_) return;
+      var st = _ccProjDetailState_;
+      var all = st.allItems || [];
+      if (!all.length) return;
+
+      var canvasDonut = document.getElementById('projStatusDonutChart');
+      var canvasBar = document.getElementById('projDisciplineBarChart');
+      if (!canvasDonut || !canvasBar) return;
+      if (typeof Chart === 'undefined') {
+        console.warn('[Project Charts] Chart.js belum tersedia.');
+        return;
+      }
+
+      // 1. Destroy instance lama
+      if (window.projStatusDonutInstance) {
+        try { window.projStatusDonutInstance.destroy(); } catch (e) {}
+        window.projStatusDonutInstance = null;
+      }
+      if (window.projDisciplineBarInstance) {
+        try { window.projDisciplineBarInstance.destroy(); } catch (e) {}
+        window.projDisciplineBarInstance = null;
+      }
+
+      var closedCount = st.closedItems ? st.closedItems.length : 0;
+      var openCount = st.openItems ? st.openItems.length : 0;
+      var total = all.length;
+      var otherCount = Math.max(0, total - closedCount - openCount);
+      var pct = total > 0 ? Math.round((closedCount / total) * 100) : 0;
+
+      // 2. Render Donut Chart
+      try {
+        var ctxDonut = canvasDonut.getContext('2d');
+        window.projStatusDonutInstance = new Chart(ctxDonut, {
+          type: 'doughnut',
+          data: {
+            labels: ['Closed', 'Open', 'Lain / Canceled'],
+            datasets: [{
+              data: [closedCount, openCount, otherCount],
+              backgroundColor: ['#16a34a', '#dc2626', '#94a3b8'],
+              borderWidth: 2,
+              borderColor: '#ffffff',
+              hoverOffset: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    var val = ctx.raw || 0;
+                    var p = total > 0 ? Math.round((val / total) * 100) : 0;
+                    return ' ' + ctx.label + ': ' + Number(val).toLocaleString('id-ID') + ' dok (' + p + '%)';
+                  }
+                }
+              }
+            }
+          }
+        });
+        var centerPct = document.getElementById('projDonutPct');
+        if (centerPct) centerPct.textContent = pct + '%';
+      } catch (err) {
+        console.warn('[Project Charts] Error render donut chart:', err);
+      }
+
+      // 3. Render Grouped Bar Chart per Disiplin
+      try {
+        var discMap = {};
+        all.forEach(function (it) {
+          var disc = (it.discipline || 'Umum').trim() || 'Umum';
+          if (!discMap[disc]) discMap[disc] = { closed: 0, open: 0, total: 0 };
+          discMap[disc].total++;
+          var s = String(it.status || '').toLowerCase();
+          if (s.indexOf('closed') !== -1) {
+            discMap[disc].closed++;
+          } else {
+            discMap[disc].open++;
+          }
+        });
+
+        var discLabels = Object.keys(discMap).sort(function (a, b) {
+          return discMap[b].total - discMap[a].total;
+        }).slice(0, 8);
+
+        var discClosed = discLabels.map(function (d) { return discMap[d].closed; });
+        var discOpen = discLabels.map(function (d) { return discMap[d].open; });
+
+        var subD = document.getElementById('projDiscChartSubtitle');
+        if (subD) subD.textContent = discLabels.length + ' Disiplin Utama';
+
+        var ctxBar = canvasBar.getContext('2d');
+        window.projDisciplineBarInstance = new Chart(ctxBar, {
+          type: 'bar',
+          data: {
+            labels: discLabels,
+            datasets: [
+              {
+                label: 'Closed',
+                data: discClosed,
+                backgroundColor: '#16a34a',
+                borderRadius: 3,
+                barPercentage: 0.7,
+                categoryPercentage: 0.8
+              },
+              {
+                label: 'Open',
+                data: discOpen,
+                backgroundColor: '#dc2626',
+                borderRadius: 3,
+                barPercentage: 0.7,
+                categoryPercentage: 0.8
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'top',
+                align: 'end',
+                labels: {
+                  boxWidth: 8,
+                  boxHeight: 8,
+                  font: { size: 10, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
+                  color: '#0f172a'
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return ' ' + ctx.dataset.label + ': ' + Number(ctx.raw || 0).toLocaleString('id-ID') + ' dok';
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { size: 9.5, family: 'Plus Jakarta Sans, sans-serif', weight: '600' },
+                  color: '#64748b'
+                }
+              },
+              y: {
+                beginAtZero: true,
+                grid: { color: 'rgba(0,0,0,0.05)' },
+                ticks: {
+                  font: { size: 9.5, family: 'JetBrains Mono, monospace' },
+                  color: '#64748b',
+                  precision: 0
+                }
+              }
+            }
+          }
+        });
+      } catch (err) {
+        console.warn('[Project Charts] Error render discipline bar chart:', err);
+      }
+
+      // 4. Render Aging Distribution Bars
+      try {
+        var agingBuckets = { '0_30': 0, '31_60': 0, '61_90': 0, 'over90': 0 };
+        var now = new Date();
+        (st.openItems || []).forEach(function (it) {
+          var days = 0;
+          if (it.issuedDate) {
+            var d = new Date(it.issuedDate);
+            if (!isNaN(d.getTime())) {
+              days = Math.max(0, Math.floor((now - d) / 86400000));
+            }
+          }
+          if (days <= 30) agingBuckets['0_30']++;
+          else if (days <= 60) agingBuckets['31_60']++;
+          else if (days <= 90) agingBuckets['61_90']++;
+          else agingBuckets['over90']++;
+        });
+
+        var agingWrap = document.getElementById('projectAgingBarsWrap');
+        if (agingWrap) {
+          var maxAging = Math.max(1, openCount);
+          var renderAgeBar = function(label, count, color) {
+            var barPct = Math.min(100, Math.round((count / maxAging) * 100));
+            var itemPct = openCount > 0 ? Math.round((count / openCount) * 100) : 0;
+            return '<div style="display:flex; flex-direction:column; gap:2px;">' +
+              '<div style="display:flex; justify-content:space-between; font-size:10.5px;">' +
+                '<span style="color:var(--ink-muted);">' + label + '</span>' +
+                '<span style="font-weight:700; color:' + color + '; font-family:var(--font-mono);">' + Number(count).toLocaleString('id-ID') + ' dok (' + itemPct + '%)</span>' +
+              '</div>' +
+              '<div style="width:100%; height:5px; background:rgba(0,0,0,0.06); border-radius:2px; overflow:hidden;">' +
+                '<div style="width:' + barPct + '%; height:100%; background:' + color + '; border-radius:2px;"></div>' +
+              '</div>' +
+            '</div>';
+          };
+
+          agingWrap.innerHTML = '' +
+            renderAgeBar('0 – 30 Hari (Normal)', agingBuckets['0_30'], '#16a34a') +
+            renderAgeBar('31 – 60 Hari (Perhatian)', agingBuckets['31_60'], '#d97706') +
+            renderAgeBar('61 – 90 Hari (Kritis)', agingBuckets['61_90'], '#ea580c') +
+            renderAgeBar('> 90 Hari (Overdue Kronis)', agingBuckets['over90'], '#dc2626') +
+            '<button type="button" onclick="scrollToAnalyticsFromModal_()" style="margin-top:6px; padding:6px 10px; font-size:11px; font-weight:700; border-radius:6px; border:1px solid var(--border); background:var(--surface-card); color:var(--primary, #163d78); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:5px;" title="Buka modul Analisis Dokumen lengkap untuk proyek ini">' +
+              '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' +
+              '<span>Buka di Analisis Dokumen Lengkap</span>' +
+            '</button>';
+        }
+      } catch (err) {
+        console.warn('[Project Charts] Error render aging distribution:', err);
+      }
+    }
+    window.renderProjectDetailCharts_ = renderProjectDetailCharts_;
 
     function previewProjectSpreadsheet_() {
       if (typeof _ccProjDetailState_ === 'undefined' || !_ccProjDetailState_ || !_ccProjDetailState_.project) {
