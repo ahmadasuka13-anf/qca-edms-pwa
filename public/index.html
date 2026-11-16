@@ -5255,7 +5255,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <svg class="sag-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
           <div class="sidebar-accordion-content">
-            <button class="sidebar-item active" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor" fill-opacity="0.16"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Daftar Dokumen</span></button>
+            <button class="sidebar-item" id="tabBtnList" onclick="switchTab('list')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor" fill-opacity="0.16"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Daftar Dokumen</span></button>
             <button class="sidebar-item" id="tabBtnUpload" onclick="switchTab('upload')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v9m-3-6 3-3 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Unggah Dokumen</span></button>
             <button class="sidebar-item" id="tabBtnTransmittals" onclick="switchTab('transmittals')" style="display:none;"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 19 3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="si-label">Transmittal</span></button>
             <button class="sidebar-item" id="tabBtnArchive" onclick="switchTab('archive')"><span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="4" rx="1" fill="currentColor" fill-opacity="0.25" stroke="currentColor" stroke-width="1.8"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="1.8"/><line x1="10" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span class="si-label">Arsip &amp; Retensi</span></button>
@@ -14209,7 +14209,7 @@ window.addEventListener('offline', updateFooterStatus);
             name = clone.textContent.trim();
           }
         }
-        userGreet.textContent = (name && name !== '-') ? 'Halo, ' + name + ' 👋' : 'Halo, Rekan Tim QC 👋';
+        userGreet.textContent = (name && name !== '-') ? 'Halo, ' + name : 'Halo, Rekan Tim QC';
       }
       var projPill = document.getElementById('welcomeProjectPill');
       if (projPill) {
@@ -15612,8 +15612,8 @@ window.addEventListener('offline', updateFooterStatus);
       </div>
 
       <!-- Tombol Aksi Utama -->
-      <button type="button" class="welcome-main-btn" onclick="closeWelcomeScreen('list')">
-        <span>Mulai Bekerja (Buka Dokumen)</span>
+      <button type="button" class="welcome-main-btn" onclick="closeWelcomeScreen('command')">
+        <span>Mulai Bekerja (Command Center)</span>
       </button>
 
       <!-- Pintasan Aksi Cepat -->
