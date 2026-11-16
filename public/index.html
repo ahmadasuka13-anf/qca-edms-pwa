@@ -3480,8 +3480,7 @@ canvas#disciplineChart {
 .mobile-main-fab {
   width: 54px;
   height: 54px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent, #ed2e35), #c81e24);
+  border-radius: 12px; background: #ed2e35;
   color: #fff;
   border: none;
   box-shadow: 0 6px 20px rgba(237, 46, 53, 0.45);
@@ -6561,17 +6560,11 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 <!-- Floating AI Copilot Launcher Button -->
 <button id="aiChatBtn" class="ai-launcher-btn" onclick="toggleAIChat()" aria-label="Buka Asisten AI QA/QC" title="Asisten AI QA/QC Copilot">
   <div class="ai-launcher-icon-wrap">
-    <svg class="ai-launcher-icon" width="26" height="26" viewBox="0 0 24 24" fill="none">
-      <path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="url(#aiSparkleGrad)" stroke="#ffffff" stroke-width="1.2" stroke-linejoin="round"/>
-      <circle cx="19" cy="5" r="2.2" fill="#60a5fa"/>
-      <circle cx="5" cy="19" r="1.8" fill="#34d399"/>
-      <defs>
-        <linearGradient id="aiSparkleGrad" x1="3" y1="2" x2="21" y2="20" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#ffffff"/>
-          <stop offset="0.5" stop-color="#93c5fd"/>
-          <stop offset="1" stop-color="#3b82f6"/>
-        </linearGradient>
-      </defs>
+    <svg class="ai-launcher-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <circle cx="11.5" cy="14.5" r="2.5"/>
+      <path d="m13.5 16.5 2 2"/>
     </svg>
   </div>
   <span id="aiChatNotifDot" class="ai-notif-beacon" style="display:none;"></span>
@@ -6733,16 +6726,16 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 58px;
-  height: 58px;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: #163d78;
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.3);
   cursor: pointer;
   z-index: 9998;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11066,6 +11059,724 @@ function fileLinksHtml(d) {
         })
         .setupHourlyTrigger(window.sessionToken || '');
     }
+
+    var _ccProjDetailState_ = null;
+
+function renderCCProjects_(projects) {
+      var wrap = document.getElementById('ccProjectsWrap');
+      if (!wrap) return;
+      if (!projects || !projects.length) {
+        wrap.innerHTML = '<div class="empty-state"><div class="icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><div class="msg">Belum ada portofolio proyek terdaftar.</div></div>';
+        return;
+      }
+
+      var discFilter = (typeof ccDisciplineFilter_ !== 'undefined' ? ccDisciplineFilter_ : '') || '';
+      var query = (typeof ccProjectSearch_ !== 'undefined' ? ccProjectSearch_ : '') || '';
+      var sortMode = (typeof ccProjectSort_ !== 'undefined' ? ccProjectSort_ : 'critical_first');
+
+      var filtered = [];
+
+      projects.forEach(function (p) {
+        // 1. Text Search Filter
+        if (query) {
+          var codeMatch = (p.code || '').toLowerCase().indexOf(query) !== -1;
+          var nameMatch = (p.name || '').toLowerCase().indexOf(query) !== -1;
+          var picMatch = ((p.pic || p.lead) || '').toLowerCase().indexOf(query) !== -1;
+          if (!codeMatch && !nameMatch && !picMatch) return;
+        }
+
+        // 2. Discipline Filter
+        if (discFilter) {
+          if (discFilter === 'MRIR') {
+            var hasMrir = (p.mrirCount && p.mrirCount > 0) || (p.types && p.types.indexOf('MRIR') !== -1);
+            if (!hasMrir) return;
+          } else {
+            var inDisc = (p.disciplines && p.disciplines.indexOf(discFilter) !== -1);
+            var inItrDisc = (p.itrByDiscipline && p.itrByDiscipline[discFilter] > 0);
+            if (!inDisc && !inItrDisc) return;
+          }
+        }
+
+        filtered.push(p);
+      });
+
+      // 3. Sorting Logic
+      filtered.sort(function (a, b) {
+        if (sortMode === 'critical_first') {
+          var healthOrder = { 'red': 0, 'yellow': 1, 'green': 2 };
+          var hA = healthOrder[a.health] !== undefined ? healthOrder[a.health] : 3;
+          var hB = healthOrder[b.health] !== undefined ? healthOrder[b.health] : 3;
+          if (hA !== hB) return hA - hB;
+          return (b.oldestOpenDays || 0) - (a.oldestOpenDays || 0);
+        } else if (sortMode === 'progress_asc') {
+          var pctA = a.total > 0 ? (a.closed / a.total) : 0;
+          var pctB = b.total > 0 ? (b.closed / b.total) : 0;
+          return pctA - pctB;
+        } else if (sortMode === 'total_desc') {
+          return (b.total || 0) - (a.total || 0);
+        } else if (sortMode === 'code_asc') {
+          return (a.code || '').localeCompare(b.code || '');
+        }
+        return 0;
+      });
+
+      if (!filtered.length) {
+        wrap.innerHTML = '<div class="empty-state" style="padding:32px 16px; background:var(--surface-card); border:1px solid var(--border); border-radius:14px; text-align:center;">' +
+          '<div style="display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:var(--surface-subtle); color:var(--ink-muted); margin-bottom:10px;">' +
+            '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
+          '</div>' +
+          '<div style="font-weight:700; color:var(--ink); font-size:14px;">Tidak ada proyek yang sesuai filter</div>' +
+          '<div style="font-size:12px; color:var(--ink-muted); margin-top:4px;">Coba ubah kata kunci pencarian atau reset filter disiplin.</div>' +
+          '<button class="btn btn-secondary" onclick="resetCCDisciplineFilter_()" style="margin-top:12px; font-size:12px; padding:6px 14px;">Reset Filter</button>' +
+          '</div>';
+        return;
+      }
+
+      var html = '<div class="cc-projects-grid">';
+
+      filtered.forEach(function (p) {
+        var pct = p.total > 0 ? Math.round((p.closed / p.total) * 100) : 0;
+        var nfiVal = (typeof p.totalNFI === 'number') ? p.totalNFI : (typeof p.nfiCount === 'number' ? p.nfiCount : (p.nfi || 0));
+        var itrVal = (typeof p.totalITR === 'number') ? p.totalITR : (typeof p.itrCount === 'number' ? p.itrCount : (p.itr || 0));
+        var mrirVal = (typeof p.totalMRIR === 'number') ? p.totalMRIR : (typeof p.mrirCount === 'number' ? p.mrirCount : (p.mrir || 0));
+        var picVal = p.pic || p.lead || 'PIC belum diatur';
+        var healthClass = 'health-' + (p.health || 'green');
+        var healthBadge = (p.health === 'red')
+          ? '<span class="cc-status-pill critical"><span style="width:6px;height:6px;border-radius:50%;background:#ef4444;"></span>Kritis</span>'
+          : (p.health === 'yellow')
+          ? '<span class="cc-status-pill warning"><span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;"></span>Waspada</span>'
+          : '<span class="cc-status-pill good"><span style="width:6px;height:6px;border-radius:50%;background:#22c55e;"></span>Lancar</span>';
+
+        var discs = p.disciplines || [];
+        var types = p.types || [];
+        var discChips = discs.map(function (d) {
+          return '<span class="chip chip-disc">' + esc(d) + '</span>';
+        }).join('');
+        var typeChips = types.map(function (t) {
+          return '<span class="chip chip-type">' + esc(t) + '</span>';
+        }).join('');
+
+        var itrChips = '';
+        if (p.itrByDiscipline && Object.keys(p.itrByDiscipline).length > 0) {
+          var itrKeys = Object.keys(p.itrByDiscipline).sort(function (a, b) {
+            return (p.itrByDiscipline[b] || 0) - (p.itrByDiscipline[a] || 0);
+          });
+          itrChips = itrKeys.map(function (k) {
+            var count = p.itrByDiscipline[k];
+            var kLow = k.toLowerCase();
+            var chipClass = 'cc-chip-disc';
+            if (kLow.indexOf('civil') !== -1) chipClass += ' civil';
+            else if (kLow.indexOf('mech') !== -1) chipClass += ' mech';
+            else if (kLow.indexOf('elec') !== -1) chipClass += ' elec';
+            return '<span class="' + chipClass + '">' + esc(k) + ' <strong>' + count + '</strong></span>';
+          }).join('');
+        }
+
+        var mrirCount = (typeof p.mrirCount === 'number') ? p.mrirCount : 0;
+        if (mrirCount > 0) {
+          itrChips += '<span class="cc-chip-disc mrir"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px;margin-right:2px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>MRIR <strong>' + mrirCount + '</strong></span>';
+        }
+
+        var detailId = 'ccDetail_' + esc(p.code).replace(/[^a-zA-Z0-9_-]/g, '_');
+
+        html +=
+          '<div class="cc-project-card ' + healthClass + '" onclick="openProjectDetailCC_(\'' + esc(p.code) + '\')">' +
+            '<div>' +
+              '<div class="cc-card-head">' +
+                '<span class="cc-card-code">' + esc(p.code) + '</span>' +
+                '<div style="margin-left:auto;">' + healthBadge + '</div>' +
+              '</div>' +
+              '<div class="cc-card-name" title="' + esc(p.name) + '">' + esc(p.name) + '</div>' +
+
+              '<!-- MINI METRIC ROW -->' +
+              '<div class="cc-mini-stats">' +
+                '<div class="cc-mini-stat">' +
+                  '<span class="cc-mini-val">' + Number(nfiVal).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl">NFI</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat">' +
+                  '<span class="cc-mini-val">' + Number(itrVal).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl">ITR</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="background:rgba(217,119,6,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#d97706;">' + Number(mrirVal).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#b45309;">MRIR</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="background:rgba(239,68,68,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#dc2626;">' + Number(p.open || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#dc2626;">Open</span>' +
+                '</div>' +
+                '<div class="cc-mini-stat" style="background:rgba(22,163,74,0.06); border-radius:6px;">' +
+                  '<span class="cc-mini-val" style="color:#16a34a;">' + Number(p.closed || 0).toLocaleString('id-ID') + '</span>' +
+                  '<span class="cc-mini-lbl" style="color:#16a34a;">Closed</span>' +
+                '</div>' +
+              '</div>' +
+
+              '<!-- PROGRESS BAR -->' +
+              '<div class="cc-progress-wrap">' +
+                '<div class="cc-progress-bar-bg">' +
+                  '<div class="cc-progress-bar-fill" style="width:' + pct + '%;"></div>' +
+                '</div>' +
+                '<span class="cc-progress-pct">' + pct + '%</span>' +
+              '</div>' +
+            '</div>' +
+
+            '<!-- FOOTER PIC & AGING -->' +
+            '<div class="cc-card-footer">' +
+              '<div class="cc-pic-badge" title="Project In-Charge (PIC)">' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+                '<span>' + esc(picVal) + '</span>' +
+              '</div>' +
+              (p.oldestOpenDays > 0 && p.open > 0
+                ? '<span style="font-size:10.5px; font-weight:700; color:' + (p.oldestOpenDays > 30 ? 'var(--rejected-text, #dc2626)' : 'var(--pending-text, #d97706)') + '; display:inline-flex; align-items:center; gap:3px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + p.oldestOpenDays + ' hari</span>'
+                : '<span style="font-size:10.5px; font-weight:600; color:var(--ink-faint); display:inline-flex; align-items:center; gap:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>On Schedule</span>') +
+              '<button type="button" onclick="event.stopPropagation();toggleCCDetail_(\'' + detailId + '\', this)" style="background:none; border:none; color:var(--accent-dark, #2563eb); font-size:11px; font-weight:700; cursor:pointer; padding:2px 4px; display:inline-flex; align-items:center; gap:3px;">' +
+                '<span>Rincian</span>' +
+                '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>' +
+              '</button>' +
+            '</div>' +
+            '<div class="cc-detail-section" id="' + detailId + '">' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>ITR per Disiplin & MRIR</div>' +
+              '<div class="cc-chip-row">' + (itrChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="currentColor" fill-opacity="0.16"/></svg>Disiplin (' + discs.length + ')</div>' +
+              '<div class="cc-chip-row">' + (discChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
+              '<div class="cc-section-label"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" fill="currentColor" fill-opacity="0.16"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>Tipe Inspeksi (' + types.length + ')</div>' +
+              '<div class="cc-chip-row">' + (typeChips || '<span class="hint" style="margin:0;">—</span>') + '</div>' +
+            '</div>' +
+          '</div>';
+      });
+
+      html += '</div>';
+      wrap.innerHTML = html;
+    }
+
+    function toggleCCDetail_(id, btn) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var shown = el.classList.toggle('show');
+      var span = btn.querySelector('span');
+      var svg = btn.querySelector('svg');
+      if (span) span.textContent = (shown ? 'Tutup' : 'Rincian');
+      if (svg) svg.innerHTML = (shown ? '<polyline points="18 15 12 9 6 15"/>' : '<polyline points="6 9 12 15 18 9"/>');
+    }
+
+    var _ccProjDetailState_ = null;
+
+function openProjectDetailCC_(code) {
+  if (!ccCache_) return;
+  var p = ccCache_.projects.filter(function (x) { return x.code === code; })[0];
+  if (!p) return;
+
+  // ✨ Panggil analitik (Aging, Trend, Breakdown)
+  loadAnalytics(code);
+
+  // Perlebar modal-box agar nyaman melihat tabel 7 kolom
+  var modalEl = document.getElementById('docDetailModal');
+  if (modalEl) {
+    var box = modalEl.querySelector('.modal-box');
+    if (box) { box.style.maxWidth = '1080px'; box.style.width = '95vw'; }
+    modalEl.classList.add('show');
+  }
+  document.getElementById('docDetailTitle').textContent = p.code + ' — ' + p.name;
+  document.getElementById('docDetailContent').innerHTML =
+    '<div class="loading-row"><span class="spinner dark"></span>Memuat detail proyek...</div>';
+
+  // ✅ Panggil fungsi server SEKALI SAJA
+  google.script.run
+    .withSuccessHandler(function (res) {
+      if (!res || !res.success) {
+        document.getElementById('docDetailContent').innerHTML = 
+          '<div class="empty-state"><div class="msg">' + esc((res && res.message) || 'Gagal memuat data') + '</div></div>';
+        return;
+      }
+      var items = res.items || [];
+      if (!items.length) {
+        document.getElementById('docDetailContent').innerHTML = 
+          '<div class="empty-state"><div class="msg">Tidak ada dokumen untuk proyek ini.</div></div>';
+        return;
+      }
+
+      // Klasifikasikan setiap dokumen & pisahkan list Open dan Closed
+      var openItems = [];
+      var closedItems = [];
+      var otherItems = [];
+
+      items.forEach(function (it) {
+        it._ccClass = classifyCCDoc_(it);
+        var sc = String(it.status || '').trim().toLowerCase();
+        if (sc === 'closed' || sc === 'close') {
+          closedItems.push(it);
+        } else if (sc === 'open') {
+          openItems.push(it);
+        } else if (sc === 'canceled' || sc === 'cancelled' || sc === 'cancel') {
+          otherItems.push(it);
+        } else {
+          openItems.push(it);
+        }
+      });
+
+      // Default tab: prioritas ke Open jika ada dokumen open, jika tidak ada baru Closed / Semua
+      var defaultTab = openItems.length > 0 ? 'open' : (closedItems.length > 0 ? 'closed' : 'all');
+
+      var projectObj = Object.assign({}, p, res.project || {});
+
+      _ccProjDetailState_ = {
+        code: code,
+        project: projectObj,
+        allItems: items,
+        openItems: openItems,
+        closedItems: closedItems,
+        otherItems: otherItems,
+        activeTab: defaultTab,
+        searchQuery: '',
+        typeFilter: ''
+      };
+
+      renderCCDetailUI_();
+    })
+    .withFailureHandler(function (err) {
+      document.getElementById('docDetailContent').innerHTML = 
+        '<div class="empty-state"><div class="msg">Gagal: ' + esc(err.message) + '</div></div>';
+    })
+    .getProjectDetailFromMaster(code);
+}
+
+function renderCCDetailUI_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+
+  var openCount = st.openItems.length;
+  var closedCount = st.closedItems.length;
+  var totalCount = st.allItems.length;
+
+  // Dapatkan opsi golongan yang ada di proyek ini untuk dropdown filter
+  var availableCats = {};
+  var hasMRIR = false;
+  var hasNfiOnly = false;
+  var hasAnyITR = false;
+
+  st.allItems.forEach(function (it) {
+    var c = it._ccClass || classifyCCDoc_(it);
+    if (c.isMRIR) {
+      hasMRIR = true;
+    } else if (c.isITR) {
+      hasAnyITR = true;
+      availableCats[c.categoryKey] = c.categoryLabel;
+    } else {
+      hasNfiOnly = true;
+    }
+  });
+
+  var catOptionsHtml = '<option value="">Semua Golongan Dokumen</option>';
+  if (hasAnyITR) catOptionsHtml += '<option value="ALL_ITR">Semua ITR</option>';
+  Object.keys(availableCats).sort().forEach(function (k) {
+    catOptionsHtml += '<option value="' + escAttr_(k) + '">' + esc(availableCats[k]) + '</option>';
+  });
+  if (hasMRIR) catOptionsHtml += '<option value="MRIR">MRIR (Material Receiving)</option>';
+  if (hasNfiOnly) catOptionsHtml += '<option value="NFI_ONLY">NFI Saja (Tanpa ITR)</option>';
+
+  var html = '' +
+    '<div class="cc-detail-container" style="display:flex; flex-direction:column; gap:12px;">' +
+      '<!-- BARIS FILTER: TAB STATUS + FILTER GOLONGAN + PENCARIAN + UNDUH -->' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; border-bottom:1px solid var(--border); padding-bottom:12px;">' +
+        '<!-- TAB BUTTONS: PISAHKAN OPEN DAN CLOSED -->' +
+        '<div style="display:flex; gap:8px; flex-wrap:wrap;" role="tablist">' +
+          '<button type="button" id="ccTabOpen" class="cc-detail-tab' + (st.activeTab === 'open' ? ' active-open' : '') + '" onclick="switchCCDetailTab_(\'open\')" title="Tampilkan hanya dokumen Open">' +
+            '<span class="cc-tab-dot dot-open"></span>' +
+            '<span>Open</span>' +
+            '<span class="cc-tab-count badge-open">' + openCount + '</span>' +
+          '</button>' +
+          '<button type="button" id="ccTabClosed" class="cc-detail-tab' + (st.activeTab === 'closed' ? ' active-closed' : '') + '" onclick="switchCCDetailTab_(\'closed\')" title="Tampilkan hanya dokumen Closed">' +
+            '<span class="cc-tab-dot dot-closed"></span>' +
+            '<span>Closed</span>' +
+            '<span class="cc-tab-count badge-closed">' + closedCount + '</span>' +
+          '</button>' +
+          '<button type="button" id="ccTabAll" class="cc-detail-tab' + (st.activeTab === 'all' ? ' active-all' : '') + '" onclick="switchCCDetailTab_(\'all\')" title="Tampilkan semua dokumen">' +
+            '<span>Semua</span>' +
+            '<span class="cc-tab-count badge-all">' + totalCount + '</span>' +
+          '</button>' +
+        '</div>' +
+
+        '<!-- FILTER GOLONGAN (ITR CIVIL DLL & MRIR) -->' +
+        '<div style="display:flex; align-items:center; gap:6px;">' +
+          '<select id="ccDetailTypeFilter" onchange="filterCCDetailList_()" style="padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-size:12px; font-weight:600; outline:none; max-width:220px;" title="Filter berdasarkan jenis ITR atau MRIR">' +
+            catOptionsHtml +
+          '</select>' +
+        '</div>' +
+
+        '<!-- SEARCH & EXPORT ACTION -->' +
+        '<div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; min-width:240px; flex-wrap:wrap;">' +
+          '<div style="position:relative; width:100%; max-width:240px;">' +
+            '<input type="text" id="ccDetailSearchInput" value="' + esc(st.searchQuery) + '" placeholder="Cari No. NFI, ITR, Subject..." oninput="filterCCDetailList_()" style="width:100%; padding:7px 10px 7px 30px; border-radius:8px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); font-size:12.5px; outline:none;">' +
+            '<span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); display:flex; align-items:center; opacity:0.6; pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>' +
+          '</div>' +
+          '<button type="button" class="btn-small" onclick="previewProjectSpreadsheet_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Buka pratinjau spreadsheet master proyek">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#16a34a;"><rect x="3" y="3" width="18" height="18" rx="2" fill="currentColor" fill-opacity="0.16"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>Pratinjau Sheet' +
+          '</button>' +
+          '<button type="button" class="btn-small" onclick="exportCCDetailCSV_()" style="padding:7px 12px; border-radius:8px; font-weight:600; font-size:12px; display:inline-flex; align-items:center; gap:5px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; touch-action:manipulation; flex-shrink:0;" title="Unduh daftar yang sedang tampil ke file CSV">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Unduh CSV' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<!-- INFO BARIS HASIL -->' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; font-size:12px; color:var(--ink-muted); padding:0 2px;">' +
+        '<div id="ccDetailInfoText"></div>' +
+      '</div>' +
+
+      '<!-- TABEL DAFTAR DOKUMEN -->' +
+      '<div class="table-scroll" style="max-height:60vh; overflow-y:auto; border-radius:10px; border:1px solid var(--border);">' +
+        '<table style="min-width:100%; width:100%; border-collapse:collapse;">' +
+          '<thead style="position:sticky; top:0; z-index:2; background:var(--surface-subtle);">' +
+            '<tr>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">No. NFI / ITR</th>' +
+              '<th style="padding:10px 12px; font-size:12px;">Subject</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Disiplin</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Golongan & Tipe</th>' +
+              '<th style="padding:10px 12px; font-size:12px; white-space:nowrap;">Location</th>' +
+              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Status</th>' +
+              '<th style="padding:10px 12px; font-size:12px; text-align:center; white-space:nowrap;">Dokumen / Aksi</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody id="ccDetailTableBody">' +
+          '</tbody>' +
+        '</table>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('docDetailContent').innerHTML = html;
+  if (st.typeFilter) {
+    var tfSel = document.getElementById('ccDetailTypeFilter');
+    if (tfSel) tfSel.value = st.typeFilter;
+  }
+  renderCCDetailRows_();
+}
+
+function switchCCDetailTab_(tab) {
+  if (!_ccProjDetailState_) return;
+  _ccProjDetailState_.activeTab = tab;
+
+  // Update class tombol tab
+  var btnOpen = document.getElementById('ccTabOpen');
+  var btnClosed = document.getElementById('ccTabClosed');
+  var btnAll = document.getElementById('ccTabAll');
+
+  if (btnOpen) {
+    btnOpen.className = 'cc-detail-tab' + (tab === 'open' ? ' active-open' : '');
+  }
+  if (btnClosed) {
+    btnClosed.className = 'cc-detail-tab' + (tab === 'closed' ? ' active-closed' : '');
+  }
+  if (btnAll) {
+    btnAll.className = 'cc-detail-tab' + (tab === 'all' ? ' active-all' : '');
+  }
+
+  renderCCDetailRows_();
+}
+
+function filterCCDetailList_() {
+  if (!_ccProjDetailState_) return;
+  var input = document.getElementById('ccDetailSearchInput');
+  var typeSel = document.getElementById('ccDetailTypeFilter');
+  _ccProjDetailState_.searchQuery = input ? input.value.trim() : '';
+  _ccProjDetailState_.typeFilter = typeSel ? typeSel.value : '';
+  renderCCDetailRows_();
+}
+
+function renderCCDetailRows_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+  var sourceList = [];
+
+  if (st.activeTab === 'open') {
+    sourceList = st.openItems;
+  } else if (st.activeTab === 'closed') {
+    sourceList = st.closedItems;
+  } else {
+    // Tab "Semua": tampilkan Open di atas agar yang masih pending terlihat jelas lebih dulu
+    sourceList = st.openItems.concat(st.closedItems, st.otherItems || []);
+  }
+
+  // Filter gabungan: Golongan Dokumen (ITR Civil dll / MRIR) + Pencarian teks
+  var q = (st.searchQuery || '').toLowerCase();
+  var tf = st.typeFilter || '';
+  var filtered = sourceList;
+
+  if (tf || q) {
+    filtered = sourceList.filter(function (it) {
+      var cls = it._ccClass || classifyCCDoc_(it);
+
+      // 1. Filter Golongan Dokumen
+      if (tf) {
+        if (tf === 'ALL_ITR' && !cls.isITR) return false;
+        if (tf === 'MRIR' && !cls.isMRIR) return false;
+        if (tf === 'NFI_ONLY' && (cls.isITR || cls.isMRIR)) return false;
+        if (tf.indexOf('ITR_') === 0 && cls.categoryKey !== tf) return false;
+      }
+
+      // 2. Filter Pencarian Teks
+      if (q) {
+        var match = (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.itrNo || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.status || '').toLowerCase().indexOf(q) !== -1) ||
+                    (cls.categoryLabel.toLowerCase().indexOf(q) !== -1);
+        if (!match) return false;
+      }
+
+      return true;
+    });
+  }
+
+  // Update info text
+  var infoEl = document.getElementById('ccDetailInfoText');
+  if (infoEl) {
+    var tabLabel = st.activeTab === 'open' ? 'Open' : (st.activeTab === 'closed' ? 'Closed' : 'Semua');
+    var filterDesc = [];
+    if (tf) {
+      var typeSel = document.getElementById('ccDetailTypeFilter');
+      var tfText = (typeSel && typeSel.options[typeSel.selectedIndex]) ? typeSel.options[typeSel.selectedIndex].text : tf;
+      filterDesc.push('golongan: "' + esc(tfText) + '"');
+    }
+    if (q) {
+      filterDesc.push('kata kunci: "<em>' + esc(q) + '</em>"');
+    }
+    if (filterDesc.length) {
+      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dari ' + sourceList.length + ' dokumen ' + tabLabel + ' (' + filterDesc.join(', ') + ')';
+    } else {
+      infoEl.innerHTML = 'Menampilkan <b>' + filtered.length + '</b> dokumen ' + tabLabel;
+    }
+  }
+
+  var tbody = document.getElementById('ccDetailTableBody');
+  if (!tbody) return;
+
+  if (!filtered.length) {
+    var emptyMsg = '';
+    if (q || tf) {
+      emptyMsg = 'Tidak ada dokumen yang cocok dengan filter yang dipilih.';
+    } else if (st.activeTab === 'open') {
+      emptyMsg = '<b>Luar biasa!</b> Semua pekerjaan telah Closed.';
+    } else if (st.activeTab === 'closed') {
+      emptyMsg = 'Belum ada dokumen yang berstatus Closed.';
+    } else {
+      emptyMsg = 'Tidak ada dokumen yang tersedia.';
+    }
+
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
+      '<div style="margin-bottom:8px;">' + (st.activeTab === 'open' && !q && !tf ? '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:#16a34a;"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="16 10 11 15 8 12"/></svg>' : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><circle cx="11" cy="11" r="8" fill="currentColor" fill-opacity="0.16"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>') + '</div>' +
+      '<div>' + emptyMsg + '</div>' +
+      '</td></tr>';
+    return;
+  }
+
+  var rowsHtml = filtered.map(function (it) {
+    var cls = it._ccClass || classifyCCDoc_(it);
+    var sc = String(it.status || '').trim().toLowerCase();
+    var badge = sc === 'closed' || sc === 'close'
+      ? '<span class="badge badge-approved">Closed</span>'
+      : (sc === 'open' 
+          ? (function() {
+              var sHtml = '<span class="badge badge-pending">Open</span>';
+              var dStr = it.inspDate || it.issuedDate || it.reportSub;
+              if (dStr) {
+                var d = new Date(dStr);
+                if (!isNaN(d.getTime())) {
+                  var days = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)));
+                  if (days >= 14) sHtml += ' <span class="sla-badge sla-overdue" title="Tertunda ' + days + ' hari">🚨 Overdue ' + days + 'h</span>';
+                  else if (days >= 7) sHtml += ' <span class="sla-badge sla-warning" title="Tertunda ' + days + ' hari">⚠️ ' + days + 'h</span>';
+                }
+              }
+              return sHtml;
+            })() 
+          : '<span class="badge">' + esc(it.status || '-') + '</span>');
+
+    // Evaluasi & Normalisasi Link Dokumen
+    var rawLink = String(it.link || '').trim();
+    var cleanLink = '';
+    if (rawLink) {
+      if (/^https?:\/\//i.test(rawLink)) {
+        cleanLink = rawLink;
+      } else if (/^(?:drive|docs)\.google\.com\//i.test(rawLink)) {
+        cleanLink = 'https://' + rawLink;
+      } else {
+        var matchUrl = rawLink.match(/https?:\/\/[^\s"'<>\)]+/i);
+        if (matchUrl) cleanLink = matchUrl[0];
+      }
+    }
+
+    var nfiHtml = '';
+    var docActionHtml = '';
+    var docLabel = esc(it.noNFI || it.itrNo || it.subject || 'Dokumen');
+
+    var isClosed = sc === 'closed' || sc === 'close';
+    var hasValidDoc = cleanLink && isClosed;
+
+    if (hasValidDoc) {
+      // Dokumen CLOSED dengan Link Valid: Tampilkan tombol Preview aktif
+      nfiHtml = '<a href="javascript:void(0)" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" style="color:var(--link, #2563eb); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:5px;" title="Klik untuk pratinjau dokumen di modal">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>' + esc(it.noNFI || 'Buka') + '</span></a>';
+
+      docActionHtml = '<div style="display:flex; align-items:center; justify-content:center; gap:6px;">' +
+        '<button type="button" class="btn-preview-action" onclick="previewDocFromCC_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Buka pratinjau dokumen langsung di modal">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.2"/><circle cx="12" cy="12" r="3"/></svg><span>Preview</span>' +
+        '</button>' +
+        '<button type="button" class="btn-action-icon" onclick="copyDocLink_(\'' + escAttr_(cleanLink) + '\', \'' + escAttr_(docLabel) + '\')" title="Salin tautan dokumen ke clipboard">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+        '</button>' +
+        '<a href="' + esc(cleanLink) + '" target="_blank" rel="noopener noreferrer" class="btn-action-icon" title="Buka berkas di tab baru Google Drive">↗</a>' +
+      '</div>';
+    } else if (isClosed) {
+      // Dokumen CLOSED tapi link belum diinput di sheet
+      nfiHtml = esc(it.noNFI || '-');
+      docActionHtml = '<span style="font-size:11px; color:var(--ink-muted); opacity:0.65; font-style:italic;">Belum ada link</span>';
+    } else {
+      // Dokumen OPEN / In Progress: belum ada berkas closed, cegah link salah pasang
+      nfiHtml = '<span style="font-weight:600; color:var(--ink);">' + esc(it.noNFI || '-') + '</span>';
+      docActionHtml = '<span style="font-size:10.5px; font-weight:600; color:var(--pending-text); background:var(--pending-bg); padding:3px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;" title="Inspeksi masih berlangsung (berkas PDF baru tersedia setelah Closed)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Menunggu Closed</span>';
+    }
+
+    // Nomor ITR pendamping NFI jika ada
+    var itrCodeHtml = it.itrNo ? '<div style="font-size:11px; font-family:var(--font-mono); color:var(--ink-muted); margin-top:3px;" title="Nomor ITR">' +
+      '<span style="opacity:0.75;">ITR:</span> <b style="color:var(--ink);">' + esc(it.itrNo) + '</b></div>' : '';
+
+    // Badge Golongan Dokumen (ITR Civil, Structure, dll atau MRIR)
+    var classBadge = '';
+    if (cls.isMRIR) {
+      classBadge = '<span class="badge" style="background:rgba(217,119,6,0.14); color:#d97706; border:1px solid rgba(217,119,6,0.3); font-size:10.5px; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:2px; font-weight:700;">MRIR</span>';
+    } else if (cls.isITR) {
+      classBadge = '<span class="badge" style="background:rgba(37,99,235,0.12); color:var(--primary); border:1px solid rgba(37,99,235,0.25); font-size:10.5px; padding:2px 6px; border-radius:4px; display:inline-block; margin-bottom:2px; font-weight:700;">' + esc(cls.categoryLabel) + '</span>';
+    }
+    var typeColHtml = classBadge + ((it.typeInsp && it.typeInsp !== 'MRIR') ? '<div style="font-size:11px; color:var(--ink-muted); margin-top:2px;">' + esc(it.typeInsp) + '</div>' : '');
+
+    return '<tr>' +
+      '<td class="doc-code" style="font-size:11.5px; font-weight:600; white-space:nowrap; vertical-align:top;">' + nfiHtml + itrCodeHtml + '</td>' +
+      '<td style="font-size:12px; max-width:260px; line-height:1.4; vertical-align:top;">' + esc(it.subject || '-') + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap; vertical-align:top;">' + esc(it.discipline || '-') + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap; vertical-align:top;">' + typeColHtml + '</td>' +
+      '<td style="font-size:11.5px; white-space:nowrap; vertical-align:top;">' + esc(it.location || '-') + '</td>' +
+      '<td style="text-align:center; white-space:nowrap; vertical-align:top;">' + badge + '</td>' +
+      '<td style="text-align:center; white-space:nowrap; vertical-align:top;">' + docActionHtml + '</td>' +
+      '</tr>';
+  }).join('');
+
+  tbody.innerHTML = rowsHtml;
+
+  // Panggil autoLabelTables_ agar card view di mobile bekerja
+  if (typeof autoLabelTables_ === 'function') {
+    autoLabelTables_();
+  }
+}
+
+function escAttr_(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '&quot;');
+}
+
+window.previewDocFromCC_ = function (fileUrl, title) {
+  if (!fileUrl) {
+    if (typeof showToast === 'function') showToast('Link dokumen tidak tersedia', 'warning');
+    return;
+  }
+  if (typeof window.previewFile_ === 'function') {
+    window.previewFile_(fileUrl, title);
+  } else {
+    window.open(fileUrl, '_blank', 'noopener,noreferrer');
+  }
+};
+
+function exportCCDetailCSV_() {
+  if (!_ccProjDetailState_) return;
+  var st = _ccProjDetailState_;
+  var sourceList = st.activeTab === 'open' ? st.openItems : (st.activeTab === 'closed' ? st.closedItems : st.allItems);
+  
+  var q = (st.searchQuery || '').toLowerCase();
+  var tf = st.typeFilter || '';
+
+  if (tf || q) {
+    sourceList = sourceList.filter(function (it) {
+      var cls = it._ccClass || classifyCCDoc_(it);
+      if (tf) {
+        if (tf === 'ALL_ITR' && !cls.isITR) return false;
+        if (tf === 'MRIR' && !cls.isMRIR) return false;
+        if (tf === 'NFI_ONLY' && (cls.isITR || cls.isMRIR)) return false;
+        if (tf.indexOf('ITR_') === 0 && cls.categoryKey !== tf) return false;
+      }
+      if (q) {
+        var match = (String(it.noNFI || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.itrNo || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.subject || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.discipline || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.typeInsp || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.location || '').toLowerCase().indexOf(q) !== -1) ||
+                    (String(it.status || '').toLowerCase().indexOf(q) !== -1) ||
+                    (cls.categoryLabel.toLowerCase().indexOf(q) !== -1);
+        if (!match) return false;
+      }
+      return true;
+    });
+  }
+
+  if (!sourceList.length) {
+    showToast('Tidak ada data untuk diekspor.', 'error');
+    return;
+  }
+
+  var csv = ['"No. NFI","ITR No.","Golongan Dokumen","Subject","Disiplin","Type of Inspection","Location","Status","Link"'];
+  sourceList.forEach(function (it) {
+    var cls = it._ccClass || classifyCCDoc_(it);
+    csv.push([
+      '"' + (it.noNFI || '').replace(/"/g, '""') + '"',
+      '"' + (it.itrNo || '').replace(/"/g, '""') + '"',
+      '"' + (cls.categoryLabel || '').replace(/"/g, '""') + '"',
+      '"' + (it.subject || '').replace(/"/g, '""') + '"',
+      '"' + (it.discipline || '').replace(/"/g, '""') + '"',
+      '"' + (it.typeInsp || '').replace(/"/g, '""') + '"',
+      '"' + (it.location || '').replace(/"/g, '""') + '"',
+      '"' + (it.status || '').replace(/"/g, '""') + '"',
+      '"' + (it.link || '').replace(/"/g, '""') + '"'
+    ].join(','));
+  });
+
+  var blob = new Blob([csv.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  var safeCode = (st.code || 'PROYEK').replace(/[^a-zA-Z0-9_-]/g, '_');
+  a.download = 'Detail-' + safeCode + '-' + st.activeTab + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV berhasil diunduh (' + sourceList.length + ' dokumen)', 'success');
+}
+    
+
+    function previewProjectSpreadsheet_() {
+      if (typeof _ccProjDetailState_ === 'undefined' || !_ccProjDetailState_ || !_ccProjDetailState_.project) {
+        if (typeof showToast === 'function') showToast('Data proyek tidak ditemukan.', 'warning');
+        return;
+      }
+      var p = _ccProjDetailState_.project;
+      var sheetId = p.id || '';
+      if (!sheetId) {
+        if (typeof showToast === 'function') showToast('ID Spreadsheet master untuk proyek ' + (p.code || '') + ' belum dikonfigurasi.', 'warning');
+        return;
+      }
+      var sheetUrl = 'https://docs.google.com/spreadsheets/d/' + encodeURIComponent(sheetId) + '/edit';
+      if (typeof window.previewFile_ === 'function') {
+        window.previewFile_(sheetUrl, 'Master Spreadsheet ' + (p.code || '') + ' — ' + (p.name || ''));
+      } else {
+        window.open(sheetUrl, '_blank', 'noopener,noreferrer');
+      }
+    }
+    window.previewProjectSpreadsheet_ = previewProjectSpreadsheet_;
 
     function runSyncFromUI_() {
       if (!confirm('Sync semua proyek dari spreadsheet? Proses membutuhkan waktu 30-60 detik.')) return;
