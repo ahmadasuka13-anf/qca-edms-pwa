@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v11.0-exact-sheet-status';
+const CACHE_NAME = 'qccms-edms-v11.4-manager-rbac-audit';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
