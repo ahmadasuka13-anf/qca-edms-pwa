@@ -14685,7 +14685,7 @@ function openAISettingsModal() {
   var key = localStorage.getItem('qc_ai_key') || '';
   var model = localStorage.getItem('qc_ai_model');
   if (!model || model === 'gemini-2.0-flash') {
-    model = (provider === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-2.5-flash');
+    model = (provider === 'groq' ? 'qwen/qwen3.8-27b' : 'gemini-2.5-flash');
     localStorage.setItem('qc_ai_model', model);
   }
 
@@ -14730,7 +14730,7 @@ function onAISettingsProviderChange() {
         helpLink.innerHTML = 'Dapatkan API Key di Groq Console &rarr;';
       }
       if (inpMod && (!inpMod.value || inpMod.value.indexOf('gemini') !== -1)) {
-        inpMod.value = 'llama-3.3-70b-versatile';
+        inpMod.value = 'qwen/qwen3.8-27b';
       }
     } else {
       if (helpLink) {
@@ -14765,10 +14765,19 @@ function saveAISettings() {
   localStorage.setItem('qc_ai_key', key);
   localStorage.setItem('qc_ai_model', model);
 
+  if (typeof google !== 'undefined' && google.script && google.script.run && typeof sessionToken !== 'undefined') {
+    try {
+      google.script.run.saveAiSettingsToBackend(sessionToken, provider, key, model);
+    } catch (e) {
+      console.warn('Gagal sync ke backend script properties:', e);
+    }
+  }
+
   updateActiveEngineBadge();
   closeAISettingsModal();
   if (typeof showToast === 'function') {
-    showToast('Pengaturan engine AI Copilot berhasil disimpan!', 'success');
+    var provLabel = provider === 'groq' ? 'Groq Cloud (' + (model || 'qwen/qwen3.8-27b') + ')' : (provider === 'gemini' ? 'Google Gemini (' + (model || 'gemini-2.5-flash') + ')' : 'Standar Server');
+    showToast('Engine AI aktif: ' + provLabel + '. Siap menjawab seluruh pertanyaan!', 'success');
   }
 }
 window.saveAISettings = saveAISettings;
@@ -14791,10 +14800,13 @@ function updateActiveEngineBadge() {
   var prov = localStorage.getItem('qc_ai_provider') || 'default';
   var key = localStorage.getItem('qc_ai_key') || '';
   if (prov === 'gemini' && key) {
-    var curMod = localStorage.getItem('qc_ai_model') || 'gemini-2.5-flash'; badge.textContent = curMod + ' (Online)';
+    var curMod = localStorage.getItem('qc_ai_model') || 'gemini-2.5-flash';
+    badge.textContent = curMod + ' (Online)';
     badge.style.color = '#38bdf8';
   } else if (prov === 'groq' && key) {
-    badge.textContent = 'Groq Llama 3.3 (Online)';
+    var curGroqMod = localStorage.getItem('qc_ai_model') || 'qwen/qwen3.8-27b';
+    var shortMod = curGroqMod.indexOf('/') !== -1 ? curGroqMod.split('/')[1] : curGroqMod;
+    badge.textContent = 'Groq ' + shortMod + ' (Online)';
     badge.style.color = '#4ade80';
   } else {
     badge.textContent = 'Intel Core v4.0';
@@ -14878,26 +14890,55 @@ async function testAISettingsConnection() {
       }
     } else if (provider === 'groq') {
       if (!key) throw new Error('API Key Groq wajib diisi.');
-      var modG = model || 'llama-3.3-70b-versatile';
-      var resG = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + key
-        },
-        body: JSON.stringify({
-          model: modG,
-          messages: [{ role: 'user', content: 'Ping. Jawab 1 kalimat: Engine AI aktif.' }],
-          max_tokens: 30
-        })
-      });
-      var dataG = await resG.json();
-      if (!resG.ok) throw new Error((dataG && dataG.error && dataG.error.message) || 'HTTP ' + resG.status);
-      var replyG = dataG.choices && dataG.choices[0] && dataG.choices[0].message && dataG.choices[0].message.content;
+      var modG = model || 'qwen/qwen3.8-27b';
+      var candidateGroqMods = [modG, 'qwen/qwen3.8-27b', 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile'].filter(function(v, i, a) { return a.indexOf(v) === i; });
+
+      var lastErrG = null;
+      var successDataG = null;
+      var activeModelG = modG;
+
+      for (var cg = 0; cg < candidateGroqMods.length; cg++) {
+        var tryModG = candidateGroqMods[cg];
+        try {
+          var resG = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + key
+            },
+            body: JSON.stringify({
+              model: tryModG,
+              messages: [{ role: 'user', content: 'Ping. Jawab 1 kalimat: Engine AI aktif.' }],
+              max_tokens: 30
+            })
+          });
+          var dataG = await resG.json();
+          if (resG.ok && dataG.choices && dataG.choices[0] && dataG.choices[0].message && dataG.choices[0].message.content) {
+            successDataG = dataG;
+            activeModelG = tryModG;
+            break;
+          } else {
+            lastErrG = new Error((dataG && dataG.error && dataG.error.message) || 'HTTP ' + resG.status);
+          }
+        } catch (fetchErrG) {
+          lastErrG = fetchErrG;
+        }
+      }
+
+      if (!successDataG) {
+        throw lastErrG || new Error('Gagal menghubungkan ke engine Groq.');
+      }
+
+      if (inpMod && inpMod.value !== activeModelG) {
+        inpMod.value = activeModelG;
+        localStorage.setItem('qc_ai_model', activeModelG);
+      }
+
+      var replyG = successDataG.choices[0].message.content;
       if (statusEl) {
         statusEl.style.background = 'rgba(22,163,74,0.12)';
         statusEl.style.color = '#15803d';
-        statusEl.innerHTML = 'Koneksi Berhasil! Respon: "' + escapeAIHtml(replyG.trim()) + '"';
+        statusEl.innerHTML = '<span style="font-weight:700;">Koneksi Berhasil!</span> Model aktif: <code>' + escapeAIHtml(activeModelG) + '</code>. Respon: "' + escapeAIHtml(replyG.trim()) + '"';
       }
     } else {
       if (statusEl) {
@@ -14938,7 +14979,144 @@ function buildClientUniversalPrompt() {
 }
 
 
-function sendAIMessage() {
+async function executeClientAIChat(message, projectCode) {
+  var prov = localStorage.getItem('qc_ai_provider') || 'default';
+  var key = localStorage.getItem('qc_ai_key') || '';
+  var mod = localStorage.getItem('qc_ai_model') || '';
+
+  if (!key || prov === 'default') {
+    return null;
+  }
+
+  var systemPrompt = (typeof buildClientUniversalPrompt === 'function') ? buildClientUniversalPrompt() : 'Kamu adalah Asisten AI Senior PT Asuka Engineering Indonesia.';
+
+  var history = [];
+  if (window.aiChatHistory && window.aiChatHistory.length > 0) {
+    var recents = window.aiChatHistory.slice(-8);
+    recents.forEach(function(h) {
+      if (h.role === 'user' || h.role === 'assistant') {
+        history.push({ role: h.role, content: h.content });
+      }
+    });
+  }
+
+  if (prov === 'groq') {
+    var targetModel = mod || 'qwen/qwen3.8-27b';
+    var candidateMods = [targetModel, 'qwen/qwen3.8-27b', 'openai/gpt-oss-120b'];
+    candidateMods = candidateMods.filter(function(v, i, a) { return a.indexOf(v) === i; });
+
+    var groqMessages = [{ role: 'system', content: systemPrompt }];
+    history.forEach(function(h) {
+      groqMessages.push({ role: h.role === 'assistant' ? 'assistant' : 'user', content: h.content });
+    });
+    if (!groqMessages.some(function(m) { return m.role === 'user' && m.content === message; })) {
+      groqMessages.push({ role: 'user', content: message });
+    }
+
+    var lastErr = null;
+    for (var i = 0; i < candidateMods.length; i++) {
+      var currentTry = candidateMods[i];
+      try {
+        var res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + key
+          },
+          body: JSON.stringify({
+            model: currentTry,
+            messages: groqMessages,
+            temperature: 0.6,
+            max_tokens: 1800
+          })
+        });
+        var data = await res.json();
+        if (res.ok && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+          if (currentTry !== targetModel) {
+            localStorage.setItem('qc_ai_model', currentTry);
+            var inpMod = document.getElementById('aiCfgModel');
+            if (inpMod) inpMod.value = currentTry;
+          }
+          return {
+            success: true,
+            reply: data.choices[0].message.content,
+            provider: 'Groq Cloud',
+            modelUsed: currentTry,
+            language: 'id'
+          };
+        } else {
+          lastErr = new Error((data && data.error && data.error.message) || ('HTTP ' + res.status));
+        }
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error('Gagal menghubungi engine Groq.');
+  }
+
+  if (prov === 'gemini') {
+    var targetGeminiModel = mod || 'gemini-2.5-flash';
+    if (targetGeminiModel === 'gemini-2.0-flash') targetGeminiModel = 'gemini-2.5-flash';
+    var candidateGemini = [targetGeminiModel, 'gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.5-flash-lite'];
+    candidateGemini = candidateGemini.filter(function(v, i, a) { return a.indexOf(v) === i; });
+
+    var geminiContents = [];
+    history.forEach(function(h) {
+      geminiContents.push({
+        role: h.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: h.content }]
+      });
+    });
+    geminiContents.push({
+      role: 'user',
+      parts: [{ text: message }]
+    });
+
+    var lastGemErr = null;
+    for (var g = 0; g < candidateGemini.length; g++) {
+      var tryGem = candidateGemini[g];
+      try {
+        var resGem = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + tryGem + ':generateContent?key=' + key, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: geminiContents,
+            generationConfig: {
+              temperature: 0.6,
+              maxOutputTokens: 2048
+            }
+          })
+        });
+        var dataGem = await resGem.json();
+        if (resGem.ok && dataGem.candidates && dataGem.candidates[0] && dataGem.candidates[0].content && dataGem.candidates[0].content.parts && dataGem.candidates[0].content.parts[0].text) {
+          if (tryGem !== targetGeminiModel) {
+            localStorage.setItem('qc_ai_model', tryGem);
+            var inpM = document.getElementById('aiCfgModel');
+            if (inpM) inpM.value = tryGem;
+          }
+          return {
+            success: true,
+            reply: dataGem.candidates[0].content.parts[0].text,
+            provider: 'Google Gemini',
+            modelUsed: tryGem,
+            language: 'id'
+          };
+        } else {
+          lastGemErr = new Error((dataGem && dataGem.error && dataGem.error.message) || ('HTTP ' + resGem.status));
+        }
+      } catch (ge) {
+        lastGemErr = ge;
+      }
+    }
+    throw lastGemErr || new Error('Gagal menghubungi engine Gemini.');
+  }
+
+  return null;
+}
+window.executeClientAIChat = executeClientAIChat;
+
+async function sendAIMessage() {
   if (aiChatBusy) return;
   var input = document.getElementById('aiChatInput');
   if (!input) { console.error('aiChatInput tidak ditemukan'); return; }
@@ -14961,32 +15139,65 @@ function sendAIMessage() {
   var sendBtn = document.getElementById('aiChatSendBtn');
   if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.5'; }
 
-  google.script.run
-    .withSuccessHandler(function(res) {
+  // 1. Prioritas Utama: Eksekusi langsung via Client AI Engine (Groq / Gemini) jika dikonfigurasi di Pengaturan
+  try {
+    var clientRes = await executeClientAIChat(message, projectCode);
+    if (clientRes && clientRes.success) {
       removeAITyping(typingId);
       aiChatBusy = false;
       if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
-      if (res && res.success) {
-        var modelInfo = res.provider ? (res.provider + (res.modelUsed ? ' (' + res.modelUsed + ')' : '')) : (res.modelUsed || '');
-        appendAIMessage('bot', res.reply, timeStr, res.actions, res.language, modelInfo);
-        aiChatHistory.push({
-          role: 'assistant',
-          content: res.reply,
-          time: timeStr,
-          actions: res.actions || []
-        });
-      } else {
-        appendAIMessage('bot', '⚠️ ' + ((res && res.message) || 'Gagal mendapatkan respons.'), timeStr);
-      }
-    })
-    .withFailureHandler(function(err) {
-      removeAITyping(typingId);
-      aiChatBusy = false;
-      if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
-      appendAIMessage('bot', '❌ Error: ' + err.message, timeStr);
-    })
-    .aiChat(sessionToken, message, projectCode);
+      var modelInfo = clientRes.provider ? (clientRes.provider + (clientRes.modelUsed ? ' (' + clientRes.modelUsed + ')' : '')) : (clientRes.modelUsed || '');
+      appendAIMessage('bot', clientRes.reply, timeStr, null, clientRes.language, modelInfo);
+      aiChatHistory.push({
+        role: 'assistant',
+        content: clientRes.reply,
+        time: timeStr
+      });
+      return;
+    }
+  } catch (clientErr) {
+    console.warn('Client AI Engine warning, mencoba fallback backend server:', clientErr);
+  }
+
+  // 2. Fallback via Google Apps Script (tanyaAI / tanyaGroq / Knowledge Base)
+  var clientProv = localStorage.getItem('qc_ai_provider') || '';
+  var clientKey = localStorage.getItem('qc_ai_key') || '';
+  var clientMod = localStorage.getItem('qc_ai_model') || '';
+
+  if (typeof google !== 'undefined' && google.script && google.script.run) {
+    google.script.run
+      .withSuccessHandler(function(res) {
+        removeAITyping(typingId);
+        aiChatBusy = false;
+        if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+        if (res && res.success) {
+          var modelInfo = res.provider ? (res.provider + (res.modelUsed ? ' (' + res.modelUsed + ')' : '')) : (res.modelUsed || '');
+          appendAIMessage('bot', res.reply, timeStr, res.actions, res.language, modelInfo);
+          aiChatHistory.push({
+            role: 'assistant',
+            content: res.reply,
+            time: timeStr,
+            actions: res.actions || []
+          });
+        } else {
+          appendAIMessage('bot', 'Gagal mendapatkan respons: ' + ((res && res.message) || 'Terjadi kesalahan sistem.'), timeStr);
+        }
+      })
+      .withFailureHandler(function(err) {
+        removeAITyping(typingId);
+        aiChatBusy = false;
+        if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+        appendAIMessage('bot', 'Error: ' + err.message, timeStr);
+      })
+      .aiChat(sessionToken, message, projectCode, clientProv, clientKey, clientMod);
+  } else {
+    removeAITyping(typingId);
+    aiChatBusy = false;
+    if (sendBtn) { sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+    appendAIMessage('bot', 'Koneksi ke backend server tidak tersedia. Silakan periksa koneksi internet atau atur API Key Groq / Gemini di Pengaturan Engine AI.', timeStr);
+  }
 }
+window.sendAIMessage = sendAIMessage;
 
 // ─── HTML escape + markdown formatter ───
 function escapeAIHtml(text) {
@@ -15198,7 +15409,7 @@ function appendAIMessage(role, text, time, actions, lang, modelInfo) {
 
     var modelBadge = '';
     if (modelInfo) {
-      modelBadge = '<div style="font-size:10px; color:#6b7280; margin-top:6px; display:inline-flex; align-items:center; gap:4px; background:rgba(0,0,0,0.04); padding:2px 8px; border-radius:12px;"><span>⚡</span><span>' + escapeAIHtml(modelInfo) + '</span></div>';
+      modelBadge = '<div style="font-size:10.5px; color:#475569; margin-top:6px; display:inline-flex; align-items:center; gap:5px; background:rgba(15,23,42,0.05); padding:3px 8px; border-radius:3px; border:1px solid rgba(15,23,42,0.1);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span style="font-family:var(--font-mono, monospace); font-size:10px; font-weight:600;">' + escapeAIHtml(modelInfo) + '</span></div>';
     }
 
     var actionsHtml = '';
@@ -17325,7 +17536,7 @@ window.addEventListener('offline', updateFooterStatus);
           <label style="font-weight:700; display:block; margin-bottom:5px; color:var(--ink, #0f172a);">Pilih Engine AI</label>
           <select id="aiCfgProvider" onchange="onAISettingsProviderChange()" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-weight:600; outline:none;">
             <option value="gemini">Google Gemini (Disarankan — Cerdas &amp; Gratis Permanen)</option>
-            <option value="groq">Groq Cloud (Llama 3.3 70B — Ultra Cepat)</option>
+            <option value="groq">Groq Cloud (Qwen 3.8 27B / GPT-OSS — Ultra Cepat)</option>
             <option value="default">Standar Server / Offline Intel Engine v4.0</option>
           </select>
         </div>
@@ -17350,10 +17561,12 @@ window.addEventListener('offline', updateFooterStatus);
                 <option value="gemini-2.5-flash">Gemini 2.5 Flash (Direkomendasikan — Cepat &amp; Cerdas)</option>
                 <option value="gemini-1.5-flash">Gemini 1.5 Flash (Stabil)</option>
                 <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite (Ultra Cepat)</option>
+                <option value="qwen/qwen3.8-27b">Qwen 3.8 27B (Groq — Cepat &amp; Fasih)</option>
+                <option value="openai/gpt-oss-120b">GPT-OSS 120B (Groq)</option>
                 <option value="llama-3.3-70b-versatile">Groq Llama 3.3 70B</option>
               </datalist>
           <label style="font-weight:700; display:block; margin-bottom:5px; color:var(--ink, #0f172a);">Model yang Digunakan</label>
-          <input type="text" id="aiCfgModel" value="gemini-2.5-flash" list="geminiModelSuggestions" placeholder="gemini-2.5-flash / gemini-1.5-flash / llama-3.3-70b-versatile" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-family:var(--font-mono, monospace); font-size:12px; outline:none;">
+          <input type="text" id="aiCfgModel" value="gemini-2.5-flash" list="geminiModelSuggestions" placeholder="gemini-2.5-flash / qwen/qwen3.8-27b / gemini-1.5-flash" style="width:100%; padding:8px 10px; border-radius:6px; border:1px solid var(--border, #cbd5e1); background:var(--surface-card, #ffffff); color:var(--ink, #0f172a); font-family:var(--font-mono, monospace); font-size:12px; outline:none;">
         </div>
 
         <!-- Connection Test Status -->
