@@ -5828,6 +5828,27 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </form>
               </div>
               <div id="numberingRuleListContent"><div class="loading-row"><span class="spinner dark"></span>Memuat...</div></div>
+
+              <!-- ═══ PUSAT KONTROL OTOMASI & EMAIL TRIGGER (AUTOMATION HUB) ═══ -->
+              <div class="section-heading" id="triggerHubSection" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:28px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Pusat Kontrol Otomasi &amp; Email Trigger</span>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <button type="button" class="btn btn-secondary btn-small" onclick="loadTriggerSettings()" style="font-size:11.5px;padding:5px 12px;border-radius:4px;display:inline-flex;align-items:center;gap:5px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                    <span>Perbarui Status</span>
+                  </button>
+                </div>
+              </div>
+              <p class="hint" style="margin:-6px 0 14px;">Kelola jadwal eksekusi background job dan notifikasi email otomatis PT Asuka. Anda dapat mengaktifkan, menonaktifkan, atau menguji coba (Test Run) langsung dari web.</p>
+
+              <div class="card-section" style="padding:0; overflow:hidden; border:1px solid var(--border); border-radius:6px; margin-bottom:24px;">
+                <div id="triggerControlHubContent">
+                  <div class="loading-row"><span class="spinner dark"></span>Memeriksa status trigger otomasi...</div>
+                </div>
+              </div>
             </div>
 
             <!-- PANEL: TUGAS SAYA -->
@@ -5961,6 +5982,10 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" fill="currentColor" fill-opacity="0.16"/><path d="M12 12v9m-3-3 3 3 3-3"/></svg>
                     <span>Sync Data</span>
                   </button>
+                  <button type="button" class="btn btn-secondary" id="btnBroadcastOpenDocs" onclick="triggerOpenDocsBroadcastFromUI()" title="Kirim email rekap dokumen open/pending ke approver & PIC" style="display:inline-flex; align-items:center; gap:6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor" fill-opacity="0.12"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <span>Broadcast Dokumen Open</span>
+                  </button>
                   <button type="button" class="btn btn-secondary" id="btnToggleCCCharts" onclick="toggleCCPresentationCharts_()" title="Tampilkan atau sembunyikan grafik presentasi" style="display:inline-flex; align-items:center; gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
                     <span>Grafik Presentasi</span>
@@ -5978,6 +6003,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                       <button type="button" class="cc-dropdown-item" onclick="loadCommandCenter();closeCCTechMenu_();">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
                         <span>Refresh Data</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="triggerOpenDocsBroadcastFromUI();closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <span>Kirim Rekap Dokumen Open</span>
+                      </button>
+                      <button type="button" class="cc-dropdown-item" onclick="switchTab('approvalsettings');setTimeout(function(){var el=document.getElementById('triggerHubSection');if(el)el.scrollIntoView({behavior:'smooth'});},300);closeCCTechMenu_();">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Pusat Kontrol Otomasi</span>
                       </button>
                       <button type="button" class="cc-dropdown-item" id="btnToggleAutoSync" onclick="toggleAutoSyncTrigger_();closeCCTechMenu_();">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -10029,6 +10062,150 @@ function fileLinksHtml(d) {
 
     // ---------- Approval Settings ----------
     // FIX: baris "← TAMBAH 1 BARIS INI" yang bikin syntax error sudah dihapus.
+    
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PUSAT KONTROL OTOMASI & EMAIL TRIGGER (ANTI-AI ROBUST RUNTIME)
+    // ═══════════════════════════════════════════════════════════════════════════
+    let triggersCache_ = null;
+
+    function loadTriggerSettings() {
+      const container = document.getElementById('triggerControlHubContent');
+      if (!container) return;
+      container.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memeriksa konfigurasi & status trigger otomasi...</div>';
+
+      if (!window.google || !google.script || !google.script.run) {
+        container.innerHTML = '<div style="padding:16px;color:var(--ink-muted);font-size:13px;">Koneksi Google Apps Script tidak tersedia.</div>';
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success && res.triggers) {
+            triggersCache_ = res.triggers;
+            renderTriggerSettings_(res.triggers);
+          } else {
+            container.innerHTML = '<div style="padding:16px;color:var(--rejected-text);font-size:13px;">Gagal memuat status trigger: ' + esc((res && res.message) || 'Error tidak diketahui') + '</div>';
+          }
+        })
+        .withFailureHandler(function (err) {
+          container.innerHTML = '<div style="padding:16px;color:var(--rejected-text);font-size:13px;">Gagal memanggil server: ' + esc(err.message) + '</div>';
+        })
+        .getAllTriggersStatus(window.sessionToken || '');
+    }
+
+    function renderTriggerSettings_(triggers) {
+      const container = document.getElementById('triggerControlHubContent');
+      if (!container) return;
+
+      const list = Object.keys(triggers).map(function (k) { return triggers[k]; });
+      if (!list.length) {
+        container.innerHTML = '<div style="padding:16px;color:var(--ink-muted);font-size:13px;">Tidak ada konfigurasi otomasi ditemukan.</div>';
+        return;
+      }
+
+      let html = '<div class="table-scroll" style="margin:0;"><table style="width:100%;border-collapse:collapse;margin:0;">' +
+        '<thead><tr style="background:var(--surface-hover);border-bottom:1px solid var(--border);">' +
+        '<th style="padding:10px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--ink);">Nama Otomasi & Deskripsi</th>' +
+        '<th style="padding:10px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--ink);width:190px;">Jadwal Eksekusi</th>' +
+        '<th style="padding:10px 14px;text-align:center;font-size:12px;font-weight:700;color:var(--ink);width:110px;">Status</th>' +
+        '<th style="padding:10px 14px;text-align:center;font-size:12px;font-weight:700;color:var(--ink);width:130px;">Saklar (On/Off)</th>' +
+        '<th style="padding:10px 14px;text-align:right;font-size:12px;font-weight:700;color:var(--ink);width:120px;">Uji Coba</th>' +
+        '</tr></thead><tbody>';
+
+      list.forEach(function (trig) {
+        const isActive = !!trig.active;
+        const badge = isActive ?
+          '<span class="badge" style="background:rgba(21,128,61,0.12);color:#15803d;border:1px solid rgba(21,128,61,0.25);border-radius:3px;font-size:11px;font-weight:700;padding:2px 8px;letter-spacing:0.3px;">AKTIF</span>' :
+          '<span class="badge" style="background:rgba(100,116,139,0.12);color:#64748b;border:1px solid rgba(100,116,139,0.25);border-radius:3px;font-size:11px;font-weight:700;padding:2px 8px;letter-spacing:0.3px;">NONAKTIF</span>';
+
+        const toggleBtn = isActive ?
+          '<button type="button" class="btn btn-secondary btn-small" onclick="toggleTriggerStatus_(\'' + trig.key + '\', false)" style="border-color:#b91c1c;color:#b91c1c;font-size:11.5px;padding:4px 10px;border-radius:4px;font-weight:600;">Matikan</button>' :
+          '<button type="button" class="btn btn-primary btn-small" onclick="toggleTriggerStatus_(\'' + trig.key + '\', true)" style="background:#163d78;border-color:#163d78;color:#fff;font-size:11.5px;padding:4px 10px;border-radius:4px;font-weight:600;">Aktifkan</button>';
+
+        const testBtn = '<button type="button" class="btn btn-secondary btn-small" onclick="executeTriggerManual_(\'' + trig.key + '\')" title="Jalankan otomasi sekarang untuk pengujian" style="font-size:11px;padding:4px 9px;border-radius:4px;font-weight:500;">Jalankan</button>';
+
+        html += '<tr style="border-bottom:1px solid var(--border);transition:background 0.15s ease;">' +
+          '<td style="padding:10px 14px;vertical-align:middle;">' +
+            '<div style="font-weight:600;font-size:13px;color:var(--ink);">' + esc(trig.name) + '</div>' +
+            '<div style="font-size:11.5px;color:var(--ink-muted);margin-top:2px;line-height:1.4;">' + esc(trig.description || '') + '</div>' +
+          '</td>' +
+          '<td style="padding:10px 14px;vertical-align:middle;font-size:12px;font-family:monospace;font-variant-numeric:tabular-nums;color:var(--ink);">' +
+            esc(trig.schedule || '—') +
+          '</td>' +
+          '<td style="padding:10px 14px;vertical-align:middle;text-align:center;">' + badge + '</td>' +
+          '<td style="padding:10px 14px;vertical-align:middle;text-align:center;">' + toggleBtn + '</td>' +
+          '<td style="padding:10px 14px;vertical-align:middle;text-align:right;">' + testBtn + '</td>' +
+          '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      container.innerHTML = html;
+    }
+
+    function toggleTriggerStatus_(triggerKey, enable) {
+      const actionText = enable ? 'mengaktifkan' : 'menonaktifkan';
+      if (!confirm('Apakah Anda yakin ingin ' + actionText + ' otomasi ini?')) return;
+
+      showToast('Memperbarui jadwal trigger...', 'info');
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || 'Trigger berhasil diubah.', 'success');
+            loadTriggerSettings();
+          } else {
+            showToast('Gagal: ' + ((res && res.message) || 'Error tidak diketahui'), 'error');
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal mengubah trigger: ' + err.message, 'error');
+        })
+        .toggleTriggerFromUI(window.sessionToken || '', { triggerKey: triggerKey, enable: enable });
+    }
+
+    function executeTriggerManual_(triggerKey) {
+      if (!confirm('Jalankan proses otomasi ini sekarang (test run manual)?')) return;
+
+      showToast('Menjalankan trigger otomasi...', 'info');
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || 'Eksekusi trigger selesai.', 'success');
+          } else {
+            showToast('Gagal: ' + ((res && res.message) || 'Gagal eksekusi'), 'error');
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Error eksekusi: ' + err.message, 'error');
+        })
+        .executeTriggerManual(window.sessionToken || '', { triggerKey: triggerKey });
+    }
+
+    function triggerOpenDocsBroadcastFromUI(projectCode) {
+      if (!confirm('Kirim broadcast email rekapitulasi seluruh dokumen mutu yang masih OPEN / Pending ke Approver & PIC sekarang?')) return;
+
+      showToast('Menyusun rekap & mengirim broadcast email...', 'info');
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          if (res && res.success) {
+            showToast(res.message || ('Broadcast berhasil dikirim (' + (res.count || 0) + ' dokumen open).'), 'success');
+          } else {
+            showToast('Broadcast gagal: ' + ((res && res.message) || 'Error tidak diketahui'), 'error');
+          }
+        })
+        .withFailureHandler(function (err) {
+          showToast('Gagal broadcast email: ' + err.message, 'error');
+        })
+        .triggerOpenDocumentsBroadcast(window.sessionToken || '', { projectCode: projectCode || '' });
+    }
+
+    window.loadTriggerSettings = loadTriggerSettings;
+    window.toggleTriggerStatus_ = toggleTriggerStatus_;
+    window.executeTriggerManual_ = executeTriggerManual_;
+    window.triggerOpenDocsBroadcastFromUI = triggerOpenDocsBroadcastFromUI;
+
     function loadApprovalSettings() {
       loadApproverList(); loadApprovalRules(); populateRuleFormSelectors(); loadNumberingRules(); populateNumberingFormSelector();
       if (currentUser && currentUser.role === 'Admin') {
@@ -10036,6 +10213,7 @@ function fileLinksHtml(d) {
         loadDisciplinesSettings();
         loadDocTypesSettings();
         loadProjectsSettings();
+        try { loadTriggerSettings(); } catch (e) { console.warn('Trigger load notice:', e); }
       }
     }
     function loadApproverList() {
@@ -16420,6 +16598,28 @@ window.addEventListener('offline', updateFooterStatus);
         var body = document.getElementById('previewModalBody');
         if (body) body.innerHTML = '';
         if (typeof window.syncModalOpenClass === 'function') window.syncModalOpenClass();
+      };
+
+      window.openPreviewModal = function (docId) {
+        if (!docId) return;
+        var doc = null;
+        if (Array.isArray(window.documentsData)) {
+          doc = window.documentsData.find(function (d) {
+            return d && (d.docId === docId || d.id === docId || d.docNumber === docId);
+          });
+        }
+        if (!doc && Array.isArray(window.__cachedAllDocs)) {
+          doc = window.__cachedAllDocs.find(function (d) {
+            return d && (d.docId === docId || d.id === docId || d.docNumber === docId);
+          });
+        }
+        if (doc && (doc.fileUrl || doc.url)) {
+          window.previewFile_(doc.fileUrl || doc.url, (doc.docNumber || doc.title || 'Dokumen Mutu') + '.pdf');
+        } else if (doc) {
+          if (typeof showToast === 'function') showToast('Dokumen belum memiliki tautan berkas fisik.', 'info');
+        } else if (typeof showToast === 'function') {
+          showToast('Dokumen dengan ID ' + docId + ' tidak ditemukan.', 'error');
+        }
       };
 
       document.addEventListener('click', function (e) {
