@@ -116,7 +116,7 @@
   color: #163d78;
   margin: 24px 0 12px;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   font-family: 'Nunito', sans-serif;
   line-height: 1.3;
 }
@@ -448,7 +448,7 @@ body {
       object-fit: contain !important;
       flex-shrink: 0 !important;
     }
-    .sidebar-brand-mini .mini-title { font-size: 12.5px; font-weight: 800; color: var(--ink); white-space: nowrap; }
+    .sidebar-brand-mini .mini-title { font-size: 12.5px; font-weight: 700; color: var(--ink); white-space: nowrap; }
     .sidebar-brand-mini .mini-sub { font-size: 10px; color: var(--ink-faint); font-weight: 500; white-space: nowrap; }
     .user-box { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; flex-shrink: 0; }
     .header-clock { display: flex; flex-direction: column; align-items: flex-end; padding: 6px 13px; border: 1px solid rgba(255,255,255,0.14); border-radius: 10px; background: rgba(255,255,255,0.05); }
@@ -524,7 +524,7 @@ body {
   box-sizing: border-box;
 }
     .sidebar-brand-mini { display: flex; align-items: center; gap: 12px; padding: 6px 10px 14px; border-bottom: 1px dashed var(--border); margin-bottom: 14px; }
-    .sidebar-brand-mini .mini-title { font-size: 13px; font-weight: 800; color: var(--ink); }
+    .sidebar-brand-mini .mini-title { font-size: 13px; font-weight: 700; color: var(--ink); }
     .sidebar-brand-mini .mini-sub { font-size: 10.5px; color: var(--ink-faint); font-weight: 500; }
     .sidebar-section { margin-bottom: 18px; }
     .sidebar-section-title { font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: var(--ink-faint); padding: 4px 10px 8px; }
@@ -1412,14 +1412,14 @@ body {
     .matrix-table td.cell-heat-5 { background: rgba(237,46,53,0.75); color: #fff; }
     .matrix-table td.total-cell {
       background: var(--surface-subtle);
-      font-weight: 800;
+      font-weight: 700;
       color: var(--ink);
       border-left: 2px solid var(--border);
     }
     .matrix-table tr.total-row td {
       background: var(--bezel);
       color: var(--bezel-text);
-      font-weight: 800;
+      font-weight: 700;
       border-top: 2px solid var(--accent);
       border-bottom: none;
     }
@@ -1460,7 +1460,7 @@ body {
     }
     .cc-card-code {
       font-family: var(--font-mono);
-      font-weight: 800;
+      font-weight: 700;
       font-size: 15px;
       color: var(--ink);
     }
@@ -1486,7 +1486,7 @@ body {
     }
     .cc-mini-stat-val {
       font-family: var(--font-mono);
-      font-weight: 800;
+      font-weight: 700;
       font-size: 16px;
       color: var(--ink);
       line-height: 1;
@@ -1588,7 +1588,7 @@ body {
     }
     .cc-chip .cc-chip-count {
       font-family: var(--font-mono);
-      font-weight: 800;
+      font-weight: 700;
       color: var(--accent-dark);
     }
     .cc-chip.active {
@@ -1743,7 +1743,7 @@ body {
     }
     .card-title {
       font-size: 13.5px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -1771,7 +1771,7 @@ body {
     .doc-metric-val {
       font-family: var(--font-mono);
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--ink);
     }
     .grid-disciplines {
@@ -1901,7 +1901,7 @@ body {
     }
     .cc-card-code {
       font-family: var(--font-mono);
-      font-weight: 800;
+      font-weight: 700;
       font-size: 15px;
       color: var(--ink);
     }
@@ -1952,7 +1952,7 @@ body {
     .cc-mini-val {
       font-family: var(--font-mono);
       font-size: 13.5px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--ink);
       line-height: 1.1;
     }
@@ -2414,7 +2414,7 @@ body {
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 13px;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(237,46,53,0.35);
@@ -2426,7 +2426,7 @@ body {
 }
 .sidebar-dev-role {
   font-size: 8.5px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.6px;
   color: var(--accent, #ed2e35);
   text-transform: uppercase;
@@ -2441,7 +2441,7 @@ body {
 }
 .sidebar-dev-chip {
   font-size: 8.5px;
-  font-weight: 800;
+  font-weight: 700;
   padding: 2px 6px;
   border-radius: 5px;
   background: rgba(34,197,94,0.15);
@@ -3648,7 +3648,7 @@ canvas#disciplineChart {
   object-fit: cover;
   object-position: center;
   display: block;
-  animation: kenBurnsDesktop 28s infinite alternate ease-in-out;
+  animation: kenBurnsDesktop 28s 3 alternate ease-in-out;
   transform-origin: center center;
 }
 @keyframes kenBurnsDesktop {
@@ -3691,9 +3691,9 @@ canvas#disciplineChart {
 }
 
 /*  Ken-Burns micro-motion terpisah di tiap foto HP agar dinamis */
-.welcome-bg-media-1 { animation: kenBurnsSlot1 22s infinite alternate ease-in-out; }
-.welcome-bg-media-2 { animation: kenBurnsSlot2 26s infinite alternate ease-in-out; }
-.welcome-bg-media-3 { animation: kenBurnsSlot3 24s infinite alternate ease-in-out; }
+.welcome-bg-media-1 { animation: kenBurnsSlot1 22s 3 alternate ease-in-out; }
+.welcome-bg-media-2 { animation: kenBurnsSlot2 26s 3 alternate ease-in-out; }
+.welcome-bg-media-3 { animation: kenBurnsSlot3 24s 3 alternate ease-in-out; }
 
 @keyframes kenBurnsSlot1 {
   0%   { transform: scale(1.02) translate(0, 0); }
@@ -3809,7 +3809,7 @@ canvas#disciplineChart {
 }
 .welcome-title {
   font-size: 24px;
-  font-weight: 800;
+  font-weight: 700;
   color: #fff;
   margin: 0 0 6px;
   line-height: 1.25;
@@ -4054,7 +4054,7 @@ canvas#disciplineChart {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 16px;
   background: rgba(34, 197, 94, 0.15);
   border: 2px solid #22c55e;
@@ -4244,7 +4244,7 @@ canvas#disciplineChart {
   align-items: center;
   gap: 6px;
   font-size: 10.5px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.8px;
   color: #fff;
   background: #163d78;
@@ -4332,7 +4332,7 @@ canvas#disciplineChart {
 }
 .dev-name {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink, #fff);
   margin: 0 0 4px;
   letter-spacing: -0.2px;
@@ -4394,7 +4394,7 @@ canvas#disciplineChart {
 .dev-stat-num {
   font-family: var(--font-mono, monospace);
   font-size: 13.5px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink, #fff);
   margin-bottom: 2px;
 }
@@ -4684,7 +4684,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     }
     .ic-nonfi {
       font-size: 14.5px;
-      font-weight: 800;
+      font-weight: 700;
       color: var(--primary);
       word-break: break-all;
     }
@@ -5309,7 +5309,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <button class="sidebar-item" type="button" onclick="toggleAIChat(); closeNavMenu();" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:12px;">
             <span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M12 8V4M9 4h6M2 14h2M20 14h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><path d="M9 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
             <span class="si-label" style="font-weight:700;">Tanya AI QC</span>
-            <span style="font-size:9.5px; background:#163d78; color:#fff; padding:2px 7px; border-radius:6px; font-weight:800; margin-left:auto;">AI</span>
+            <span style="font-size:9.5px; background:#163d78; color:#fff; padding:2px 7px; border-radius:6px; font-weight: 700; margin-left:auto;">AI</span>
           </button>
         </div>
 
@@ -6080,7 +6080,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
                     <div>
                       <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; font-weight:600;">Analisis Proyek Mendalam</div>
-                      <div style="font-size:16px; font-weight:800; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
+                      <div style="font-size:16px; font-weight: 700; font-family:'Nunito',sans-serif;" id="analyticsProjectName">—</div>
                     </div>
                   </div>
                   <button type="button" onclick="clearAnalyticsProject_()" style="background:rgba(255,255,255,0.22); color:#fff; border:1px solid rgba(255,255,255,0.5); padding:8px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; min-height:40px; touch-action:manipulation; -webkit-tap-highlight-color:transparent; display:inline-flex; align-items:center; gap:8px;">
@@ -6097,7 +6097,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <div>
                       <div style="font-size:11px; font-weight:700; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Tingkat Penyelesaian (Completion Rate)</div>
                       <div style="display:flex; align-items:baseline; gap:10px; margin-top:2px;">
-                        <span id="backlogCompletion" style="font-size:26px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</span>
+                        <span id="backlogCompletion" style="font-size:26px; font-weight: 700; color:var(--ink); font-variant-numeric:tabular-nums;">-</span>
                         <span id="backlogRateText" style="font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums;">-</span>
                       </div>
                       <div id="backlogDetail" style="font-size:12px; color:var(--ink-muted); margin-top:4px;">-</div>
@@ -6105,15 +6105,15 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <div style="display:flex; gap:16px; text-align:right;">
                       <div>
                         <div style="font-size:11px; color:var(--ink-muted);">Dokumen Selesai</div>
-                        <div id="backlogClosed" style="font-size:18px; font-weight:800; color:#16a34a; font-variant-numeric:tabular-nums;">-</div>
+                        <div id="backlogClosed" style="font-size:18px; font-weight: 700; color:#16a34a; font-variant-numeric:tabular-nums;">-</div>
                       </div>
                       <div>
                         <div style="font-size:11px; color:var(--ink-muted);">Total Dokumen</div>
-                        <div id="backlogAll" style="font-size:18px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums;">-</div>
+                        <div id="backlogAll" style="font-size:18px; font-weight: 700; color:var(--ink); font-variant-numeric:tabular-nums;">-</div>
                       </div>
                       <div>
                         <div style="font-size:11px; color:var(--ink-muted);">Backlog Tertunda</div>
-                        <div id="backlogTotal" style="font-size:18px; font-weight:800; color:#dc2626; font-variant-numeric:tabular-nums;">-</div>
+                        <div id="backlogTotal" style="font-size:18px; font-weight: 700; color:#dc2626; font-variant-numeric:tabular-nums;">-</div>
                       </div>
                     </div>
                   </div>
@@ -6123,30 +6123,30 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </div>
                 
                 <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open (Aging)</span></h3>
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight: 700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent,#e11d48);"><circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.14"/><polyline points="12 6 12 12 16 14"/></svg><span>Analisis Umur Dokumen Open (Aging)</span></h3>
                   <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,163,74,0.08); border-radius:8px; border:1px solid rgba(22,163,74,0.2); cursor:pointer;" onclick="drillDownAging('0-30')">
-                      <div style="font-size:20px; font-weight:800; color:#16a34a; font-family:var(--font-mono);" id="age0_30">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:#16a34a; font-family:var(--font-mono);" id="age0_30">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">0-30 hari</div>
                     </div>
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(217,119,6,0.08); border-radius:8px; border:1px solid rgba(217,119,6,0.2); cursor:pointer;" onclick="drillDownAging('31-60')">
-                      <div style="font-size:20px; font-weight:800; color:#d97706; font-family:var(--font-mono);" id="age31_60">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:#d97706; font-family:var(--font-mono);" id="age31_60">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">31-60 hari</div>
                     </div>
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(234,88,12,0.08); border-radius:8px; border:1px solid rgba(234,88,12,0.2); cursor:pointer;" onclick="drillDownAging('61-90')">
-                      <div style="font-size:20px; font-weight:800; color:#ea580c; font-family:var(--font-mono);" id="age61_90">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:#ea580c; font-family:var(--font-mono);" id="age61_90">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">61-90 hari</div>
                     </div>
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(220,38,38,0.08); border-radius:8px; border:1px solid rgba(220,38,38,0.2); cursor:pointer;" onclick="drillDownAging('>90')">
-                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="age90plus">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:#dc2626; font-family:var(--font-mono);" id="age90plus">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">&gt;90 hari (Kritis)</div>
                     </div>
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(22,61,120,0.06); border-radius:8px; border:1px solid rgba(22,61,120,0.18);">
-                      <div style="font-size:20px; font-weight:800; color:var(--primary,#163d78); font-family:var(--font-mono);" id="avgAge">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:var(--primary,#163d78); font-family:var(--font-mono);" id="avgAge">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Rata-rata (hari)</div>
                     </div>
                     <div style="flex:1; min-width:110px; padding:12px; background:rgba(239,68,68,0.06); border-radius:8px; border:1px solid rgba(239,68,68,0.18);">
-                      <div style="font-size:20px; font-weight:800; color:#dc2626; font-family:var(--font-mono);" id="maxAge">-</div>
+                      <div style="font-size:20px; font-weight: 700; color:#dc2626; font-family:var(--font-mono);" id="maxAge">-</div>
                       <div style="font-size:11.5px; font-weight:600; color:var(--ink-muted);">Maksimal (hari)</div>
                     </div>
                   </div>
@@ -6157,7 +6157,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
                 <!-- Monthly Trend Chart -->
                 <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Trend Bulanan Dokumen</span></h3>
+                  <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:15px;font-weight: 700;color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg><span>Trend Bulanan Dokumen</span></h3>
                   <div style="position:relative; height:220px; width:100%;">
                     <canvas id="trendChart"></canvas>
                   </div>
@@ -6166,13 +6166,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 <!-- Discipline & Type Breakdown Charts -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
                   <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight: 700;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
                     <div style="position:relative; height:200px; width:100%;">
                       <canvas id="disciplineChart"></canvas>
                     </div>
                   </div>
                   <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#2563eb;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span>Komposisi Tipe Dokumen</span></h3>
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight: 700;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#2563eb;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg><span>Komposisi Tipe Dokumen</span></h3>
                     <div style="position:relative; height:200px; width:100%;">
                       <canvas id="typeChart"></canvas>
                     </div>
@@ -6182,7 +6182,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 <!-- Drill-down Table (Hidden by Default) -->
                 <div id="drillDownTableWrapper" style="display:none; background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                    <h3 id="drillDownTitle" style="margin:0;font-size:15px;font-weight:800;color:var(--ink);">Daftar Dokumen</h3>
+                    <h3 id="drillDownTitle" style="margin:0;font-size:15px;font-weight: 700;color:var(--ink);">Daftar Dokumen</h3>
                     <button class="btn-small" onclick="closeDrillDown()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="vertical-align:-1px;margin-right:4px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Tutup Tabel</button>
                   </div>
                   <div style="overflow-x:auto;">
@@ -7362,13 +7362,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 }
 .ai-header-title {
   font-size: 14.5px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.2px;
   color: #ffffff;
 }
 .ai-header-badge {
   font-size: 9.5px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
   padding: 2px 7px;
@@ -7465,7 +7465,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 }
 .ai-msg-bot .ai-md-heading {
   color: var(--ink);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.2px;
   margin: 14px 0 6px 0;
   line-height: 1.35;
@@ -7518,7 +7518,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 }
 .ai-md-table th {
   padding: 8px 10px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink);
   font-size: 11px;
   text-transform: uppercase;
@@ -7537,7 +7537,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   background: var(--surface-hover);
 }
 .ai-md-table .ai-table-section-row td {
-  font-weight: 800;
+  font-weight: 700;
   background: var(--surface-subtle);
   color: var(--ink);
   letter-spacing: 0.3px;
@@ -7600,7 +7600,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 }
 .ai-bot-greeting {
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--ink);
   margin-bottom: 4px;
 }
@@ -13125,7 +13125,7 @@ function renderCCDetailUI_() {
           '<div style="position:relative; width:135px; height:135px; margin:4px 0;">' +
             '<canvas id="projStatusDonutChart"></canvas>' +
             '<div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none;">' +
-              '<span id="projDonutPct" style="font-size:18px; font-weight:800; color:var(--ink); font-family:var(--font-mono); font-variant-numeric:tabular-nums;">' + Math.round((closedCount / Math.max(1, totalCount)) * 100) + '%</span>' +
+              '<span id="projDonutPct" style="font-size:18px; font-weight: 700; color:var(--ink); font-family:var(--font-mono); font-variant-numeric:tabular-nums;">' + Math.round((closedCount / Math.max(1, totalCount)) * 100) + '%</span>' +
               '<span style="font-size:9.5px; font-weight:600; color:var(--ink-muted); text-transform:uppercase; letter-spacing:0.5px;">Selesai</span>' +
             '</div>' +
           '</div>' +
@@ -13997,12 +13997,12 @@ function exportCCDetailCSV_() {
               '</div>' +
               '<div style="display:flex; align-items:center; gap:16px; margin:10px 0 14px 0;">' +
                 '<div style="width:72px; height:72px; min-width:72px; border-radius:50%; background:conic-gradient(#16a34a 0% ' + progress + '%, var(--surface-subtle) ' + progress + '% 100%); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.06);">' +
-                  '<div style="width:54px; height:54px; border-radius:50%; background:var(--surface-card); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:16px; font-weight:800; color:#16a34a;">' +
+                  '<div style="width:54px; height:54px; border-radius:50%; background:var(--surface-card); display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:16px; font-weight: 700; color:#16a34a;">' +
                     progress + '%' +
                   '</div>' +
                 '</div>' +
                 '<div>' +
-                  '<div style="font-size:17px; font-weight:800; color:#16a34a; font-family:var(--font-mono); line-height:1.2;">' + Number(t.closed || 0).toLocaleString('id-ID') + ' Closed</div>' +
+                  '<div style="font-size:17px; font-weight: 700; color:#16a34a; font-family:var(--font-mono); line-height:1.2;">' + Number(t.closed || 0).toLocaleString('id-ID') + ' Closed</div>' +
                   '<div style="font-size:13px; font-weight:700; color:#dc2626; font-family:var(--font-mono); margin-top:2px;">' + Number(t.open || 0).toLocaleString('id-ID') + ' Open Aktif</div>' +
                   '<div style="font-size:11px; color:var(--ink-muted); margin-top:2px;">' + Number(otherCount).toLocaleString('id-ID') + ' Canceled / Lain</div>' +
                 '</div>' +
@@ -16185,13 +16185,13 @@ window.addEventListener('offline', updateFooterStatus);
       div.onclick = function(e) { if(e.target === div || e.target.classList.contains('close-btn')) div.classList.remove('show'); };
       div.innerHTML = '<div class="modal-box" style="max-width:440px; padding:16px; text-align:center; position:relative; background:var(--surface-card); border-radius:18px; border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,0.6);">' +
         '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">' +
-          '<span style="font-weight:800; font-size:13.5px; color:var(--ink);">Foto Profil Pengembang</span>' +
+          '<span style="font-weight: 700; font-size:13.5px; color:var(--ink);">Foto Profil Pengembang</span>' +
           '<button type="button" class="close-btn" onclick="document.getElementById(\'devPhotoModal\').classList.remove(\'show\')" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; color:var(--ink); font-size:15px; cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
         '</div>' +
         '<div style="border-radius:14px; overflow:hidden; border:2px solid var(--border); background:#0f172a; margin-bottom:12px;">' +
           '<img src="' + window._DEV_FULL_PHOTO + '" alt="Ahmad Nur Fatony" style="width:100%; height:auto; max-height:70vh; object-fit:contain; display:block;">' +
         '</div>' +
-        '<div style="font-size:14px; font-weight:800; color:var(--ink);">Ahmad Nur Fatony</div>' +
+        '<div style="font-size:14px; font-weight: 700; color:var(--ink);">Ahmad Nur Fatony</div>' +
         '<div style="font-size:11.5px; font-weight:600; color:var(--accent,#ed2e35); margin-top:2px;">Lead System Developer &amp; QA/QC Engineering Specialist</div>' +
         '<div style="font-size:11px; color:var(--ink-muted); margin-top:1px;">PT Asuka Engineering Indonesia</div>' +
       '</div>';
@@ -17596,7 +17596,7 @@ window.addEventListener('offline', updateFooterStatus);
           <div class="ai-diag-score-wrap">
             <div class="ai-diag-score-circle" id="aiDiagScoreVal">--</div>
             <div>
-              <div style="font-weight:800; font-size:14.5px; color:var(--ink);" id="aiDiagStatusText">Siap Menjalankan Uji Diagnostik</div>
+              <div style="font-weight: 700; font-size:14.5px; color:var(--ink);" id="aiDiagStatusText">Siap Menjalankan Uji Diagnostik</div>
               <div style="font-size:12px; color:var(--ink-muted); margin-top:2px;" id="aiDiagStatusDesc">Klik tombol di bawah untuk memindai kesehatan &amp; kepatuhan sistem.</div>
             </div>
           </div>
@@ -17731,7 +17731,7 @@ window.addEventListener('offline', updateFooterStatus);
         <div style="display:flex; align-items:center; gap:8px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:8px;color:var(--accent);"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.65-.75 1.65-1.69 0-.44-.18-.84-.44-1.13-.29-.29-.44-.65-.44-1.12a1.64 1.64 0 0 1 1.67-1.67h2c3.05 0 5.56-2.5 5.56-5.55C22 6.01 17.5 2 12 2z" fill="currentColor" fill-opacity="0.16"/><circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"/><circle cx="12" cy="7.5" r="1.5" fill="currentColor"/><circle cx="16.5" cy="10.5" r="1.5" fill="currentColor"/></svg>
           <div>
-            <h3 style="margin:0; font-size:16px; font-weight:800; color:var(--ink);">Kustomisasi Warna Header</h3>
+            <h3 style="margin:0; font-size:16px; font-weight: 700; color:var(--ink);">Kustomisasi Warna Header</h3>
             <p style="margin:2px 0 0; font-size:12px; color:var(--ink-muted);">Sesuaikan warna bilah atas sesuai selera Anda</p>
           </div>
         </div>
@@ -17742,7 +17742,7 @@ window.addEventListener('offline', updateFooterStatus);
       <div id="headerColorPreview" style="background:#13275a; border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; box-shadow:0 4px 14px rgba(0,0,0,0.15); transition:background 0.25s ease;">
         <div style="display:flex; align-items:center; gap:8px;">
           <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="22" alt="Logo" style="height:22px; object-fit:contain;">
-          <span id="previewHeaderTitle" style="font-size:12px; font-weight:800; color:#fff;">QC-CMS EDMS</span>
+          <span id="previewHeaderTitle" style="font-size:12px; font-weight: 700; color:#fff;">QC-CMS EDMS</span>
         </div>
         <span id="previewHeaderTag" style="font-size:11px; padding:3px 8px; border-radius: 4px; background:rgba(255,255,255,0.18); color:#fff; font-weight:600;">Pratinjau</span>
       </div>

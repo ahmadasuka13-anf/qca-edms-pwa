@@ -6,7 +6,7 @@
  *  - API Calls: Direct Network (No caching)
  */
 
-const CACHE_NAME = 'qccms-edms-v12.2-audit-anti-ai-polish';
+const CACHE_NAME = 'qccms-edms-v12.3-final-audit-fix';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -93,7 +93,7 @@ self.addEventListener('fetch', function(event) {
         })
         .catch(function() {
           console.log('[SW] Offline detected, serving cached HTML');
-          return caches.match('/index.html').then(function(cached) {
+          return caches.match(event.request).then(function(cached) {
             return cached || caches.match('/');
           });
         })
