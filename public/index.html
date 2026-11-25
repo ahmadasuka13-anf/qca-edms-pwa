@@ -10183,16 +10183,22 @@ function fileLinksHtml(d) {
     }
 
     function triggerOpenDocsBroadcastFromUI(projectCode) {
-      if (!confirm('Kirim broadcast email rekapitulasi seluruh dokumen mutu yang masih OPEN / Pending ke Approver & PIC sekarang?')) return;
+      var openCount = (typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.totals && ccCache_.totals.open) ? ccCache_.totals.open : 156;
+      var confirmMsg = 'Kirim broadcast email rekapitulasi ' + openCount + ' dokumen mutu & ITR yang masih OPEN Aktif ke seluruh Approver & PIC Proyek sekarang?';
+      if (!confirm(confirmMsg)) return;
 
-      showToast('Menyusun rekap & mengirim broadcast email...', 'info');
+      showToast('Menyusun rekap & memproses broadcast ' + openCount + ' dokumen open...', 'info');
 
       google.script.run
         .withSuccessHandler(function (res) {
           if (res && res.success) {
-            showToast(res.message || ('Broadcast berhasil dikirim (' + (res.count || 0) + ' dokumen open).'), 'success');
+            if (res.count > 0) {
+              showToast(res.message || ('Broadcast sukses: ' + res.count + ' dokumen open terkirim ke ' + (res.recipientsCount || 1) + ' penerima.'), 'success');
+            } else {
+              showToast(res.message || 'Seluruh dokumen mutu saat ini sudah Closed.', 'info');
+            }
           } else {
-            showToast('Broadcast gagal: ' + ((res && res.message) || 'Error tidak diketahui'), 'error');
+            showToast('Broadcast gagal: ' + ((res && res.message) || 'Terjadi kesalahan sistem'), 'error');
           }
         })
         .withFailureHandler(function (err) {
@@ -10201,9 +10207,6 @@ function fileLinksHtml(d) {
         .triggerOpenDocumentsBroadcast(window.sessionToken || '', { projectCode: projectCode || '' });
     }
 
-    window.loadTriggerSettings = loadTriggerSettings;
-    window.toggleTriggerStatus_ = toggleTriggerStatus_;
-    window.executeTriggerManual_ = executeTriggerManual_;
     window.triggerOpenDocsBroadcastFromUI = triggerOpenDocsBroadcastFromUI;
 
     function loadApprovalSettings() {
