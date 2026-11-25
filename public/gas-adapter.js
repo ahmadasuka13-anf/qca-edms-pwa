@@ -34,7 +34,7 @@
     const CACHEABLE_READ_ACTIONS = [
       'getDocumentList', 'getInitData', 'getNFILogList', 'getProjectsListForUI',
       'getProjectsSettings', 'getSiteReportEntries', 'getDashboardStats',
-      'getCalibrationTools', 'getMyTasks', 'getDisciplinesSettings', 'getDocTypesSettings',
+      'getCalibrationTools', 'getNcrData', 'getNcrSummary', 'getMyTasks', 'getDisciplinesSettings', 'getDocTypesSettings',
       'getProjectDetailFromMaster', 'getExecutiveDashboard'
     ];
 
@@ -96,7 +96,7 @@
           successCb.call(userObj, {
             success:  true,
             offline:  true,
-            message:  '📶 Anda sedang offline. Form disimpan di antrian offline dan otomatis disinkronkan saat koneksi internet kembali.'
+            message:  'Mode Offline: Form disimpan di antrian offline dan otomatis disinkronkan saat koneksi internet kembali.'
           });
         }
         return;
@@ -225,11 +225,12 @@
       // ── Kirim ke server ──
       const _doRequest = async (retryCount) => {
         const isUploadAction = action === 'submitDocument' || action === 'submitSiteReportEntry' || action === 'saveNFILogEntry' || action === 'submitCalibration' || action === 'updateDocumentMetadata';
-        const isLongRunningSync = action === 'runSyncAll' || action === 'autoSyncAllProjects' || action === 'syncProjectMaster_' || action === 'setupHourlyTrigger';
+        const isLongRunningSync = action === 'runSyncAll' || action === 'autoSyncAllProjects' || action === 'syncProjectMaster_' || action === 'setupHourlyTrigger' || action === 'cleanupDuplicateDocumentsInMaster';
         const isPayloadExceedingVercel = jsonStr.length > 2.5 * 1024 * 1024; // > 2.5 MB
 
-        // Jika form upload dokumen/foto, payload besar, atau proses sync berdurasi panjang, LANGSUNG kirim ke Google Apps Script (Bypass limit 10-15s Vercel)
-        if (isUploadAction || isLongRunningSync || isPayloadExceedingVercel) {
+        const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+        // Jika form upload dokumen/foto, payload besar, proses sync, atau di environment lokal tanpa Vercel proxy, LANGSUNG kirim ke Google Apps Script
+        if (isLocalDev || isUploadAction || isLongRunningSync || isPayloadExceedingVercel) {
           return await _sendDirectToGas();
         }
 
@@ -252,8 +253,8 @@
             }
 
             xhr.onload = async () => {
-              if (xhr.status === 413) {
-                console.warn('[GAS Adapter] HTTP 413 dari Vercel terdeteksi! Mengalihkan langsung ke Google Apps Script...');
+              if (xhr.status === 413 || xhr.status === 404) {
+                console.warn('[GAS Adapter] HTTP ' + xhr.status + ' dari proxy! Mengalihkan langsung ke Google Apps Script...');
                 try {
                   const fallbackData = await _sendDirectToGas();
                   resolve(fallbackData);
@@ -296,8 +297,8 @@
           body:    jsonStr
         });
 
-        if (res.status === 413) {
-          console.warn('[GAS Adapter] HTTP 413 dari Vercel fetch! Mengalihkan langsung ke Google Apps Script...');
+        if (res.status === 413 || res.status === 404) {
+          console.warn('[GAS Adapter] HTTP ' + res.status + ' dari proxy! Mengalihkan langsung ke Google Apps Script...');
           return await _sendDirectToGas();
         }
 
@@ -314,10 +315,10 @@
           data = await _doRequest(0);
         } catch (firstErr) {
           const errMsg = (firstErr && firstErr.message) || '';
-          if (errMsg.includes('413')) {
-            console.warn('[GAS Adapter] Auto-recover dari HTTP 413 langsung ke Google Apps Script:', action);
+          if (errMsg.includes('413') || errMsg.includes('404') || (firstErr && firstErr.name === 'TypeError')) {
+            console.warn('[GAS Adapter] Auto-recover dari error proxy (' + errMsg + ') langsung ke Google Apps Script:', action);
             data = await _sendDirectToGas();
-          } else if (errMsg.startsWith('HTTP 5') || (firstErr && firstErr.name === 'TypeError')) {
+          } else if (errMsg.startsWith('HTTP 5')) {
             console.warn('[GAS Adapter] Retry 1x untuk:', action);
             await new Promise(r => setTimeout(r, 1500));
             data = await _doRequest(1);
@@ -395,7 +396,7 @@
             successCb.call(userObj, {
               success: true,
               offline: true,
-              message: '📶 Anda sedang offline. Form disimpan dan akan dikirim otomatis saat koneksi kembali.'
+              message: 'Mode Offline: Form disimpan dan akan dikirim otomatis saat koneksi kembali.'
             });
           }
           return;

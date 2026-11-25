@@ -23,9 +23,15 @@
     });
   }
 
-  function callAuthed(fnName) {
+  async function callAuthed(fnName) {
     var args = Array.prototype.slice.call(arguments, 1);
-    var token = window.sessionToken || (typeof sessionToken !== 'undefined' ? sessionToken : null) || localStorage.getItem('qccms_session');
+    var token = window.sessionToken || (typeof sessionToken !== 'undefined' ? sessionToken : null);
+    if (!token && typeof QC_SECURITY !== 'undefined' && typeof QC_SECURITY.decryptToken === 'function') {
+      try { token = await QC_SECURITY.decryptToken(); } catch (e) {}
+    }
+    if (!token) {
+      token = localStorage.getItem('qccms_session') || localStorage.getItem('qc_session_token');
+    }
     if (!token) {
       return Promise.reject(new Error('Session tidak aktif. Silakan login ulang.'));
     }

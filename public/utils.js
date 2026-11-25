@@ -1,7 +1,7 @@
 /**
  * QC-CMS EDMS Utility Library & Global State Initializer
  */
-// 🛡️ ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
+// ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
 var sessionToken = sessionToken || '';
 var currentUser = currentUser || null;
 var initData = initData || null;
@@ -230,7 +230,7 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
     if (actionText) actionText.textContent = actionMap[action] || '';
 
     if (percent >= 100) {
-      if (titleText) titleText.innerHTML = '<span>⚡ Menyimpan ke Drive & Spreadsheet...</span>';
+      if (titleText) titleText.innerHTML = '<span>Menyimpan ke Drive & Spreadsheet...</span>';
     } else {
       if (titleText) titleText.innerHTML = '<span class="spinner" style="width:13px;height:13px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></span><span>Mengunggah berkas...</span>';
     }
@@ -311,7 +311,7 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
             }
           }
           if (typeof showToast === 'function') {
-            showToast('✅ Berhasil scan: ' + decodedText, 'success');
+            showToast('Berhasil scan: ' + decodedText, 'success');
           }
           window.closeQrScanner();
         },
@@ -366,7 +366,7 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
         advanced: [{ torch: _isTorchActive }]
       });
       const btn = document.getElementById('qrTorchBtn');
-      if (btn) btn.textContent = _isTorchActive ? '🔦 Matikan Flash' : '💡 Flashlight';
+      if (btn) btn.textContent = _isTorchActive ? 'Matikan Flash' : 'Flashlight';
     } catch (e) {
       console.warn('Torch error:', e);
     }

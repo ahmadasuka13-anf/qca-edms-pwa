@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>QC-CMS EDMS</title>
   <link rel="icon" type="image/png" href="/icons/logo.png">
-    <!-- ✅ PWA META TAGS -->
+    <!--  PWA META TAGS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="QC-CMS">
@@ -16,13 +16,13 @@
 <meta name="theme-color" content="#13275a" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#14100c" media="(prefers-color-scheme: dark)">
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <!-- ✨ PWA ICON FIX -->
+  <!--  PWA ICON FIX -->
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- ✅ CORE PWA & GAS RUNTIME ADAPTERS -->
+  <!--  CORE PWA & GAS RUNTIME ADAPTERS -->
   <script src="/utils.js"></script>
   <script src="/security.js"></script>
   <script src="/offline-queue.js"></script>
@@ -87,7 +87,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #163d78, #0d6ab0);
+  background: #163d78;
   z-index: 99999;
   align-items: center;
   justify-content: center;
@@ -131,7 +131,7 @@
 .success-progress-bar {
   height: 4px;
   background: #e8f1fb;
-  border-radius: 999px;
+  border-radius: 4px;
   overflow: hidden;
   margin-bottom: 24px;
 }
@@ -139,13 +139,13 @@
 #successProgressBar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #16a34a, #22c55e);
+  background: #16a34a;
   transition: width linear;
-  border-radius: 999px;
+  border-radius: 4px;
 }
 
 #successBtn {
-  background: linear-gradient(135deg, #163d78, #0d6ab0);
+  background: #163d78;
   color: #fff;
   border: none;
   padding: 14px 32px;
@@ -160,7 +160,6 @@
 }
 
 #successBtn:hover {
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(22,61,120,0.25);
 }
 
@@ -178,11 +177,11 @@
 }
 #successOverlay.error-mode #successTitle { color: #dc2626; }
 #successOverlay.error-mode #successProgressBar {
-  background: linear-gradient(90deg, #dc2626, #ef4444);
+  background: #ed2e35;
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 MOBILE: Full Screen                                          */
+/*  MOBILE: Full Screen                                          */
 /* ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
@@ -346,7 +345,7 @@ html, body {
   width: 100%;
 }
 
-/* ✅ FIX DEFINITIF: html & body warna tema + tinggi full */
+/*  FIX DEFINITIF: html & body warna tema + tinggi full */
 html {
   background-color: var(--surface) !important;
   min-height: 100%;
@@ -400,7 +399,7 @@ body {
     .password-wrap input { padding-right: 62px; }
     .password-toggle { position: absolute; right: 4px; top: 4px; bottom: 4px; background: none; border: none; color: var(--ink-muted); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0 8px; touch-action: manipulation; }
 
-    /* 📱 GLOBAL MOBILE TOUCH & TAP OPTIMIZATIONS */
+    /*  GLOBAL MOBILE TOUCH & TAP OPTIMIZATIONS */
     html, body {
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
@@ -456,9 +455,9 @@ body {
     .clock-time { font-family: var(--font-mono); font-size: 14px; font-weight: 700; color: #fff; letter-spacing: 1px; }
     .clock-date { font-family: var(--font-mono); font-size: 10px; color: var(--bezel-text-muted); margin-top: 1px; }
     .theme-toggle { background: rgba(255,255,255,0.1); border: none; width: 38px; height: 38px; min-width: 38px; min-height: 38px; border-radius: 10px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; touch-action: manipulation; }
-    .theme-toggle:hover { background: rgba(255,255,255,0.2); transform: translateY(-1px); }
+    .theme-toggle:hover { background: rgba(255,255,255,0.2); }
     .hamburger-btn { display: none; background: rgba(255,255,255,0.1); border: none; width: 44px; height: 44px; min-width: 44px; min-height: 44px; border-radius: 10px; cursor: pointer; font-size: 22px; color: #fff; align-items: center; justify-content: center; flex-shrink: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-    .notif-badge { position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 9.5px; font-weight: 700; min-width: 15px; height: 15px; border-radius: 999px; display: flex; align-items: center; justify-content: center; padding: 0 3px; font-family: var(--font-mono); }
+    .notif-badge { position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 9.5px; font-weight: 700; min-width: 15px; height: 15px; border-radius: 4px; display: flex; align-items: center; justify-content: center; padding: 0 3px; font-family: var(--font-mono); }
     .notif-panel { position: absolute; top: 42px; right: 0; width: 320px; max-height: 420px; overflow-y: auto; background: var(--surface-card); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 8px 30px rgba(40,30,20,0.2); z-index: 500; }
     .notif-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 11px 15px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 13px; color: var(--ink); position: sticky; top: 0; background: var(--surface-card); }
     .notif-item { padding: 10px 15px; border-bottom: 1px solid var(--border); font-size: 12.5px; color: var(--ink); line-height: 1.45; cursor: pointer; }
@@ -466,8 +465,8 @@ body {
     .notif-item.unread { border-left: 3px solid var(--accent); background: var(--surface-hover); }
     .notif-item .notif-time { display: block; font-size: 10.5px; color: var(--ink-faint); margin-top: 3px; font-family: var(--font-mono); }
     .tz-warning-banner { background: #fdf0d5; color: #92400e; font-size: 12.5px; padding: 9px 20px; text-align: center; font-weight: 600; }
-    .user-badge { font-size: 12.5px; background: rgba(255,255,255,0.1); padding: 6px 13px; border-radius: 999px; color: #dbe6f2; font-weight: 500; }
-    .role-badge { font-size: 10.5px; background: var(--accent); color: #fff; padding: 2px 10px; border-radius: 999px; font-weight: 700; margin-left: 7px; }
+    .user-badge { font-size: 12.5px; background: rgba(255,255,255,0.1); padding: 6px 13px; border-radius: 4px; color: #dbe6f2; font-weight: 500; }
+    .role-badge { font-size: 10.5px; background: var(--accent); color: #fff; padding: 2px 10px; border-radius: 4px; font-weight: 700; margin-left: 7px; }
     .logout-btn { background: rgba(255,255,255,0.12); color: #fff; border: none; padding: 8px 16px; border-radius: 9px; font-size: 12.5px; font-weight: 600; cursor: pointer; flex-shrink: 0; min-height: 38px; touch-action: manipulation; }
     .logout-btn:hover { background: rgba(255,255,255,0.2); }
 
@@ -490,7 +489,7 @@ body {
   .hamburger-btn { display: flex !important; }
 }
 
-    /* ✅ SIDEBAR TOGGLE — Desktop Collapse Support */
+    /*  SIDEBAR TOGGLE — Desktop Collapse Support */
 .app-sidebar {
   transition: width 0.25s ease, padding 0.25s ease, border-color 0.25s ease;
 }
@@ -504,12 +503,12 @@ body {
   overflow: hidden !important;
 }
 
-/* ✅ Tampilkan hamburger di desktop supaya bisa toggle */
+/*  Tampilkan hamburger di desktop supaya bisa toggle */
 @media (min-width: 861px) {
   .hamburger-btn { display: flex !important; }
 }
 
-/* ✅ Saat sidebar collapsed, main content dapat lebih banyak ruang */
+/*  Saat sidebar collapsed, main content dapat lebih banyak ruang */
 .app-layout:has(.app-sidebar.collapsed) .app-main {
   max-width: calc(100vw);
 }
@@ -519,7 +518,7 @@ body {
   position: sticky; top: 0; align-self: flex-start;
   max-height: 100vh; overflow-y: auto; z-index: 90;
   
-  /* ✅ FIX: bikin sidebar full tinggi */
+  /*  FIX: bikin sidebar full tinggi */
   height: 100vh;
   min-height: 100vh;
   box-sizing: border-box;
@@ -570,7 +569,7 @@ body {
       .app-sidebar.open { transform: translateX(0); }
       .main-content { padding: 16px 14px 60px; }
       .sidebar-close-btn { display: flex; }
-    /* ✅ TAMBAHKAN 2 BARIS INI */
+    /*  TAMBAHKAN 2 BARIS INI */
   .app-main { min-height: calc(100vh - 100px); min-height: calc(100dvh - 100px); }
   .app-footer { margin-top: auto; }
 }
@@ -603,7 +602,7 @@ body {
     .btn { font-family: var(--font-ui); font-size: 14px; font-weight: 600; padding: 11px 22px; border-radius: 10px; border: none; cursor: pointer; }
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
     .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover:not(:disabled) { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(237,46,53,0.25); }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-dark); box-shadow: 0 4px 12px rgba(237,46,53,0.25); }
     .btn-secondary { background: var(--surface-subtle); color: var(--ink); border: 1px solid var(--border); }
     .btn-secondary:hover:not(:disabled) { background: var(--surface-hover); }
     .btn-approve { background: var(--approved-text); color: #fff; }
@@ -641,7 +640,7 @@ body {
     tbody tr:hover { background: var(--surface-hover); }
     .doc-code { font-family: var(--font-mono); font-size: 12.5px; color: var(--ink); }
     .doc-title { font-weight: 500; }
-    .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge { display: inline-block; padding: 3px 11px; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap; }
     .badge-pending { background: var(--pending-bg); color: var(--pending-text); }
     .badge-approved { background: var(--approved-bg); color: var(--approved-text); }
     .badge-rejected { background: var(--rejected-bg); color: var(--rejected-text); }
@@ -653,7 +652,7 @@ body {
       align-items: center;
       gap: 7px;
       padding: 6px 14px;
-      border-radius: 999px;
+      border-radius: 6px;
       font-size: 12.5px;
       font-weight: 600;
       border: 1px solid var(--border);
@@ -667,7 +666,6 @@ body {
     .cc-detail-tab:hover {
       background: var(--surface-hover);
       color: var(--ink);
-      transform: translateY(-1px);
     }
     .cc-detail-tab.active-open {
       background: var(--pending-bg) !important;
@@ -706,7 +704,7 @@ body {
     }
     .cc-tab-count {
       padding: 1px 7px;
-      border-radius: 999px;
+      border-radius: 4px;
       font-size: 11px;
       font-weight: 700;
       font-family: var(--font-mono);
@@ -744,9 +742,9 @@ body {
     .skeleton-cell {
       height: 14px;
       border-radius: 6px;
-      background: linear-gradient(90deg, var(--surface-subtle) 25%, var(--border) 50%, var(--surface-subtle) 75%);
+      background: var(--surface-subtle);
       background-size: 700px 100%;
-      animation: shimmer 1.5s infinite linear;
+      
     }
     .skeleton-cell.w-60  { width: 60%; }
     .skeleton-cell.w-75  { width: 75%; }
@@ -754,7 +752,7 @@ body {
     .skeleton-cell.w-50  { width: 50%; }
     .skeleton-cell.w-30  { width: 30%; }
     .skeleton-cell.w-90  { width: 90%; }
-    .skeleton-cell.badge { height: 20px; border-radius: 999px; width: 70px; }
+    .skeleton-cell.badge { height: 20px; border-radius: 4px; width: 70px; }
     .skeleton-cell.btn   { height: 26px; border-radius: 6px; width: 50px; display: inline-block; }
     .skeleton-btns { display: flex; gap: 4px; }
     /* Offline queue banner animation */
@@ -800,7 +798,7 @@ body {
     }
     .dash-alert-head .count-badge {
       background: var(--rejected-text); color: #fff;
-      font-size: 11px; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; padding: 2px 8px; border-radius: 4px;
       font-family: var(--font-mono); font-weight: 700;
     }
     .dash-alert-item {
@@ -821,7 +819,7 @@ body {
     }
     .dash-alert-item .reason {
       font-size: 11px; font-weight: 700; white-space: nowrap;
-      padding: 3px 9px; border-radius: 999px;
+      padding: 3px 9px; border-radius: 4px;
     }
     .dash-alert-item .reason.rfi { background: var(--rejected-bg); color: var(--rejected-text); }
     .dash-alert-item .reason.stale { background: var(--pending-bg); color: var(--pending-text); }
@@ -850,12 +848,12 @@ body {
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .top-proj-bar {
-      height: 6px; background: var(--surface-subtle); border-radius: 999px;
+      height: 6px; background: var(--surface-subtle); border-radius: 4px;
       margin-top: 5px; overflow: hidden;
     }
     .top-proj-bar-fill {
-      height: 100%; background: linear-gradient(90deg, #163d78, #0d6ab0);
-      border-radius: 999px;
+      height: 100%; background: #163d78;
+      border-radius: 4px;
     }
     .top-proj-count {
       font-family: var(--font-mono); font-weight: 700; font-size: 14px;
@@ -911,7 +909,7 @@ body {
     .user-profile-trigger {
       background: rgba(255, 255, 255, 0.14) !important;
       border: 1px solid rgba(255, 255, 255, 0.24) !important;
-      border-radius: 999px !important;
+      border-radius: 4px !important;
       padding: 5px 14px 5px 12px !important;
       display: inline-flex !important;
       align-items: center !important;
@@ -928,7 +926,6 @@ body {
     .user-profile-trigger:hover {
       background: rgba(255, 255, 255, 0.24) !important;
       border-color: rgba(255, 255, 255, 0.4) !important;
-      transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18) !important;
     }
     .user-profile-trigger:active {
@@ -981,7 +978,6 @@ body {
     .btn-preview-action:hover {
       background: var(--primary-hover, #1d4ed8) !important;
       border-color: var(--primary-hover, #1d4ed8) !important;
-      transform: translateY(-1px);
       box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35) !important;
     }
     .btn-action-icon {
@@ -1080,7 +1076,6 @@ body {
       background: var(--surface-hover, #e2e8f0) !important;
       color: var(--ink, #0f172a) !important;
       border-color: var(--ink-faint, #94a3b8) !important;
-      transform: translateY(-1px);
     }
     .preview-modal-head .btn-small.btn-primary-preview {
       background: var(--primary, #2563eb) !important;
@@ -1255,7 +1250,7 @@ body {
 
     .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
     .project-card { border: 1px solid var(--border); border-radius: 14px; padding: 17px; cursor: pointer; background: var(--surface-card); border-left: 4px solid var(--superseded-text); }
-    .project-card:hover { box-shadow: var(--shadow-card); transform: translateY(-2px); }
+    .project-card:hover { box-shadow: var(--shadow-card); }
     .project-card.health-red { border-left-color: var(--rejected-text); }
     .project-card.health-yellow { border-left-color: var(--pending-text); }
     .project-card.health-green { border-left-color: var(--approved-text); }
@@ -1359,10 +1354,10 @@ body {
     .nfi-legend-val { margin-left: auto; font-family: var(--font-mono); font-weight: 700; }
 
     .nfi-type-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-    .nfi-type-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 5px 10px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface-card); color: var(--ink); }
+    .nfi-type-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-card); color: var(--ink); }
     .nfi-type-chip.builtin { opacity: 0.65; }
     .nfi-type-chip .chip-x { cursor: pointer; color: var(--rejected-text); font-weight: 700; padding: 0 2px; font-size: 13px; }
-        /* ✅ MATRIX TABEL ANALISIS */
+        /*  MATRIX TABEL ANALISIS */
     .matrix-table {
       width: 100%;
       border-collapse: collapse;
@@ -1452,7 +1447,6 @@ body {
     }
     .cc-project-card:hover {
       box-shadow: var(--shadow-card);
-      transform: translateY(-2px);
     }
     .cc-project-card.health-red { border-left-color: var(--rejected-text); }
     .cc-project-card.health-yellow { border-left-color: var(--pending-text); }
@@ -1517,7 +1511,7 @@ body {
     }
     .cc-progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--approved-text), #22c55e);
+      background: var(--approved-text);
       border-radius: 3px;
       transition: width 0.3s ease;
     }
@@ -1585,7 +1579,7 @@ body {
       align-items: center;
       gap: 4px;
       padding: 4px 10px;
-      border-radius: 999px;
+      border-radius: 4px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
       font-size: 11px;
@@ -1806,7 +1800,6 @@ body {
       border-color: var(--primary, #163d78) !important;
       background: rgba(22, 61, 120, 0.12) !important;
       box-shadow: 0 0 0 1.5px var(--primary, #163d78);
-      transform: translateY(-1px);
     }
     .disc-cell strong { font-weight: 600; color: var(--ink-muted); }
     .disc-cell span { font-family: var(--font-mono); font-weight: 700; color: var(--primary); }
@@ -2062,7 +2055,7 @@ body {
     .cc-chip-disc.mech {
       background: rgba(124,58,237,0.08);
       border-color: rgba(124,58,237,0.25);
-      color: #7c3aed;
+      color: #163d78;
     }
     .cc-chip-disc.elec {
       background: rgba(13,148,136,0.08);
@@ -2070,7 +2063,7 @@ body {
       color: #0d9488;
     }
 
-    /* 📱 MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
+    /*  MOBILE-FRIENDLY LAYER — Tambahan universal untuk HP/tablet  */
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* ─── 1. ANTI-ZOOM: Cegah iOS auto-zoom saat tap input ─────────── */
@@ -2216,7 +2209,7 @@ body {
 
 /* ─── 8. TABEL → CARD VIEW di HP ────────────────────────────────── */
 @media (max-width: 640px) {
-  .table-scroll table { min-width: 100% !important; } /* ✨ TAMBAHKAN INI */
+  .table-scroll table { min-width: 100% !important; } /* Table min width */
   .table-scroll table thead { display: none !important; }
   .table-scroll table tbody tr {
     display: block !important;
@@ -2398,7 +2391,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: linear-gradient(135deg, rgba(237,46,53,0.08), rgba(37,99,235,0.08));
+  background: rgba(22,61,120,0.06);
   border: 1px solid rgba(237,46,53,0.25);
   border-radius: 12px;
   margin: 10px 0 8px;
@@ -2408,16 +2401,15 @@ body {
   touch-action: manipulation;
 }
 .sidebar-dev-card:hover, .sidebar-dev-card:active {
-  background: linear-gradient(135deg, rgba(237,46,53,0.15), rgba(37,99,235,0.15));
+  background: rgba(22,61,120,0.12);
   border-color: rgba(237,46,53,0.5);
-  transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(237,46,53,0.2);
 }
 .sidebar-dev-avatar {
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #ed2e35, #2563eb);
+  background: #163d78;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2491,7 +2483,6 @@ body {
 
 .sidebar-footer-links a:hover,
 .sidebar-footer-links a:active {
-  transform: translateY(-2px);
 }
 
 .sidebar-footer-links a:hover svg,
@@ -2502,19 +2493,19 @@ body {
 /* Individualized brand accents in normal & hover states */
 .sidebar-footer-links a.sfl-wa { color: #059669; }
 .sidebar-footer-links a.sfl-email { color: #0284c7; }
-.sidebar-footer-links a.sfl-cinema { color: #7c3aed; }
+.sidebar-footer-links a.sfl-cinema { color: #163d78; }
 .sidebar-footer-links a.sfl-diag { color: #0d9488; }
 .sidebar-footer-links a.sfl-info { color: #2563eb; }
 
 [data-theme="dark"] .sidebar-footer-links a.sfl-wa { color: #34d399; }
 [data-theme="dark"] .sidebar-footer-links a.sfl-email { color: #38bdf8; }
-[data-theme="dark"] .sidebar-footer-links a.sfl-cinema { color: #c084fc; }
+[data-theme="dark"] .sidebar-footer-links a.sfl-cinema { color: #60a5fa; }
 [data-theme="dark"] .sidebar-footer-links a.sfl-diag { color: #2dd4bf; }
 [data-theme="dark"] .sidebar-footer-links a.sfl-info { color: #60a5fa; }
 
 .sidebar-footer-links a.sfl-wa:hover,
 .sidebar-footer-links a.sfl-wa:active {
-  background: linear-gradient(135deg, #059669, #10b981);
+  background: #059669;
   color: #fff;
   border-color: #059669;
   box-shadow: 0 4px 12px rgba(16,185,129,0.35);
@@ -2522,7 +2513,7 @@ body {
 
 .sidebar-footer-links a.sfl-email:hover,
 .sidebar-footer-links a.sfl-email:active {
-  background: linear-gradient(135deg, #0284c7, #38bdf8);
+  background: #0284c7;
   color: #fff;
   border-color: #0284c7;
   box-shadow: 0 4px 12px rgba(2,132,199,0.35);
@@ -2530,15 +2521,15 @@ body {
 
 .sidebar-footer-links a.sfl-cinema:hover,
 .sidebar-footer-links a.sfl-cinema:active {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  background: #163d78;
   color: #fff;
-  border-color: #7c3aed;
-  box-shadow: 0 4px 12px rgba(168,85,247,0.35);
+  border-color: #163d78;
+  box-shadow: 0 4px 12px rgba(22,61,120,0.25);
 }
 
 .sidebar-footer-links a.sfl-diag:hover,
 .sidebar-footer-links a.sfl-diag:active {
-  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  background: #0d9488;
   color: #fff;
   border-color: #0d9488;
   box-shadow: 0 4px 12px rgba(20,184,166,0.35);
@@ -2546,7 +2537,7 @@ body {
 
 .sidebar-footer-links a.sfl-info:hover,
 .sidebar-footer-links a.sfl-info:active {
-  background: linear-gradient(135deg, #163d78, #0d6ab0);
+  background: #163d78;
   color: #fff;
   border-color: #0d6ab0;
   box-shadow: 0 4px 12px rgba(22,61,120,0.35);
@@ -2590,7 +2581,7 @@ body {
 .app-footer {
   margin-top: auto;
   padding: 16px 24px;
-  padding-bottom: calc(16px + env(safe-area-inset-bottom));  /* ✅ tambah ini */
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));  /* Safe area inset */
   border-top: 1px solid var(--border);
   background: var(--surface-card);
   color: var(--ink-muted);
@@ -2629,7 +2620,7 @@ body {
   border-radius: 50%;
   background: #22c55e;
   box-shadow: 0 0 0 0 rgba(34,197,94,0.5);
-  animation: footerPulse 2s infinite;
+  
 }
 
 @keyframes footerPulse {
@@ -2672,7 +2663,7 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 FIX: DASHBOARD OVERFLOW DI HP                                */
+/*  FIX: DASHBOARD OVERFLOW DI HP                                */
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* 1. Cegah horizontal scroll di seluruh halaman */
@@ -2853,7 +2844,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 FIX: CARD VIEW TABEL — Tombol AKSI & Overflow               */
+/*  FIX: CARD VIEW TABEL — Tombol AKSI & Overflow               */
 /* ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
@@ -2974,7 +2965,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 FIX: TUGAS SAYA — Kartu Statistik Responsive                */
+/*  FIX: TUGAS SAYA — Kartu Statistik Responsive                */
 /* ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
@@ -3070,7 +3061,7 @@ canvas#disciplineChart {
 
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 FIX: AUTH CARD RESPONSIVE — Cegah Terpotong di HP            */
+/*  FIX: AUTH CARD RESPONSIVE — Cegah Terpotong di HP            */
 /* ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 480px) {
@@ -3186,7 +3177,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 📱 FIX: SUCCESS OVERLAY — Full Screen di HP                     */
+/*  FIX: SUCCESS OVERLAY — Full Screen di HP                     */
 /* ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 640px) {
@@ -3305,7 +3296,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 🚀 10/10 MODERN UI & MOBILE UX ENHANCEMENTS                    */
+/*  10/10 MODERN UI & MOBILE UX ENHANCEMENTS                    */
 /* ═══════════════════════════════════════════════════════════════ */
 
 /* 1. Pulse Beacon Dot on Pending Badges */
@@ -3325,7 +3316,7 @@ canvas#disciplineChart {
   inset: -3px;
   border-radius: 50%;
   background: inherit;
-  animation: beaconPulse 1.8s infinite ease-out;
+  
 }
 @keyframes beaconPulse {
   0% { transform: scale(0.8); opacity: 0.9; }
@@ -3603,7 +3594,7 @@ canvas#disciplineChart {
   background: var(--surface-hover);
 }
 /* ═══════════════════════════════════════════════════════════════ */
-/* 🎬 CINEMATIC WELCOME SCREEN OVERLAY (KONSEP B)                 */
+/*  CINEMATIC WELCOME SCREEN OVERLAY (KONSEP B)                 */
 /* ═══════════════════════════════════════════════════════════════ */
 .cinematic-welcome-overlay {
   position: fixed;
@@ -3638,7 +3629,7 @@ canvas#disciplineChart {
   pointer-events: none;
 }
 
-/* ─── 💻 LAPTOP & DESKTOP (Widescreen 100% Layar Penuh Megah Tanpa Garis/Hitam) ─── */
+/* ───  LAPTOP & DESKTOP (Widescreen 100% Layar Penuh Megah Tanpa Garis/Hitam) ─── */
 .welcome-bg-desktop {
   position: absolute;
   top: -20px;
@@ -3666,7 +3657,7 @@ canvas#disciplineChart {
   100% { transform: scale(1.06) translate(1%, 0.5%); }
 }
 
-/* ─── 📱 SMARTPHONE & HP (3 Foto Bertumpuk Vertikal Penuh 100%) ─── */
+/* ───  SMARTPHONE & HP (3 Foto Bertumpuk Vertikal Penuh 100%) ─── */
 .welcome-bg-mobile-3stack {
   display: none; /* Sembunyikan default di laptop */
   position: absolute;
@@ -3699,7 +3690,7 @@ canvas#disciplineChart {
   pointer-events: none;
 }
 
-/* 🎬 Ken-Burns micro-motion terpisah di tiap foto HP agar dinamis */
+/*  Ken-Burns micro-motion terpisah di tiap foto HP agar dinamis */
 .welcome-bg-media-1 { animation: kenBurnsSlot1 22s infinite alternate ease-in-out; }
 .welcome-bg-media-2 { animation: kenBurnsSlot2 26s infinite alternate ease-in-out; }
 .welcome-bg-media-3 { animation: kenBurnsSlot3 24s infinite alternate ease-in-out; }
@@ -3717,15 +3708,15 @@ canvas#disciplineChart {
   100% { transform: scale(1.09) translate(1%, -1%); }
 }
 
-/* 🌫️ Vignette soft gradient antar slot foto vertikal di HP */
+/*  Vignette soft gradient antar slot foto vertikal di HP */
 .welcome-slot-vignette {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(9, 13, 22, 0.45) 0%, rgba(9, 13, 22, 0.08) 35%, rgba(9, 13, 22, 0.08) 65%, rgba(9, 13, 22, 0.45) 100%);
+  background: #163d78 0%, rgba(9, 13, 22, 0.08) 35%, rgba(9, 13, 22, 0.08) 65%, rgba(9, 13, 22, 0.45) 100%);
   pointer-events: none;
 }
 
-/* 📱 Di Layar HP (Lebar <= 768px atau Orientasi Portrait): Aktifkan 3 Foto Vertikal Penuh */
+/*  Di Layar HP (Lebar <= 768px atau Orientasi Portrait): Aktifkan 3 Foto Vertikal Penuh */
 @media (max-width: 768px), (orientation: portrait) {
   .welcome-bg-desktop {
     display: none !important;
@@ -3735,7 +3726,7 @@ canvas#disciplineChart {
   }
 }
 
-/* 🛡️ Scrim global elegan agar kartu kaca, logo, dan teks sangat terbaca jernih */
+/*  Scrim global elegan agar kartu kaca, logo, dan teks sangat terbaca jernih */
 .welcome-overlay-scrim {
   position: fixed;
   top: 0;
@@ -3776,7 +3767,7 @@ canvas#disciplineChart {
   z-index: 5;
   width: 90%;
   max-width: 660px;
-  background: linear-gradient(135deg, rgba(20, 30, 52, 0.42) 0%, rgba(11, 18, 36, 0.28) 100%);
+  background: rgba(15, 23, 42, 0.38);
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 26px;
   padding: 34px 30px 28px;
@@ -3883,7 +3874,7 @@ canvas#disciplineChart {
   max-width: 420px;
   padding: 13px 26px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #f03e44 0%, #c81e24 100%);
+  background: #ed2e35;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
@@ -3894,7 +3885,6 @@ canvas#disciplineChart {
   margin-bottom: 16px;
 }
 .welcome-main-btn:hover {
-  transform: translateY(-2px);
   box-shadow: 0 14px 35px rgba(237, 46, 53, 0.65);
 }
 .welcome-main-btn:active {
@@ -3928,7 +3918,6 @@ canvas#disciplineChart {
 .welcome-shortcut-item:hover {
   background: rgba(255, 255, 255, 0.24);
   border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
 }
 .welcome-shortcut-icon {
@@ -3953,7 +3942,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 🧪 AI QA DIAGNOSTIC AGENT MODAL STYLES                         */
+/*  AI QA DIAGNOSTIC AGENT MODAL STYLES                         */
 /* ═══════════════════════════════════════════════════════════════ */
 .ai-diag-overlay {
   position: fixed;
@@ -4082,7 +4071,7 @@ canvas#disciplineChart {
 .ai-diag-progress-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #3b82f6, #10b981);
+  background: #163d78;
   transition: width 0.2s ease;
 }
 .ai-diag-item {
@@ -4135,7 +4124,7 @@ canvas#disciplineChart {
   gap: 10px;
 }
 
-/* 📱 Responsive Mobile AI QA Diagnostic Modal */
+/*  Responsive Mobile AI QA Diagnostic Modal */
 @media (max-width: 640px) {
   .ai-diag-overlay {
     padding: 10px;
@@ -4181,7 +4170,7 @@ canvas#disciplineChart {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* 👨‍💻 DEVELOPER SHOWCASE & SYSTEM ARCHITECT (AHMAD NUR FATONY)    */
+/* ‍ DEVELOPER SHOWCASE & SYSTEM ARCHITECT (AHMAD NUR FATONY)    */
 /* ═══════════════════════════════════════════════════════════════ */
 .app-footer-dev-badge {
   display: inline-flex;
@@ -4200,7 +4189,6 @@ canvas#disciplineChart {
 .app-footer-dev-badge:hover, .app-footer-dev-badge:active {
   background: rgba(237,46,53,0.18);
   border-color: rgba(237,46,53,0.5);
-  transform: translateY(-1px);
 }
 .app-footer-dev-badge b {
   color: var(--accent, #ed2e35);
@@ -4248,7 +4236,7 @@ canvas#disciplineChart {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, rgba(237,46,53,0.18), rgba(37,99,235,0.18));
+  background: rgba(22,61,120,0.14);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .dev-banner-badge {
@@ -4259,7 +4247,7 @@ canvas#disciplineChart {
   font-weight: 800;
   letter-spacing: 0.8px;
   color: #fff;
-  background: linear-gradient(135deg, #ed2e35, #2563eb);
+  background: #163d78;
   padding: 4px 12px;
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(237,46,53,0.4);
@@ -4300,8 +4288,8 @@ canvas#disciplineChart {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ed2e35, #3b82f6, #10b981);
-  animation: devAvatarSpin 8s linear infinite;
+  background: #163d78;
+  
 }
 @keyframes devAvatarSpin {
   to { transform: rotate(360deg); }
@@ -4489,7 +4477,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       align-items: center;
       gap: 7px;
       padding: 5px 11px;
-      border-radius: 999px;
+      border-radius: 4px;
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.22);
       color: #ffffff;
@@ -4504,7 +4492,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     .header-sync-pill:hover {
       background: rgba(255, 255, 255, 0.22);
       border-color: rgba(255, 255, 255, 0.35);
-      transform: translateY(-1px);
     }
     .sync-pulse-dot {
       width: 8px;
@@ -4576,7 +4563,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       font-size: 10.5px;
       font-weight: 700;
       padding: 2px 7px;
-      border-radius: 999px;
+      border-radius: 4px;
       background: rgba(16, 185, 129, 0.15);
       color: #10b981;
       border: 1px solid rgba(16, 185, 129, 0.3);
@@ -4614,7 +4601,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     }
     .btn-sync-now:hover {
       filter: brightness(1.1);
-      transform: translateY(-1px);
     }
 
     /* ==========================================================================
@@ -4643,7 +4629,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       background: #fee2e2;
       color: #dc2626;
       border: 1px solid #fca5a5;
-      animation: overduePulse 2s infinite ease-in-out;
+      
     }
     @keyframes overduePulse {
       0%, 100% {
@@ -4911,7 +4897,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       font-size: 10.5px;
       font-weight: 700;
       padding: 1px 6px;
-      border-radius: 999px;
+      border-radius: 4px;
       background: rgba(22, 61, 120, 0.12);
       color: var(--primary, #163d78);
     }
@@ -5007,6 +4993,27 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
     .gs-result-item:hover, .gs-result-item.active {
       background: var(--surface-hover) !important;
     }
+
+/* ═══ PRINT STYLESHEET (A4 CLEAN LAYOUT) ═══ */
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  body { background: #ffffff !important; color: #0f172a !important; overflow: visible !important; }
+  .sidebar, .topbar, .mobile-nav, #mobileFabContainer, #aiChatBtn, #aiChatPanel,
+  #offlineQueueBanner, .toast, .cc-toolbar, .filter-row, .btn, button { display: none !important; }
+  .main-content, .content-area, .panel.active, .card-section, .table-scroll {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; }
+  th, td { border: 1px solid #cbd5e1 !important; padding: 5px 7px !important; }
+  tr { page-break-inside: avoid; }
+}
+
 </style>
 
 <script>
@@ -5020,14 +5027,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       }
     }
   });
-  // ✅ FIX: Hapus touchend preventDefault yang memblokir klik tombol di HP
+  //  FIX: Hapus touchend preventDefault yang memblokir klik tombol di HP
   document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
 })();
 </script>
 
 </head>
 <body>
-    <!-- ✅ PWA SPLASH SCREEN -->
+    <!--  PWA SPLASH SCREEN -->
   <div id="pwaSplash" style="position:fixed;inset:0;background:#13275a;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:18px;transition:opacity 0.35s ease;">
       <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="54" alt="ASUKA Logo" style="height:54px;width:auto;max-width:240px;object-fit:contain;">
         <div style="color:#fff;font-family:'Nunito',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.3px;">QC-CMS EDMS</div>
@@ -5106,7 +5113,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <span class="clock-date" id="headerClockDate">-</span>
         </div>
 
-        <!-- 🟢 HEADER LIVE SYNC STATUS WIDGET (FASE 2) -->
+        <!--  HEADER LIVE SYNC STATUS WIDGET (FASE 2) -->
         <div class="header-sync-wrap" style="position:relative;" id="headerSyncWrap">
           <button type="button" class="header-sync-pill" id="headerSyncPill" onclick="toggleSyncStatusPopover(event)" title="Status Sinkronisasi Real-Time (Klik untuk detail)">
             <span class="sync-pulse-dot" id="headerSyncDot"></span>
@@ -5145,7 +5152,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- 🔔 NOTIFIKASI -->
+        <!--  NOTIFIKASI -->
         <div class="notif-bell-wrap" style="position:relative;">
           <button class="theme-toggle notif-btn" onclick="toggleNotifPanel()" title="Notifikasi">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="currentColor" fill-opacity="0.16"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span id="notifBadge" class="notif-badge" style="display:none;">0</span>
@@ -5156,8 +5163,8 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- 👤 PROFIL PENGGUNA & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
-        <!-- 👤 PROFIL USER & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
+        <!--  PROFIL PENGGUNA & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
+        <!--  PROFIL USER & DROPDOWN RAMPING (Ganti 4 tombol jadi 1 menu ringkas) -->
         <div class="user-profile-wrap" style="position:relative;" id="userProfileWrap">
           <button type="button" class="user-profile-trigger" id="userProfileTrigger" onclick="toggleUserDropdown(event)" title="Menu Profil &amp; Pengaturan">
             <span class="user-badge" id="userBadge">-</span>
@@ -5175,7 +5182,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <div class="udh-divider"></div>
             <button type="button" class="user-dropdown-item" onclick="openHeaderColorModal(); closeUserDropdown();">
               <span class="udi-icon">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="1.8"/><circle cx="8" cy="10" r="1.5" fill="#ef4444"/><circle cx="12" cy="7" r="1.5" fill="#f59e0b"/><circle cx="16" cy="10" r="1.5" fill="#10b981"/><circle cx="14" cy="15" r="1.5" fill="#8b5cf6"/></svg>
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-width="1.8"/><circle cx="8" cy="10" r="1.5" fill="#ef4444"/><circle cx="12" cy="7" r="1.5" fill="#f59e0b"/><circle cx="16" cy="10" r="1.5" fill="#10b981"/><circle cx="14" cy="15" r="1.5" fill="#163d78"/></svg>
               </span>
               <span>Ganti Warna Header</span>
             </button>
@@ -5220,13 +5227,13 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <div class="mini-sub" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Dokumen Mutu Proyek</div>
           </div>
         </div>
-        <!-- 🎯 FOKUS PROYEK -->
+        <!--  FOKUS PROYEK -->
         <div class="sidebar-focus" style="margin-top:4px;">
           <label for="globalProjectFilter"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:6px;"><circle cx="12" cy="12" r="9" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>Fokus Proyek</label>
           <select id="globalProjectFilter" onchange="onGlobalProjectFilterChange()"></select>
         </div>
 
-        <!-- 📂 GRUP 1: DOKUMEN MUTU (ACCORDION) -->
+        <!--  GRUP 1: DOKUMEN MUTU (ACCORDION) -->
         <div class="sidebar-accordion-group open" id="groupMonitoring">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupMonitoring')">
             <span class="sag-title">
@@ -5245,7 +5252,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- ⚙️ GRUP 4: ADMINISTRASI SISTEM (ACCORDION) -->
+        <!--  GRUP 4: ADMINISTRASI SISTEM (ACCORDION) -->
 
         <div class="sidebar-accordion-group" id="groupDokumen">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupDokumen')">
@@ -5263,7 +5270,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- 🛠️ GRUP 2: INSPEKSI & LAPANGAN (ACCORDION) -->
+        <!--  GRUP 2: INSPEKSI & LAPANGAN (ACCORDION) -->
         <div class="sidebar-accordion-group" id="groupInspeksi">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupInspeksi')">
             <span class="sag-title">
@@ -5280,7 +5287,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- 📊 GRUP 3: MONITORING & REVIEW (ACCORDION) -->
+        <!--  GRUP 3: MONITORING & REVIEW (ACCORDION) -->
         <div class="sidebar-accordion-group" id="groupAdmin">
           <button type="button" class="sidebar-accordion-header" onclick="toggleSidebarGroup('groupAdmin')">
             <span class="sag-title">
@@ -5297,12 +5304,12 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           </div>
         </div>
 
-        <!-- 🤖 SEKSI RINGKAS AI ASSISTANT -->
+        <!--  SEKSI RINGKAS AI ASSISTANT -->
         <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border);">
           <button class="sidebar-item" type="button" onclick="toggleAIChat(); closeNavMenu();" style="background:var(--surface-subtle); border:1px solid var(--border); border-radius:12px;">
             <span class="si-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="12" rx="3" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.8"/><path d="M12 8V4M9 4h6M2 14h2M20 14h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="13" r="1.5" fill="currentColor"/><circle cx="15" cy="13" r="1.5" fill="currentColor"/><path d="M9 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
             <span class="si-label" style="font-weight:700;">Tanya AI QC</span>
-            <span style="font-size:9.5px; background:linear-gradient(135deg,#2563eb,#10b981); color:#fff; padding:2px 7px; border-radius:6px; font-weight:800; margin-left:auto;">AI</span>
+            <span style="font-size:9.5px; background:#163d78; color:#fff; padding:2px 7px; border-radius:6px; font-weight:800; margin-left:auto;">AI</span>
           </button>
         </div>
 
@@ -5317,7 +5324,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             </div>
           </div>
 
-          <!-- ⚡ DEVELOPER SHOWCASE CARD -->
+          <!--  DEVELOPER SHOWCASE CARD -->
           <div class="sidebar-dev-card" onclick="openDevModal()" title="Profil Pengembang — Ahmad Nur Fatony">
             <div class="sidebar-dev-avatar" style="overflow:hidden; padding:0; background:#0f172a;">
               <img src="data:image/jpeg;base64,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" alt="ANF" style="width:100%; height:100%; object-fit:cover; border-radius:8px; display:block;">
@@ -5664,7 +5671,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
             <div class="panel" id="panelApprovalsettings">
               <h2 class="panel-title">Pengaturan Sistem</h2>
 
-              <!-- 🎨 KARTU KUSTOMISASI WARNA HEADER -->
+              <!--  KARTU KUSTOMISASI WARNA HEADER -->
               <div class="card-section" style="margin-bottom:20px; border-left:4px solid var(--accent);">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                   <div>
@@ -5931,7 +5938,8 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                   <div class="hint" id="testProjectResult"></div>
                 </div>
                 <div class="form-row">
-                  <div class="form-group"><label>PIC</label><input type="text" id="newProjPic" placeholder="Nama PIC" maxlength="60"></div>
+                  <div class="form-group"><label>PIC Proyek</label><input type="text" id="newProjPic" placeholder="Nama PIC" maxlength="60"></div>
+                  <div class="form-group"><label>Email PIC (untuk Notifikasi Otomatis)</label><input type="email" id="newProjEmailPic" placeholder="nama@asukaengineering.com" maxlength="100"></div>
                   <div class="form-group">
                     <label>Nama Tab (opsional)</label>
                     <input type="text" id="newProjTab" placeholder="Register NFI (auto-detect)">
@@ -6066,7 +6074,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
               <div id="ccProjectsWrap" style="margin-bottom:28px;"></div>
 
               <!-- ═══ 3. DOCKED DEEP ANALYTICS CONTAINER ═══ -->
-              <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:linear-gradient(135deg, #163d78 0%, #0d6ab0 100%); border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
+              <div id="analyticsProjectBanner" style="display:none; padding:14px 18px; background:#163d78; border-radius:12px; color:#fff; margin-bottom:20px; box-shadow:0 4px 12px rgba(22,61,120,0.25);">
                 <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                   <div style="display:flex; align-items:center; gap:12px;">
                     <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.18);color:#fff;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>
@@ -6158,7 +6166,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 <!-- Discipline & Type Breakdown Charts -->
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;">
                   <div style="background:var(--surface-card); border:1px solid var(--border); border-radius:14px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#7c3aed;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
+                    <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:800;color:var(--ink);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#163d78;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Komposisi Disiplin</span></h3>
                     <div style="position:relative; height:200px; width:100%;">
                       <canvas id="disciplineChart"></canvas>
                     </div>
@@ -6485,7 +6493,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   </div>
 
   <!-- ===================== MODALS ===================== -->
-<!-- 📑 MODAL TAMBAH / EDIT ALAT KALIBRASI -->
+<!--  MODAL TAMBAH / EDIT ALAT KALIBRASI -->
 <div class="modal-overlay" id="calibrationModal">
                 <div class="modal-box" style="max-width:560px;">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -6493,7 +6501,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()" style="padding:4px 10px; font-size:16px; border:none; cursor:pointer;" title="Tutup"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                   </div>
 
-                  <!-- ⚡ AI SMART SCANNER HERO BANNER -->
+                  <!--  AI SMART SCANNER HERO BANNER -->
                   <div style="background:var(--surface-subtle); border:1.5px dashed var(--border); border-radius:6px; padding:12px 14px; margin-bottom:16px; text-align:center;">
                     <div style="font-size:13px; font-weight:700; color:#163d78; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:6px;">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#f59e0b;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" fill-opacity="0.2"/></svg>AI Smart Scanner (Vision AI OCR)
@@ -6530,7 +6538,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                     <div class="form-row single">
                       <div class="form-group"><label>PIC *</label><input type="text" id="calPic" required></div>
                     </div>
-                    <!-- 📁 Berkas Sertifikat Kalibrasi Resmi -->
+                    <!--  Berkas Sertifikat Kalibrasi Resmi -->
                     <div style="background:var(--surface-subtle, #f8fafc); border:1px solid var(--border, #cbd5e1); border-radius:6px; padding:10px 12px; margin-bottom:12px;">
                       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
                         <label style="font-size:12px; font-weight:700; color:var(--ink, #0f172a); margin:0;">Berkas Sertifikat Kalibrasi (PDF / Scan)</label>
@@ -6554,7 +6562,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </div>
               </div>
 
-<!-- 📄 MODAL PREVIEW & UPLOAD SERTIFIKAT KALIBRASI -->
+<!--  MODAL PREVIEW & UPLOAD SERTIFIKAT KALIBRASI -->
 <div class="modal-overlay" id="calCertPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
                 <div class="modal-box" style="max-width:920px; width:100%; max-height:92vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden; padding:0;">
                   <!-- Header Modal -->
@@ -6616,7 +6624,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </div>
               </div>
 
-<!-- 📑 MODAL TAMBAH / EDIT NCR -->
+<!--  MODAL TAMBAH / EDIT NCR -->
 <div class="modal-overlay" id="ncrModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
                 <div class="modal-box" style="max-width:620px; width:100%; max-height:90vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 36px rgba(0,0,0,0.25); display:flex; flex-direction:column; overflow:hidden;">
                   <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc);">
@@ -6724,7 +6732,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </div>
               </div>
 
-<!-- 🔍 MODAL DETAIL TEKNIS NCR -->
+<!--  MODAL DETAIL TEKNIS NCR -->
 <div class="modal-overlay" id="ncrDetailModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
                 <div class="modal-box" style="max-width:680px; width:100%; max-height:90vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 36px rgba(0,0,0,0.25); display:flex; flex-direction:column; overflow:hidden;">
                   <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 18px; border-bottom:1px solid var(--border, #e2e8f0); background:var(--surface-subtle, #f8fafc);">
@@ -6752,7 +6760,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
                 </div>
               </div>
 
-<!-- 📄 MODAL PREVIEW & UPLOAD DOKUMEN NCR -->
+<!--  MODAL PREVIEW & UPLOAD DOKUMEN NCR -->
 <div class="modal-overlay" id="ncrDocPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(15,23,42,0.68); backdrop-filter:blur(3px); z-index:99999; align-items:center; justify-content:center; padding:16px;">
                 <div class="modal-box" style="max-width:920px; width:100%; max-height:92vh; background:var(--surface, #ffffff); border:1px solid var(--border, #cbd5e1); border-radius:8px; box-shadow:0 16px 40px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden; padding:0;">
                   <!-- Header Modal -->
@@ -7002,7 +7010,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       <span id="uploadProgressPercent" style="color:#e8720c;font-weight:700;">0%</span>
     </div>
     <div style="background:rgba(255,255,255,0.15);height:8px;border-radius:4px;overflow:hidden;position:relative;">
-      <div id="uploadProgressBar" style="background:linear-gradient(90deg,#e8720c,#f59e0b);height:100%;width:0%;transition:width 0.15s ease;border-radius:4px;"></div>
+      <div id="uploadProgressBar" style="background:#163d78;height:100%;width:0%;transition:width 0.15s ease;border-radius:4px;"></div>
     </div>
     <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted,#94a3b8);margin-top:6px;">
       <span id="uploadProgressDetail">0 KB / 0 KB</span>
@@ -7056,7 +7064,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 </div>
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- 🤖 AI CHATBOT -->
+<!--  AI CHATBOT -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <!-- Floating AI Copilot Launcher Button -->
@@ -7209,7 +7217,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
           <button type="button" class="ai-suggest-card" onclick="quickAIQuestion('Validasi MTR pipa ASTM A106 Gr. B dengan data: C: 0.28%, Mn: 0.85%, Tensile: 450 MPa, Yield: 260 MPa')">
             <div class="asc-left">
               <span class="asc-icon purple">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#8b5cf6" fill-opacity="0.18" stroke="#7c3aed" stroke-width="1.8"/><polyline points="9 12 11 14 15 10" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#163d78" fill-opacity="0.18" stroke="#163d78" stroke-width="1.8"/><polyline points="9 12 11 14 15 10" stroke="#163d78" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
               <div class="asc-text">
                 <span class="asc-title">Validasi Sertifikat Material (MTR)</span>
@@ -7276,7 +7284,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   touch-action: manipulation;
 }
 #aiChatBtn.ai-launcher-btn:hover {
-  transform: translateY(-3px) scale(1.05);
   box-shadow: 0 14px 38px rgba(37, 99, 235, 0.45);
 }
 #aiChatBtn.ai-launcher-btn:active {
@@ -7297,7 +7304,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   border-radius: 50%;
   border: 2px solid #ffffff;
   box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: beaconPulse 2s infinite;
+  
 }
 
 /* AI Chat Card Frame */
@@ -7322,7 +7329,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
 /* Chat Header */
 .ai-chat-header {
-  background: var(--bezel, linear-gradient(135deg, #1e293b, #0f172a));
+  background: var(--bezel, #0f172a);
   color: #ffffff;
   padding: 14px 18px;
   display: flex;
@@ -7365,7 +7372,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   text-transform: uppercase;
   letter-spacing: 0.6px;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: 4px;
   background: rgba(59, 130, 246, 0.3);
   border: 1px solid rgba(147, 197, 253, 0.4);
   color: #dbeafe;
@@ -7400,7 +7407,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 .ai-hdr-btn:hover {
   background: rgba(255, 255, 255, 0.24);
   border-color: rgba(255, 255, 255, 0.35);
-  transform: translateY(-1px);
 }
 .ai-hdr-btn.ai-hdr-close:hover {
   background: rgba(239, 68, 68, 0.8);
@@ -7429,14 +7435,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   width: 32px;
   height: 32px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  background: #163d78;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
 }
-/* 📝 AI Typography & Modern Markdown Formatting */
+/*  AI Typography & Modern Markdown Formatting */
 .ai-msg-bot {
   background: var(--surface-card, #ffffff);
   color: var(--ink);
@@ -7487,7 +7493,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   font-style: italic;
 }
 
-/* 📊 AI Responsive Data Tables */
+/*  AI Responsive Data Tables */
 .ai-table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -7538,7 +7544,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   border-top: 1px solid var(--border);
 }
 
-/* 💬 AI Lists & Blockquotes */
+/*  AI Lists & Blockquotes */
 .ai-msg-bot .ai-md-ul, .ai-msg-bot .ai-md-ol {
   margin: 6px 0 10px 0;
   padding-left: 20px;
@@ -7557,7 +7563,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   color: var(--ink);
 }
 
-/* 💻 AI Code formatting */
+/*  AI Code formatting */
 .ai-code-wrap {
   margin: 10px 0;
   border-radius: 10px;
@@ -7606,7 +7612,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 }
 .ai-msg-user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: #163d78;
   color: #ffffff;
   border-radius: 16px 16px 4px 16px;
   padding: 11px 16px;
@@ -7627,7 +7633,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   height: 7px;
   background: #3b82f6;
   border-radius: 50%;
-  animation: aiTypingDot 1.2s infinite ease-in-out;
+  
 }
 .ai-typing span:nth-child(2) { animation-delay: 0.15s; }
 .ai-typing span:nth-child(3) { animation-delay: 0.3s; }
@@ -7657,7 +7663,6 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 .ai-suggest-card:hover {
   background: var(--surface-hover, #e2e8f0);
   border-color: rgba(59, 130, 246, 0.45);
-  transform: translateY(-1.5px);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 .ai-suggest-card:hover .asc-arrow {
@@ -7776,14 +7781,14 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   background: #ef4444 !important;
   color: #ffffff !important;
   border-color: #ef4444 !important;
-  animation: aiPulse 1s infinite;
+  
 }
 @keyframes aiPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
   50% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
 }
 .ai-send-btn {
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: #163d78;
   color: #ffffff;
   border: none;
   width: 36px;
@@ -7835,10 +7840,9 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   transition: all 0.15s ease;
 }
 .ai-action-btn:hover {
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: #163d78;
   color: #ffffff;
   border-color: #2563eb;
-  transform: translateY(-1px);
 }
 .ai-export-menu {
   position: absolute;
@@ -7877,7 +7881,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
   color: #2563eb;
   font-size: 10px;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: 4px;
   font-weight: 700;
   margin-left: 6px;
   text-transform: uppercase;
@@ -7991,7 +7995,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
 
   <script>
     // State, Constants, Utils, dan Api sudah di-include di atas.
-    // ✅ PWA: Sembunyikan splash screen setelah app siap (Fast & Fail-Safe)
+    //  PWA: Sembunyikan splash screen setelah app siap (Fast & Fail-Safe)
     (function hidePwaSplash() {
       var dismissed = false;
       var hide = function () {
@@ -8014,7 +8018,7 @@ html, body, button, a, input, select, textarea, .sidebar-item, .fab-item, .mobil
       setTimeout(hide, 1200);
     })();
 
-            // 🛡️ ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
+            //  ROBUST GLOBAL STATE, TIMERS & CACHE INITIALIZER
 var sessionToken = sessionToken || '';
 var currentUser = currentUser || null;
 var initData = initData || null;
@@ -8046,7 +8050,7 @@ var recycleBinView = recycleBinView || 'docs';
 var nfiQuickContinueOnly = nfiQuickContinueOnly || false;
 var nfiSearchDebounce = nfiSearchDebounce || null;
 
-    // 🛡️ GLOBAL ESCAPE HTML UTILITY (Digunakan oleh 280+ fungsi render)
+    //  GLOBAL ESCAPE HTML UTILITY (Digunakan oleh 280+ fungsi render)
     function escapeJs_(s) {
       if (s == null) return '';
       return String(s)
@@ -8091,7 +8095,7 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
         .replace(/'/g, '&#39;');
     }
 
-    // 📋 NFI COLUMN CONFIGURATIONS
+    //  NFI COLUMN CONFIGURATIONS
     const NFI_OPTIONAL_COLS = ['area', 'type', 'issued', 'location', 'inspdate', 'itr', 'itp', 'repsub', 'compdate', 'pic', 'remark'];
     const NFI_COL_CHECKBOX_MAP = {
       area: 'nfiColArea',
@@ -8107,7 +8111,7 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
       remark: 'nfiColRemark'
     };
 
-// 🔍 NFI ZOOM STATE & CONSTANTS
+//  NFI ZOOM STATE & CONSTANTS
     var nfiZoomLevel = 100;
     var NFI_ZOOM_MIN = 60;
     var NFI_ZOOM_MAX = 140;
@@ -8136,9 +8140,9 @@ var nfiSearchDebounce = nfiSearchDebounce || null;
 function syncThemeToggleIcon() {
   const t = document.documentElement.getAttribute('data-theme') || 'light';
   const btn = document.getElementById('themeToggleBtn');
-  if (btn) btn.textContent = t === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.innerHTML = t === 'dark' ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>' : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
   
-  // ✅ Update theme-color supaya match
+  //  Update theme-color supaya match
   var meta = document.getElementById('themeColorMeta');
   if (meta) meta.setAttribute('content', t === 'dark' ? '#14100c' : '#13275a');
 }
@@ -8226,7 +8230,7 @@ function enterApp(isFreshLogin) {
     try { localStorage.setItem('qccms_user_role', currentUser.role); } catch (e) {}
   }
 
-  // 3. 🎬 Tampilkan Layar Sambutan Sinematik jika login baru atau sesi baru
+  // 3.  Tampilkan Layar Sambutan Sinematik jika login baru atau sesi baru
   var alreadySeen = false;
   try { alreadySeen = sessionStorage.getItem('qccms_welcome_seen') === '1'; } catch (e) {}
   if (isFreshLogin || !alreadySeen) {
@@ -8328,7 +8332,7 @@ function enterApp(isFreshLogin) {
       syncUploadFormProjectDefault();
 
       if (!data.rootFolderConfigured) showToast('Perhatian: ROOT_FOLDER_ID belum diisi.', 'error');
-      if (data.tzWarning) { const b = document.getElementById('tzWarningBanner'); b.textContent = '🕒 ' + data.tzWarning; b.style.display = 'block'; }
+      if (data.tzWarning) { const b = document.getElementById('tzWarningBanner'); b.textContent = 'Zona Waktu: ' + data.tzWarning; b.style.display = 'block'; }
       updateNotifBadge(data.unreadNotificationCount || 0);
 
       // Default landing page adalah DAFTAR DOKUMEN (bukan form kosong)
@@ -8343,7 +8347,7 @@ function enterApp(isFreshLogin) {
       refreshMyTasksBadge();
       if (!myTasksPollTimer) myTasksPollTimer = setInterval(refreshMyTasksBadge, 180000);
 
-      // 🎬 Perbarui info proyek pada Layar Sambutan jika sedang terbuka
+      //  Perbarui info proyek pada Layar Sambutan jika sedang terbuka
       var welcomeScr = document.getElementById('welcomeCinematicScreen');
       if (welcomeScr && welcomeScr.style.display !== 'none') {
         var projPill = document.getElementById('welcomeProjectPill');
@@ -8413,10 +8417,10 @@ function enterApp(isFreshLogin) {
       updateNotifBadge(list.filter(n => !n.isRead).length);
       const el = document.getElementById('notifPanelList');
       if (!list.length) { el.innerHTML = '<div class="empty-state" style="padding:20px;"><div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M13.73 21a2 2 0 0 1-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0 1 18 8"/><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 0 0-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div><div class="msg">Belum ada notifikasi.</div></div>'; return; }
-      const map = { approval_needed: '⏳', document_approved: '✅', document_rejected: '⚠️', no_approver: '❗', nfi_overdue: '⏰' };
+      const map = { approval_needed: '[Menunggu]', document_approved: '[Disetujui]', document_rejected: '[Ditolak]', no_approver: '[Perhatian]', nfi_overdue: '[Overdue]' };
       el.innerHTML = list.map(function (n) {
         const t = n.createdAt ? new Date(n.createdAt).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
-        return '<div class="notif-item' + (n.isRead ? '' : ' unread') + '" onclick="onNotifClick(\'' + n.notifId + '\')">' + (map[n.type] || 'ℹ️') + ' ' + esc(n.message) + '<span class="notif-time">' + t + '</span></div>';
+        return '<div class="notif-item' + (n.isRead ? '' : ' unread') + '" onclick="onNotifClick(\'' + n.notifId + '\')">' + (map[n.type] || '[Info]') + ' ' + esc(n.message) + '<span class="notif-time">' + t + '</span></div>';
       }).join('');
     }
     function onNotifClick(id) { google.script.run.markNotificationRead(sessionToken, id); refreshNotifBadge(); }
@@ -9322,7 +9326,7 @@ function handleCertFormFileSelected_(input) {
   var statusEl = document.getElementById('calCertFormUploadStatus');
   if (statusEl) {
     statusEl.style.display = 'block';
-    statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;">✓ Berkas terpilih:</span> ' + esc(input.files[0].name) + ' (' + Math.round(input.files[0].size / 1024) + ' KB) — akan diunggah ke Google Drive saat disimpan.';
+    statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;"> Berkas terpilih:</span> ' + esc(input.files[0].name) + ' (' + Math.round(input.files[0].size / 1024) + ' KB) — akan diunggah ke Google Drive saat disimpan.';
   }
 }
 window.handleCertFormFileSelected_ = handleCertFormFileSelected_;
@@ -9583,7 +9587,7 @@ function saveCalibrationData(e) {
       if (name === 'ncr') loadNcrData();
       if (name === 'nfilog') loadNFILog();
       if (name === 'sitereport') { if (!siteReportInitialized) { siteReportInitialized = true; initSiteReportView(); } else loadSiteReportEntries(); }
-}                                          // ← ✅ TAMBAH BARIS INI
+}                                          // End block
 
 function toggleNavMenu() {
   const sb = document.getElementById('appSidebar');
@@ -9591,13 +9595,13 @@ function toggleNavMenu() {
   const isMobile = window.innerWidth <= 860;
 
   if (isMobile) {
-    // 📱 Mobile — overlay slide (behavior lama, tidak berubah)
+    //  Mobile — overlay slide (behavior lama, tidak berubah)
     const open = !sb.classList.contains('open');
     sb.classList.toggle('open', open);
     ov.classList.toggle('show', open);
     document.body.classList.toggle('sidebar-open', open);
   } else {
-    // 🖥️ Desktop — collapse width
+    //  Desktop — collapse width
     const isCollapsed = sb.classList.toggle('collapsed');
     try {
       localStorage.setItem('qccms_sidebar_collapsed', isCollapsed ? '1' : '0');
@@ -9605,7 +9609,7 @@ function toggleNavMenu() {
   }
 }
 
-// ✅ Restore preferensi sidebar saat halaman dibuka
+//  Restore preferensi sidebar saat halaman dibuka
 function restoreSidebarState() {
   try {
     if (window.innerWidth <= 860) return; // hanya desktop
@@ -9727,7 +9731,7 @@ function restoreSidebarState() {
     }
     function loadDocumentList() {
       const content = document.getElementById('listContent');
-      // ✨ Skeleton screen — jauh lebih premium dari spinner biasa
+      //  Skeleton screen — jauh lebih premium dari spinner biasa
       content.innerHTML = [
         '<div class="table-scroll">',
           '<table>',
@@ -9763,10 +9767,10 @@ function restoreSidebarState() {
       const btn = document.getElementById('exportListExcelBtn');
       btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>...';
       google.script.run.withSuccessHandler(function (res) {
-        btn.disabled = false; btn.textContent = '📊 Ekspor Excel';
+        btn.disabled = false; btn.textContent = 'Ekspor Excel';
         if (res.success) { downloadBase64File(res.base64, res.fileName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); showToast(res.count + ' dokumen.', 'success'); }
         else showToast(res.message, 'error');
-      }).withFailureHandler(function (err) { btn.disabled = false; btn.textContent = '📊 Ekspor Excel'; showToast('Gagal: ' + err.message, 'error'); }).exportDocumentListExcel(sessionToken, filters);
+      }).withFailureHandler(function (err) { btn.disabled = false; btn.textContent = 'Ekspor Excel'; showToast('Gagal: ' + err.message, 'error'); }).exportDocumentListExcel(sessionToken, filters);
     }
     function renderStatusDonut(counts) {
       const wrap = document.getElementById('statusDonutWrap');
@@ -9797,7 +9801,7 @@ function restoreSidebarState() {
       documentsCache = {}; docs.forEach(d => documentsCache[d.docId] = d);
       const content = document.getElementById('listContent');
       if (!docs.length) {
-        content.innerHTML = '<div class="rich-empty-state"><div class="res-icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Tidak Ada Dokumen yang Ditemukan</h3><p>Belum ada dokumen yang sesuai dengan filter atau kata kunci pencarian saat ini.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById(\'filterSearch\').value=\'\';document.getElementById(\'filterStatus\').value=\'\';document.getElementById(\'filterDocType\').value=\'\';loadDocumentList();">🔄 Reset Filter</button><button type="button" class="btn btn-primary btn-small" onclick="switchTab(\'upload\')">📤 Unggah Dokumen Baru</button></div></div>';
+        content.innerHTML = '<div class="rich-empty-state"><div class="res-icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h9" fill="currentColor" fill-opacity="0.16"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div><h3>Tidak Ada Dokumen yang Ditemukan</h3><p>Belum ada dokumen yang sesuai dengan filter atau kata kunci pencarian saat ini.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"><button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById(\'filterSearch\').value=\'\';document.getElementById(\'filterStatus\').value=\'\';document.getElementById(\'filterDocType\').value=\'\';loadDocumentList();"> Reset Filter</button><button type="button" class="btn btn-primary btn-small" onclick="switchTab(\'upload\')"> Unggah Dokumen Baru</button></div></div>';
         return;
       }
       let rows = '';
@@ -10082,7 +10086,7 @@ function fileLinksHtml(d) {
         .withSuccessHandler(function (res) {
           if (res && res.success && res.triggers) {
             triggersCache_ = res.triggers;
-            renderTriggerSettings_(res.triggers);
+            renderTriggerSettings_(res.triggers, res.emailQuotaRemaining);
           } else {
             container.innerHTML = '<div style="padding:16px;color:var(--rejected-text);font-size:13px;">Gagal memuat status trigger: ' + esc((res && res.message) || 'Error tidak diketahui') + '</div>';
           }
@@ -10093,7 +10097,7 @@ function fileLinksHtml(d) {
         .getAllTriggersStatus(window.sessionToken || '');
     }
 
-    function renderTriggerSettings_(triggers) {
+    function renderTriggerSettings_(triggers, quotaRemaining) {
       const container = document.getElementById('triggerControlHubContent');
       if (!container) return;
 
@@ -10103,7 +10107,15 @@ function fileLinksHtml(d) {
         return;
       }
 
-      let html = '<div class="table-scroll" style="margin:0;"><table style="width:100%;border-collapse:collapse;margin:0;">' +
+      let quotaBanner = '';
+      if (typeof quotaRemaining === 'number' && quotaRemaining >= 0) {
+        const qColor = quotaRemaining < 20 ? '#dc2626' : '#163d78';
+        quotaBanner = '<div style="padding:10px 14px;background:var(--surface-subtle);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;">' +
+          '<span style="font-weight:600;color:var(--ink);">Sisa Kuota Pengiriman Email Harian (MailApp):</span>' +
+          '<span style="font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-weight:700;color:' + qColor + ';background:var(--surface-card);padding:2px 8px;border:1px solid var(--border);border-radius:4px;">' + quotaRemaining + ' penerima tersisa hari ini</span>' +
+        '</div>';
+      }
+      let html = quotaBanner + '<div class="table-scroll" style="margin:0;"><table style="width:100%;border-collapse:collapse;margin:0;">' +
         '<thead><tr style="background:var(--surface-hover);border-bottom:1px solid var(--border);">' +
         '<th style="padding:10px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--ink);">Nama Otomasi & Deskripsi</th>' +
         '<th style="padding:10px 14px;text-align:left;font-size:12px;font-weight:700;color:var(--ink);width:190px;">Jadwal Eksekusi</th>' +
@@ -10183,19 +10195,72 @@ function fileLinksHtml(d) {
     }
 
     function triggerOpenDocsBroadcastFromUI(projectCode) {
-      var openCount = (typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.totals && ccCache_.totals.open) ? ccCache_.totals.open : 156;
-      var confirmMsg = 'Kirim broadcast email rekapitulasi ' + openCount + ' dokumen mutu & ITR yang masih OPEN Aktif ke seluruh Approver & PIC Proyek sekarang?';
-      if (!confirm(confirmMsg)) return;
+      if (typeof projectCode === 'string' && projectCode.length > 0) {
+        _executeBroadcastOpenDocs_(projectCode);
+        return;
+      }
 
-      showToast('Menyusun rekap & memproses broadcast ' + openCount + ' dokumen open...', 'info');
+      // Pastikan modal pilih proyek tersedia
+      let modal = document.getElementById('broadcastOpenDocsModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'broadcastOpenDocsModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML =
+          '<div class="modal-box" style="max-width:440px;border-radius:8px;padding:20px;">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px;">' +
+              '<h3 style="margin:0;font-size:15px;font-weight:700;color:var(--ink);">Broadcast Rekap Dokumen Open</h3>' +
+              '<button type="button" onclick="document.getElementById(\'broadcastOpenDocsModal\').classList.remove(\'show\')" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink-muted);">&times;</button>' +
+            '</div>' +
+            '<p class="hint" style="margin:0 0 12px;font-size:12.5px;">Pilih cakupan proyek yang akan direkap dan dikirimkan notifikasi email ke Approver &amp; PIC terkait:</p>' +
+            '<div class="form-group" style="margin-bottom:14px;">' +
+              '<label style="font-size:12px;font-weight:600;">Target Proyek</label>' +
+              '<select id="broadcastProjSelect" style="width:100%;padding:8px 10px;border-radius:6px;border:1px solid var(--border);"></select>' +
+            '</div>' +
+            '<div style="display:flex;justify-content:flex-end;gap:8px;">' +
+              '<button type="button" class="btn btn-secondary" onclick="document.getElementById(\'broadcastOpenDocsModal\').classList.remove(\'show\')">Batal</button>' +
+              '<button type="button" class="btn btn-primary" style="background:#163d78;border-color:#163d78;" onclick="_confirmBroadcastModal_()">Kirim Email Rekap</button>' +
+            '</div>' +
+          '</div>';
+        document.body.appendChild(modal);
+      }
+
+      const sel = document.getElementById('broadcastProjSelect');
+      if (sel) {
+        const totalOpen = (typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.totals && ccCache_.totals.open) ? ccCache_.totals.open : 0;
+        let opts = '<option value="">Semua Proyek Aktif (' + totalOpen + ' Open Aktif)</option>';
+        if (typeof ccCache_ !== 'undefined' && ccCache_ && ccCache_.projects) {
+          ccCache_.projects.forEach(function (p) {
+            if ((p.open || 0) > 0) {
+              opts += '<option value="' + esc(p.code) + '">' + esc(p.code) + ' — ' + esc(p.name) + ' (' + p.open + ' Open)</option>';
+            }
+          });
+        }
+        sel.innerHTML = opts;
+      }
+      modal.classList.add('show');
+    }
+
+    function _confirmBroadcastModal_() {
+      const modal = document.getElementById('broadcastOpenDocsModal');
+      const sel = document.getElementById('broadcastProjSelect');
+      const proj = sel ? sel.value : '';
+      if (modal) modal.classList.remove('show');
+      _executeBroadcastOpenDocs_(proj);
+    }
+
+    function _executeBroadcastOpenDocs_(projectCode) {
+      var labelTarget = projectCode ? ('Proyek ' + projectCode) : 'Semua Proyek Aktif';
+      showToast('Menyusun rekap & mengirim email (' + labelTarget + ')...', 'info');
 
       google.script.run
         .withSuccessHandler(function (res) {
           if (res && res.success) {
             if (res.count > 0) {
-              showToast(res.message || ('Broadcast sukses: ' + res.count + ' dokumen open terkirim ke ' + (res.recipientsCount || 1) + ' penerima.'), 'success');
+              var qInfo = (typeof res.remainingQuota === 'number' && res.remainingQuota >= 0) ? (' · Sisa kuota email: ' + res.remainingQuota) : '';
+              showToast((res.message || ('Broadcast sukses (' + res.count + ' dokumen open).')) + qInfo, 'success');
             } else {
-              showToast(res.message || 'Seluruh dokumen mutu saat ini sudah Closed.', 'info');
+              showToast(res.message || 'Seluruh dokumen pada cakupan ini sudah Closed.', 'info');
             }
           } else {
             showToast('Broadcast gagal: ' + ((res && res.message) || 'Terjadi kesalahan sistem'), 'error');
@@ -10206,7 +10271,8 @@ function fileLinksHtml(d) {
         })
         .triggerOpenDocumentsBroadcast(window.sessionToken || '', { projectCode: projectCode || '' });
     }
-
+    window._confirmBroadcastModal_ = _confirmBroadcastModal_;
+    
     window.triggerOpenDocsBroadcastFromUI = triggerOpenDocsBroadcastFromUI;
 
     function loadApprovalSettings() {
@@ -10352,7 +10418,8 @@ function fileLinksHtml(d) {
       if (!projects.length) { c.innerHTML = '<div class="empty-state"><div class="icon"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-muted);"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" fill="currentColor" fill-opacity="0.14"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></div><div class="msg">Belum ada proyek.</div></div>'; return; }
       let html = '<div class="project-grid">';
       projects.forEach(function (p) {
-        const di = p.health === 'red' ? '🔴' : (p.health === 'yellow' ? '🟡' : '🟢');
+        const diColor = p.health === 'red' ? '#dc2626' : (p.health === 'yellow' ? '#d97706' : '#16a34a');
+        const di = '<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:' + diColor + ';margin-right:4px;vertical-align:middle;"></span>';
         html += '<div class="project-card health-' + p.health + '" onclick="focusOnProject(\'' + p.code + '\')"><div class="project-card-head"><span class="health-dot"></span><span class="project-card-name">' + di + ' ' + esc(p.name) + '</span></div><div class="project-card-location">' + esc(p.location || '-') + '</div><div class="project-card-stats"><div class="pc-stat"><span class="pc-stat-value">' + p.pendingCount + '</span><span class="pc-stat-label">Pending</span></div><div class="pc-stat"><span class="pc-stat-value">' + p.rfiOverdueCount + '</span><span class="pc-stat-label">RFI Lewat SLA</span></div></div>' + (p.reasons.length ? '<div class="project-card-reason">' + esc(p.reasons.join(' · ')) + '</div>' : '') + '</div>';
       });
       html += '</div>';
@@ -10775,9 +10842,9 @@ function fileLinksHtml(d) {
       if (n && (s === 'Open' || s === 'In Progress')) {
         var days = getNfiAgingDays_(n);
         if (days >= 14) {
-          html += ' <span class="sla-badge sla-overdue" title="Dokumen pending lebih dari 14 hari (' + days + ' hari)">🚨 Overdue ' + days + 'h</span>';
+          html += ' <span class="sla-badge sla-overdue" title="Dokumen pending lebih dari 14 hari (' + days + ' hari)">Overdue ' + days + 'h</span>';
         } else if (days >= 7) {
-          html += ' <span class="sla-badge sla-warning" title="Dokumen pending lebih dari 7 hari (' + days + ' hari)">⚠️ ' + days + 'h</span>';
+          html += ' <span class="sla-badge sla-warning" title="Dokumen pending lebih dari 7 hari (' + days + ' hari)">Tertunda ' + days + 'h</span>';
         }
       }
       return html;
@@ -11316,7 +11383,7 @@ function fileLinksHtml(d) {
       let rows = '';
       list.forEach(function (t) {
         const d = t.timestamp ? new Date(t.timestamp).toLocaleDateString('id-ID') : '-';
-        const a = t.acknowledgedAt ? '✓ ' + new Date(t.acknowledgedAt).toLocaleDateString('id-ID') : '—';
+        const a = t.acknowledgedAt ? ' ' + new Date(t.acknowledgedAt).toLocaleDateString('id-ID') : '—';
         const sc = t.status === 'Acknowledged' ? 'badge-approved' : 'badge-pending';
         let acts = '';
         if (t.coverSheetUrl) acts += '<button type="button" class="btn-small" onclick="previewFile_(\'' + escapeJs_(t.coverSheetUrl) + '\',\'Cover Sheet ' + escapeJs_(t.transmittalNumber || '') + '\')" title="Preview Cover Sheet"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="currentColor" fill-opacity="0.16"/><circle cx="12" cy="12" r="3"/></svg></button> <a href="' + esc(t.coverSheetUrl) + '" target="_blank" class="btn-small" title="Buka Cover Sheet di tab baru"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="currentColor" fill-opacity="0.16"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></a> ';
@@ -11522,7 +11589,7 @@ function fileLinksHtml(d) {
     }
 
     function doPermanentDeleteDocument(docId) {
-      if (!confirm('⚠️ HAPUS PERMANEN?\n\nDokumen & file tidak bisa dikembalikan sama sekali. Yakin?')) return;
+      if (!confirm('HAPUS PERMANEN?\n\nDokumen & file tidak bisa dikembalikan sama sekali. Yakin?')) return;
       google.script.run.withSuccessHandler(function (res) {
         showToast(res.message, res.success ? 'success' : 'error');
         if (res.success) loadRecycleBin();
@@ -11530,7 +11597,7 @@ function fileLinksHtml(d) {
     }
 
     function doPermanentDeleteNfi(nfiId) {
-      if (!confirm('⚠️ HAPUS PERMANEN?\n\nEntri tidak bisa dikembalikan. Yakin?')) return;
+      if (!confirm('HAPUS PERMANEN?\n\nEntri tidak bisa dikembalikan. Yakin?')) return;
       google.script.run.withSuccessHandler(function (res) {
         showToast(res.message, res.success ? 'success' : 'error');
         if (res.success) loadRecycleBin();
@@ -12503,7 +12570,7 @@ function fileLinksHtml(d) {
     }
 
     // ============================================================================
-    // 📊 ENRICH DATA COMMAND CENTER: REKAPITULASI ITR PER DISIPLIN & MRIR
+    //  ENRICH DATA COMMAND CENTER: REKAPITULASI ITR PER DISIPLIN & MRIR
     // ============================================================================
     function enrichCCData_(res) {
       if (!res || !res.projects) return;
@@ -12889,7 +12956,7 @@ function openProjectDetailCC_(code) {
   var p = ccCache_.projects.filter(function (x) { return x.code === code; })[0];
   if (!p) return;
 
-  // ✨ Panggil analitik (Aging, Trend, Breakdown)
+  //  Panggil analitik (Aging, Trend, Breakdown)
   loadAnalytics(code);
 
   // Perlebar modal-box agar nyaman melihat tabel 7 kolom
@@ -12903,7 +12970,7 @@ function openProjectDetailCC_(code) {
   document.getElementById('docDetailContent').innerHTML =
     '<div class="loading-row"><span class="spinner dark"></span>Memuat detail proyek...</div>';
 
-  // ✅ Panggil fungsi server SEKALI SAJA
+  //  Panggil fungsi server SEKALI SAJA
   google.script.run
     .withSuccessHandler(function (res) {
       if (!res || !res.success) {
@@ -13271,8 +13338,8 @@ function renderCCDetailRows_() {
                 var d = new Date(dStr);
                 if (!isNaN(d.getTime())) {
                   var days = Math.max(0, Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24)));
-                  if (days >= 14) sHtml += ' <span class="sla-badge sla-overdue" title="Tertunda ' + days + ' hari">🚨 Overdue ' + days + 'h</span>';
-                  else if (days >= 7) sHtml += ' <span class="sla-badge sla-warning" title="Tertunda ' + days + ' hari">⚠️ ' + days + 'h</span>';
+                  if (days >= 14) sHtml += ' <span class="sla-badge sla-overdue" title="Tertunda ' + days + ' hari">Overdue ' + days + 'h</span>';
+                  else if (days >= 7) sHtml += ' <span class="sla-badge sla-warning" title="Tertunda ' + days + ' hari">Tertunda ' + days + 'h</span>';
                 }
               }
               return sHtml;
@@ -13890,8 +13957,8 @@ function exportCCDetailCSV_() {
                 '<span class="doc-metric-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>NFI Unik</span>' +
                 '<span class="doc-metric-val">' + Number(t.totalNFI || 0).toLocaleString('id-ID') + '</span>' +
               '</div>' +
-              '<div class="doc-metric-row" style="border-left:3px solid #7c3aed;">' +
-                '<span class="doc-metric-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>ITR Terverifikasi</span>' +
+              '<div class="doc-metric-row" style="border-left:3px solid #163d78;">' +
+                '<span class="doc-metric-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#163d78" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>ITR Terverifikasi</span>' +
                 '<span class="doc-metric-val">' + Number(t.totalITR || 0).toLocaleString('id-ID') + '</span>' +
               '</div>' +
               '<div class="doc-metric-row" style="border-left:3px solid #d97706; background:rgba(217,119,6,0.05);">' +
@@ -13909,7 +13976,7 @@ function exportCCDetailCSV_() {
           '<div class="deck-card">' +
             '<div>' +
               '<div class="card-title">' +
-                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
+                '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#163d78" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' +
                 '<span>Klasifikasi Disiplin (ITR &amp; MRIR)</span>' +
               '</div>' +
               '<div class="grid-disciplines">' +
@@ -14267,7 +14334,7 @@ function exportCCDetailCSV_() {
         html += '<tr style="' + (p.status !== 'Aktif' ? 'opacity:0.6;' : '') + '">' +
           '<td class="doc-code" style="font-weight:700;">' + esc(p.code) + '</td>' +
           '<td>' + esc(p.name) + '</td>' +
-          '<td style="font-size:12px;">' + esc(p.pic || '—') + '</td>' +
+          '<td style="font-size:12px;"><div>' + esc(p.pic || '—') + '</div>' + (p.emailPic ? '<div style="font-size:11px;color:var(--primary);font-family:var(--font-mono);">' + esc(p.emailPic) + '</div>' : '') + '</td>' +
           '<td style="font-size:11.5px;color:var(--ink-muted);">' + esc(p.tabName || '—') + '</td>' +
           '<td style="font-size:11.5px;">' + lastSyncStr + '</td>' +
           '<td>' + statusBadge + '</td>' +
@@ -14302,8 +14369,10 @@ function exportCCDetailCSV_() {
       if (!p) return;
       var newName = prompt('Nama Proyek:', p.name);
       if (newName === null) return;
-      var newPic = prompt('PIC:', p.pic);
+      var newPic = prompt('Nama PIC:', p.pic || '');
       if (newPic === null) return;
+      var newEmailPic = prompt('Email PIC (untuk penerima notifikasi otomatis):', p.emailPic || '');
+      if (newEmailPic === null) return;
 
       google.script.run
         .withSuccessHandler(function (res) {
@@ -14311,11 +14380,11 @@ function exportCCDetailCSV_() {
           if (res.success) loadProjectsUI();
         })
         .withFailureHandler(function (err) { showToast('Gagal: ' + err.message, 'error'); })
-        .updateProjectDetails(code, { name: newName, pic: newPic });
+        .updateProjectDetails(code, { name: newName, pic: newPic, emailPic: newEmailPic });
     }
 
     function deleteProjectUI_(code) {
-      if (!confirm('⚠️ Hapus proyek "' + code + '" dari daftar?\n\n(Dokumen di Master tetap ada, tapi proyek tidak akan muncul di Command Center)')) return;
+      if (!confirm('Hapus proyek "' + code + '" dari daftar?\n\n(Dokumen di Master tetap ada, tapi proyek tidak akan muncul di Command Center)')) return;
 
       google.script.run
         .withSuccessHandler(function (res) {
@@ -14332,7 +14401,7 @@ function exportCCDetailCSV_() {
       var show = wrap.style.display === 'none';
       wrap.style.display = show ? 'block' : 'none';
       if (show) {
-        ['newProjCode','newProjName','newProjId','newProjPic','newProjTab'].forEach(function(id) {
+        ['newProjCode','newProjName','newProjId','newProjPic','newProjEmailPic','newProjTab'].forEach(function(id) {
           var el = document.getElementById(id);
           if (el) el.value = '';
         });
@@ -14344,23 +14413,23 @@ function exportCCDetailCSV_() {
     function testProjectAccess_() {
       var ssId = (document.getElementById('newProjId').value || '').trim();
       var result = document.getElementById('testProjectResult');
-      if (!ssId) { result.textContent = '⚠️ Masukkan ID Spreadsheet dulu'; result.style.color = 'var(--pending-text)'; return; }
-      result.textContent = '⏳ Testing...';
+      if (!ssId) { result.textContent = 'Masukkan ID Spreadsheet dulu'; result.style.color = 'var(--pending-text)'; return; }
+      result.textContent = 'Memeriksa akses...';
       result.style.color = 'var(--ink-muted)';
 
       google.script.run
         .withSuccessHandler(function (res) {
           if (res.success) {
-            result.textContent = '✅ Bisa diakses! File: "' + res.fileName + '" · Tab terdeteksi: "' + res.detectedTab + '"';
+            result.textContent = 'Dapat diakses! File: "' + res.fileName + '" · Tab terdeteksi: "' + res.detectedTab + '"';
             result.style.color = 'var(--approved-text)';
             document.getElementById('newProjTab').value = res.detectedTab;
           } else {
-            result.textContent = '❌ Gagal: ' + res.message;
+            result.textContent = 'Gagal: ' + res.message;
             result.style.color = 'var(--rejected-text)';
           }
         })
         .withFailureHandler(function (err) {
-          result.textContent = '❌ Error: ' + err.message;
+          result.textContent = 'Error: ' + err.message;
           result.style.color = 'var(--rejected-text)';
         })
         .testSpreadsheetAccess(ssId);
@@ -14372,6 +14441,7 @@ function exportCCDetailCSV_() {
         name: (document.getElementById('newProjName').value || '').trim(),
         id: (document.getElementById('newProjId').value || '').trim(),
         pic: (document.getElementById('newProjPic').value || '').trim(),
+        emailPic: (document.getElementById('newProjEmailPic') ? document.getElementById('newProjEmailPic').value : '').trim(),
         tabName: (document.getElementById('newProjTab').value || '').trim()
       };
 
@@ -14423,7 +14493,7 @@ function loadAnalytics(projectCode) {
   var nameEl = document.getElementById('analyticsProjectName');
   if (nameEl) nameEl.textContent = projName;
 
-  console.log("🔍 Memuat analitik untuk:", projectCode);
+  console.log(" Memuat analitik untuk:", projectCode);
 
   // 1. Aging
   google.script.run
@@ -14516,7 +14586,7 @@ function clearAnalyticsProject_() {
   if (disciplineChartInstance) { disciplineChartInstance.destroy(); disciplineChartInstance = null; }
 }
 
-// ✨ TARUH KODE BARU DI SINI (SETELAH baris 5024, SEBELUM baris 5026) ✨
+//  TARUH KODE BARU DI SINI (SETELAH baris 5024, SEBELUM baris 5026) 
 function renderTrendChart(data) {
   var canvas = document.getElementById('trendChart');
   if (!canvas) { console.error("Canvas trendChart tidak ditemukan"); return; }
@@ -14571,7 +14641,7 @@ function renderDisciplineChart(byDiscipline) {
     }
   });
 }
-// ✨ SAMPAI SINI ✨
+//  SAMPAI SINI 
 
 function drillDownAging(bucket) {
   showDrillDown({ project: currentProject, status: 'open', ageBucket: bucket }, 'Open umur ' + bucket + ' hari');
@@ -14583,7 +14653,7 @@ function showDrillDown(filters, title) {
   document.getElementById('drillInfo').textContent = 'Memuat data...';
   document.getElementById('drillBody').innerHTML = '';
   google.script.run.withSuccessHandler(function(res) {
-    if (!res.success) { document.getElementById('drillInfo').textContent = '❌ ' + res.message; return; }
+    if (!res.success) { document.getElementById('drillInfo').textContent = 'Gagal: ' + res.message; return; }
     document.getElementById('drillInfo').textContent = 'Total: ' + res.count + ' dokumen';
     var html = '';
     res.items.forEach(function(it) {
@@ -14641,7 +14711,7 @@ function exportToCSV() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 📱 AUTO-LABEL TABEL UNTUK MOBILE CARD VIEW
+//  AUTO-LABEL TABEL UNTUK MOBILE CARD VIEW
 // ═══════════════════════════════════════════════════════════════
 
 function autoLabelTables_() {
@@ -14689,7 +14759,7 @@ if (typeof MutationObserver !== 'undefined') {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 📱 PWA MANIFEST INJECTOR
+//  PWA MANIFEST INJECTOR
 // Generate manifest.json secara runtime karena Apps Script
 // tidak bisa host file manifest secara langsung.
 // ═══════════════════════════════════════════════════════════════
@@ -14773,16 +14843,16 @@ if (typeof MutationObserver !== 'undefined') {
     link.href = manifestURL;
     document.head.appendChild(link);
     
-    console.log('✅ PWA Manifest ter-inject:', manifestURL);
+    console.log('PWA Manifest ter-inject:', manifestURL);
   } catch (e) {
-    console.warn('⚠️ Gagal inject PWA manifest:', e.message);
+    console.warn('Gagal inject PWA manifest:', e.message);
   }
 })();
 
 // ═══════════════════════════════════════════════════════════════
-// 🤖 AI CHATBOT — Full Clean Edition (v3)
-// ✅ Fix: aksi per-pesan, tidak ada global overwrite
-// ✅ Semua fungsi lama tetap tersedia (backward compat)
+//  AI CHATBOT — Full Clean Edition (v3)
+//  Fix: aksi per-pesan, tidak ada global overwrite
+//  Semua fungsi lama tetap tersedia (backward compat)
 // ═══════════════════════════════════════════════════════════════
 
 var aiChatHistory = [];
@@ -14813,9 +14883,9 @@ function updateAIChatContext() {
   var ctxEl = document.getElementById('aiChatContext');
   if (!ctxEl) return;
   if (typeof globalProjectFilter !== 'undefined' && globalProjectFilter) {
-    ctxEl.textContent = '📍 Fokus: ' + globalProjectFilter;
+    ctxEl.textContent = 'Fokus: ' + globalProjectFilter;
   } else {
-    ctxEl.textContent = '📍 Fokus: Semua Proyek';
+    ctxEl.textContent = 'Fokus: Semua Proyek';
   }
 }
 
@@ -14828,9 +14898,9 @@ function clearAIChat() {
   var welcome = document.createElement('div');
   welcome.style.cssText = 'display:flex; gap:10px; align-items:flex-start;';
   welcome.innerHTML =
-    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
+    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.5 16.5L15 18"/></svg></div>' +
     '<div style="background:#fff; border-radius:12px 12px 12px 4px; padding:12px 14px; font-size:13px; color:#2b2621; line-height:1.5; max-width:85%; box-shadow:0 2px 6px rgba(0,0,0,0.05);">' +
-      '<b>Percakapan baru dimulai ✨</b><br>Tanya apa saja tentang QC-CMS!' +
+      '<b>Sesi Baru Asisten QC-CMS</b><br>Ajukan pertanyaan terkait dokumen mutu &amp; proyek.' +
     '</div>';
   msgs.appendChild(welcome);
 }
@@ -15600,11 +15670,11 @@ function appendAIMessage(role, text, time, actions, lang, modelInfo) {
       try { wrap.setAttribute('data-actions', JSON.stringify(actions)); } catch (e) {}
 
       actionsHtml = '<div class="ai-actions-wrap">' +
-        '<div class="ai-actions-label">💡 Aksi Cepat</div>' +
+        '<div class="ai-actions-label">Aksi Cepat</div>' +
         '<div>';
       actions.forEach(function(a, idx) {
         actionsHtml += '<button class="ai-action-btn" onclick="handleAIActionByMsg(\'' + msgId + '\',' + idx + ')">' +
-          '<span>' + (a.icon || '⚡') + '</span>' +
+          '<span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:1px 4px;border-radius:3px;background:rgba(22,61,120,0.1);color:#163d78;">RUN</span>' +
           '<span>' + escapeAIHtml(a.label || 'Aksi') + '</span>' +
         '</button>';
       });
@@ -15612,7 +15682,7 @@ function appendAIMessage(role, text, time, actions, lang, modelInfo) {
     }
 
     wrap.innerHTML =
-      '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
+      '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.5 16.5L15 18"/></svg></div>' +
       '<div class="ai-msg-bot">' + formatAIText(text) + langBadge + modelBadge + actionsHtml + '</div>';
   } else {
     wrap.innerHTML = '<div class="ai-msg-user">' + escapeAIHtml(text) + '</div>';
@@ -15631,7 +15701,7 @@ function appendAITyping() {
   wrap.id = id;
   wrap.style.cssText = 'display:flex; gap:10px; align-items:flex-start;';
   wrap.innerHTML =
-    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21 11L14.5 13.5L12 20L9.5 13.5L3 11L9.5 8.5L12 2Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.2"/></svg></div>' +
+    '<div class="ai-msg-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.5 16.5L15 18"/></svg></div>' +
     '<div class="ai-msg-bot ai-typing"><span></span><span></span><span></span></div>';
   msgs.appendChild(wrap);
   msgs.scrollTop = msgs.scrollHeight;
@@ -15675,26 +15745,26 @@ function _parseAIAction_(actionStr) {
 
 function _execAIAction_(actionStr) {
   var parsed = _parseAIAction_(actionStr);
-  if (!parsed) { console.error('❌ Format action tidak dikenali:', actionStr); return; }
+  if (!parsed) { console.error('Format action tidak dikenali:', actionStr); return; }
   var fnName = parsed.fnName;
   var args = parsed.args;
   if (typeof window[fnName] !== 'function') {
-    console.error('❌ Fungsi tidak ditemukan:', fnName);
+    console.error('Fungsi tidak ditemukan:', fnName);
     if (typeof showToast === 'function') showToast('Fungsi ' + fnName + ' tidak tersedia', 'error');
     return;
   }
   try { window[fnName].apply(null, args); }
-  catch (e) { console.error('❌ Error execute action:', e); }
+  catch (e) { console.error('Error execute action:', e); }
 }
 
 function _closeAIChatPanel_() {
   var panel = document.getElementById('aiChatPanel');
   var btn = document.getElementById('aiChatBtn');
   if (panel) panel.style.display = 'none';
-  if (btn) btn.innerHTML = '🤖';
+  if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.5 16.5L15 18"/></svg>';
 }
 
-// ✅ HANDLER UTAMA — baca actions dari pesan itu sendiri (bukan global)
+//  HANDLER UTAMA — baca actions dari pesan itu sendiri (bukan global)
 function handleAIActionByMsg(msgId, idx) {
   try {
     var msgEl = document.getElementById(msgId);
@@ -15705,23 +15775,23 @@ function handleAIActionByMsg(msgId, idx) {
     var action = actions[idx];
     if (!action) return;
 
-    console.log('🔍 Menjalankan action:', action.action);
+    console.log('Menjalankan action:', action.action);
     _closeAIChatPanel_();
 
     var actionStr = String(action.action || '')
       .replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&')
       .replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\\\/g, '\\');
 
-    console.log('🔍 Action setelah bersih:', actionStr);
+    console.log('Action setelah bersih:', actionStr);
     setTimeout(function() { _execAIAction_(actionStr); }, 300);
   } catch (e) {
-    console.error('❌ Error handle action:', e);
+    console.error('Error handle action:', e);
   }
 }
 
-// 🔁 Backward compat — kalau ada kode lama / backend masih pakai
+//  Backward compat — kalau ada kode lama / backend masih pakai
 function handleAIActionByIndex(idx) {
-  console.warn('⚠️ handleAIActionByIndex deprecated — pakai handleAIActionByMsg');
+  console.warn('handleAIActionByIndex deprecated — pakai handleAIActionByMsg');
   var actions = window._aiActions || [];
   var action = actions[idx];
   if (!action) return;
@@ -15732,14 +15802,14 @@ function handleAIActionByIndex(idx) {
   setTimeout(function() { _execAIAction_(actionStr); }, 300);
 }
 
-// 🔁 Backward compat — encoded URI style
+//  Backward compat — encoded URI style
 function handleAIAction(encodedAction) {
   try {
     var actionStr = decodeURIComponent(String(encodedAction || ''));
-    console.log('🔍 Menjalankan action (legacy):', actionStr);
+    console.log('Menjalankan action (legacy):', actionStr);
     _closeAIChatPanel_();
     setTimeout(function() { _execAIAction_(actionStr); }, 300);
-  } catch (e) { console.error('❌ Error handle action:', e); }
+  } catch (e) { console.error('Error handle action:', e); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -15799,13 +15869,13 @@ function doExportAIChat(format) {
         downloadBase64File(res.base64, res.fileName, res.mimeType);
         showToast('File berhasil di-download!', 'success');
       } else {
-        showToast('❌ Gagal export: ' + ((res && res.message) || 'Unknown'), 'error');
+        showToast('Gagal export: ' + ((res && res.message) || 'Unknown'), 'error');
       }
     })
     .withFailureHandler(function(err) {
       var loadEl = document.getElementById('aiExportLoading');
       if (loadEl) loadEl.remove();
-      showToast('❌ Error: ' + err.message, 'error');
+      showToast('Error: ' + err.message, 'error');
     })
     .exportAIChat(sessionToken, aiChatHistory, format, userName);
 }
@@ -15848,7 +15918,7 @@ function startVoiceInput() {
     };
     voiceRecognition.onerror = function(event) {
       console.warn('Voice error:', event.error);
-      if (event.error === 'not-allowed') showToast('❌ Izin mikrofon ditolak. Izinkan akses di browser.', 'error');
+      if (event.error === 'not-allowed') showToast('Izin mikrofon ditolak. Izinkan akses di browser.', 'error');
     };
     voiceRecognition.onend = function() {
       isVoiceRecording = false;
@@ -15858,7 +15928,7 @@ function startVoiceInput() {
     voiceRecognition.start();
   } catch (e) {
     console.error('Voice init error:', e);
-    showToast('❌ Gagal memulai voice input.', 'error');
+    showToast('Gagal memulai voice input.', 'error');
   }
 }
 
@@ -16029,7 +16099,7 @@ window.addEventListener('offline', updateFooterStatus);
       if (mcElem) mcElem.addEventListener('scroll', checkScrollTop, { passive: true });
     }
 
-    // 🎬 Kontroler Layar Sambutan Sinematik (Konsep B)
+    //  Kontroler Layar Sambutan Sinematik (Konsep B)
     window.openWelcomeScreen = function(data) {
       var scr = document.getElementById('welcomeCinematicScreen');
       if (!scr) return;
@@ -16081,7 +16151,7 @@ window.addEventListener('offline', updateFooterStatus);
     };
 
     // ═══════════════════════════════════════════════════════════════
-    // 🧪 AI QA DIAGNOSTIC AGENT ENGINE
+    //  AI QA DIAGNOSTIC AGENT ENGINE
     // ═══════════════════════════════════════════════════════════════
     window.openQADiagnosticModal = function() {
       var modal = document.getElementById('aiDiagnosticModal');
@@ -16387,7 +16457,7 @@ window.addEventListener('offline', updateFooterStatus);
     window.copyQADiagnosticReport = function() {
       if (!window._lastQADiagReport) return;
       navigator.clipboard.writeText(window._lastQADiagReport).then(function() {
-        showToast('📋 Laporan diagnostik berhasil disalin ke clipboard!', 'success');
+        showToast('Laporan diagnostik berhasil disalin ke clipboard.', 'success');
       }).catch(function() {
         showToast('Gagal menyalin, browser tidak mengizinkan akses clipboard.', 'error');
       });
@@ -16444,7 +16514,7 @@ window.addEventListener('offline', updateFooterStatus);
                   '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
                   '<span>Pratinjau Google Drive terenkripsi. Jika dokumen terhalang izin akun atau browser, silakan klik <a href="#" id="previewBannerLink" target="_blank" rel="noopener noreferrer">Buka di Tab Baru ↗</a></span>' +
                 '</div>' +
-                '<button type="button" onclick="document.getElementById(\'previewBannerHint\').style.display=\'none\'" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:2px 6px;font-size:12px;" title="Tutup pemberitahuan">✕</button>' +
+                '<button type="button" onclick="document.getElementById(\'previewBannerHint\').style.display=\'none\'" style="background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:2px 6px;font-size:12px;" title="Tutup pemberitahuan"></button>' +
               '</div>' +
               '<div class="preview-modal-body" id="previewModalBody">' +
                 '<div class="loading-row" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink);"><span class="spinner"></span>Memuat pratinjau dokumen...</div>' +
@@ -16645,7 +16715,7 @@ window.addEventListener('offline', updateFooterStatus);
 
 
     // ═══════════════════════════════════════════════════════════════
-    // 📱 LIGHTWEIGHT MODAL STATE MANAGER (TANPA MUTATION OBSERVER LOOP)
+    //  LIGHTWEIGHT MODAL STATE MANAGER (TANPA MUTATION OBSERVER LOOP)
     // ═══════════════════════════════════════════════════════════════
     window.syncModalOpenClass = function() {
       var hasOpen = !!document.querySelector('.modal-overlay.show, .dev-modal-overlay.active, .dev-modal-overlay.show, .ai-diag-overlay.active, .ai-diag-overlay.show, #drillModal[style*="display: block"]');
@@ -16659,7 +16729,7 @@ window.addEventListener('offline', updateFooterStatus);
     window.updateModalOpenState_ = window.syncModalOpenClass;
 
     // ═══════════════════════════════════════════════════════════════
-    // 📱 MOBILE PWA BACK BUTTON & NAVIGATION HISTORY MANAGER
+    //  MOBILE PWA BACK BUTTON & NAVIGATION HISTORY MANAGER
     // Mencegah aplikasi keluar mendadak saat tombol back di HP ditekan
     // ═══════════════════════════════════════════════════════════════
     window.closeAnyOpenModal = function () {
@@ -16826,7 +16896,7 @@ window.addEventListener('offline', updateFooterStatus);
     <div class="mobile-fab-menu" id="mobileFabMenu">
       <button type="button" class="fab-item" onclick="handleFabAction('ai-diag')" title="AI Audit & Diagnostic Agent">
         <span class="fab-label">AI Audit Agent</span>
-        <span class="fab-icon" style="background:linear-gradient(135deg, #2563eb, #10b981); color:#fff; display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#10b981;"><path d="M10 2v7.31L4.62 18.5A2 2 0 0 0 6.36 21h11.28a2 2 0 0 0 1.74-2.5L14 9.31V2" fill="currentColor" fill-opacity="0.16"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg></span>
+        <span class="fab-icon" style="background:#163d78; color:#fff; display:inline-flex; align-items:center; justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px;color:#10b981;"><path d="M10 2v7.31L4.62 18.5A2 2 0 0 0 6.36 21h11.28a2 2 0 0 0 1.74-2.5L14 9.31V2" fill="currentColor" fill-opacity="0.16"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg></span>
       </button>
       <button type="button" class="fab-item" onclick="handleFabAction('ai')" title="Tanya AI Assistant">
         <span class="fab-label">AI Assistant QC</span>
@@ -16892,7 +16962,7 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
 <script>
-    // 🎨 KONTROLER KUSTOMISASI WARNA HEADER & TAMPILAN
+    //  KONTROLER KUSTOMISASI WARNA HEADER & TAMPILAN
     window.openHeaderColorModal = function() {
       var modal = document.getElementById('headerColorModal');
       if (!modal) return;
@@ -16979,7 +17049,7 @@ window.addEventListener('offline', updateFooterStatus);
     })();
 
 
-    // 👤 KONTROLER PROFIL DROPDOWN DI HEADER
+    //  KONTROLER PROFIL DROPDOWN DI HEADER
     window.toggleUserDropdown = function(e) {
       if (e) {
         e.preventDefault();
@@ -17049,7 +17119,7 @@ window.addEventListener('offline', updateFooterStatus);
       }
     });
 
-    // 📂 KONTROLER ACCORDION SIDEBAR
+    //  KONTROLER ACCORDION SIDEBAR
     window.toggleSidebarGroup = function(groupId) {
       var group = document.getElementById(groupId);
       if (!group) return;
@@ -17262,14 +17332,14 @@ window.addEventListener('offline', updateFooterStatus);
       var results = [];
 
       var navItems = [
-        { title: 'NFI Register & Log', sub: 'Pusat data registrasi inspeksi lapangan', tab: 'nfilog', icon: '📋' },
-        { title: 'Daftar Dokumen Mutu', sub: 'Repositori dokumen & transmittal proyek', tab: 'list', icon: '📁' },
-        { title: 'Dashboard Mutu & Analytics', sub: 'Grafik KPI & monitoring proyek', tab: 'dashboard', icon: '📊' },
-        { title: 'Command Center Master Hub', sub: 'Monitoring komprehensif seluruh proyek aktif', tab: 'command', icon: '🎯' },
-        { title: 'Kalibrasi Alat QC', sub: 'Validitas sertifikasi alat inspeksi', tab: 'calibration', icon: '⚖️' },
-        { title: 'Kelola Proyek & Hub Sync', sub: 'Pengaturan sinkronisasi Master Hub', tab: 'projects', icon: '⚙️' },
-        { title: 'Laporan Lapangan (Site Report)', sub: 'Entri aktivitas harian site', tab: 'sitereport', icon: '📝' },
-        { title: 'Unggah Dokumen Baru', sub: 'Upload berkas QC/QA baru ke sistem', tab: 'upload', icon: '📤' }
+        { title: 'NFI Register & Log', sub: 'Pusat data registrasi inspeksi lapangan', tab: 'nfilog', icon: 'NFI' },
+        { title: 'Daftar Dokumen Mutu', sub: 'Repositori dokumen & transmittal proyek', tab: 'list', icon: 'DOC' },
+        { title: 'Dashboard Mutu & Analytics', sub: 'Grafik KPI & monitoring proyek', tab: 'dashboard', icon: 'KPI' },
+        { title: 'Command Center Master Hub', sub: 'Monitoring komprehensif seluruh proyek aktif', tab: 'command', icon: 'HUB' },
+        { title: 'Kalibrasi Alat QC', sub: 'Validitas sertifikasi alat inspeksi', tab: 'calibration', icon: 'CAL' },
+        { title: 'Kelola Proyek & Hub Sync', sub: 'Pengaturan sinkronisasi Master Hub', tab: 'projects', icon: 'PRJ' },
+        { title: 'Laporan Lapangan (Site Report)', sub: 'Entri aktivitas harian site', tab: 'sitereport', icon: 'RPT' },
+        { title: 'Unggah Dokumen Baru', sub: 'Upload berkas QC/QA baru ke sistem', tab: 'upload', icon: 'UPL' }
       ];
 
       if (!q) {
@@ -17279,7 +17349,7 @@ window.addEventListener('offline', updateFooterStatus);
         });
         navItems.slice(0, 6).forEach(function(item, idx) {
           html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._navGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
-            '<span style="font-size:18px;">' + item.icon + '</span>' +
+            '<span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:3px 6px;border-radius:4px;background:rgba(22,61,120,0.09);color:#163d78;min-width:34px;text-align:center;">' + item.icon + '</span>' +
             '<div style="flex:1; min-width:0;">' +
               '<div style="font-size:13.5px; font-weight:600; color:var(--ink);">' + item.title + '</div>' +
               '<div style="font-size:11.5px; color:var(--ink-muted);">' + item.sub + '</div>' +
@@ -17322,7 +17392,7 @@ window.addEventListener('offline', updateFooterStatus);
                 }
                 closeGlobalSearchModal();
               },
-              icon: '📄'
+              icon: 'NFI'
             });
           }
         });
@@ -17347,7 +17417,7 @@ window.addEventListener('offline', updateFooterStatus);
                 }
                 closeGlobalSearchModal();
               },
-              icon: '📑'
+              icon: 'DOC'
             });
           }
         });
@@ -17355,7 +17425,7 @@ window.addEventListener('offline', updateFooterStatus);
 
       if (!results.length) {
         container.innerHTML = '<div style="text-align:center; padding:32px 16px; color:var(--ink-muted);">' +
-          '<div style="font-size:24px; margin-bottom:8px;">🔍</div>' +
+          '<div style="margin-bottom:8px;color:var(--ink-muted);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>' +
           '<div style="font-weight:600; font-size:13.5px; color:var(--ink);">Tidak ada hasil untuk "' + esc(query) + '"</div>' +
           '<div style="font-size:12px; margin-top:4px;">Coba gunakan nomor NFI, ITR, nama proyek, atau menu lainnya.</div>' +
         '</div>';
@@ -17366,7 +17436,7 @@ window.addEventListener('offline', updateFooterStatus);
       window._activeGsActions_ = results.map(function(r) { return r.action; });
       results.forEach(function(res, idx) {
         html += '<div class="gs-result-item ' + (idx === 0 ? 'active' : '') + '" onclick="window._activeGsActions_[' + idx + ']();" style="display:flex; align-items:center; gap:12px; padding:10px 16px; cursor:pointer; transition:background 0.15s; border-radius:8px; margin:2px 8px;">' +
-          '<span style="font-size:18px;">' + res.icon + '</span>' +
+          '<span style="font-family:var(--font-mono);font-size:10px;font-weight:700;padding:3px 6px;border-radius:4px;background:rgba(22,61,120,0.09);color:#163d78;min-width:34px;text-align:center;">' + res.icon + '</span>' +
           '<div style="flex:1; min-width:0;">' +
             '<div style="font-size:13.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.title) + '</div>' +
             '<div style="font-size:11.5px; color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + esc(res.sub) + '</div>' +
@@ -17404,29 +17474,29 @@ window.addEventListener('offline', updateFooterStatus);
     });
 </script>
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 🎬 CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
+  <!--  CINEMATIC WELCOME SCREEN (KONSEP B)                         -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="welcomeCinematicScreen" class="cinematic-welcome-overlay" style="display:none;">
     <!-- Background layer (Adaptif: Full Widescreen di Laptop, 3 Foto Vertikal Penuh di HP) -->
     <div class="welcome-bg-wrapper" id="welcomeBgWrapper">
-      <!-- 💻 TAMPILAN LAPTOP / DESKTOP (1 Foto Widescreen Megah Menutupi 100% Layar Penuh) -->
+      <!--  TAMPILAN LAPTOP / DESKTOP (1 Foto Widescreen Megah Menutupi 100% Layar Penuh) -->
       <div class="welcome-bg-desktop">
         <img src="/welcome-bg.jpg" onerror="this.onerror=null; this.src='/welcome-bg-1.jpg';" alt="Asuka Engineering Project" class="welcome-bg-media welcome-bg-media-desktop" id="welcomeImgBg">
       </div>
 
-      <!-- 📱 TAMPILAN HP / MOBILE (3 Foto Bertumpuk Vertikal 100% Penuh dari Atas Sampai Bawah) -->
+      <!--  TAMPILAN HP / MOBILE (3 Foto Bertumpuk Vertikal 100% Penuh dari Atas Sampai Bawah) -->
       <div class="welcome-bg-mobile-3stack">
-        <!-- 📸 Foto 1 (Atas): Proyek Lapangan / Aerial Drone -->
+        <!--  Foto 1 (Atas): Proyek Lapangan / Aerial Drone -->
         <div class="welcome-bg-slot welcome-bg-slot-1">
           <img src="/welcome-bg-1.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Proyek Lapangan 1" class="welcome-bg-media welcome-bg-media-1" id="welcomeImgBg1">
           <div class="welcome-slot-vignette"></div>
         </div>
-        <!-- 📸 Foto 2 (Tengah): Workshop Fabrikasi & Manufaktur -->
+        <!--  Foto 2 (Tengah): Workshop Fabrikasi & Manufaktur -->
         <div class="welcome-bg-slot welcome-bg-slot-2">
           <img src="/welcome-bg-2.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Fabrikasi Workshop 2" class="welcome-bg-media welcome-bg-media-2" id="welcomeImgBg2">
           <div class="welcome-slot-vignette"></div>
         </div>
-        <!-- 📸 Foto 3 (Bawah): Konstruksi & Ereksi Struktur Baja -->
+        <!--  Foto 3 (Bawah): Konstruksi & Ereksi Struktur Baja -->
         <div class="welcome-bg-slot welcome-bg-slot-3">
           <img src="/welcome-bg-3.jpg" onerror="this.onerror=null; this.src='/welcome-bg.jpg';" alt="Ereksi Struktur 3" class="welcome-bg-media welcome-bg-media-3" id="welcomeImgBg3">
           <div class="welcome-slot-vignette"></div>
@@ -17501,9 +17571,9 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 🧪 AI QA DIAGNOSTIC AGENT MODAL                                -->
+  <!--  AI QA DIAGNOSTIC AGENT MODAL                                -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 🧪 AI QA DIAGNOSTIC AGENT MODAL (HEALTH & INTEGRITY)           -->
+  <!--  AI QA DIAGNOSTIC AGENT MODAL (HEALTH & INTEGRITY)           -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="aiDiagnosticModal" class="ai-diag-overlay" onclick="if(event.target===this) closeQADiagnosticModal()">
     <div class="ai-diag-card">
@@ -17571,7 +17641,7 @@ window.addEventListener('offline', updateFooterStatus);
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 👨‍💻 DEVELOPER SHOWCASE MODAL (AHMAD NUR FATONY)                -->
+  <!-- ‍ DEVELOPER SHOWCASE MODAL (AHMAD NUR FATONY)                -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="developerModal" class="dev-modal-overlay" onclick="if(event.target===this) closeDevModal()">
     <div class="dev-modal-card">
@@ -17653,7 +17723,7 @@ window.addEventListener('offline', updateFooterStatus);
 
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 🎨 MODAL KUSTOMISASI WARNA HEADER                              -->
+  <!--  MODAL KUSTOMISASI WARNA HEADER                              -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div id="headerColorModal" class="modal-overlay" style="display:none;" onclick="if(event.target===this) closeHeaderColorModal()">
     <div class="modal-box" style="max-width:440px; padding:22px; border-radius:20px; background:var(--surface-card); border:1px solid var(--border); box-shadow:0 24px 60px rgba(0,0,0,0.5);">
@@ -17674,7 +17744,7 @@ window.addEventListener('offline', updateFooterStatus);
           <img src="/icons/logo.png" onerror="this.onerror=null; this.src='/icons/logo.png';" height="22" alt="Logo" style="height:22px; object-fit:contain;">
           <span id="previewHeaderTitle" style="font-size:12px; font-weight:800; color:#fff;">QC-CMS EDMS</span>
         </div>
-        <span id="previewHeaderTag" style="font-size:11px; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,0.18); color:#fff; font-weight:600;">Pratinjau</span>
+        <span id="previewHeaderTag" style="font-size:11px; padding:3px 8px; border-radius: 4px; background:rgba(255,255,255,0.18); color:#fff; font-weight:600;">Pratinjau</span>
       </div>
 
       <div style="font-size:12px; font-weight:700; color:var(--ink); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Pilihan Warna Cepat (Preset)</div>

@@ -1,5 +1,6 @@
 /**
- * QC-CMS EDMS — Calibration Loader Module (calibration.js)
+ * QC-CMS EDMS — Calibration Module (calibration.js)
+ * Standar Anti-AI PT Asuka Engineering Indonesia
  */
 (function () {
   if (window.__calLoaderInjected) return;
@@ -12,7 +13,7 @@
     var target = null;
     sections.forEach(function (sec) {
       var title = sec.querySelector('.sidebar-section-title');
-      if (title && /review|monitoring/i.test(title.textContent)) target = sec;
+      if (title && /inspeksi|alat|review|monitoring/i.test(title.textContent)) target = sec;
     });
     if (!target) target = sections[0];
 
@@ -20,71 +21,8 @@
     btn.className = 'sidebar-item';
     btn.id = 'tabBtnCalibration';
     btn.setAttribute('onclick', "switchTab('calibration')");
-    btn.innerHTML = '<span class="si-icon">📏</span><span class="si-label">Kalibrasi Alat</span>';
+    btn.innerHTML = '<span class="si-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 8.7 8.7 21.3a2 2 0 0 1-2.8 0L2.7 18.1a2 2 0 0 1 0-2.8L15.3 2.7a2 2 0 0 1 2.8 0l3.2 3.2a2 2 0 0 1 0 2.8Z"/><path d="m14.5 3.5 6 6"/><path d="m7.5 10.5 2 2"/><path d="m10.5 7.5 2 2"/><path d="m4.5 13.5 2 2"/></svg></span><span class="si-label">Kalibrasi Alat</span>';
     target.appendChild(btn);
-  }
-
-  function injectPanel() {
-    if (document.getElementById('panelCalibration')) return;
-    var wrapper = document.getElementById('panelWrapper');
-    if (!wrapper) return;
-
-    var div = document.createElement('div');
-    div.className = 'panel';
-    div.id = 'panelCalibration';
-    div.innerHTML = [
-      '<h2 class="panel-title">📏 Kalibrasi & Alat Ukur</h2>',
-      '<p class="hint" style="margin:-10px 0 16px;">Monitoring status kalibrasi alat ukur per disiplin.</p>',
-      '<div class="filter-row" style="margin-bottom:16px; display:flex; flex-wrap:wrap; gap:8px;">',
-      '  <button class="btn btn-secondary" onclick="loadCalibrationData()">↻ Muat Ulang</button>',
-      '  <button class="btn btn-primary" onclick="openCalibrationForm()">+ Update Kalibrasi</button>',
-      '  <button class="btn btn-primary" onclick="openCalibrationAiScanner()" style="background:linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color:#fff; border:none; box-shadow:0 2px 8px rgba(79,70,229,0.35); font-weight:600;"><span style="font-size:1.1em;">⚡</span> AI Smart Scanner (Vision OCR)</button>',
-      '  <button class="btn btn-secondary" onclick="openCalibrationForm(); setTimeout(function(){ openQrScanner(\'calToolId\', \'Scan Label Alat\'); }, 300);" title="Scan Barcode / QR Label Alat">📷 Scan Label Alat</button>',
-      '</div>',
-      '<div class="card-section" id="calKpiWrap">',
-      '  <div class="loading-row"><span class="spinner dark"></span>Memuat ringkasan...</div>',
-      '</div>',
-      '<div id="calTableContent">',
-      '  <div class="loading-row"><span class="spinner dark"></span>Memuat data...</div>',
-      '</div>',
-      '<div class="modal-overlay" id="calibrationModal">',
-      '  <div class="modal-box" style="max-width:560px;">',
-      '    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">',
-      '      <h3 class="card-title" style="margin:0;">Update Data Kalibrasi</h3>',
-      '      <button type="button" class="btn-small" onclick="triggerAiCertScan()" id="btnAiCertScan" style="background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;">⚡ AI Scan Sertifikat</button>',
-      '      <input type="file" id="calCertFileInput" accept="image/*,application/pdf" style="display:none;" onchange="handleAiCertScan(this)">',
-      '    </div>',
-      '    <form id="calibrationForm" onsubmit="saveCalibrationData(event)">',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Tool ID *</label><div style="display:flex;gap:6px;"><input type="text" id="calToolId" required style="flex:1;"><button type="button" class="btn-small" onclick="openQrScanner(\'calToolId\', \'Scan Tool ID Kalibrasi\')" title="Scan QR / Barcode Alat" style="white-space:nowrap;padding:4px 8px;">📷 Scan</button></div></div>',
-      '        <div class="form-group"><label>Nama Alat *</label><input type="text" id="calToolName" required></div>',
-      '      </div>',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Disiplin *</label><input type="text" id="calDiscipline" required></div>',
-      '        <div class="form-group"><label>Status *</label>',
-      '          <select id="calStatus" required>',
-      '            <option value="Valid">Valid</option>',
-      '            <option value="Overdue">Overdue</option>',
-      '            <option value="Dalam Proses">Dalam Proses</option>',
-      '          </select>',
-      '        </div>',
-      '      </div>',
-      '      <div class="form-row">',
-      '        <div class="form-group"><label>Tgl Kalibrasi *</label><input type="date" id="calDate" required></div>',
-      '        <div class="form-group"><label>Tgl Berikutnya *</label><input type="date" id="calNextDate" required></div>',
-      '      </div>',
-      '      <div class="form-row single">',
-      '        <div class="form-group"><label>PIC *</label><input type="text" id="calPic" required></div>',
-      '      </div>',
-      '      <div class="modal-actions">',
-      '        <button type="button" class="btn btn-secondary" onclick="closeCalibrationForm()">Batal</button>',
-      '        <button type="submit" class="btn btn-primary" id="calSubmitBtn">Simpan</button>',
-      '      </div>',
-      '    </form>',
-      '  </div>',
-      '</div>'
-    ].join('\n');
-    wrapper.appendChild(div);
   }
 
   function hookSwitchTab() {
@@ -95,7 +33,7 @@
       orig.apply(this, arguments);
       if (name === 'calibration') {
         setTimeout(function () {
-          if (typeof loadCalibrationData === 'function') loadCalibrationData();
+          if (typeof window.loadCalibrationData === 'function') window.loadCalibrationData();
         }, 30);
       }
     };
@@ -103,77 +41,11 @@
     window.switchTab = wrapped;
   }
 
-  function escHtml(s) {
-    if (typeof esc === 'function') return esc(s);
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  var _calLoading = false;
-  window.loadCalibrationData = function () {
-    if (_calLoading) return;
-    _calLoading = true;
-
-    var kpiWrap = document.getElementById('calKpiWrap');
-    if (kpiWrap) kpiWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat...</div>';
-
-    google.script.run
-      .withSuccessHandler(function (res) {
-        if (!kpiWrap) return;
-        if (!res || !res.success) { kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">' + escHtml((res && res.error) || 'Gagal memuat ringkasan.') + '</div></div>'; return; }
-        kpiWrap.innerHTML =
-          '<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:0;">' +
-            '<div class="stat-card"><div class="stat-value">' + (res.total || 0)   + '</div><div class="stat-label">Total Alat</div></div>' +
-            '<div class="stat-card"><div class="stat-value">' + (res.valid || 0)   + '</div><div class="stat-label">Valid</div></div>' +
-            '<div class="stat-card warn"><div class="stat-value">' + (res.overdue || 0) + '</div><div class="stat-label">Jatuh Tempo</div></div>' +
-          '</div>';
-      })
-      .withFailureHandler(function (err) {
-        if (kpiWrap) kpiWrap.innerHTML = '<div class="empty-state"><div class="msg">Gagal: ' + escHtml(err && err.message ? err.message : String(err)) + '</div></div>';
-      })
-      .getCalibrationSummary();
-
-    var tblWrap = document.getElementById('calTableContent');
-    if (tblWrap) tblWrap.innerHTML = '<div class="loading-row"><span class="spinner dark"></span>Memuat data...</div>';
-
-    google.script.run
-      .withSuccessHandler(function (res) {
-        _calLoading = false;
-        if (!tblWrap) return;
-        if (!res || !res.success) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">' + escHtml((res && res.error) || 'Gagal memuat data alat.') + '</div></div>'; return; }
-        var data = res.data;
-        if (!data || data.length < 2) { tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Belum ada data alat.</div></div>'; return; }
-        var rows = '';
-        for (var i = 1; i < data.length; i++) {
-          var r = data[i];
-          var statusStr = String(r[5] || '').trim();
-          var statusCls = statusStr === 'Valid' ? 'badge-approved' : (statusStr === 'Overdue' ? 'badge-rejected' : 'badge-pending');
-          rows += '<tr>' +
-            '<td class="doc-code">' + escHtml(r[0] || '-') + '</td>' +
-            '<td>' + escHtml(r[1] || '-') + '</td>' +
-            '<td>' + escHtml(r[2] || '-') + '</td>' +
-            '<td>' + escHtml(r[3] || '-') + '</td>' +
-            '<td>' + escHtml(r[4] || '-') + '</td>' +
-            '<td><span class="badge ' + statusCls + '">' + escHtml(statusStr || '-') + '</span></td>' +
-            '<td>' + escHtml(r[6] || '-') + '</td>' +
-            '</tr>';
-        }
-        tblWrap.innerHTML = '<div class="table-scroll"><table><thead><tr>' +
-          '<th>Tool ID</th><th>Nama Alat</th><th>Disiplin</th>' +
-          '<th>Tgl Kalibrasi</th><th>Tgl Berikutnya</th><th>Status</th><th>PIC</th>' +
-          '</tr></thead><tbody>' + rows + '</tbody></table></div>';
-      })
-      .withFailureHandler(function (err) {
-        _calLoading = false;
-        if (tblWrap) tblWrap.innerHTML = '<div class="empty-state"><div class="msg">Gagal memuat data: ' + escHtml(err && err.message ? err.message : String(err)) + '</div></div>';
-      })
-      .getCalibrationTools();
-  };
-
   window.openCalibrationForm = function () {
+    if (typeof window.openCalibrationAddForm === 'function') {
+      window.openCalibrationAddForm();
+      return;
+    }
     var m = document.getElementById('calibrationModal');
     if (m) m.classList.add('show');
     var f = document.getElementById('calibrationForm');
@@ -236,8 +108,8 @@
     var file = input.files[0];
     var btn = document.getElementById('btnAiCertScan');
     var oldText = btn ? btn.innerHTML : '';
-    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Menganalisis...'; }
-    if (typeof showToast === 'function') showToast('Membaca sertifikat via Vision AI...', 'info');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner dark"></span> Menganalisis...'; }
+    if (typeof showToast === 'function') showToast('Membaca sertifikat via Vision OCR...', 'info');
 
     compressImageForAi_(file, 1280, 0.82, function(base64, mimeType) {
       var token = window.sessionToken || '';
@@ -254,9 +126,9 @@
             if (d.nextCalDate && document.getElementById('calNextDate')) document.getElementById('calNextDate').value = d.nextCalDate;
             if (d.status && document.getElementById('calStatus')) document.getElementById('calStatus').value = d.status;
             if (d.pic && document.getElementById('calPic')) document.getElementById('calPic').value = d.pic;
-            if (typeof showToast === 'function') showToast('✅ Data sertifikat berhasil diisi otomatis oleh AI!', 'success');
+            if (typeof showToast === 'function') showToast('Data sertifikat berhasil diisi otomatis.', 'success');
           } else {
-            if (typeof showToast === 'function') showToast('⚠️ ' + ((res && res.message) || 'Gagal membaca sertifikat'), 'warning');
+            if (typeof showToast === 'function') showToast(((res && res.message) || 'Gagal membaca sertifikat.'), 'warning');
           }
         })
         .withFailureHandler(function (err) {
@@ -285,7 +157,10 @@
       if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; }
       if (typeof showToast === 'function')
         showToast(res.message || (res.success ? 'Berhasil' : 'Gagal'), res.success ? 'success' : 'error');
-      if (res.success) { closeCalibrationForm(); loadCalibrationData(); }
+      if (res.success) { 
+        window.closeCalibrationForm(); 
+        if (typeof window.loadCalibrationData === 'function') window.loadCalibrationData(); 
+      }
     }).withFailureHandler(function (err) {
       if (btn) { btn.disabled = false; btn.textContent = 'Simpan'; }
       if (typeof showToast === 'function') showToast('Gagal: ' + err.message, 'error');
@@ -294,7 +169,6 @@
 
   function boot() {
     injectSidebar();
-    injectPanel();
     hookSwitchTab();
     var tries = 0;
     var interval = setInterval(function () {

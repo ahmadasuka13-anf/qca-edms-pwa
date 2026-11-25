@@ -193,13 +193,12 @@ const QC_OFFLINE_QUEUE = (function () {
       banner.style.cssText = [
         'position:fixed', 'bottom:60px', 'left:50%',
         'transform:translateX(-50%)', 'z-index:9999',
-        'background:linear-gradient(135deg,#f59e0b,#d97706)',
-        'color:#fff', 'padding:10px 20px', 'border-radius:12px',
+        'background:#d97706',
+        'color:#fff', 'padding:10px 18px', 'border-radius:6px',
         'font-size:13px', 'font-weight:600', 'display:flex',
         'align-items:center', 'gap:10px',
-        'box-shadow:0 4px 20px rgba(217,119,6,0.4)',
-        'cursor:pointer', 'max-width:340px',
-        'animation:slideUp 0.3s ease'
+        'box-shadow:0 2px 10px rgba(15,23,42,0.2)',
+        'cursor:pointer', 'max-width:340px'
       ].join(';');
       banner.onclick = () => _showQueueDetails();
       document.body.appendChild(banner);
@@ -270,12 +269,25 @@ const QC_OFFLINE_QUEUE = (function () {
     || localStorage.getItem('qc_gas_exec_url')
     || 'https://script.google.com/macros/s/AKfycbxHv0P-UIPghtjjUzMiu0Bdi7WqvtNlDmEQmVaOnS1dPQAgdZNZV7piFks72p1GJDz9/exec';
 
+    let activeToken = '';
+    if (typeof QC_SECURITY !== 'undefined') {
+      try { activeToken = await QC_SECURITY.decryptToken() || ''; } catch (e) {}
+    }
+    if (!activeToken && typeof window !== 'undefined' && window.sessionToken) {
+      activeToken = window.sessionToken;
+    }
+
     for (const item of pending) {
       try {
+        const effectiveToken = activeToken || item.sessionToken;
+        const itemArgs = Array.isArray(item.args) ? item.args.slice() : [];
+        if (effectiveToken && itemArgs.length > 0 && typeof itemArgs[0] === 'string' && /^[0-9a-fA-F-]{36}$/.test(itemArgs[0])) {
+          itemArgs[0] = effectiveToken;
+        }
         const payload = {
           action:       item.action,
-          args:         item.args,
-          sessionToken: item.sessionToken,
+          args:         itemArgs,
+          sessionToken: effectiveToken,
           csrfToken:    typeof QC_SECURITY !== 'undefined' ? QC_SECURITY.getCsrfToken() : ''
         };
 
@@ -332,7 +344,7 @@ const QC_OFFLINE_QUEUE = (function () {
         try { navigator.vibrate([40, 30, 40]); } catch (e) {}
       }
       if (typeof showToast === 'function') {
-        showToast(`✅ ${successCount} form offline berhasil dikirim ke server!`, 'success');
+        showToast(`${successCount} form offline berhasil dikirim ke server.`, 'success');
       }
       // Refresh semua modul yang terpengaruh
       if (typeof loadDocumentList      === 'function') loadDocumentList();
@@ -342,7 +354,7 @@ const QC_OFFLINE_QUEUE = (function () {
       if (typeof getCalibrationTools   === 'function') getCalibrationTools();
     }
     if (failCount > 0 && typeof showToast === 'function') {
-      showToast(`⚠️ ${failCount} form gagal dikirim — akan dicoba lagi otomatis`, 'error');
+      showToast(`${failCount} form gagal dikirim — akan dicoba lagi otomatis`, 'error');
     }
   }
 
@@ -389,7 +401,7 @@ const QC_OFFLINE_QUEUE = (function () {
   window.addEventListener('offline', function () {
     _updateNetworkIndicator();
     if (typeof showToast === 'function') {
-      showToast('📶 Anda sedang offline. Menampilkan data cache lokal & form disimpan otomatis.', 'warning');
+      showToast('Anda sedang offline. Menampilkan data cache lokal & form disimpan otomatis.', 'warning');
     }
   });
 

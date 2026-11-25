@@ -158,7 +158,7 @@
         if (res && res.success) {
           if (typeof window.showSuccessOverlay === 'function') {
             window.showSuccessOverlay({
-              title: '🎉 Registrasi Berhasil!',
+              title: 'Registrasi Berhasil',
               message: 'Akun Anda telah dibuat:<br><b style="color:#163d78;">' + payload.email + '</b><br><br>' +
                        'Silakan login dengan akun baru Anda.',
               buttonText: '→ Login Sekarang',
@@ -177,7 +177,7 @@
           var msg = (res && res.message) || 'Terjadi kesalahan saat mendaftar.';
           if (typeof window.showSuccessOverlay === 'function') {
             window.showSuccessOverlay({
-              title: '⚠️ Registrasi Gagal',
+              title: 'Registrasi Gagal',
               message: msg,
               buttonText: 'Coba Lagi',
               isError: true
@@ -192,7 +192,7 @@
         var errMsg = err && err.message ? err.message : 'Terjadi kesalahan sistem';
         if (typeof window.showSuccessOverlay === 'function') {
           window.showSuccessOverlay({
-            title: '❌ Error',
+            title: 'Error',
             message: 'Terjadi kesalahan: ' + errMsg,
             buttonText: 'Tutup',
             isError: true
@@ -235,7 +235,7 @@
         if (res && res.success) {
           if (typeof window.showSuccessOverlay === 'function') {
             window.showSuccessOverlay({
-              title: '📧 Email Terkirim!',
+              title: 'Email Terkirim',
               message: 'Link reset password telah dikirim ke:<br><b style="color:#163d78;">' + email + '</b><br><br>' +
                        'Silakan cek <b>Inbox</b> atau <b>Spam</b> Anda.<br>Link berlaku selama <b>24 jam</b>.',
               buttonText: '← Kembali ke Login',
@@ -254,7 +254,7 @@
           var msg = (res && res.message) || 'Email tidak ditemukan atau ada masalah pada server.';
           if (typeof window.showSuccessOverlay === 'function') {
             window.showSuccessOverlay({
-              title: '⚠️ Gagal Mengirim',
+              title: 'Gagal Mengirim',
               message: msg,
               buttonText: 'Coba Lagi',
               isError: true,
@@ -273,7 +273,7 @@
         var errMsg = err && err.message ? err.message : 'Gagal mengirim email';
         if (typeof window.showSuccessOverlay === 'function') {
           window.showSuccessOverlay({
-            title: '❌ Terjadi Kesalahan',
+            title: 'Terjadi Kesalahan',
             message: 'Gagal mengirim email: ' + errMsg,
             buttonText: 'Tutup',
             isError: true

@@ -401,9 +401,16 @@ function filterNcrTable_() {
       '<td style="padding:10px 12px; font-size:12px; color:var(--ink); white-space:nowrap;">' + esc(pic || '-') + '</td>' +
       '<td style="padding:10px 12px; text-align:center; white-space:nowrap;">' + docBtnHtml + '</td>' +
       '<td style="padding:10px 12px; text-align:right; white-space:nowrap;">' +
-        '<button type="button" class="btn-small" onclick="viewNcrDetail(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Lihat detail teknis NCR">Detail</button>' +
-        '<button type="button" class="btn-small" onclick="openNcrForm(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Edit data NCR">Edit</button>' +
-        '<button type="button" class="btn-small" onclick="deleteNcrUI(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid rgba(220,38,38,0.25); background:rgba(220,38,38,0.06); color:#dc2626; cursor:pointer;" title="Hapus dari register NCR">Hapus</button>' +
+        (function() {
+        var uRole = (window.currentUser && window.currentUser.role) || (typeof currentUser !== 'undefined' && currentUser && currentUser.role) || '';
+        var isClient = (uRole === 'Client/Konsultan' || uRole === 'Client' || uRole === 'Konsultan');
+        var btns = '<button type="button" class="btn-small" onclick="viewNcrDetail(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Lihat detail teknis NCR">Detail</button>';
+        if (!isClient) {
+          btns += '<button type="button" class="btn-small" onclick="openNcrForm(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid var(--border); background:var(--surface-card); color:var(--ink); cursor:pointer; margin-right:4px;" title="Edit data NCR">Edit</button>' +
+                  '<button type="button" class="btn-small" onclick="deleteNcrUI(\'' + escAttr_(ncrNo) + '\')" style="padding:4px 8px; font-size:11px; font-weight:600; border-radius:4px; border:1px solid rgba(220,38,38,0.25); background:rgba(220,38,38,0.06); color:#dc2626; cursor:pointer;" title="Hapus dari register NCR">Hapus</button>';
+        }
+        return btns;
+      })() +
       '</td>' +
     '</tr>';
   }
@@ -554,6 +561,14 @@ function saveNcrData(e) {
 window.saveNcrData = saveNcrData;
 
 function executeSubmitNcr_(payload, btn, oldText) {
+  if (typeof google === 'undefined' || !google.script || !google.script.run) {
+    setTimeout(function() {
+      if (btn) { btn.disabled = false; btn.textContent = oldText; }
+      if (typeof showToast === 'function') showToast('[Preview Mode] Data NCR ' + payload.ncrNo + ' disimulasikan tersimpan!', 'success');
+      closeNcrForm();
+    }, 600);
+    return;
+  }
   google.script.run
     .withSuccessHandler(function(res) {
       if (btn) { btn.disabled = false; btn.textContent = oldText; }
@@ -573,6 +588,11 @@ function executeSubmitNcr_(payload, btn, oldText) {
 }
 
 function deleteNcrUI(ncrNo) {
+  if (typeof google === 'undefined' || !google.script || !google.script.run) {
+    if (!confirm('Apakah Anda yakin ingin menghapus ' + ncrNo + ' dari register NCR?')) return;
+    if (typeof showToast === 'function') showToast('[Preview Mode] ' + ncrNo + ' disimulasikan terhapus!', 'success');
+    return;
+  }
   if (!confirm('Apakah Anda yakin ingin menghapus ' + ncrNo + ' dari register NCR spreadsheet?')) return;
   if (typeof showToast === 'function') showToast('Menghapus ' + ncrNo + '...', 'info');
 
@@ -804,6 +824,15 @@ function triggerNcrDocUploadFromPreview_() {
 window.triggerNcrDocUploadFromPreview_ = triggerNcrDocUploadFromPreview_;
 
 function handleNcrDocDirectUploadSelected_(input) {
+  if (!input || !input.files || !input.files[0]) return;
+  var f = input.files[0];
+  var ncrNo = window.currentNcrViewingDoc || 'NCR';
+  if (typeof google === 'undefined' || !google.script || !google.script.run) {
+    if (typeof showToast === 'function') showToast('[Preview Mode] Berkas ' + f.name + ' disimulasikan berhasil diunggah!', 'success');
+    input.value = '';
+    closeNcrDocModal();
+    return;
+  }
   if (!input || !input.files || !input.files[0]) return;
   var file = input.files[0];
   var ncrNo = window.activeUploadNcrNo;
